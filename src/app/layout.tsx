@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EngSols — Connecting Engineers & Mentees",
   description:
-    "1-on-1 mentorship for engineers in oil & gas, drilling, reservoir, civil, mechanical, and applied engineering fields.",
+    "Mentorship, jobs, portfolios, forum, live streams, videos, certifications, and industrial marketplace for applied engineers.",
 };
 
 export default function RootLayout({

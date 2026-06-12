@@ -3,6 +3,7 @@ import { ValueProps } from "@/components/home/ValueProps";
 import { StatsQuote } from "@/components/home/StatsQuote";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { MentorGrid } from "@/components/home/MentorGrid";
+import { PlatformSection } from "@/components/home/PlatformSection";
 import { MidTestimonial } from "@/components/home/MidTestimonial";
 import { TrustSection } from "@/components/home/TrustSection";
 import { PricingCarousel } from "@/components/home/PricingCarousel";
@@ -18,6 +19,7 @@ export default function HomePage() {
       <StatsQuote />
       <HowItWorks />
       <MentorGrid />
+      <PlatformSection />
       <MidTestimonial />
       <TrustSection />
       <PricingCarousel />
