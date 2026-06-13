@@ -14,12 +14,12 @@ export function TestimonialCarousel() {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <h2 className="text-center text-3xl font-bold text-slate-900">
+        <h2 className="text-center text-3xl font-bold text-foreground">
           Still not convinced? Don&apos;t just take our word for it
         </h2>
-        <p className="mt-4 text-center text-slate-600">
+        <p className="mt-4 text-center text-muted-foreground">
           We&apos;ve delivered 1-on-1 mentorship to thousands of engineers. Average mentor rating:{" "}
-          <span className="font-semibold text-slate-900">{stats.averageRating} out of 5</span>.
+          <span className="font-semibold text-foreground">{stats.averageRating} out of 5</span>.
         </p>
         <div className="mt-10 px-8">
           <Carousel autoplay autoplayDelay={7000} showDots>
@@ -29,8 +29,8 @@ export function TestimonialCarousel() {
                 <CarouselSlide key={review.mentorSlug + review.menteeName}>
                   <Card className="mx-auto max-w-2xl">
                     <CardContent className="text-center">
-                      <p className="text-lg text-slate-700">
-                        <Link href={`/mentors/${review.mentorSlug}`} className="font-semibold text-amber-600">
+                      <p className="text-lg text-foreground/90">
+                        <Link href={`/mentors/${review.mentorSlug}`} className="font-semibold text-primary">
                           {review.mentorName}
                         </Link>{" "}
                         {review.text}
@@ -47,7 +47,7 @@ export function TestimonialCarousel() {
                           />
                         )}
                         <div className="text-left text-sm">
-                          <p className="font-medium text-slate-900">{review.menteeName}</p>
+                          <p className="font-medium text-foreground">{review.menteeName}</p>
                           <Badge>{review.category}</Badge>
                         </div>
                       </div>

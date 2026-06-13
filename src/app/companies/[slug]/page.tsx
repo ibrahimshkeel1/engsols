@@ -31,23 +31,23 @@ export default async function CompanyPage({ params }: Props) {
           <Image src={companyLogo(company.name)} alt="" width={80} height={80} className="rounded-xl" unoptimized />
           <div>
             {company.verified && <Badge className="bg-green-50 text-green-700">Verified employer</Badge>}
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">{company.name}</h1>
-            <p className="capitalize text-slate-600">{company.type.replace("-", " ")} · {company.headquarters}</p>
-            <p className="text-sm text-slate-500">Founded {company.founded} · {company.employeeCount} employees</p>
+            <h1 className="mt-2 text-3xl font-bold text-foreground">{company.name}</h1>
+            <p className="capitalize text-muted-foreground">{company.type.replace("-", " ")} · {company.headquarters}</p>
+            <p className="text-sm text-muted-foreground">Founded {company.founded} · {company.employeeCount} employees</p>
           </div>
         </div>
-        <p className="mt-6 max-w-3xl text-slate-700">{company.description}</p>
+        <p className="mt-6 max-w-3xl text-foreground/90">{company.description}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {company.disciplines.map((d) => <Badge key={d}>{d}</Badge>)}
         </div>
         <h2 className="mt-10 text-xl font-bold">Open jobs ({companyJobs.length})</h2>
         <div className="mt-4 space-y-3">
-          {companyJobs.length === 0 && <p className="text-slate-500">No open positions right now.</p>}
+          {companyJobs.length === 0 && <p className="text-muted-foreground">No open positions right now.</p>}
           {companyJobs.map((job) => (
             <Card key={job.slug}>
               <CardContent className="py-3">
-                <Link href={`/jobs/${job.slug}`} className="font-semibold text-slate-900 hover:text-amber-600">{job.title}</Link>
-                <p className="text-sm text-slate-600">{job.location} · {job.type.replace("-", " ")}</p>
+                <Link href={`/jobs/${job.slug}`} className="font-semibold text-foreground hover:text-primary">{job.title}</Link>
+                <p className="text-sm text-muted-foreground">{job.location} · {job.type.replace("-", " ")}</p>
               </CardContent>
             </Card>
           ))}
@@ -58,7 +58,7 @@ export default async function CompanyPage({ params }: Props) {
             <ul className="mt-4 space-y-2">
               {companyListings.map((l) => (
                 <li key={l.slug}>
-                  <Link href={`/marketplace/${l.slug}`} className="text-amber-600">{l.title}</Link>
+                  <Link href={`/marketplace/${l.slug}`} className="text-primary">{l.title}</Link>
                 </li>
               ))}
             </ul>
@@ -70,13 +70,13 @@ export default async function CompanyPage({ params }: Props) {
             <ul className="mt-4 space-y-2">
               {employees.map((m) => (
                 <li key={m.slug}>
-                  <Link href={`/mentors/${m.slug}`} className="text-amber-600">{m.name} — {m.headline}</Link>
+                  <Link href={`/mentors/${m.slug}`} className="text-primary">{m.name} — {m.headline}</Link>
                 </li>
               ))}
             </ul>
           </>
         )}
-        <Link href="/jobs/post" className="mt-8 inline-flex rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-slate-900">
+        <Link href="/jobs/post" className="mt-8 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground">
           Post a job at this company
         </Link>
       </div>

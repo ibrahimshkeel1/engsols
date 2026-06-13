@@ -2,7 +2,7 @@
 
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
-import { Input } from "@/components/ui/input";
+import { Input, Select } from "@/components/ui/input";
 
 type MentorFiltersProps = {
   search: string;
@@ -26,42 +26,30 @@ export function MentorFilters({
   onSortChange,
 }: MentorFiltersProps) {
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 sm:flex-row sm:flex-wrap sm:items-center">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 sm:flex-row sm:flex-wrap sm:items-center">
       <Input
         placeholder="Search mentors..."
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         className="sm:max-w-xs"
       />
-      <select
-        value={discipline}
-        onChange={(e) => onDisciplineChange(e.target.value)}
-        className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm"
-      >
+      <Select value={discipline} onChange={(e) => onDisciplineChange(e.target.value)}>
         <option value="">All disciplines</option>
         {disciplines.map((d) => (
           <option key={d} value={d}>{d}</option>
         ))}
-      </select>
-      <select
-        value={goal}
-        onChange={(e) => onGoalChange(e.target.value)}
-        className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm"
-      >
+      </Select>
+      <Select value={goal} onChange={(e) => onGoalChange(e.target.value)}>
         <option value="">All goals</option>
         {goals.map((g) => (
           <option key={g.id} value={g.id}>{g.label}</option>
         ))}
-      </select>
-      <select
-        value={sort}
-        onChange={(e) => onSortChange(e.target.value)}
-        className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm"
-      >
+      </Select>
+      <Select value={sort} onChange={(e) => onSortChange(e.target.value)}>
         <option value="rating">Highest rated</option>
         <option value="price-asc">Price: low to high</option>
         <option value="price-desc">Price: high to low</option>
-      </select>
+      </Select>
     </div>
   );
 }

@@ -11,10 +11,10 @@ export function PricingCarousel() {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <h2 className="text-center text-3xl font-bold text-slate-900">
+        <h2 className="text-center text-3xl font-bold text-foreground">
           Industry veterans and mentoring packages at a flexible price
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-slate-600">
+        <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
           Pick from a curated collection of mentors. Try them with no obligation. Move to a
           low-cost monthly subscription when you&apos;re ready — no lock-ins, no hidden fees.
         </p>
@@ -34,8 +34,8 @@ export function PricingCarousel() {
                         unoptimized
                       />
                       <div>
-                        <p className="font-semibold text-slate-900">{mentor.name}</p>
-                        <p className="text-sm text-slate-600">{mentor.headline} at {mentor.company}</p>
+                        <p className="font-semibold text-foreground">{mentor.name}</p>
+                        <p className="text-sm text-muted-foreground">{mentor.headline} at {mentor.company}</p>
                       </div>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-1">
@@ -45,15 +45,15 @@ export function PricingCarousel() {
                     </div>
                     <div className="mt-4 flex items-end justify-between">
                       <div>
-                        <p className="text-xs text-slate-500">Starting from</p>
-                        <p className="text-xl font-bold text-slate-900">${mentor.monthlyRate}<span className="text-sm font-normal">/month</span></p>
+                        <p className="text-xs text-muted-foreground">Starting from</p>
+                        <p className="text-xl font-bold text-foreground">${mentor.monthlyRate}<span className="text-sm font-normal">/month</span></p>
                       </div>
                       <div className="flex items-center gap-1 text-amber-500">
                         <Star className="h-4 w-4 fill-current" />
                         <span className="text-sm font-medium">{mentor.rating.toFixed(1)}</span>
                       </div>
                     </div>
-                    <Link href={`/mentors/${mentor.slug}`} className="mt-3 inline-block text-sm font-medium text-amber-600">
+                    <Link href={`/mentors/${mentor.slug}`} className="mt-3 inline-block text-sm font-medium text-primary">
                       View profile →
                     </Link>
                   </CardContent>

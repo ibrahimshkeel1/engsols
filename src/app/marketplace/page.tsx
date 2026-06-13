@@ -34,10 +34,10 @@ export default function MarketplacePage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Industrial Marketplace</h1>
-            <p className="mt-2 text-slate-600">Equipment, materials, and services from factories and suppliers.</p>
+            <h1 className="text-3xl font-bold text-foreground">Industrial Marketplace</h1>
+            <p className="mt-2 text-muted-foreground">Equipment, materials, and services from factories and suppliers.</p>
           </div>
-          <Link href="/marketplace/sell" className="inline-flex rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-amber-400">
+          <Link href="/marketplace/sell" className="inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground hover:bg-primary">
             List your product
           </Link>
         </div>
@@ -46,7 +46,7 @@ export default function MarketplacePage() {
             <button
               key={c || "all"}
               onClick={() => setCategory(c)}
-              className={`rounded-lg px-4 py-2 text-sm font-medium capitalize ${category === c ? "bg-slate-900 text-white" : "bg-slate-100"}`}
+              className={`rounded-lg px-4 py-2 text-sm font-medium capitalize ${category === c ? "bg-foreground text-white" : "bg-muted"}`}
             >
               {c || "All"}
             </button>
@@ -54,7 +54,7 @@ export default function MarketplacePage() {
         </div>
         <div className="mt-4 flex flex-wrap gap-3">
           <Input placeholder="Search listings..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="h-10 rounded-lg border border-slate-300 px-3 text-sm">
+          <select value={sort} onChange={(e) => setSort(e.target.value)} className="h-10 rounded-lg border border-border px-3 text-sm">
             <option value="featured">Featured</option>
             <option value="price-asc">Price: low to high</option>
             <option value="price-desc">Price: high to low</option>
@@ -71,15 +71,15 @@ export default function MarketplacePage() {
                 <CardContent>
                   <div className="flex gap-2">
                     <Badge className="capitalize">{listing.category}</Badge>
-                    {listing.featured && <Badge className="bg-amber-50 text-amber-800">Featured</Badge>}
+                    {listing.featured && <Badge className="bg-primary/10 text-primary">Featured</Badge>}
                   </div>
-                  <Link href={`/marketplace/${listing.slug}`} className="mt-2 block font-semibold text-slate-900 hover:text-amber-600">
+                  <Link href={`/marketplace/${listing.slug}`} className="mt-2 block font-semibold text-foreground hover:text-primary">
                     {listing.title}
                   </Link>
-                  <p className="mt-1 text-lg font-bold text-slate-900">
+                  <p className="mt-1 text-lg font-bold text-foreground">
                     {listing.priceUnit === "quote" ? "Request quote" : `$${listing.price.toLocaleString()}${listing.priceUnit === "per hour" ? "/hr" : listing.priceUnit === "per unit" ? "" : `/${listing.priceUnit.replace("per ", "")}`}`}
                   </p>
-                  <p className="text-sm text-slate-500">{seller?.name} · {listing.location}</p>
+                  <p className="text-sm text-muted-foreground">{seller?.name} · {listing.location}</p>
                 </CardContent>
               </Card>
             );

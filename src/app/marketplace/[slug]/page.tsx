@@ -32,12 +32,12 @@ export default async function ListingPage({ params }: Props) {
           <div>
             <Badge className="capitalize">{listing.category}</Badge>
             <Badge className="ml-2">{listing.condition}</Badge>
-            <h1 className="mt-3 text-3xl font-bold text-slate-900">{listing.title}</h1>
-            <p className="mt-4 text-2xl font-bold text-slate-900">
+            <h1 className="mt-3 text-3xl font-bold text-foreground">{listing.title}</h1>
+            <p className="mt-4 text-2xl font-bold text-foreground">
               {listing.priceUnit === "quote" ? "Price on request" : `$${listing.price.toLocaleString()} / ${listing.priceUnit.replace("per ", "")}`}
             </p>
-            <p className="mt-4 text-slate-600">{listing.description}</p>
-            <p className="mt-2 text-sm text-slate-500">{listing.location} · {listing.inStock ? "In stock" : "Lead time applies"}</p>
+            <p className="mt-4 text-muted-foreground">{listing.description}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{listing.location} · {listing.inStock ? "In stock" : "Lead time applies"}</p>
             <div className="mt-6 flex gap-3">
               <ComingSoonButton variant="accent">Request quote</ComingSoonButton>
               <ComingSoonButton variant="outline">Contact seller</ComingSoonButton>
@@ -49,8 +49,8 @@ export default async function ListingPage({ params }: Props) {
                   <tbody>
                     {Object.entries(listing.specs).map(([k, v]) => (
                       <tr key={k} className="border-b border-slate-100">
-                        <td className="py-2 font-medium text-slate-700">{k}</td>
-                        <td className="py-2 text-slate-600">{v}</td>
+                        <td className="py-2 font-medium text-foreground/90">{k}</td>
+                        <td className="py-2 text-muted-foreground">{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -63,13 +63,13 @@ export default async function ListingPage({ params }: Props) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold">{seller.name}</p>
-                      <p className="text-sm text-slate-600">{seller.location}</p>
+                      <p className="text-sm text-muted-foreground">{seller.location}</p>
                       {seller.verified && <Badge className="mt-1 bg-green-50 text-green-700">Verified seller</Badge>}
                     </div>
                     <span className="text-amber-500">★ {seller.rating}</span>
                   </div>
                   {listing.companySlug && (
-                    <Link href={`/companies/${listing.companySlug}`} className="mt-2 inline-block text-sm text-amber-600">
+                    <Link href={`/companies/${listing.companySlug}`} className="mt-2 inline-block text-sm text-primary">
                       View company →
                     </Link>
                   )}
@@ -83,7 +83,7 @@ export default async function ListingPage({ params }: Props) {
             <h2 className="text-xl font-bold">Related listings</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
               {related.map((l) => (
-                <Link key={l.slug} href={`/marketplace/${l.slug}`} className="rounded-lg border border-slate-200 p-4 hover:border-amber-400">
+                <Link key={l.slug} href={`/marketplace/${l.slug}`} className="rounded-lg border border-border p-4 hover:border-amber-400">
                   {l.title}
                 </Link>
               ))}

@@ -15,10 +15,10 @@ export function ValueProps() {
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-slate-900">
+          <h2 className="text-3xl font-bold text-foreground">
             At your fingertips: a dedicated engineering mentor
           </h2>
-          <p className="mt-4 text-slate-600">
+          <p className="mt-4 text-muted-foreground">
             Want to break into oil & gas? Pass the FE or PE exam? Land your first engineering role?
             Work smart with an online mentor who offers expert advice matched to your goals.
           </p>
@@ -27,11 +27,11 @@ export function ValueProps() {
           {valueProps.map((prop) => {
             const Icon = icons[prop.icon];
             return (
-              <div key={prop.label} className="flex items-center gap-3 rounded-xl border border-slate-200 p-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+              <div key={prop.label} className="flex items-center gap-3 rounded-xl border border-border p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
-                <span className="font-medium text-slate-800">{prop.label}</span>
+                <span className="font-medium text-foreground">{prop.label}</span>
               </div>
             );
           })}

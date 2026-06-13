@@ -9,7 +9,7 @@ import { MentorFilters } from "@/components/mentors/MentorFilters";
 
 export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const searchParams = useSearchParams();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
   const [sort, setSort] = useState("rating");

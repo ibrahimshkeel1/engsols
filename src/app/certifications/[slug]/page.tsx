@@ -26,15 +26,15 @@ export default async function CertificationPage({ params }: Props) {
     <div className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Badge>{cert.discipline}</Badge>
-        <h1 className="mt-3 text-3xl font-bold text-slate-900">{cert.name}</h1>
-        <p className="mt-4 text-slate-700">{cert.description}</p>
+        <h1 className="mt-3 text-3xl font-bold text-foreground">{cert.name}</h1>
+        <p className="mt-4 text-foreground/90">{cert.description}</p>
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <div>
-            <h2 className="font-semibold text-slate-900">Eligibility</h2>
-            <p className="mt-2 text-slate-600">{cert.eligibility}</p>
-            <h2 className="mt-6 font-semibold text-slate-900">Exam format</h2>
-            <p className="mt-2 text-slate-600">{cert.examFormat}</p>
-            <p className="mt-4 text-sm text-slate-500">
+            <h2 className="font-semibold text-foreground">Eligibility</h2>
+            <p className="mt-2 text-muted-foreground">{cert.eligibility}</p>
+            <h2 className="mt-6 font-semibold text-foreground">Exam format</h2>
+            <p className="mt-2 text-muted-foreground">{cert.examFormat}</p>
+            <p className="mt-4 text-sm text-muted-foreground">
               Average prep: {cert.avgPrepMonths} months
               {cert.passRate && ` · Pass rate: ${cert.passRate}`}
             </p>
@@ -68,7 +68,7 @@ export default async function CertificationPage({ params }: Props) {
             <ul className="mt-4 space-y-2">
               {relatedThreads.map((t) => (
                 <li key={t.slug}>
-                  <Link href={`/forum/${t.slug}`} className="text-amber-600">{t.title}</Link>
+                  <Link href={`/forum/${t.slug}`} className="text-primary">{t.title}</Link>
                 </li>
               ))}
             </ul>
@@ -76,7 +76,7 @@ export default async function CertificationPage({ params }: Props) {
         )}
         <Link
           href={`/mentors?goal=fe-pe`}
-          className="mt-8 inline-flex rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-slate-900"
+          className="mt-8 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground"
         >
           Find a mentor for this exam
         </Link>

@@ -8,6 +8,7 @@ export default async function LivePage() {
   return (
     <>
       <PageHero
+        variant="live"
         title="Live Sessions"
         description="Watch engineers and mentors live — Q&As, workshops, and industry deep dives."
       />

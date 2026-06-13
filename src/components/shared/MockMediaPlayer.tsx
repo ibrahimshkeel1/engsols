@@ -25,13 +25,13 @@ export function MockMediaPlayer({
       type="button"
       onClick={() => toast.info("Playback is coming soon!")}
       className={cn(
-        "group relative aspect-video w-full overflow-hidden rounded-xl bg-slate-900",
+        "group relative aspect-video w-full overflow-hidden rounded-xl bg-foreground",
         className,
       )}
     >
       <Image src={thumbnail} alt={title} fill className="object-cover opacity-80" unoptimized />
       <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/40">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500 text-slate-900 shadow-lg">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-foreground shadow-lg">
           <Play className="h-8 w-8 fill-current" />
         </div>
       </div>

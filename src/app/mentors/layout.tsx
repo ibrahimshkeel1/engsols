@@ -5,5 +5,5 @@ export default function MentorsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Suspense fallback={<div className="py-12 text-center text-slate-500">Loading mentors...</div>}>{children}</Suspense>;
+  return <Suspense fallback={<div className="py-12 text-center text-muted-foreground">Loading mentors...</div>}>{children}</Suspense>;
 }

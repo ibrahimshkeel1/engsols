@@ -6,9 +6,10 @@ import { useMemo, useState } from "react";
 import type { Portfolio } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { avatarUrl } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { getDisciplineColors } from "@/lib/discipline-colors";
+import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Input, Select } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
   const [search, setSearch] = useState("");
@@ -38,28 +39,36 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
           {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
         </Select>
       </div>
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => (
-          <Card key={p.slug} className="card-elevated transition hover:border-primary/30">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <Image src={avatarUrl(p.name)} alt="" width={52} height={52} className="rounded-full ring-2 ring-border" unoptimized />
-                <div>
-                  {p.openToWork && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Open to work</Badge>}
-                  <h3 className="mt-1 font-semibold">{p.name}</h3>
-                  <p className="text-sm text-muted-foreground">{p.headline}</p>
-                  <p className="text-xs text-muted-foreground">{p.university} · {p.discipline}</p>
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((p) => {
+          const stripe = getDisciplineColors(p.discipline).stripe;
+          return (
+            <Link key={p.slug} href={`/portfolios/${p.slug}`} className="card-interactive relative flex overflow-hidden rounded-2xl">
+              <div className={cn("w-1 shrink-0", stripe)} />
+              <div className="flex-1 p-5">
+                <div className="flex items-start gap-4">
+                  <Image src={avatarUrl(p.name)} alt="" width={52} height={52} className="rounded-xl ring-2 ring-border" unoptimized />
+                  <div>
+                    {p.openToWork && (
+                      <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                        Open to work
+                      </span>
+                    )}
+                    <h3 className="mt-1 font-semibold">{p.name}</h3>
+                    <p className="text-sm text-muted-foreground">{p.headline}</p>
+                    <p className="text-xs text-muted-foreground">{p.university}</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  <DisciplineBadge discipline={p.discipline} />
+                  {p.skills.slice(0, 3).map((s) => (
+                    <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
+                  ))}
                 </div>
               </div>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {p.skills.slice(0, 4).map((s) => <Badge key={s}>{s}</Badge>)}
-              </div>
-              <Link href={`/portfolios/${p.slug}`} className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
-                View portfolio →
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
+            </Link>
+          );
+        })}
       </div>
       {filtered.length === 0 && (
         <p className="py-16 text-center text-muted-foreground">No portfolios match your search.</p>

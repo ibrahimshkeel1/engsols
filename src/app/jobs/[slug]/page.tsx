@@ -32,21 +32,21 @@ export default async function JobPage({ params }: Props) {
               <Badge>{job.discipline}</Badge>
               <Badge>{job.remote}</Badge>
             </div>
-            <h1 className="mt-3 text-3xl font-bold text-slate-900">{job.title}</h1>
-            <p className="mt-2 text-slate-600">
-              <Link href={`/companies/${job.companySlug}`} className="font-medium text-amber-600">{job.company}</Link>
+            <h1 className="mt-3 text-3xl font-bold text-foreground">{job.title}</h1>
+            <p className="mt-2 text-muted-foreground">
+              <Link href={`/companies/${job.companySlug}`} className="font-medium text-primary">{job.company}</Link>
               {" · "}{job.location}
             </p>
             {job.salaryRange && <p className="mt-2 text-lg font-semibold">{job.salaryRange}</p>}
-            <p className="mt-6 leading-relaxed text-slate-700">{job.description}</p>
+            <p className="mt-6 leading-relaxed text-foreground/90">{job.description}</p>
             <h2 className="mt-8 font-semibold">Requirements</h2>
-            <ul className="mt-2 list-inside list-disc text-slate-600">
+            <ul className="mt-2 list-inside list-disc text-muted-foreground">
               {job.requirements.map((r) => <li key={r}>{r}</li>)}
             </ul>
             {job.benefits.length > 0 && (
               <>
                 <h2 className="mt-6 font-semibold">Benefits</h2>
-                <ul className="mt-2 list-inside list-disc text-slate-600">
+                <ul className="mt-2 list-inside list-disc text-muted-foreground">
                   {job.benefits.map((b) => <li key={b}>{b}</li>)}
                 </ul>
               </>
@@ -63,9 +63,9 @@ export default async function JobPage({ params }: Props) {
               <Card>
                 <CardContent>
                   <h3 className="font-semibold">{company.name}</h3>
-                  <p className="mt-1 text-sm text-slate-600">{company.headquarters}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{company.headquarters}</p>
                   {company.verified && <Badge className="mt-2 bg-green-50 text-green-700">Verified</Badge>}
-                  <Link href={`/companies/${company.slug}`} className="mt-3 inline-block text-sm text-amber-600">View company →</Link>
+                  <Link href={`/companies/${company.slug}`} className="mt-3 inline-block text-sm text-primary">View company →</Link>
                 </CardContent>
               </Card>
             )}
@@ -76,11 +76,11 @@ export default async function JobPage({ params }: Props) {
                   <ul className="mt-2 space-y-2">
                     {graduates.map((p) => (
                       <li key={p.slug}>
-                        <Link href={`/portfolios/${p.slug}`} className="text-sm text-amber-600">{p.name}</Link>
+                        <Link href={`/portfolios/${p.slug}`} className="text-sm text-primary">{p.name}</Link>
                       </li>
                     ))}
                   </ul>
-                  <Link href={`/portfolios?discipline=${encodeURIComponent(job.discipline)}`} className="mt-2 inline-block text-sm text-slate-500">Browse portfolios →</Link>
+                  <Link href={`/portfolios?discipline=${encodeURIComponent(job.discipline)}`} className="mt-2 inline-block text-sm text-muted-foreground">Browse portfolios →</Link>
                 </CardContent>
               </Card>
             )}
@@ -91,7 +91,7 @@ export default async function JobPage({ params }: Props) {
             <h2 className="text-xl font-bold">Similar jobs</h2>
             <ul className="mt-4 space-y-2">
               {similar.map((j) => (
-                <li key={j.slug}><Link href={`/jobs/${j.slug}`} className="text-amber-600">{j.title} at {j.company}</Link></li>
+                <li key={j.slug}><Link href={`/jobs/${j.slug}`} className="text-primary">{j.title} at {j.company}</Link></li>
               ))}
             </ul>
           </div>

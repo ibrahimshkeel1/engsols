@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ForumPost } from "@/types";
 import { disciplines } from "@/data/disciplines";
-import { Badge } from "@/components/ui/badge";
+import { getDisciplineColors } from "@/lib/discipline-colors";
+import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Input, Select } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export function ForumList({ posts }: { posts: ForumPost[] }) {
   const [search, setSearch] = useState("");
@@ -44,23 +45,33 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
         </Select>
       </div>
       <div className="mt-8 space-y-3">
-        {filtered.map((post) => (
-          <Card key={post.slug} className="card-elevated transition hover:border-primary/30">
-            <CardContent className="py-5">
-              <div className="flex flex-wrap gap-2">
-                <Badge className="bg-primary/10 text-primary">{post.discipline}</Badge>
-                {post.isSolved && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Solved</Badge>}
+        {filtered.map((post) => {
+          const stripe = getDisciplineColors(post.discipline).stripe;
+          return (
+            <Link
+              key={post.slug}
+              href={`/forum/${post.slug}`}
+              className="card-interactive group relative flex overflow-hidden rounded-2xl"
+            >
+              <div className={cn("w-1 shrink-0", stripe)} />
+              <div className="flex-1 p-5 pl-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <DisciplineBadge discipline={post.discipline} />
+                  {post.isSolved && (
+                    <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                      Solved
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-2 text-lg font-semibold group-hover:text-primary">{post.title}</h3>
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.body}</p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {post.author} · {post.replyCount} replies · {post.viewCount} views
+                </p>
               </div>
-              <Link href={`/forum/${post.slug}`} className="mt-3 block text-lg font-semibold hover:text-primary">
-                {post.title}
-              </Link>
-              <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.body}</p>
-              <p className="mt-3 text-xs text-muted-foreground">
-                {post.author} · {post.replyCount} replies · {post.viewCount} views
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+            </Link>
+          );
+        })}
         {filtered.length === 0 && (
           <p className="py-12 text-center text-muted-foreground">No discussions match your filters.</p>
         )}

@@ -8,11 +8,11 @@ export async function AuthLinks() {
   if (!user) {
     return (
       <>
-        <Link href="/login" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted sm:inline-flex">
+        <Link href="/login" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
           Log in
         </Link>
-        <Link href="/mentors" className="inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 hover:brightness-110">
-          Get started
+        <Link href="/signup" className="rounded-lg px-3 py-2 text-sm font-medium text-primary hover:underline">
+          Sign up
         </Link>
       </>
     );
@@ -22,11 +22,11 @@ export async function AuthLinks() {
 
   return (
     <>
-      <Link href={panelHref} className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted sm:inline-flex">
+      <Link href={panelHref} className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
         Dashboard
       </Link>
       <form action={signOut}>
-        <button type="submit" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted">
+        <button type="submit" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
           Sign out
         </button>
       </form>

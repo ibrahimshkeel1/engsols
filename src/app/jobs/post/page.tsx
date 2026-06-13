@@ -10,8 +10,8 @@ export default function PostJobPage() {
   return (
     <div className="py-12">
       <div className="mx-auto max-w-xl px-4 sm:px-6">
-        <h1 className="text-3xl font-bold text-slate-900">Post a job</h1>
-        <p className="mt-2 text-slate-600">Reach engineering students and professionals on EngSols.</p>
+        <h1 className="text-3xl font-bold text-foreground">Post a job</h1>
+        <p className="mt-2 text-muted-foreground">Reach engineering students and professionals on EngSols.</p>
         <Card className="mt-8">
           <CardContent>
             <form
@@ -31,7 +31,7 @@ export default function PostJobPage() {
               </div>
               <div>
                 <label className="text-sm font-medium">Type</label>
-                <select required className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
+                <select required className="mt-1 h-10 w-full rounded-lg border border-border px-3 text-sm">
                   <option value="full-time">Full-time</option>
                   <option value="internship">Internship</option>
                   <option value="contract">Contract</option>
@@ -40,7 +40,7 @@ export default function PostJobPage() {
               </div>
               <div>
                 <label className="text-sm font-medium">Discipline</label>
-                <select required className="mt-1 h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
+                <select required className="mt-1 h-10 w-full rounded-lg border border-border px-3 text-sm">
                   {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
@@ -50,7 +50,7 @@ export default function PostJobPage() {
               </div>
               <div>
                 <label className="text-sm font-medium">Description</label>
-                <textarea required rows={5} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                <textarea required rows={5} className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm" />
               </div>
               <Button type="submit" variant="accent" className="w-full">Post job</Button>
             </form>

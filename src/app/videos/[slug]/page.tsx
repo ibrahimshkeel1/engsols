@@ -24,17 +24,17 @@ export default async function VideoPage({ params }: Props) {
     <div className="py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <MockMediaPlayer thumbnail={videoThumbnail(video.title.slice(0, 24))} title={video.title} duration={video.duration} />
-        <h1 className="mt-6 text-3xl font-bold text-slate-900">{video.title}</h1>
-        <p className="mt-2 text-sm text-slate-500">{video.views.toLocaleString()} views · {video.publishedAt}</p>
-        <p className="mt-4 text-slate-700">{video.description}</p>
+        <h1 className="mt-6 text-3xl font-bold text-foreground">{video.title}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{video.views.toLocaleString()} views · {video.publishedAt}</p>
+        <p className="mt-4 text-foreground/90">{video.description}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {video.tags.map((t) => <Badge key={t}>{t}</Badge>)}
         </div>
         {author && (
-          <div className="mt-6 rounded-xl border border-slate-200 p-4">
+          <div className="mt-6 rounded-xl border border-border p-4">
             <p className="font-semibold">{author.name}</p>
-            <p className="text-sm text-slate-600">{author.headline}</p>
-            <Link href={`/mentors/${author.slug}`} className="text-sm text-amber-600">View profile →</Link>
+            <p className="text-sm text-muted-foreground">{author.headline}</p>
+            <Link href={`/mentors/${author.slug}`} className="text-sm text-primary">View profile →</Link>
           </div>
         )}
         {related.length > 0 && (
@@ -43,7 +43,7 @@ export default async function VideoPage({ params }: Props) {
             <ul className="mt-4 space-y-2">
               {related.map((v) => (
                 <li key={v.slug}>
-                  <Link href={`/videos/${v.slug}`} className="text-amber-600 hover:text-amber-700">{v.title}</Link>
+                  <Link href={`/videos/${v.slug}`} className="text-primary hover:text-primary">{v.title}</Link>
                 </li>
               ))}
             </ul>

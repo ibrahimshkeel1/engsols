@@ -60,7 +60,7 @@ export function Carousel({
           <Button
             variant="outline"
             size="sm"
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white shadow-md"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-card shadow-md"
             onClick={scrollPrev}
             aria-label="Previous slide"
           >
@@ -69,7 +69,7 @@ export function Carousel({
           <Button
             variant="outline"
             size="sm"
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white shadow-md"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-card shadow-md"
             onClick={scrollNext}
             aria-label="Next slide"
           >
@@ -84,7 +84,7 @@ export function Carousel({
               key={i}
               className={cn(
                 "h-2 w-2 rounded-full transition-colors",
-                i === selectedIndex ? "bg-amber-500" : "bg-slate-300",
+                i === selectedIndex ? "bg-primary" : "bg-muted",
               )}
               onClick={() => emblaApi?.scrollTo(i)}
               aria-label={`Go to slide ${i + 1}`}

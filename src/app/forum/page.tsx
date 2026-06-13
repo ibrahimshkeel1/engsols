@@ -9,6 +9,7 @@ export default async function ForumPage() {
   return (
     <>
       <PageHero
+        variant="forum"
         title="Engineering Forum"
         description="Ask questions, share knowledge, and learn from mentors and peers."
       >

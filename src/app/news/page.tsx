@@ -13,6 +13,7 @@ export default async function NewsPage() {
   return (
     <>
       <PageHero
+        variant="editorial"
         title="Engineering News"
         description="Industry updates, career insights, and certification news for applied engineers."
       />

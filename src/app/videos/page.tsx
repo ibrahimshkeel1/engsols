@@ -28,11 +28,11 @@ export default function VideosPage() {
   return (
     <div className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <h1 className="text-3xl font-bold text-slate-900">Engineering Videos</h1>
-        <p className="mt-2 text-slate-600">Tutorials, career talks, and technical deep-dives from industry engineers.</p>
+        <h1 className="text-3xl font-bold text-foreground">Engineering Videos</h1>
+        <p className="mt-2 text-muted-foreground">Tutorials, career talks, and technical deep-dives from industry engineers.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
-          <select value={discipline} onChange={(e) => setDiscipline(e.target.value)} className="h-10 rounded-lg border border-slate-300 px-3 text-sm">
+          <select value={discipline} onChange={(e) => setDiscipline(e.target.value)} className="h-10 rounded-lg border border-border px-3 text-sm">
             <option value="">All disciplines</option>
             {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
@@ -47,11 +47,11 @@ export default function VideosPage() {
                   <span className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">{video.duration}</span>
                 </div>
                 <CardContent>
-                  <Link href={`/videos/${video.slug}`} className="font-semibold text-slate-900 hover:text-amber-600">
+                  <Link href={`/videos/${video.slug}`} className="font-semibold text-foreground hover:text-primary">
                     {video.title}
                   </Link>
-                  <p className="mt-1 text-sm text-slate-600">{author?.name}</p>
-                  <p className="mt-1 text-xs text-slate-500">{video.views.toLocaleString()} views</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{author?.name}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{video.views.toLocaleString()} views</p>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {video.tags.slice(0, 2).map((t) => <Badge key={t}>{t}</Badge>)}
                   </div>

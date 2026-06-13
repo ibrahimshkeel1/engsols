@@ -12,10 +12,10 @@ export function MentorGrid() {
   const filtered = filterMentors(mentors, { search }).slice(0, 12);
 
   return (
-    <section className="bg-slate-50 py-16">
+    <section className="bg-muted/50 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <h2 className="text-3xl font-bold text-slate-900">Explore 650+ available mentors</h2>
+          <h2 className="text-3xl font-bold text-foreground">Explore 650+ available mentors</h2>
           <Input
             placeholder="Find mentors..."
             value={search}
@@ -31,7 +31,7 @@ export function MentorGrid() {
         <div className="mt-10 text-center">
           <Link
             href="/mentors"
-            className="inline-flex rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-800"
+            className="inline-flex rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-white hover:opacity-90"
           >
             View all mentors
           </Link>

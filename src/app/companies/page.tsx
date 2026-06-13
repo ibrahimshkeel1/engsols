@@ -27,11 +27,11 @@ export default function CompaniesPage() {
   return (
     <div className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <h1 className="text-3xl font-bold text-slate-900">Companies</h1>
-        <p className="mt-2 text-slate-600">Operators, service companies, manufacturers, and consultancies hiring engineers.</p>
+        <h1 className="text-3xl font-bold text-foreground">Companies</h1>
+        <p className="mt-2 text-muted-foreground">Operators, service companies, manufacturers, and consultancies hiring engineers.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Input placeholder="Search companies..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
-          <select value={type} onChange={(e) => setType(e.target.value)} className="h-10 rounded-lg border border-slate-300 px-3 text-sm">
+          <select value={type} onChange={(e) => setType(e.target.value)} className="h-10 rounded-lg border border-border px-3 text-sm">
             <option value="">All types</option>
             <option value="operator">Operator</option>
             <option value="service-company">Service company</option>
@@ -50,13 +50,13 @@ export default function CompaniesPage() {
                     <Image src={companyLogo(company.name)} alt="" width={48} height={48} className="rounded-lg" unoptimized />
                     <div>
                       {company.verified && <Badge className="bg-green-50 text-green-700">Verified</Badge>}
-                      <h3 className="font-semibold text-slate-900">{company.name}</h3>
-                      <p className="text-xs capitalize text-slate-500">{company.type.replace("-", " ")}</p>
+                      <h3 className="font-semibold text-foreground">{company.name}</h3>
+                      <p className="text-xs capitalize text-muted-foreground">{company.type.replace("-", " ")}</p>
                     </div>
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm text-slate-600">{company.description}</p>
-                  <p className="mt-2 text-sm text-slate-500">{company.headquarters} · {openJobs} open jobs</p>
-                  <Link href={`/companies/${company.slug}`} className="mt-3 inline-block text-sm font-medium text-amber-600">
+                  <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{company.description}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{company.headquarters} · {openJobs} open jobs</p>
+                  <Link href={`/companies/${company.slug}`} className="mt-3 inline-block text-sm font-medium text-primary">
                     View company →
                   </Link>
                 </CardContent>
