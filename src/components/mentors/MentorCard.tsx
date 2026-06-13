@@ -13,41 +13,41 @@ type MentorCardProps = {
 
 export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
   return (
-    <Card className="h-full transition-shadow hover:shadow-md">
-      <CardContent className="flex h-full flex-col">
+    <Card className="card-elevated h-full transition hover:border-primary/30 hover:shadow-lg">
+      <CardContent className="flex h-full flex-col p-6">
         <div className="flex items-start gap-3">
           <Image
             src={avatarUrl(mentor.name)}
             alt={mentor.name}
             width={56}
             height={56}
-            className="rounded-full bg-slate-100"
+            className="rounded-full ring-2 ring-border"
             unoptimized
           />
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1 text-amber-500">
+            <div className="flex items-center gap-1 text-primary">
               <Star className="h-3.5 w-3.5 fill-current" />
               <span className="text-sm font-medium">{mentor.rating.toFixed(1)}</span>
             </div>
-            <h3 className="truncate font-semibold text-slate-900">{mentor.name}</h3>
-            <p className="text-sm text-slate-600">{mentor.headline}</p>
-            <p className="text-xs text-slate-500">{mentor.company}</p>
+            <h3 className="truncate font-semibold">{mentor.name}</h3>
+            <p className="text-sm text-muted-foreground">{mentor.headline}</p>
+            <p className="text-xs text-muted-foreground">{mentor.company}</p>
           </div>
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
-          <Badge className="bg-amber-50 text-amber-800">{mentor.discipline}</Badge>
+          <Badge className="bg-primary/10 text-primary">{mentor.discipline}</Badge>
           {mentor.skills.slice(0, 2).map((skill) => (
             <Badge key={skill}>{skill}</Badge>
           ))}
         </div>
         {showPrice && (
-          <p className="mt-auto pt-4 text-sm text-slate-600">
-            Starting from <span className="font-semibold text-slate-900">${mentor.monthlyRate}/month</span>
+          <p className="mt-auto pt-4 text-sm text-muted-foreground">
+            Starting from <span className="font-semibold text-foreground">${mentor.monthlyRate}/month</span>
           </p>
         )}
         <Link
           href={`/mentors/${mentor.slug}`}
-          className="mt-3 inline-flex text-sm font-medium text-amber-600 hover:text-amber-700"
+          className="mt-3 inline-flex text-sm font-medium text-primary hover:underline"
         >
           View profile →
         </Link>

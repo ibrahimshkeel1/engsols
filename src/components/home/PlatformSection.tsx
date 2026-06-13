@@ -4,6 +4,7 @@ import {
   Briefcase,
   Building2,
   MessageSquare,
+  Newspaper,
   Radio,
   ShoppingBag,
   UserCircle,
@@ -18,16 +19,17 @@ const pillars = [
   { href: "/certifications", title: "Certifications", desc: "FE, PE, IWCF exam prep and resources", icon: Award },
   { href: "/forum", title: "Join forum", desc: "Discuss problems with the community", icon: MessageSquare },
   { href: "/live", title: "Watch live", desc: "Streams and Q&A with experts", icon: Radio },
+  { href: "/news", title: "Read news", desc: "Industry updates and career insights", icon: Newspaper },
   { href: "/videos", title: "Watch videos", desc: "Tutorials and career talks", icon: Video },
   { href: "/marketplace", title: "Marketplace", desc: "Equipment, materials, and services", icon: ShoppingBag },
 ];
 
 export function PlatformSection() {
   return (
-    <section className="bg-slate-900 py-16 text-white">
+    <section className="border-y border-border bg-foreground py-16 text-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <h2 className="text-center text-3xl font-bold">Everything engineers need in one place</h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-slate-300">
+        <p className="mx-auto mt-3 max-w-2xl text-center opacity-70">
           Mentorship, careers, community, and industry — built for oil & gas, drilling, reservoir, and applied engineering.
         </p>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -35,11 +37,11 @@ export function PlatformSection() {
             <Link
               key={p.href}
               href={p.href}
-              className="rounded-xl border border-slate-700 bg-slate-800 p-5 transition hover:border-amber-500/50 hover:bg-slate-800/80"
+              className="rounded-2xl border border-background/20 bg-background/5 p-5 transition hover:border-primary hover:bg-background/10"
             >
-              <p.icon className="h-8 w-8 text-amber-400" />
+              <p.icon className="h-8 w-8 text-primary" />
               <h3 className="mt-3 font-semibold">{p.title}</h3>
-              <p className="mt-1 text-sm text-slate-400">{p.desc}</p>
+              <p className="mt-1 text-sm opacity-70">{p.desc}</p>
             </Link>
           ))}
         </div>

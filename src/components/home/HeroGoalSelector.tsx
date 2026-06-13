@@ -23,17 +23,17 @@ export function HeroGoalSelector() {
   }, []);
 
   return (
-    <section className="bg-gradient-to-b from-slate-50 to-white py-16 sm:py-24">
+    <section className="gradient-hero py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge className="mb-4 bg-amber-100 text-amber-800">1-on-1 Mentorship</Badge>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <Badge className="mb-4 bg-primary/15 text-primary">1-on-1 Mentorship</Badge>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             What do you want to achieve next?
           </h1>
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             Get practical guidance from a mentor who has already done it.
           </p>
-          <p className="mt-6 min-h-[2rem] text-xl font-medium text-amber-600 transition-opacity">
+          <p className="mt-6 min-h-[2rem] text-xl font-medium text-primary transition-opacity">
             {goals[goalIndex].heroText}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -41,7 +41,7 @@ export function HeroGoalSelector() {
               <Link
                 key={goal.id}
                 href={`/mentors?goal=${goal.id}`}
-                className="rounded-full border border-slate-300 bg-white px-4 py-1.5 text-sm text-slate-700 hover:border-amber-400 hover:bg-amber-50"
+                className="rounded-full border border-border bg-card px-4 py-1.5 text-sm text-foreground transition hover:border-primary hover:bg-primary/10"
               >
                 {goal.label}
               </Link>

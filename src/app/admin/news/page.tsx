@@ -1,0 +1,49 @@
+import Link from "next/link";
+import { format } from "date-fns";
+import { getAllNewsForAdmin } from "@/lib/data/news";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+export default async function AdminNewsPage() {
+  const articles = await getAllNewsForAdmin();
+
+  return (
+    <div>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold">News articles</h1>
+          <p className="mt-1 text-muted-foreground">Manage industry news and platform updates.</p>
+        </div>
+        <Link href="/admin/news/new" className="inline-flex h-10 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 hover:brightness-110">
+          New article
+        </Link>
+      </div>
+      <div className="mt-8 space-y-4">
+        {articles.map((a) => (
+          <Card key={a.id} className="card-elevated">
+            <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="flex flex-wrap gap-2">
+                  <Badge>{a.category}</Badge>
+                  {!a.published && <Badge className="bg-muted text-muted-foreground">Draft</Badge>}
+                  {a.featured && <Badge className="bg-primary/15 text-primary">Featured</Badge>}
+                </div>
+                <h2 className="mt-2 font-semibold">{a.title}</h2>
+                <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{a.excerpt}</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {a.published_at ? format(new Date(a.published_at), "MMM d, yyyy") : "Not published"}
+                </p>
+              </div>
+              {a.published && (
+                <Link href={`/news/${a.slug}`} className="text-sm font-medium text-primary hover:underline">
+                  View →
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
