@@ -38,7 +38,8 @@ export async function signUp(formData: FormData) {
 
 export async function signIn(formData: FormData) {
   const supabase = await createClient();
-  const email = formData.get("email") as string;
+  const emailInput = (formData.get("email") as string).trim();
+  const email = emailInput.includes("@") ? emailInput : `${emailInput}@engsols.com`;
   const password = formData.get("password") as string;
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });

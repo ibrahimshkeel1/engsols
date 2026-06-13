@@ -25,12 +25,12 @@ export default async function LoginPage({ searchParams }: Props) {
           <CardContent className="p-6">
             <form action={signIn} className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Email</label>
-                <Input name="email" required type="email" placeholder="you@example.com" className="mt-1.5" />
+                <label className="text-sm font-medium">Email or username</label>
+                <Input name="email" required type="text" placeholder="admin" className="mt-1.5" autoComplete="username" />
               </div>
               <div>
                 <label className="text-sm font-medium">Password</label>
-                <Input name="password" required type="password" className="mt-1.5" />
+                <Input name="password" required type="password" placeholder="••••••••" className="mt-1.5" autoComplete="current-password" />
               </div>
               <Button type="submit" variant="accent" className="w-full">Log in</Button>
             </form>
