@@ -12,7 +12,7 @@ export default async function PortfoliosPage() {
         title="Student Portfolios"
         description="Discover engineering students and graduates open to internships and full-time roles."
       >
-        <Link href="/portfolios/build" className="inline-flex h-11 items-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 hover:brightness-110">
+        <Link href="/portfolios/build" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition-all hover:brightness-110 active:scale-95">
           Build your portfolio
         </Link>
       </PageHero>

@@ -24,8 +24,9 @@ export function PageHero({
     return (
       <section className={cn("hero-dark relative overflow-hidden border-b border-white/10", className)}>
         <div className="bg-grid absolute inset-0 opacity-30" />
+        <div className="animate-float absolute right-0 top-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-6 px-4 py-16 sm:px-6 sm:flex-row sm:items-end">
-          <div>
+          <div className="animate-fade-up">
             {backHref && (
               <Link href={backHref} className="text-sm font-medium text-primary hover:underline">
                 {backLabel ?? "← Back"}
@@ -47,8 +48,8 @@ export function PageHero({
   if (variant === "forum") {
     return (
       <section className={cn("border-b border-border bg-surface", className)}>
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">Community</p>
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 animate-fade-up">
+          <p className="section-label">Community</p>
           <h1 className="font-display mt-2 text-4xl tracking-tight sm:text-5xl">{title}</h1>
           {description && <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
@@ -60,13 +61,13 @@ export function PageHero({
   if (variant === "editorial") {
     return (
       <section className={cn("border-b border-border", className)}>
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 animate-fade-up">
           {backHref && (
-            <Link href={backHref} className="text-sm font-medium text-primary hover:underline">
+            <Link href={backHref} className="text-sm font-medium text-accent hover:underline">
               {backLabel ?? "← Back"}
             </Link>
           )}
-          <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-primary">Industry News</p>
+          <p className="section-label mt-4">Industry News</p>
           <h1 className="font-display mt-2 max-w-4xl text-4xl leading-tight tracking-tight sm:text-5xl">{title}</h1>
           {description && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
@@ -77,7 +78,7 @@ export function PageHero({
 
   return (
     <section className={cn("gradient-hero border-b border-border", className)}>
-      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-4 py-14 sm:px-6 sm:flex-row sm:items-end">
+      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-4 py-14 sm:px-6 sm:flex-row sm:items-end animate-fade-up">
         <div>
           <h1 className="font-display text-4xl tracking-tight sm:text-5xl">{title}</h1>
           {description && <p className="mt-3 max-w-2xl text-lg leading-relaxed text-muted-foreground">{description}</p>}

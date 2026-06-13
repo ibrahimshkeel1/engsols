@@ -13,7 +13,7 @@ export default async function ForumPage() {
         title="Engineering Forum"
         description="Ask questions, share knowledge, and learn from mentors and peers."
       >
-        <Link href="/forum/new" className="inline-flex h-11 items-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 hover:brightness-110">
+        <Link href="/forum/new" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition-all hover:brightness-110 active:scale-95">
           Ask a question
         </Link>
       </PageHero>

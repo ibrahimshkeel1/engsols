@@ -1,3 +1,7 @@
+"use client";
+
+import { AnimateIn } from "@/components/motion/AnimateIn";
+
 export function SocialProof() {
   const stats = [
     { value: "22+", label: "Vetted mentors" },
@@ -9,11 +13,13 @@ export function SocialProof() {
   return (
     <section className="border-b border-border bg-surface">
       <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-y divide-border sm:grid-cols-4 sm:divide-y-0">
-        {stats.map((s) => (
-          <div key={s.label} className="px-6 py-8 text-center sm:py-10">
-            <p className="font-display text-3xl text-primary sm:text-4xl">{s.value}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
-          </div>
+        {stats.map((s, i) => (
+          <AnimateIn key={s.label} delay={i * 0.08} y={16}>
+            <div className="px-6 py-8 text-center sm:py-10">
+              <p className="font-display text-3xl text-accent sm:text-4xl">{s.value}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
+            </div>
+          </AnimateIn>
         ))}
       </div>
     </section>

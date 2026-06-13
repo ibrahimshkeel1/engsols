@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="hero-dark border-t border-white/10">
+    <footer className="footer-dark border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
@@ -14,27 +14,27 @@ export function Footer() {
             </p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Mentorship</p>
+            <p className="section-label">Mentorship</p>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
-              <li><Link href="/mentors" className="hover:text-white">Find mentors</Link></li>
-              <li><Link href="/apply" className="hover:text-white">Become a mentor</Link></li>
-              <li><Link href="/mentor" className="hover:text-white">Mentor panel</Link></li>
+              <li><Link href="/mentors" className="transition-colors hover:text-white">Find mentors</Link></li>
+              <li><Link href="/apply" className="transition-colors hover:text-white">Become a mentor</Link></li>
+              <li><Link href="/mentor" className="transition-colors hover:text-white">Mentor panel</Link></li>
             </ul>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Careers</p>
+            <p className="section-label">Careers</p>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
-              <li><Link href="/portfolios" className="hover:text-white">Portfolios</Link></li>
-              <li><Link href="/jobs" className="hover:text-white">Jobs</Link></li>
-              <li><Link href="/certifications" className="hover:text-white">Certifications</Link></li>
+              <li><Link href="/portfolios" className="transition-colors hover:text-white">Portfolios</Link></li>
+              <li><Link href="/jobs" className="transition-colors hover:text-white">Jobs</Link></li>
+              <li><Link href="/certifications" className="transition-colors hover:text-white">Certifications</Link></li>
             </ul>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">Community</p>
+            <p className="section-label">Community</p>
             <ul className="mt-4 space-y-3 text-sm text-white/60">
-              <li><Link href="/forum" className="hover:text-white">Forum</Link></li>
-              <li><Link href="/live" className="hover:text-white">Live</Link></li>
-              <li><Link href="/news" className="hover:text-white">News</Link></li>
+              <li><Link href="/forum" className="transition-colors hover:text-white">Forum</Link></li>
+              <li><Link href="/live" className="transition-colors hover:text-white">Live</Link></li>
+              <li><Link href="/news" className="transition-colors hover:text-white">News</Link></li>
             </ul>
           </div>
         </div>
