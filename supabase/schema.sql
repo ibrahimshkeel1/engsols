@@ -133,6 +133,20 @@ create table if not exists news_articles (
   created_at timestamptz not null default now()
 );
 
+-- Booking requests (intro calls & mentorship)
+create table if not exists booking_requests (
+  id uuid primary key default gen_random_uuid(),
+  mentor_slug text not null,
+  mentor_name text not null,
+  requester_name text not null,
+  requester_email text not null,
+  message text not null default '',
+  request_type text not null default 'intro',
+  user_id uuid references profiles(id) on delete set null,
+  status text not null default 'pending',
+  created_at timestamptz not null default now()
+);
+
 -- Indexes
 create index if not exists idx_mentor_profiles_status on mentor_profiles(status);
 create index if not exists idx_mentor_profiles_discipline on mentor_profiles(discipline);
@@ -150,6 +164,12 @@ alter table forum_posts enable row level security;
 alter table forum_replies enable row level security;
 alter table live_sessions enable row level security;
 alter table news_articles enable row level security;
+
+-- Booking requests
+alter table booking_requests enable row level security;
+create policy "Users read own bookings" on booking_requests for select using (auth.uid() = user_id or exists (select 1 from profiles where id = auth.uid() and role = 'admin'));
+create policy "Anyone can request booking" on booking_requests for insert with check (true);
+create policy "Admins manage bookings" on booking_requests for all using (exists (select 1 from profiles where id = auth.uid() and role = 'admin'));
 
 -- Profiles policies
 create policy "Public profiles read" on profiles for select using (true);

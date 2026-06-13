@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { requireRole } from "@/lib/auth";
 
 function slugify(text: string) {
@@ -30,7 +31,7 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
-  redirect("/login?message=Check your email to confirm your account");
+  redirect("/login?message=Check your email to confirm your account, then complete onboarding");
 }
 
 export async function signIn(formData: FormData) {
@@ -41,15 +42,35 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
-    .eq("id", (await supabase.auth.getUser()).data.user?.id ?? "")
+    .eq("id", user.id)
     .single();
 
   if (profile?.role === "admin") redirect("/admin");
-  if (profile?.role === "mentor") redirect("/mentor");
-  redirect("/portfolios/build");
+
+  if (profile?.role === "mentor") {
+    const { data: mentorProfile } = await supabase
+      .from("mentor_profiles")
+      .select("status")
+      .eq("user_id", user.id)
+      .single();
+    if (!mentorProfile) redirect("/onboarding/mentor");
+    if (mentorProfile.status === "approved") redirect("/mentor");
+    redirect("/apply");
+  }
+
+  const { data: portfolio } = await supabase
+    .from("portfolios")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+  if (!portfolio) redirect("/onboarding/student");
+  redirect("/");
 }
 
 export async function signOut() {
@@ -272,4 +293,139 @@ export async function createNewsArticle(formData: FormData) {
   revalidatePath("/news");
   revalidatePath("/admin");
   redirect("/admin/news");
+}
+
+async function insertContactRequest(fields: {
+  refSlug: string;
+  refName: string;
+  requesterName: string;
+  requesterEmail: string;
+  message: string;
+  requestType: string;
+}) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  await supabase.from("booking_requests").insert({
+    mentor_slug: fields.refSlug,
+    mentor_name: fields.refName,
+    requester_name: fields.requesterName,
+    requester_email: fields.requesterEmail,
+    message: fields.message,
+    request_type: fields.requestType,
+    user_id: user?.id ?? null,
+  });
+}
+
+export async function submitBookingRequest(formData: FormData) {
+  const mentorSlug = formData.get("mentorSlug") as string;
+  const mentorName = formData.get("mentorName") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const message = formData.get("message") as string;
+  const type = formData.get("type") as string;
+
+  await insertContactRequest({
+    refSlug: mentorSlug,
+    refName: mentorName,
+    requesterName: name,
+    requesterEmail: email,
+    message,
+    requestType: type,
+  });
+  return { success: true };
+}
+
+export async function submitPortfolioContact(formData: FormData) {
+  await insertContactRequest({
+    refSlug: formData.get("portfolioSlug") as string,
+    refName: formData.get("studentName") as string,
+    requesterName: formData.get("name") as string,
+    requesterEmail: formData.get("email") as string,
+    message: formData.get("message") as string,
+    requestType: "portfolio",
+  });
+  return { success: true };
+}
+
+export async function submitJobApplication(formData: FormData) {
+  const jobTitle = formData.get("jobTitle") as string;
+  const company = formData.get("company") as string;
+  await insertContactRequest({
+    refSlug: formData.get("jobSlug") as string,
+    refName: `${jobTitle} @ ${company}`,
+    requesterName: formData.get("name") as string,
+    requesterEmail: formData.get("email") as string,
+    message: formData.get("message") as string,
+    requestType: "job_application",
+  });
+  return { success: true };
+}
+
+export async function submitMarketplaceInquiry(formData: FormData) {
+  const listingTitle = formData.get("listingTitle") as string;
+  await insertContactRequest({
+    refSlug: formData.get("listingSlug") as string,
+    refName: listingTitle,
+    requesterName: formData.get("name") as string,
+    requesterEmail: formData.get("email") as string,
+    message: formData.get("message") as string,
+    requestType: formData.get("type") as string === "contact" ? "marketplace_contact" : "marketplace_quote",
+  });
+  return { success: true };
+}
+
+export async function completeStudentOnboarding(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/onboarding/student");
+
+  const discipline = formData.get("discipline") as string;
+  const goal = formData.get("goal") as string;
+  const university = formData.get("university") as string;
+
+  await supabase.from("profiles").update({
+    full_name: formData.get("fullName") as string || undefined,
+  }).eq("id", user.id);
+
+  const headline = formData.get("headline") as string;
+  const slug = `${slugify(headline || user.id)}-${user.id.slice(0, 8)}`;
+
+  const { data: existing } = await supabase
+    .from("portfolios")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  const payload = {
+    user_id: user.id,
+    slug,
+    headline: headline || goal,
+    university: university || "",
+    discipline,
+    bio: `Looking for mentorship in ${discipline}. Goal: ${goal}.`,
+    skills: [] as string[],
+    published: false,
+    open_to_work: true,
+    seeking: "full-time",
+    location: "",
+    credentials: [] as string[],
+  };
+
+  if (existing) {
+    await supabase.from("portfolios").update(payload).eq("user_id", user.id);
+  } else {
+    await supabase.from("portfolios").insert(payload);
+  }
+
+  redirect("/portfolios/build");
+}
+
+export async function completeMentorOnboarding(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/onboarding/mentor");
+
+  await supabase.from("profiles").update({ role: "mentor" }).eq("id", user.id);
+  redirect("/apply");
 }

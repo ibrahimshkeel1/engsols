@@ -6,6 +6,7 @@ import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
+import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
 export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const searchParams = useSearchParams();
@@ -26,26 +27,35 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   );
 
   return (
-    <>
-      <MentorFilters
-        search={search}
-        discipline={discipline}
-        goal={goal}
-        sort={sort}
-        onSearchChange={setSearch}
-        onDisciplineChange={setDiscipline}
-        onGoalChange={setGoal}
-        onSortChange={setSort}
-      />
-      <p className="mt-6 text-sm text-muted-foreground">{filtered.length} mentors found</p>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((mentor) => (
-          <MentorCard key={mentor.slug} mentor={mentor} />
-        ))}
+    <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-10">
+      <aside className="lg:sticky lg:top-24 lg:self-start">
+        <MentorFilters
+          search={search}
+          discipline={discipline}
+          goal={goal}
+          sort={sort}
+          onSearchChange={setSearch}
+          onDisciplineChange={setDiscipline}
+          onGoalChange={setGoal}
+          onSortChange={setSort}
+        />
+        <p className="mt-4 hidden text-sm text-muted-foreground lg:block">
+          {filtered.length} mentors match your filters
+        </p>
+      </aside>
+      <div>
+        <p className="mb-6 text-sm text-muted-foreground lg:hidden">{filtered.length} mentors found</p>
+        <Stagger className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" stagger={0.06}>
+          {filtered.map((mentor) => (
+            <StaggerItem key={mentor.slug}>
+              <MentorCard mentor={mentor} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+        {filtered.length === 0 && (
+          <p className="py-16 text-center text-muted-foreground">No mentors match your filters.</p>
+        )}
       </div>
-      {filtered.length === 0 && (
-        <p className="mt-12 text-center text-muted-foreground">No mentors match your filters. Try adjusting your search.</p>
-      )}
-    </>
+    </div>
   );
 }

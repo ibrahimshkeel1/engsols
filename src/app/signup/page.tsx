@@ -8,8 +8,9 @@ export default function SignupPage() {
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
-        <h1 className="text-center text-3xl font-bold">Join EngSols</h1>
-        <p className="mt-2 text-center text-muted-foreground">Create your account to get started</p>
+        <p className="text-center section-label">Get started</p>
+        <h1 className="mt-2 text-center font-display text-3xl tracking-tight">Join EngSols</h1>
+        <p className="mt-2 text-center text-muted-foreground">Students get mentorship. Professionals can apply to mentor.</p>
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
             <form action={signUp} className="space-y-4">
@@ -23,7 +24,7 @@ export default function SignupPage() {
               </div>
               <div>
                 <label className="text-sm font-medium">Password</label>
-                <Input name="password" required type="password" minLength={8} className="mt-1.5" />
+                <Input name="password" required type="password" minLength={8} placeholder="At least 8 characters" className="mt-1.5" />
               </div>
               <div>
                 <label className="text-sm font-medium">I am a...</label>

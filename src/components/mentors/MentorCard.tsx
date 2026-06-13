@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, ArrowRight, BadgeCheck } from "lucide-react";
 import type { Mentor } from "@/types";
-import { avatarUrl } from "@/lib/utils";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { Avatar } from "@/components/ui/Avatar";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 
 type MentorCardProps = {
@@ -25,14 +25,7 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
         <div className="relative flex flex-1 flex-col p-5 pl-6">
           <div className="flex items-start gap-4">
             <div className="relative">
-              <Image
-                src={avatarUrl(mentor.name)}
-                alt={mentor.name}
-                width={52}
-                height={52}
-                className="rounded-xl ring-2 ring-border transition-transform duration-300 group-hover:scale-105"
-                unoptimized
-              />
+              <Avatar name={mentor.name} discipline={mentor.discipline} size="md" />
               {mentor.featured && (
                 <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-sm">
                   <BadgeCheck className="h-3 w-3" />
@@ -47,7 +40,10 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
               </div>
               <h3 className="mt-0.5 truncate font-semibold">{mentor.name}</h3>
               <p className="truncate text-sm text-muted-foreground">{mentor.headline}</p>
-              <p className="text-xs text-muted-foreground">{mentor.company} · {mentor.yearsExperience} yrs</p>
+              <div className="mt-1 flex items-center gap-1.5">
+                <CompanyLogo company={mentor.company} size="sm" />
+                <p className="truncate text-xs text-muted-foreground">{mentor.company}</p>
+              </div>
             </div>
           </div>
 

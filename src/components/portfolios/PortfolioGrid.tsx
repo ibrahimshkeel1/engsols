@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Portfolio } from "@/types";
 import { disciplines } from "@/data/disciplines";
-import { avatarUrl } from "@/lib/utils";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Input, Select } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -47,7 +46,7 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
               <div className={cn("w-1 shrink-0", stripe)} />
               <div className="flex-1 p-5">
                 <div className="flex items-start gap-4">
-                  <Image src={avatarUrl(p.name)} alt="" width={52} height={52} className="rounded-xl ring-2 ring-border" unoptimized />
+                  <Avatar name={p.name} discipline={p.discipline} size="md" />
                   <div>
                     {p.openToWork && (
                       <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">

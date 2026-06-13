@@ -1,14 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
-import { avatarUrl } from "@/lib/utils";
 import { videoThumbnail } from "@/lib/placeholders";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type Session = {
   slug: string;
@@ -20,6 +20,7 @@ type Session = {
   viewerCount?: number;
   hostName?: string;
   hostSlug?: string;
+  hostDiscipline?: string;
 };
 
 export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
@@ -76,7 +77,7 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
                 <h3 className="mt-3 font-semibold group-hover:text-primary">{stream.title}</h3>
                 {stream.hostName && (
                   <div className="mt-3 flex items-center gap-2">
-                    <Image src={avatarUrl(stream.hostName)} alt="" width={28} height={28} className="rounded-lg" unoptimized />
+                    <Avatar name={stream.hostName} discipline={stream.hostDiscipline ?? stream.discipline} size="sm" />
                     <span className="text-sm text-muted-foreground">{stream.hostName}</span>
                   </div>
                 )}

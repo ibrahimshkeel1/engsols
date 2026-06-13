@@ -1,12 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getLiveSession } from "@/lib/data/live";
 import { getMentorBySlug } from "@/lib/data/mentors";
-import { avatarUrl } from "@/lib/utils";
 import { videoThumbnail } from "@/lib/placeholders";
-import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/Avatar";
+import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { MockMediaPlayer } from "@/components/shared/MockMediaPlayer";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -20,7 +19,7 @@ export default async function LiveStreamPage({ params }: Props) {
   const hostName = "hostName" in stream ? stream.hostName : host?.name;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-5xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
       <MockMediaPlayer
         thumbnail={videoThumbnail(stream.title.slice(0, 24))}
         title={stream.title}
@@ -28,19 +27,19 @@ export default async function LiveStreamPage({ params }: Props) {
       />
       <div className="mt-8">
         <div className="flex flex-wrap gap-2">
-          <Badge>{stream.discipline}</Badge>
+          <DisciplineBadge discipline={stream.discipline} />
           {stream.status === "live" && (
-            <Badge className="bg-red-500/15 text-red-600 dark:text-red-400">
+            <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-600 dark:text-red-400">
               Live now · {stream.viewerCount} viewers
-            </Badge>
+            </span>
           )}
         </div>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight">{stream.title}</h1>
+        <h1 className="mt-4 font-display text-3xl tracking-tight">{stream.title}</h1>
         <p className="mt-4 text-muted-foreground">{stream.description}</p>
         <p className="mt-2 text-sm text-muted-foreground">{format(new Date(stream.scheduledAt), "MMMM d, yyyy h:mm a")}</p>
         {(host || hostName) && (
           <div className="card-elevated mt-8 flex items-center gap-4 rounded-2xl p-5">
-            <Image src={avatarUrl(hostName || "Host")} alt="" width={52} height={52} className="rounded-full" unoptimized />
+            <Avatar name={hostName || "Host"} discipline={host?.discipline ?? stream.discipline} size="md" />
             <div>
               <p className="font-semibold">{hostName}</p>
               {host && <p className="text-sm text-muted-foreground">{host.headline} at {host.company}</p>}

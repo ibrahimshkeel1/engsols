@@ -1,123 +1,140 @@
-import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star } from "lucide-react";
+import { Star, MessageSquare, Radio, Award } from "lucide-react";
 import { sessionTypes } from "@/data/sessionTypes";
 import { getSimilarMentors } from "@/lib/filter-mentors";
 import { getApprovedMentors, getMentorBySlug } from "@/lib/data/mentors";
-import { avatarUrl } from "@/lib/utils";
+import { getDisciplineColors } from "@/lib/discipline-colors";
+import { Avatar } from "@/components/ui/Avatar";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ComingSoonButton } from "@/components/shared/ComingSoonButton";
+import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
 import { SimilarMentors } from "@/components/mentors/SimilarMentors";
+import { cn } from "@/lib/utils";
 
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
+type PageProps = { params: Promise<{ slug: string }> };
 
 export default async function MentorProfilePage({ params }: PageProps) {
   const { slug } = await params;
   const mentor = await getMentorBySlug(slug);
-
   if (!mentor) notFound();
 
   const allMentors = await getApprovedMentors();
   const similar = getSimilarMentors(allMentors, mentor);
+  const stripe = getDisciplineColors(mentor.discipline).stripe;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <div className="grid gap-10 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="flex items-start gap-6">
-            <Image
-              src={avatarUrl(mentor.name)}
-              alt={mentor.name}
-              width={96}
-              height={96}
-              className="rounded-full ring-4 ring-border"
-              unoptimized
-            />
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-primary">
+    <div>
+      {/* Cover hero */}
+      <section className="hero-dark relative overflow-hidden border-b border-white/10">
+        <div className={cn("absolute inset-x-0 top-0 h-1", stripe)} />
+        <div className="bg-grid absolute inset-0 opacity-20" />
+        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
+            <Avatar name={mentor.name} discipline={mentor.discipline} size="xl" className="ring-4 ring-white/20" />
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5 text-primary">
                   <Star className="h-4 w-4 fill-current" />
-                  <span className="font-medium">{mentor.rating.toFixed(1)}</span>
+                  <span className="font-semibold">{mentor.rating.toFixed(1)}</span>
+                  <span className="text-sm text-white/50">({mentor.reviewCount} reviews)</span>
                 </div>
-                <span className="text-sm text-muted-foreground">({mentor.reviewCount} reviews)</span>
+                {mentor.featured && (
+                  <Badge className="bg-primary/20 text-primary">Featured mentor</Badge>
+                )}
               </div>
-              <h1 className="mt-1 text-3xl font-bold">{mentor.name}</h1>
-              <p className="text-lg text-muted-foreground">{mentor.headline}</p>
-              <p className="text-muted-foreground">{mentor.company} · {mentor.yearsExperience} years experience</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge className="bg-primary/10 text-primary">{mentor.discipline}</Badge>
+              <h1 className="font-display mt-2 text-4xl tracking-tight sm:text-5xl">{mentor.name}</h1>
+              <p className="mt-2 text-xl text-white/80">{mentor.headline}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <CompanyLogo company={mentor.company} />
+                <span className="text-white/70">{mentor.company}</span>
+                <span className="text-white/40">·</span>
+                <span className="text-white/70">{mentor.yearsExperience} years experience</span>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <DisciplineBadge discipline={mentor.discipline} />
                 {mentor.credentials.map((c) => (
-                  <Badge key={c}>{c}</Badge>
+                  <span key={c} className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-0.5 text-xs font-medium text-white/80">
+                    <Award className="h-3 w-3" />
+                    {c}
+                  </span>
                 ))}
               </div>
             </div>
           </div>
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold">About</h2>
-            <p className="mt-2 leading-relaxed text-muted-foreground">{mentor.bio}</p>
-          </div>
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold">Skills & expertise</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {mentor.skills.map((skill) => (
-                <Badge key={skill}>{skill}</Badge>
-              ))}
-            </div>
-          </div>
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold">Reviews</h2>
-            <div className="mt-4 space-y-4">
-              {mentor.reviews.map((review) => (
-                <Card key={review.author} className="card-elevated">
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-1 text-primary">
-                      {Array.from({ length: review.rating }).map((_, i) => (
-                        <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                      ))}
-                    </div>
-                    <p className="mt-2">&ldquo;{review.text}&rdquo;</p>
-                    <p className="mt-2 text-sm text-muted-foreground">— {review.author}, {review.role}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
         </div>
-        <div>
-          <Card className="card-elevated sticky top-24">
-            <CardContent className="p-6">
-              <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Free trial on first call</Badge>
-              <div className="mt-4">
-                <p className="text-sm text-muted-foreground">Monthly mentorship</p>
-                <p className="text-3xl font-bold">${mentor.monthlyRate}<span className="text-base font-normal">/mo</span></p>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-3">
+          <div className="space-y-10 lg:col-span-2">
+            {/* Activity signals */}
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { icon: MessageSquare, label: "Forum contributor", value: "Active" },
+                { icon: Radio, label: "Live sessions", value: "Hosts Q&As" },
+                { icon: Star, label: "Response time", value: "< 24 hrs" },
+              ].map((item) => (
+                <div key={item.label} className="card-elevated rounded-xl p-4">
+                  <item.icon className="h-5 w-5 text-accent" />
+                  <p className="mt-2 text-sm font-semibold">{item.value}</p>
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
+                </div>
+              ))}
+            </div>
+
+            <section>
+              <h2 className="text-xl font-semibold">About</h2>
+              <p className="mt-3 leading-relaxed text-muted-foreground">{mentor.bio}</p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold">Skills & expertise</h2>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {mentor.skills.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
               </div>
-              <div className="mt-4 border-t border-border pt-4">
-                <p className="text-sm text-muted-foreground">Introductory call</p>
-                <p className="font-semibold">Free</p>
-              </div>
-              <ComingSoonButton variant="accent" className="mt-6 w-full">
-                Book free intro call
-              </ComingSoonButton>
-              <ComingSoonButton variant="outline" className="mt-2 w-full">
-                Start monthly mentorship
-              </ComingSoonButton>
-              <div className="mt-6 space-y-3 border-t border-border pt-4">
-                <p className="text-sm font-medium">One-off sessions</p>
-                {sessionTypes.map((s) => (
-                  <div key={s.id} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{s.title}</span>
-                    <span className="font-medium">${s.price}</span>
+              {mentor.subFields.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-muted-foreground">Specializations</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {mentor.subFields.map((f) => (
+                      <span key={f} className="rounded-lg bg-muted px-3 py-1 text-sm">{f}</span>
+                    ))}
                   </div>
+                </div>
+              )}
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold">Reviews</h2>
+              <div className="mt-4 space-y-4">
+                {mentor.reviews.map((review) => (
+                  <Card key={review.author} className="card-elevated">
+                    <CardContent className="p-5">
+                      <div className="flex items-center gap-1 text-accent">
+                        {Array.from({ length: review.rating }).map((_, i) => (
+                          <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                        ))}
+                      </div>
+                      <p className="mt-3 leading-relaxed">&ldquo;{review.text}&rdquo;</p>
+                      <p className="mt-3 text-sm text-muted-foreground">— {review.author}, {review.role}</p>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </section>
+          </div>
+
+          <div>
+            <MentorBookingCard mentor={mentor} />
+          </div>
         </div>
+        <SimilarMentors mentors={similar} />
       </div>
-      <SimilarMentors mentors={similar} />
     </div>
   );
 }

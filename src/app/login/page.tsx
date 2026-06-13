@@ -12,8 +12,9 @@ export default async function LoginPage({ searchParams }: Props) {
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
-        <h1 className="text-center text-3xl font-bold">Welcome back</h1>
-        <p className="mt-2 text-center text-muted-foreground">Log in to your EngSols account</p>
+        <p className="text-center section-label">Welcome back</p>
+        <h1 className="mt-2 text-center font-display text-3xl tracking-tight">Sign in to EngSols</h1>
+        <p className="mt-2 text-center text-muted-foreground">Mentorship, portfolios, and your community in one place.</p>
         {params.message && (
           <p className="mt-4 rounded-xl bg-primary/10 px-4 py-3 text-center text-sm text-primary">{params.message}</p>
         )}

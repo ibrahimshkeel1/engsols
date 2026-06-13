@@ -1,94 +1,10 @@
-"use client";
-
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { jobs } from "@/data/jobs";
-import { disciplines } from "@/data/disciplines";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Suspense } from "react";
+import { JobsDirectory } from "@/components/jobs/JobsDirectory";
 
 export default function JobsPage() {
-  const searchParams = useSearchParams();
-  const [search, setSearch] = useState("");
-  const [type, setType] = useState("");
-  const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
-
-  const filtered = useMemo(() => {
-    let result = [...jobs];
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (j) =>
-          j.title.toLowerCase().includes(q) ||
-          j.company.toLowerCase().includes(q) ||
-          j.description.toLowerCase().includes(q),
-      );
-    }
-    if (type) result = result.filter((j) => j.type === type);
-    if (discipline) result = result.filter((j) => j.discipline === discipline);
-    result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-    return result;
-  }, [search, type, discipline]);
-
   return (
-    <div className="py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Engineering Jobs</h1>
-            <p className="mt-2 text-muted-foreground">Roles across oil & gas, drilling, reservoir, and applied engineering.</p>
-          </div>
-          <Link href="/jobs/post" className="inline-flex rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:brightness-110">
-            Post a job
-          </Link>
-        </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {(["", "full-time", "internship", "contract", "graduate-program"] as const).map((t) => (
-            <button
-              key={t || "all"}
-              onClick={() => setType(t)}
-              className={`rounded-lg px-3 py-1.5 text-sm capitalize ${type === t ? "bg-foreground text-white" : "bg-muted"}`}
-            >
-              {t ? t.replace("-", " ") : "All"}
-            </button>
-          ))}
-        </div>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Input placeholder="Search jobs..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
-          <select value={discipline} onChange={(e) => setDiscipline(e.target.value)} className="h-10 rounded-lg border border-border px-3 text-sm">
-            <option value="">All disciplines</option>
-            {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </div>
-        <div className="mt-8 space-y-3">
-          {filtered.map((job) => (
-            <Card key={job.slug}>
-              <CardContent className="py-4">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge className="capitalize">{job.type.replace("-", " ")}</Badge>
-                      {job.featured && <Badge className="bg-primary/10 text-primary">Featured</Badge>}
-                      <Badge>{job.discipline}</Badge>
-                    </div>
-                    <Link href={`/jobs/${job.slug}`} className="mt-2 block text-lg font-semibold text-foreground hover:text-primary">
-                      {job.title}
-                    </Link>
-                    <p className="text-muted-foreground">
-                      <Link href={`/companies/${job.companySlug}`} className="hover:text-primary">{job.company}</Link>
-                      {" · "}{job.location} · {job.remote}
-                    </p>
-                    {job.salaryRange && <p className="mt-1 text-sm font-medium text-foreground/90">{job.salaryRange}</p>}
-                  </div>
-                  <span className="text-xs text-muted-foreground">{job.postedAt}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </div>
+    <Suspense fallback={<p className="mx-auto max-w-7xl px-4 py-12 text-muted-foreground">Loading jobs...</p>}>
+      <JobsDirectory />
+    </Suspense>
   );
 }

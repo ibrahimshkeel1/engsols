@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPortfolio } from "@/lib/data/portfolios";
-import { avatarUrl } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/Avatar";
+import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ComingSoonButton } from "@/components/shared/ComingSoonButton";
+import { PortfolioContactForm } from "@/components/portfolios/PortfolioContactForm";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -15,25 +14,31 @@ export default async function PortfolioPage({ params }: Props) {
   if (!portfolio) notFound();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="flex items-start gap-4">
-            <Image src={avatarUrl(portfolio.name)} alt="" width={80} height={80} className="rounded-full ring-4 ring-border" unoptimized />
+            <Avatar name={portfolio.name} discipline={portfolio.discipline} size="lg" className="ring-4 ring-border" />
             <div>
-              {portfolio.openToWork && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Open to work</Badge>}
-              <h1 className="mt-2 text-3xl font-bold">{portfolio.name}</h1>
+              {portfolio.openToWork && (
+                <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                  Open to work
+                </span>
+              )}
+              <h1 className="mt-2 font-display text-3xl tracking-tight">{portfolio.name}</h1>
               <p className="text-lg text-muted-foreground">{portfolio.headline}</p>
               <p className="text-muted-foreground">{portfolio.university} · Class of {portfolio.graduationYear} · {portfolio.location}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                <Badge>{portfolio.discipline}</Badge>
-                <Badge className="capitalize">Seeking: {portfolio.seeking.replace("-", " ")}</Badge>
+                <DisciplineBadge discipline={portfolio.discipline} />
+                <span className="rounded-md bg-muted px-2 py-0.5 text-xs capitalize">Seeking: {portfolio.seeking.replace("-", " ")}</span>
               </div>
             </div>
           </div>
           <p className="mt-6 leading-relaxed text-foreground/90">{portfolio.bio}</p>
           <div className="mt-6 flex flex-wrap gap-2">
-            {portfolio.skills.map((s) => <Badge key={s}>{s}</Badge>)}
+            {portfolio.skills.map((s) => (
+              <span key={s} className="rounded-md bg-muted px-2 py-0.5 text-xs">{s}</span>
+            ))}
           </div>
           {portfolio.credentials.length > 0 && (
             <p className="mt-4 text-sm text-muted-foreground">Credentials: {portfolio.credentials.join(", ")}</p>
@@ -46,7 +51,9 @@ export default async function PortfolioPage({ params }: Props) {
                   <h3 className="font-semibold">{proj.title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{proj.description}</p>
                   <div className="mt-2 flex gap-2">
-                    {proj.tags.map((t) => <Badge key={t}>{t}</Badge>)}
+                    {proj.tags.map((t) => (
+                      <span key={t} className="rounded-md bg-muted px-2 py-0.5 text-xs">{t}</span>
+                    ))}
                     <span className="text-xs text-muted-foreground">{proj.year}</span>
                   </div>
                 </CardContent>
@@ -71,8 +78,12 @@ export default async function PortfolioPage({ params }: Props) {
         <div>
           <Card className="card-elevated sticky top-24">
             <CardContent className="p-6">
-              <ComingSoonButton variant="accent" className="w-full">Contact student</ComingSoonButton>
-              <Link href={`/jobs?discipline=${encodeURIComponent(portfolio.discipline)}`} className="mt-3 block text-center text-sm text-primary hover:underline">
+              <h3 className="font-semibold">Reach out</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Recruiters and mentors can contact {portfolio.name.split(" ")[0]} directly.</p>
+              <div className="mt-4">
+                <PortfolioContactForm portfolioSlug={portfolio.slug} studentName={portfolio.name} />
+              </div>
+              <Link href={`/jobs?discipline=${encodeURIComponent(portfolio.discipline)}`} className="mt-4 block text-center text-sm text-primary hover:underline">
                 Jobs in {portfolio.discipline} →
               </Link>
             </CardContent>

@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CommunityBottomNav } from "@/components/layout/CommunityBottomNav";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
@@ -38,8 +40,11 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-background text-foreground antialiased">
         <ThemeProvider>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-16 lg:pb-0">
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
+          <CommunityBottomNav />
           <Toaster position="bottom-center" richColors />
         </ThemeProvider>
       </body>
