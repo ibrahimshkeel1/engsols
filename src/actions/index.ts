@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ensureLiveKitRoom, deleteLiveKitRoom } from "@/lib/livekit/server";
 import { isLiveKitConfigured } from "@/lib/livekit/config";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { requireRole } from "@/lib/auth";
 
 function slugify(text: string) {
@@ -47,8 +47,9 @@ export async function signUp(formData: FormData) {
 }
 
 export async function signIn(formData: FormData) {
-  if (!isSupabaseConfigured()) {
-    redirect("/login?error=" + encodeURIComponent("Supabase is not connected. Add API keys in Vercel environment variables."));
+  const configError = getSupabaseConfigError();
+  if (configError) {
+    redirect("/login?error=" + encodeURIComponent(configError));
   }
 
   try {
@@ -64,7 +65,11 @@ export async function signIn(formData: FormData) {
 
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) {
-      redirect(`/login?error=${encodeURIComponent(authError.message)}`);
+      const message =
+        authError.message.includes("Invalid path specified in request URL")
+          ? "Supabase URL is misconfigured. In Vercel, set NEXT_PUBLIC_SUPABASE_URL to https://YOUR-PROJECT.supabase.co (no /rest/v1)."
+          : authError.message;
+      redirect(`/login?error=${encodeURIComponent(message)}`);
     }
 
     const { data: { user } } = await supabase.auth.getUser();

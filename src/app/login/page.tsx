@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signIn } from "@/actions";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +10,7 @@ type Props = { searchParams: Promise<{ message?: string; error?: string; next?: 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
   const supabaseReady = isSupabaseConfigured();
+  const configError = getSupabaseConfigError();
 
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
@@ -19,7 +20,7 @@ export default async function LoginPage({ searchParams }: Props) {
         <p className="mt-2 text-center text-muted-foreground">Mentorship, portfolios, and your community in one place.</p>
         {!supabaseReady && (
           <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800 dark:text-amber-200">
-            Supabase is not configured on this deployment. Add API keys in Vercel → Settings → Environment Variables.
+            {configError ?? "Supabase is not configured on this deployment. Add API keys in Vercel → Settings → Environment Variables."}
           </p>
         )}
         {params.message && (
