@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { mentors as mockMentors } from "@/data/mentors";
 import type { Mentor } from "@/types";
@@ -30,7 +31,9 @@ function dbToMentor(m: DbMentorProfile): Mentor {
 export async function getApprovedMentors(): Promise<Mentor[]> {
   if (!isSupabaseConfigured()) return mockMentors;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return mockMentors;
+
   const { data, error } = await supabase
     .from("mentor_profiles")
     .select("*, profiles(*)")
@@ -47,7 +50,9 @@ export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
     return mockMentors.find((m) => m.slug === slug) ?? null;
   }
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return mockMentors.find((m) => m.slug === slug) ?? null;
+
   const { data } = await supabase
     .from("mentor_profiles")
     .select("*, profiles(*)")

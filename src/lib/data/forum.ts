@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { forumPosts as mockPosts } from "@/data/forumPosts";
 import { forumReplies as mockReplies } from "@/data/forumReplies";
@@ -23,7 +24,9 @@ function toForumPost(p: DbForumPost): ForumPost {
 export async function getForumPosts(): Promise<ForumPost[]> {
   if (!isSupabaseConfigured()) return mockPosts;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return mockPosts;
+
   const { data: posts } = await supabase
     .from("forum_posts")
     .select("*, profiles(*)")
@@ -54,7 +57,13 @@ export async function getForumPost(slug: string) {
     return { post, replies, dbPost: null };
   }
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) {
+    const mock = mockPosts.find((p) => p.slug === slug);
+    if (!mock) return null;
+    return { post: mock, replies: mockReplies[slug] ?? [], dbPost: null };
+  }
+
   const { data: post } = await supabase
     .from("forum_posts")
     .select("*, profiles(*)")

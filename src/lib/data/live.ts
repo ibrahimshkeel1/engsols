@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { liveStreams as mockStreams } from "@/data/liveStreams";
 import { mentors } from "@/data/mentors";
@@ -36,7 +36,14 @@ export async function getLiveSessions() {
     }));
   }
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return mockStreams.map((s) => ({
+      ...s,
+      hostName: mentors.find((m) => m.slug === s.hostSlug)?.name,
+    }));
+  }
+
   const { data } = await supabase
     .from("live_sessions")
     .select("*, profiles(*), mentor_profiles(*), forum_posts(slug)")
@@ -53,14 +60,16 @@ export async function getLiveSessions() {
 
 export async function getLiveSession(slug: string) {
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("live_sessions")
-      .select("*, profiles(*), mentor_profiles(*), forum_posts(slug)")
-      .eq("slug", slug)
-      .single();
+    const supabase = createPublicClient();
+    if (supabase) {
+      const { data } = await supabase
+        .from("live_sessions")
+        .select("*, profiles(*), mentor_profiles(*), forum_posts(slug)")
+        .eq("slug", slug)
+        .single();
 
-    if (data) return toLiveStream(data as DbLiveSession);
+      if (data) return toLiveStream(data as DbLiveSession);
+    }
   }
 
   const sessions = await getLiveSessions();
@@ -70,7 +79,9 @@ export async function getLiveSession(slug: string) {
 export async function getLiveSessionForForumPost(forumPostId: string) {
   if (!isSupabaseConfigured()) return null;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return null;
+
   const { data } = await supabase
     .from("live_sessions")
     .select("*, profiles(*), mentor_profiles(*), forum_posts(slug)")
@@ -85,7 +96,8 @@ export async function getLiveSessionForForumPost(forumPostId: string) {
 
 export async function getLiveSessionsForHost(hostId: string) {
   if (!isSupabaseConfigured()) return [];
-  const supabase = await createClient();
+  const supabase = createPublicClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("live_sessions")
     .select("*, forum_posts(slug)")
