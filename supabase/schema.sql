@@ -250,10 +250,14 @@ create extension if not exists pgcrypto;
 
 do $$
 declare
-  admin_user_id uuid := 'a0000000-0000-4000-8000-000000000001';
+  admin_user_id uuid;
   admin_email text := 'admin@engsols.com';
 begin
-  if not exists (select 1 from auth.users where email = admin_email) then
+  select id into admin_user_id from auth.users where email = admin_email;
+
+  if admin_user_id is null then
+    admin_user_id := 'a0000000-0000-4000-8000-000000000001';
+
     insert into auth.users (
       id,
       instance_id,
@@ -265,11 +269,7 @@ begin
       raw_app_meta_data,
       raw_user_meta_data,
       created_at,
-      updated_at,
-      confirmation_token,
-      email_change,
-      email_change_token_new,
-      recovery_token
+      updated_at
     ) values (
       admin_user_id,
       '00000000-0000-0000-0000-000000000000',
@@ -281,11 +281,7 @@ begin
       '{"provider":"email","providers":["email"]}'::jsonb,
       '{"full_name":"admin","role":"admin"}'::jsonb,
       now(),
-      now(),
-      '',
-      '',
-      '',
-      ''
+      now()
     );
 
     insert into auth.identities (
@@ -306,7 +302,7 @@ begin
         'email_verified', true
       ),
       'email',
-      admin_user_id::text,
+      admin_email,
       now(),
       now(),
       now()
@@ -317,4 +313,8 @@ begin
   values (admin_user_id, admin_email, 'admin', 'admin')
   on conflict (id) do update
     set role = 'admin', full_name = 'admin', email = admin_email;
+
+  update public.profiles
+  set role = 'admin', full_name = 'admin'
+  where id = admin_user_id;
 end $$;

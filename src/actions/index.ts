@@ -16,6 +16,16 @@ function slugify(text: string) {
     .slice(0, 60);
 }
 
+function isNextRedirect(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string" &&
+    (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+  );
+}
+
 export async function signUp(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
@@ -37,43 +47,69 @@ export async function signUp(formData: FormData) {
 }
 
 export async function signIn(formData: FormData) {
-  const supabase = await createClient();
-  const emailInput = (formData.get("email") as string).trim();
-  const email = emailInput.includes("@") ? emailInput : `${emailInput}@engsols.com`;
-  const password = formData.get("password") as string;
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role === "admin") redirect("/admin");
-
-  if (profile?.role === "mentor") {
-    const { data: mentorProfile } = await supabase
-      .from("mentor_profiles")
-      .select("status")
-      .eq("user_id", user.id)
-      .single();
-    if (!mentorProfile) redirect("/onboarding/mentor");
-    if (mentorProfile.status === "approved") redirect("/mentor");
-    redirect("/apply");
+  if (!isSupabaseConfigured()) {
+    redirect("/login?error=" + encodeURIComponent("Supabase is not connected. Add API keys in Vercel environment variables."));
   }
 
-  const { data: portfolio } = await supabase
-    .from("portfolios")
-    .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!portfolio) redirect("/onboarding/student");
-  redirect("/");
+  try {
+    const supabase = await createClient();
+    const emailInput = ((formData.get("email") as string | null) ?? "").trim();
+    const password = (formData.get("password") as string | null) ?? "";
+
+    if (!emailInput || !password) {
+      redirect("/login?error=" + encodeURIComponent("Enter username and password"));
+    }
+
+    const email = emailInput.includes("@") ? emailInput : `${emailInput}@engsols.com`;
+
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) {
+      redirect(`/login?error=${encodeURIComponent(authError.message)}`);
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      redirect("/login?error=" + encodeURIComponent("Sign-in failed. Try again."));
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      redirect(`/login?error=${encodeURIComponent(profileError.message)}`);
+    }
+
+    revalidatePath("/", "layout");
+
+    if (profile?.role === "admin") redirect("/admin");
+
+    if (profile?.role === "mentor") {
+      const { data: mentorProfile } = await supabase
+        .from("mentor_profiles")
+        .select("status")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (!mentorProfile) redirect("/onboarding/mentor");
+      if (mentorProfile.status === "approved") redirect("/mentor");
+      redirect("/apply");
+    }
+
+    const { data: portfolio } = await supabase
+      .from("portfolios")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!portfolio) redirect("/onboarding/student");
+    redirect("/");
+  } catch (error) {
+    if (isNextRedirect(error)) throw error;
+    const message = error instanceof Error ? error.message : "Sign-in failed";
+    redirect(`/login?error=${encodeURIComponent(message)}`);
+  }
 }
 
 export async function signOut() {
