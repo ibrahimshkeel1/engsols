@@ -31,7 +31,7 @@ function MiniMentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
     <motion.div custom={index + 4} initial="hidden" animate="visible" variants={fadeUp}>
       <Link
         href={`/mentors/${mentor.slug}`}
-        className="card-interactive group relative flex gap-4 overflow-hidden rounded-2xl border-white/10 bg-white/5 p-4 backdrop-blur-sm"
+        className="group relative flex gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-white/15"
       >
         <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
         <Avatar name={mentor.name} discipline={mentor.discipline} size="md" className="ring-2 ring-white/20" />

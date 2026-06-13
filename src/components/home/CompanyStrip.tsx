@@ -1,25 +1,30 @@
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
-import { AnimateIn } from "@/components/motion/AnimateIn";
 
-const companies = ["Shell", "Schlumberger", "BP", "Chevron", "Halliburton", "ExxonMobil", "Wood"];
+const companies = ["Shell", "Schlumberger", "BP", "Chevron", "Halliburton", "ExxonMobil", "Wood", "TotalEnergies", "Baker Hughes", "Saipem"];
+
+function CompanyItem({ name }: { name: string }) {
+  return (
+    <div className="flex shrink-0 items-center gap-3 px-6 opacity-80 transition-opacity hover:opacity-100">
+      <CompanyLogo company={name} />
+      <span className="whitespace-nowrap text-sm font-medium text-muted-foreground">{name}</span>
+    </div>
+  );
+}
 
 export function CompanyStrip() {
+  const track = [...companies, ...companies];
+
   return (
     <section className="border-b border-border py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <AnimateIn>
-          <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Mentors from leading operators & service companies
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-            {companies.map((name) => (
-              <div key={name} className="flex items-center gap-2 opacity-80 transition hover:opacity-100">
-                <CompanyLogo company={name} />
-                <span className="hidden text-sm font-medium text-muted-foreground sm:inline">{name}</span>
-              </div>
-            ))}
-          </div>
-        </AnimateIn>
+      <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        Mentors from leading operators & service companies
+      </p>
+      <div className="marquee-fade relative mt-6 overflow-hidden">
+        <div className="animate-marquee-ltr flex w-max items-center">
+          {track.map((name, i) => (
+            <CompanyItem key={`${name}-${i}`} name={name} />
+          ))}
+        </div>
       </div>
     </section>
   );
