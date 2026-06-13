@@ -105,9 +105,17 @@ export type DbLiveSession = {
   scheduled_at: string;
   status: LiveStatus;
   stream_url: string | null;
+  room_name: string | null;
+  call_type: "scheduled" | "forum_instant" | "mentorship_1on1" | "group_qa";
+  forum_post_id: string | null;
+  booking_request_id: string | null;
+  max_participants: number;
+  access_mode: string;
+  ended_at: string | null;
   viewer_count: number;
   profiles?: DbProfile;
   mentor_profiles?: DbMentorProfile;
+  forum_posts?: { slug: string } | null;
 };
 
 export type DbNewsArticle = {

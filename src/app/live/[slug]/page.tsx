@@ -3,31 +3,48 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getLiveSession } from "@/lib/data/live";
 import { getMentorBySlug } from "@/lib/data/mentors";
+import { getCurrentUser } from "@/lib/auth";
+import { isLiveKitConfigured } from "@/lib/livekit/config";
 import { videoThumbnail } from "@/lib/placeholders";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
-import { MockMediaPlayer } from "@/components/shared/MockMediaPlayer";
+import { LiveSessionActions } from "@/components/live/LiveSessionActions";
+import Image from "next/image";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export default async function LiveStreamPage({ params }: Props) {
   const { slug } = await params;
-  const stream = await getLiveSession(slug);
+  const [stream, user] = await Promise.all([getLiveSession(slug), getCurrentUser()]);
   if (!stream) notFound();
 
   const host = stream.hostSlug ? await getMentorBySlug(stream.hostSlug) : null;
   const hostName = "hostName" in stream ? stream.hostName : host?.name;
+  const isHost = !!user && stream.hostId === user.id;
+  const liveKitConfigured = isLiveKitConfigured();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
-      <MockMediaPlayer
-        thumbnail={videoThumbnail(stream.title.slice(0, 24))}
-        title={stream.title}
-        live={stream.status === "live"}
-      />
+      <div className="relative aspect-video overflow-hidden rounded-2xl bg-muted">
+        <Image
+          src={videoThumbnail(stream.title.slice(0, 24))}
+          alt=""
+          fill
+          className="object-cover opacity-90"
+          unoptimized
+        />
+        {stream.status === "live" && (
+          <span className="absolute left-4 top-4 rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white">
+            LIVE
+          </span>
+        )}
+      </div>
       <div className="mt-8">
         <div className="flex flex-wrap gap-2">
           <DisciplineBadge discipline={stream.discipline} />
+          {stream.callType === "forum_instant" && (
+            <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium">From forum</span>
+          )}
           {stream.status === "live" && (
             <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-600 dark:text-red-400">
               Live now · {stream.viewerCount} viewers
@@ -36,7 +53,15 @@ export default async function LiveStreamPage({ params }: Props) {
         </div>
         <h1 className="mt-4 font-display text-3xl tracking-tight">{stream.title}</h1>
         <p className="mt-4 text-muted-foreground">{stream.description}</p>
-        <p className="mt-2 text-sm text-muted-foreground">{format(new Date(stream.scheduledAt), "MMMM d, yyyy h:mm a")}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {format(new Date(stream.scheduledAt), "MMMM d, yyyy h:mm a")}
+          {stream.endedAt && ` · Ended ${format(new Date(stream.endedAt), "MMM d, h:mm a")}`}
+        </p>
+        {stream.forumPostSlug && (
+          <Link href={`/forum/${stream.forumPostSlug}`} className="mt-2 inline-block text-sm text-primary hover:underline">
+            View forum discussion →
+          </Link>
+        )}
         {(host || hostName) && (
           <div className="card-elevated mt-8 flex items-center gap-4 rounded-2xl p-5">
             <Avatar name={hostName || "Host"} discipline={host?.discipline ?? stream.discipline} size="md" />
@@ -51,13 +76,14 @@ export default async function LiveStreamPage({ params }: Props) {
             </div>
           </div>
         )}
-        {stream.status === "live" ? (
-          <a href="#" className="mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground hover:brightness-110">
-            Join live
-          </a>
-        ) : (
-          <p className="mt-6 text-sm text-muted-foreground">Stream link will be available before the session starts.</p>
-        )}
+        <div className="mt-6">
+          <LiveSessionActions
+            slug={slug}
+            status={stream.status}
+            isHost={isHost}
+            liveKitConfigured={liveKitConfigured}
+          />
+        </div>
       </div>
     </div>
   );

@@ -80,10 +80,18 @@ export type LiveStream = {
   title: string;
   description: string;
   hostSlug: string;
+  hostId?: string;
   discipline: string;
   scheduledAt: string;
   status: "upcoming" | "live" | "ended";
   viewerCount: number;
+  roomName?: string;
+  callType?: "scheduled" | "forum_instant" | "mentorship_1on1" | "group_qa";
+  forumPostId?: string;
+  forumPostSlug?: string;
+  endedAt?: string;
+  maxParticipants?: number;
+  accessMode?: string;
 };
 
 export type Video = {

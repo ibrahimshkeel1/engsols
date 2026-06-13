@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getLiveSessionsForHost } from "@/lib/data/live";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function MentorLivePage() {
@@ -33,7 +32,7 @@ export default async function MentorLivePage() {
           </Card>
         )}
         {sessions.map((s) => (
-          <Card key={s.id} className="card-elevated">
+          <Card key={s.slug} className="card-elevated">
             <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="flex gap-2">
@@ -42,12 +41,19 @@ export default async function MentorLivePage() {
                 </div>
                 <h2 className="mt-2 font-semibold">{s.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {format(new Date(s.scheduled_at), "MMM d, yyyy h:mm a")}
+                  {format(new Date(s.scheduledAt), "MMM d, yyyy h:mm a")}
                 </p>
               </div>
-              <Link href={`/live/${s.slug}`} className="text-sm font-medium text-primary hover:underline">
-                View →
-              </Link>
+              <div className="flex gap-3">
+                <Link href={`/live/${s.slug}`} className="text-sm font-medium text-primary hover:underline">
+                  View →
+                </Link>
+                {s.status === "live" && (
+                  <Link href={`/live/${s.slug}/room`} className="text-sm font-medium text-primary hover:underline">
+                    Join room →
+                  </Link>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}

@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getForumPost } from "@/lib/data/forum";
+import { getLiveSessionForForumPost } from "@/lib/data/live";
 import { getApprovedMentors } from "@/lib/data/mentors";
+import { getCurrentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ForumReplyForm } from "@/components/forum/ForumReplyForm";
+import { ForumGoLiveButton } from "@/components/forum/ForumGoLiveButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,7 +19,11 @@ export default async function ForumThreadPage({ params }: Props) {
   if (!data) notFound();
 
   const { post, replies, dbPost } = data;
-  const mentors = await getApprovedMentors();
+  const [mentors, user, activeLive] = await Promise.all([
+    getApprovedMentors(),
+    getCurrentUser(),
+    dbPost?.id ? getLiveSessionForForumPost(dbPost.id) : Promise.resolve(null),
+  ]);
   const relatedMentors = mentors.filter((m) => m.discipline === post.discipline).slice(0, 3);
 
   return (
@@ -54,7 +61,26 @@ export default async function ForumThreadPage({ params }: Props) {
           </div>
           <ForumReplyForm postId={dbPost?.id} />
         </div>
-        <div>
+        <div className="space-y-6">
+          <Card className="card-elevated">
+            <CardContent className="p-6">
+              <h3 className="font-semibold">Live discussion</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Start a video call on this topic without leaving EngSols.
+              </p>
+              <div className="mt-4">
+                <ForumGoLiveButton
+                  postId={dbPost?.id ?? ""}
+                  postSlug={slug}
+                  title={post.title}
+                  description={post.body}
+                  discipline={post.discipline}
+                  isLoggedIn={!!user}
+                  activeLiveSlug={activeLive?.slug}
+                />
+              </div>
+            </CardContent>
+          </Card>
           <Card className="card-elevated">
             <CardContent className="p-6">
               <h3 className="font-semibold">Related mentors</h3>

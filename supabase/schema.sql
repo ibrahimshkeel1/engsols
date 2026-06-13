@@ -3,6 +3,7 @@
 create type user_role as enum ('student', 'mentor', 'admin');
 create type mentor_status as enum ('pending', 'approved', 'rejected');
 create type live_status as enum ('upcoming', 'live', 'ended');
+create type call_type as enum ('scheduled', 'forum_instant', 'mentorship_1on1', 'group_qa');
 
 -- Profiles (extends auth.users)
 create table if not exists profiles (
@@ -114,6 +115,12 @@ create table if not exists live_sessions (
   scheduled_at timestamptz not null,
   status live_status not null default 'upcoming',
   stream_url text,
+  room_name text,
+  call_type call_type not null default 'scheduled',
+  forum_post_id uuid references forum_posts(id) on delete set null,
+  max_participants integer not null default 50,
+  access_mode text not null default 'authenticated',
+  ended_at timestamptz,
   viewer_count integer not null default 0,
   created_at timestamptz not null default now()
 );
@@ -147,11 +154,16 @@ create table if not exists booking_requests (
   created_at timestamptz not null default now()
 );
 
+-- Link live sessions to bookings (booking_requests defined above in migration order)
+alter table live_sessions add column if not exists booking_request_id uuid references booking_requests(id) on delete set null;
+
 -- Indexes
 create index if not exists idx_mentor_profiles_status on mentor_profiles(status);
 create index if not exists idx_mentor_profiles_discipline on mentor_profiles(discipline);
 create index if not exists idx_forum_posts_created on forum_posts(created_at desc);
 create index if not exists idx_portfolios_published on portfolios(published);
+create index if not exists idx_live_sessions_status on live_sessions(status);
+create index if not exists idx_live_sessions_forum on live_sessions(forum_post_id);
 create index if not exists idx_news_published on news_articles(published, published_at desc);
 
 -- RLS
@@ -204,7 +216,7 @@ create policy "Auth users create replies" on forum_replies for insert with check
 
 -- Live sessions
 create policy "Live sessions public read" on live_sessions for select using (true);
-create policy "Mentors manage own sessions" on live_sessions for all using (auth.uid() = host_id);
+create policy "Hosts manage own sessions" on live_sessions for all using (auth.uid() = host_id);
 create policy "Admins manage sessions" on live_sessions for all using (exists (select 1 from profiles where id = auth.uid() and role = 'admin'));
 
 -- News

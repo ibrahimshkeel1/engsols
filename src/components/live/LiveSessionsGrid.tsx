@@ -21,6 +21,7 @@ type Session = {
   hostName?: string;
   hostSlug?: string;
   hostDiscipline?: string;
+  callType?: string;
 };
 
 export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
@@ -69,6 +70,11 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
                   <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-lg bg-red-600 px-2.5 py-1 text-xs font-bold text-white">
                     <span className="live-dot h-1.5 w-1.5 rounded-full bg-white" />
                     LIVE
+                  </span>
+                )}
+                {"callType" in stream && stream.callType === "forum_instant" && (
+                  <span className="absolute right-3 top-3 rounded-lg bg-black/60 px-2 py-1 text-xs text-white">
+                    Forum
                   </span>
                 )}
               </div>
