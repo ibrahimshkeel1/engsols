@@ -327,11 +327,23 @@ html.live-room-active main {
   width: 100%;
 }
 
-.live-kit-stage {
+.live-kit-stage,
+.live-video-conference-wrap {
   flex: 1;
   min-height: 0;
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.live-video-conference-wrap .lk-video-conference {
+  height: 100%;
+  min-height: 0;
+}
+
+.live-video-conference-wrap .lk-grid-layout-wrapper,
+.live-video-conference-wrap .lk-focus-layout-wrapper {
+  height: calc(100% - var(--lk-control-bar-height));
 }
 
 .live-participant-grid {
@@ -344,7 +356,8 @@ html.live-room-active main {
 }
 
 .live-video-shell .lk-participant-tile {
-  overflow: hidden;
+  min-height: 180px;
+  background: var(--lk-bg2, #1a1a1a);
 }
 
 .live-device-error {
@@ -354,14 +367,6 @@ html.live-room-active main {
   color: #fecaca;
   background: rgba(127, 29, 29, 0.85);
   border-bottom: 1px solid rgba(254, 202, 202, 0.2);
-}
-
-.live-video-shell video {
-  object-fit: cover;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .live-video-shell .lk-control-bar {
