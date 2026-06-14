@@ -1,16 +1,33 @@
 import Link from "next/link";
 import { signUp } from "@/actions";
+import { getSupabaseConfigError, isSupabaseConfigured } from "@/lib/supabase/config";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function SignupPage() {
+type Props = { searchParams: Promise<{ error?: string }> };
+
+export default async function SignupPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const supabaseReady = isSupabaseConfigured();
+  const configError = getSupabaseConfigError();
+
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
         <p className="text-center section-label">Get started</p>
         <h1 className="mt-2 text-center font-display text-3xl tracking-tight">Join EngSols</h1>
         <p className="mt-2 text-center text-muted-foreground">Students get mentorship. Professionals can apply to mentor.</p>
+        {!supabaseReady && (
+          <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800 dark:text-amber-200">
+            {configError ?? "Supabase is not configured on this deployment."}
+          </p>
+        )}
+        {params.error && (
+          <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-600">
+            {decodeURIComponent(params.error)}
+          </p>
+        )}
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
             <form action={signUp} className="space-y-4">

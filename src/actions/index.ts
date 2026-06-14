@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { User } from "@supabase/supabase-js";
 import { ensureLiveKitRoom, deleteLiveKitRoom } from "@/lib/livekit/server";
 import { isLiveKitConfigured } from "@/lib/livekit/config";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
+import { ensureUserProfile } from "@/lib/supabase/profile";
 import { requireRole } from "@/lib/auth";
 
 function slugify(text: string) {
@@ -26,24 +28,86 @@ function isNextRedirect(error: unknown) {
   );
 }
 
+async function redirectAfterSignIn(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  user: User,
+) {
+  const profile = await ensureUserProfile(supabase, user);
+
+  revalidatePath("/", "layout");
+
+  if (profile.role === "admin") redirect("/admin");
+
+  if (profile.role === "mentor") {
+    const { data: mentorProfile } = await supabase
+      .from("mentor_profiles")
+      .select("status")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!mentorProfile) redirect("/onboarding/mentor");
+    if (mentorProfile.status === "approved") redirect("/mentor");
+    redirect("/apply");
+  }
+
+  const { data: portfolio } = await supabase
+    .from("portfolios")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!portfolio) redirect("/onboarding/student");
+  redirect("/");
+}
+
 export async function signUp(formData: FormData) {
-  const supabase = await createClient();
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const fullName = formData.get("fullName") as string;
-  const role = formData.get("role") as string;
+  const configError = getSupabaseConfigError();
+  if (configError) {
+    redirect("/signup?error=" + encodeURIComponent(configError));
+  }
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { full_name: fullName, role },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback`,
-    },
-  });
+  try {
+    const supabase = await createClient();
+    const email = ((formData.get("email") as string | null) ?? "").trim();
+    const password = (formData.get("password") as string | null) ?? "";
+    const fullName = ((formData.get("fullName") as string | null) ?? "").trim();
+    const role = (formData.get("role") as string | null) ?? "student";
 
-  if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
-  redirect("/login?message=Check your email to confirm your account, then complete onboarding");
+    if (!email || !password || !fullName) {
+      redirect("/signup?error=" + encodeURIComponent("Fill in all required fields"));
+    }
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName, role },
+        emailRedirectTo: `${siteUrl}/auth/callback`,
+      },
+    });
+
+    if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+
+    if (data.user && data.session) {
+      await ensureUserProfile(supabase, data.user);
+      revalidatePath("/", "layout");
+
+      if (role === "mentor") redirect("/onboarding/mentor");
+      redirect("/onboarding/student");
+    }
+
+    redirect(
+      "/login?message=" +
+        encodeURIComponent(
+          "Account created. Check your email to confirm, then log in. (Or disable email confirmation in Supabase → Authentication → Providers → Email.)",
+        ),
+    );
+  } catch (error) {
+    if (isNextRedirect(error)) throw error;
+    const message = error instanceof Error ? error.message : "Sign-up failed";
+    redirect(`/signup?error=${encodeURIComponent(message)}`);
+  }
 }
 
 export async function signIn(formData: FormData) {
@@ -77,39 +141,7 @@ export async function signIn(formData: FormData) {
       redirect("/login?error=" + encodeURIComponent("Sign-in failed. Try again."));
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profileError) {
-      redirect(`/login?error=${encodeURIComponent(profileError.message)}`);
-    }
-
-    revalidatePath("/", "layout");
-
-    if (profile?.role === "admin") redirect("/admin");
-
-    if (profile?.role === "mentor") {
-      const { data: mentorProfile } = await supabase
-        .from("mentor_profiles")
-        .select("status")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (!mentorProfile) redirect("/onboarding/mentor");
-      if (mentorProfile.status === "approved") redirect("/mentor");
-      redirect("/apply");
-    }
-
-    const { data: portfolio } = await supabase
-      .from("portfolios")
-      .select("id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (!portfolio) redirect("/onboarding/student");
-    redirect("/");
+    await redirectAfterSignIn(supabase, user);
   } catch (error) {
     if (isNextRedirect(error)) throw error;
     const message = error instanceof Error ? error.message : "Sign-in failed";
@@ -563,6 +595,13 @@ export async function completeStudentOnboarding(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/onboarding/student");
 
+  try {
+    await ensureUserProfile(supabase, user);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not create profile";
+    redirect(`/onboarding/student?error=${encodeURIComponent(message)}`);
+  }
+
   const discipline = formData.get("discipline") as string;
   const goal = formData.get("goal") as string;
   const university = formData.get("university") as string;
@@ -578,7 +617,7 @@ export async function completeStudentOnboarding(formData: FormData) {
     .from("portfolios")
     .select("id")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   const payload = {
     user_id: user.id,
@@ -595,10 +634,12 @@ export async function completeStudentOnboarding(formData: FormData) {
     credentials: [] as string[],
   };
 
-  if (existing) {
-    await supabase.from("portfolios").update(payload).eq("user_id", user.id);
-  } else {
-    await supabase.from("portfolios").insert(payload);
+  const { error } = existing
+    ? await supabase.from("portfolios").update(payload).eq("user_id", user.id)
+    : await supabase.from("portfolios").insert(payload);
+
+  if (error) {
+    redirect(`/onboarding/student?error=${encodeURIComponent(error.message)}`);
   }
 
   redirect("/portfolios/build");

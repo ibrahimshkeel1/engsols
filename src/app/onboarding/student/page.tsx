@@ -5,12 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function StudentOnboardingPage() {
+type Props = { searchParams: Promise<{ error?: string }> };
+
+export default async function StudentOnboardingPage({ searchParams }: Props) {
+  const params = await searchParams;
+
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
       <p className="section-label">Step 1 of 2</p>
       <h1 className="font-display mt-2 text-3xl tracking-tight">Set up your profile</h1>
       <p className="mt-2 text-muted-foreground">Tell us about your goals so we can match you with the right mentors.</p>
+      {params.error && (
+        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+          {decodeURIComponent(params.error)}
+        </p>
+      )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
           <form action={completeStudentOnboarding} className="space-y-5">
