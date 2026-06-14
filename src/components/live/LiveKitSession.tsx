@@ -9,6 +9,7 @@ import {
   ControlBar,
   GridLayout,
   ParticipantTile,
+  LayoutContextProvider,
   useTracks,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
@@ -28,6 +29,47 @@ function ParticipantGrid() {
     <GridLayout tracks={tracks} className="live-participant-grid">
       <ParticipantTile />
     </GridLayout>
+  );
+}
+
+function LiveRoomInternals({
+  deviceError,
+  setDeviceError,
+}: {
+  deviceError: string | null;
+  setDeviceError: (message: string | null) => void;
+}) {
+  return (
+    <LayoutContextProvider>
+      {deviceError && (
+        <p className="live-device-error" role="alert">
+          {deviceError}
+        </p>
+      )}
+      <div className="live-kit-stage">
+        <ParticipantGrid />
+      </div>
+      <ControlBar
+        saveUserChoices={false}
+        controls={{
+          camera: true,
+          microphone: true,
+          screenShare: true,
+          chat: false,
+          settings: true,
+        }}
+        onDeviceError={({ source, error }) => {
+          const label =
+            source === Track.Source.Camera
+              ? "Camera"
+              : source === Track.Source.Microphone
+                ? "Microphone"
+                : "Device";
+          setDeviceError(`${label}: ${error.message}`);
+        }}
+      />
+      <RoomAudioRenderer />
+    </LayoutContextProvider>
   );
 }
 
@@ -56,29 +98,7 @@ const LiveKitSession = memo(function LiveKitSession({ serverUrl, token }: LiveKi
       }}
       onError={(error) => setDeviceError(error.message)}
     >
-      {deviceError && (
-        <p className="live-device-error" role="alert">
-          {deviceError}
-        </p>
-      )}
-      <div className="live-kit-stage">
-        <ParticipantGrid />
-      </div>
-      <ControlBar
-        saveUserChoices={false}
-        controls={{
-          camera: true,
-          microphone: true,
-          screenShare: true,
-          chat: false,
-          settings: true,
-        }}
-        onDeviceError={({ source, error }) => {
-          const label = source === Track.Source.Camera ? "Camera" : source === Track.Source.Microphone ? "Microphone" : "Device";
-          setDeviceError(`${label}: ${error.message}`);
-        }}
-      />
-      <RoomAudioRenderer />
+      <LiveRoomInternals deviceError={deviceError} setDeviceError={setDeviceError} />
     </LiveKitRoom>
   );
 });
