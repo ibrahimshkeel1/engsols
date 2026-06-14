@@ -297,22 +297,65 @@ body {
   color: var(--primary);
 }
 
-/* LiveKit — stable layout on desktop (reduces video flicker) */
+/* LiveKit — stable layout on desktop (reduces video flicker / blink) */
+html.live-room-active header,
+html.live-room-active footer,
+html.live-room-active nav.fixed {
+  display: none !important;
+}
+
+html.live-room-active main {
+  padding-bottom: 0 !important;
+}
+
+.live-room-container {
+  min-height: calc(100vh - 2rem);
+}
+
 .live-video-shell {
-  contain: layout style paint;
+  contain: strict;
   isolation: isolate;
-  min-height: 480px;
-  height: 70vh;
+  height: calc(100vh - 11rem);
+  min-height: 420px;
+  max-height: 900px;
   background: #0a1220;
 }
 
-.live-video-shell .lk-video-conference {
+.live-kit-room {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.live-kit-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.live-participant-grid {
   height: 100% !important;
-  min-height: 0 !important;
+  width: 100% !important;
+}
+
+.live-video-shell .lk-grid-layout {
+  height: 100% !important;
+}
+
+.live-video-shell .lk-participant-tile {
+  contain: layout style paint;
 }
 
 .live-video-shell video {
   object-fit: cover;
   transform: translateZ(0);
+  -webkit-transform: translateZ(0);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.live-video-shell .lk-control-bar {
+  flex-shrink: 0;
 }

@@ -19,7 +19,7 @@ export default async function LiveRoomPage({ params }: Props) {
   const isHost = stream.hostId === user.id;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 pb-24 sm:px-6 lg:pb-12">
+    <div className="live-room-container mx-auto max-w-6xl px-4 py-4 sm:px-6">
       <LiveRoomClient slug={slug} title={stream.title} isHost={isHost} />
     </div>
   );
