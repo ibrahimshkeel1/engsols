@@ -1,4 +1,4 @@
-import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
+import { AccessToken, RoomServiceClient, TrackSource } from "livekit-server-sdk";
 import { getLiveKitUrl, isLiveKitConfigured } from "./config";
 
 function getCredentials() {
@@ -56,6 +56,12 @@ export async function createParticipantToken(
     roomJoin: true,
     canPublish: true,
     canSubscribe: true,
+    canPublishSources: [
+      TrackSource.CAMERA,
+      TrackSource.MICROPHONE,
+      TrackSource.SCREEN_SHARE,
+      TrackSource.SCREEN_SHARE_AUDIO,
+    ],
     roomAdmin: isHost,
   });
 

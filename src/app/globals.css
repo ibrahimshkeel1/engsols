@@ -313,7 +313,6 @@ html.live-room-active main {
 }
 
 .live-video-shell {
-  contain: strict;
   isolation: isolate;
   height: calc(100vh - 11rem);
   min-height: 420px;
@@ -345,7 +344,16 @@ html.live-room-active main {
 }
 
 .live-video-shell .lk-participant-tile {
-  contain: layout style paint;
+  overflow: hidden;
+}
+
+.live-device-error {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.85);
+  border-bottom: 1px solid rgba(254, 202, 202, 0.2);
 }
 
 .live-video-shell video {
@@ -358,4 +366,6 @@ html.live-room-active main {
 
 .live-video-shell .lk-control-bar {
   flex-shrink: 0;
+  position: relative;
+  z-index: 20;
 }

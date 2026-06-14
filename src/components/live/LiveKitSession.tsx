@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import type { RoomOptions } from "livekit-client";
 import { Track } from "livekit-client";
 import {
@@ -13,13 +13,10 @@ import {
 } from "@livekit/components-react";
 import "@livekit/components-styles";
 
-/** Stable options — do not inline; LiveKit recreates the room if this object changes. */
+/** Stable options — must be module-level so LiveKit does not recreate the room. */
 const ROOM_OPTIONS: RoomOptions = {
   adaptiveStream: false,
   dynacast: false,
-  videoCaptureDefaults: {
-    resolution: { width: 1280, height: 720, frameRate: 24 },
-  },
 };
 
 function ParticipantGrid() {
@@ -40,6 +37,8 @@ type LiveKitSessionProps = {
 };
 
 const LiveKitSession = memo(function LiveKitSession({ serverUrl, token }: LiveKitSessionProps) {
+  const [deviceError, setDeviceError] = useState<string | null>(null);
+
   return (
     <LiveKitRoom
       serverUrl={serverUrl}
@@ -50,11 +49,35 @@ const LiveKitSession = memo(function LiveKitSession({ serverUrl, token }: LiveKi
       options={ROOM_OPTIONS}
       data-lk-theme="default"
       className="live-kit-room"
+      onMediaDeviceFailure={(failure) => {
+        if (failure) {
+          setDeviceError("Camera or microphone blocked. Check browser permissions for this site.");
+        }
+      }}
+      onError={(error) => setDeviceError(error.message)}
     >
+      {deviceError && (
+        <p className="live-device-error" role="alert">
+          {deviceError}
+        </p>
+      )}
       <div className="live-kit-stage">
         <ParticipantGrid />
       </div>
-      <ControlBar controls={{ chat: false, settings: false, screenShare: true }} />
+      <ControlBar
+        saveUserChoices={false}
+        controls={{
+          camera: true,
+          microphone: true,
+          screenShare: true,
+          chat: false,
+          settings: true,
+        }}
+        onDeviceError={({ source, error }) => {
+          const label = source === Track.Source.Camera ? "Camera" : source === Track.Source.Microphone ? "Microphone" : "Device";
+          setDeviceError(`${label}: ${error.message}`);
+        }}
+      />
       <RoomAudioRenderer />
     </LiveKitRoom>
   );
