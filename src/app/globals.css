@@ -296,3 +296,23 @@ body {
 .footer-dark .section-label {
   color: var(--primary);
 }
+
+/* LiveKit — stable layout on desktop (reduces video flicker) */
+.live-video-shell {
+  contain: layout style paint;
+  isolation: isolate;
+  min-height: 480px;
+  height: 70vh;
+  background: #0a1220;
+}
+
+.live-video-shell .lk-video-conference {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.live-video-shell video {
+  object-fit: cover;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

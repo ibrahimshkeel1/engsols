@@ -2,14 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  LiveKitRoom,
-  RoomAudioRenderer,
-  VideoConference,
-} from "@livekit/components-react";
-import "@livekit/components-styles";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LiveKitSession } from "./LiveKitSession";
 
 type LiveVideoRoomProps = {
   slug: string;
@@ -97,18 +92,8 @@ export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVi
           )}
         </div>
       </div>
-      <div className="overflow-hidden rounded-2xl border border-border [&_.lk-video-conference]:min-h-[60vh]">
-        <LiveKitRoom
-          serverUrl={serverUrl}
-          token={token}
-          connect
-          audio
-          video
-          data-lk-theme="default"
-        >
-          <VideoConference />
-          <RoomAudioRenderer />
-        </LiveKitRoom>
+      <div className="live-video-shell overflow-hidden rounded-2xl border border-border">
+        <LiveKitSession serverUrl={serverUrl} token={token} />
       </div>
     </div>
   );
