@@ -1,6 +1,7 @@
 import { completeStudentOnboarding } from "@/actions";
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
+import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,7 +18,7 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
       <p className="mt-2 text-muted-foreground">Tell us about your goals so we can match you with the right mentors.</p>
       {params.error && (
         <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
-          {decodeURIComponent(params.error)}
+          {safeDecodeURIComponent(params.error)}
         </p>
       )}
       <Card className="card-elevated mt-8">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signUp } from "@/actions";
 import { getSupabaseConfigError, isSupabaseConfigured } from "@/lib/supabase/config";
+import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,7 +26,7 @@ export default async function SignupPage({ searchParams }: Props) {
         )}
         {params.error && (
           <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-600">
-            {decodeURIComponent(params.error)}
+            {safeDecodeURIComponent(params.error)}
           </p>
         )}
         <Card className="card-elevated mt-8">

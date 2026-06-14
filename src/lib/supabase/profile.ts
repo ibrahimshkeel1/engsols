@@ -15,15 +15,18 @@ export async function ensureUserProfile(supabase: SupabaseClient, user: User) {
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .insert({
-      id: user.id,
-      email: user.email ?? "",
-      full_name: (user.user_metadata?.full_name as string | undefined) ?? "",
-      role,
-    })
+    .upsert(
+      {
+        id: user.id,
+        email: user.email ?? "",
+        full_name: (user.user_metadata?.full_name as string | undefined) ?? "",
+        role,
+      },
+      { onConflict: "id", ignoreDuplicates: false },
+    )
     .select("id, role")
     .single();
 
-  if (error) throw error;
+  if (error || !profile) throw error ?? new Error("Could not create profile");
   return profile;
 }

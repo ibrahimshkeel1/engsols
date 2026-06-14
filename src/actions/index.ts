@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { User } from "@supabase/supabase-js";
-import { ensureLiveKitRoom, deleteLiveKitRoom } from "@/lib/livekit/server";
 import { isLiveKitConfigured } from "@/lib/livekit/config";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { ensureUserProfile } from "@/lib/supabase/profile";
@@ -32,7 +31,15 @@ async function redirectAfterSignIn(
   supabase: Awaited<ReturnType<typeof createClient>>,
   user: User,
 ) {
-  const profile = await ensureUserProfile(supabase, user);
+  let profile;
+  try {
+    profile = await ensureUserProfile(supabase, user);
+  } catch {
+    redirect(
+      "/login?error=" +
+        encodeURIComponent("Could not load your profile. Run supabase/migrations/003_profile_trigger.sql, then try again."),
+    );
+  }
 
   revalidatePath("/", "layout");
 
@@ -337,6 +344,7 @@ export async function createLiveSession(formData: FormData) {
     .single();
 
   if (isLiveKitConfigured()) {
+    const { ensureLiveKitRoom } = await import("@/lib/livekit/server");
     await ensureLiveKitRoom(roomName, maxParticipants);
   }
 
@@ -388,6 +396,7 @@ export async function goLiveFromForum(formData: FormData) {
     .single();
 
   if (isLiveKitConfigured()) {
+    const { ensureLiveKitRoom } = await import("@/lib/livekit/server");
     await ensureLiveKitRoom(roomName, 50);
   }
 
@@ -438,6 +447,7 @@ export async function startLiveSession(slug: string) {
 
   const roomName = session.room_name || session.slug;
   if (isLiveKitConfigured()) {
+    const { ensureLiveKitRoom } = await import("@/lib/livekit/server");
     await ensureLiveKitRoom(roomName, session.max_participants ?? 50);
   }
 
@@ -466,6 +476,7 @@ export async function endLiveSession(slug: string) {
 
   const roomName = session.room_name || session.slug;
   if (isLiveKitConfigured()) {
+    const { deleteLiveKitRoom } = await import("@/lib/livekit/server");
     await deleteLiveKitRoom(roomName);
   }
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signIn } from "@/actions";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
+import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,10 +25,14 @@ export default async function LoginPage({ searchParams }: Props) {
           </p>
         )}
         {params.message && (
-          <p className="mt-4 rounded-xl bg-primary/10 px-4 py-3 text-center text-sm text-primary">{params.message}</p>
+          <p className="mt-4 rounded-xl bg-primary/10 px-4 py-3 text-center text-sm text-primary">
+            {safeDecodeURIComponent(params.message)}
+          </p>
         )}
         {params.error && (
-          <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-600">{decodeURIComponent(params.error)}</p>
+          <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-600">
+            {safeDecodeURIComponent(params.error)}
+          </p>
         )}
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
