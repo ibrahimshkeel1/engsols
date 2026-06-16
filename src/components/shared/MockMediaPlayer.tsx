@@ -5,25 +5,40 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-type MockMediaPlayerProps = {
+type MediaPlayerProps = {
   thumbnail: string;
   title: string;
   duration?: string;
   live?: boolean;
+  videoUrl?: string | null;
   className?: string;
 };
 
-export function MockMediaPlayer({
+export function MediaPlayer({
   thumbnail,
   title,
   duration,
   live,
+  videoUrl,
   className,
-}: MockMediaPlayerProps) {
+}: MediaPlayerProps) {
+  if (videoUrl) {
+    return (
+      <div className={cn("relative aspect-video w-full overflow-hidden rounded-xl bg-black", className)}>
+        <video src={videoUrl} controls className="h-full w-full" title={title} />
+        {duration && (
+          <span className="absolute bottom-3 right-3 rounded bg-black/70 px-2 py-0.5 text-xs text-white pointer-events-none">
+            {duration}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
-      onClick={() => toast.info("Playback is coming soon!")}
+      onClick={() => toast.info("Video URL not set yet. Admins can add one in Admin → Videos.")}
       className={cn(
         "group relative aspect-video w-full overflow-hidden rounded-xl bg-foreground",
         className,
@@ -48,3 +63,6 @@ export function MockMediaPlayer({
     </button>
   );
 }
+
+// Backward-compatible export
+export const MockMediaPlayer = MediaPlayer;

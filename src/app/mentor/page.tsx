@@ -44,6 +44,7 @@ export default async function MentorDashboardPage() {
           <CardContent className="p-6">
             <h2 className="font-semibold">Quick actions</h2>
             <ul className="mt-4 space-y-2 text-sm">
+              <li><Link href="/mentor/bookings" className="text-primary hover:underline">View booking inbox</Link></li>
               <li><Link href="/mentor/profile" className="text-primary hover:underline">Edit public profile</Link></li>
               <li><Link href="/mentor/live/new" className="text-primary hover:underline">Schedule a live session</Link></li>
               <li><Link href="/forum/new" className="text-primary hover:underline">Answer a forum question</Link></li>

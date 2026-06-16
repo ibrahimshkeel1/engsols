@@ -6,6 +6,7 @@ import { signOut } from "@/actions";
 
 const mentorNav = [
   { href: "/mentor", label: "Overview" },
+  { href: "/mentor/bookings", label: "Bookings" },
   { href: "/mentor/profile", label: "My profile" },
   { href: "/mentor/live", label: "Live sessions" },
   { href: "/apply", label: "Application" },

@@ -28,7 +28,7 @@ export default async function VideoPage({ params }: Props) {
   return (
     <div className="py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <MockMediaPlayer thumbnail={videoThumbnail(video.title.slice(0, 24))} title={video.title} duration={video.duration} />
+        <MockMediaPlayer thumbnail={videoThumbnail(video.title.slice(0, 24))} title={video.title} duration={video.duration} videoUrl={video.videoUrl} />
         <h1 className="mt-6 text-3xl font-bold text-foreground">{video.title}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{video.views.toLocaleString()} views · {video.publishedAt}</p>
         <p className="mt-4 text-foreground/90">{video.description}</p>

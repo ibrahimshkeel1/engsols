@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
-import { getForumPosts } from "@/lib/data/forum";
+import { getForumPostsForAdmin } from "@/lib/data/forum";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { DeleteForumPostButton } from "@/components/admin/DeleteForumPostButton";
 
 export default async function AdminForumPage() {
-  const posts = await getForumPosts();
+  const posts = await getForumPostsForAdmin();
 
   return (
     <div>
       <h1 className="text-2xl font-bold">Forum moderation</h1>
-      <p className="mt-1 text-muted-foreground">Review community discussions.</p>
+      <p className="mt-1 text-muted-foreground">Review and remove community discussions.</p>
       <div className="mt-8 space-y-3">
         {posts.length === 0 ? (
           <EmptyState
@@ -34,9 +35,12 @@ export default async function AdminForumPage() {
                   {post.author} · {post.replyCount} replies · {post.viewCount} views
                 </p>
               </div>
-              <Link href={`/forum/${post.slug}`} className="text-sm font-medium text-primary hover:underline">
-                View thread →
-              </Link>
+              <div className="flex shrink-0 flex-wrap items-center gap-3">
+                <Link href={`/forum/${post.slug}`} className="text-sm font-medium text-primary hover:underline">
+                  View thread →
+                </Link>
+                <DeleteForumPostButton postId={post.id} title={post.title} />
+              </div>
             </CardContent>
           </Card>
           ))

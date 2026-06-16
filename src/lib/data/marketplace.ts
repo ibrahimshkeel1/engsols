@@ -1,3 +1,4 @@
+import { createClient } from "@/lib/supabase/server";
 import { getPublicSupabase } from "@/lib/data/helpers";
 import type { DbMarketplaceListing, DbSeller } from "@/types/database";
 import type { Listing, ListingCategory, Seller } from "@/types";
@@ -42,6 +43,20 @@ export async function getSellers(): Promise<Seller[]> {
 
   const { data } = await supabase.from("sellers").select("*").eq("published", true).order("name");
   return (data ?? []).map((s) => toSeller(s as DbSeller));
+}
+
+export async function getSellerForUser(userId: string): Promise<Seller | null> {
+  if (!userId) return null;
+  const supabase = await createClient();
+  const { data } = await supabase.from("sellers").select("*").eq("owner_id", userId).maybeSingle();
+  return data ? toSeller(data as DbSeller) : null;
+}
+
+export async function getSellersForListing(userId: string): Promise<Seller[]> {
+  const [published, own] = await Promise.all([getSellers(), getSellerForUser(userId)]);
+  if (!own) return published;
+  if (published.some((s) => s.slug === own.slug)) return published;
+  return [own, ...published];
 }
 
 export async function getSellerBySlug(slug: string): Promise<Seller | null> {

@@ -1,10 +1,29 @@
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import type { Mentor } from "@/types";
+import type { Mentor, Review } from "@/types";
 import type { DbMentorProfile } from "@/types/database";
 
-function dbToMentor(m: DbMentorProfile): Mentor {
+async function loadReviews(mentorProfileId: string): Promise<Review[]> {
+  const supabase = createPublicClient();
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from("mentor_reviews")
+    .select("rating, text, author_role, profiles(full_name)")
+    .eq("mentor_profile_id", mentorProfileId)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  return (data ?? []).map((r) => ({
+    author: (r.profiles as { full_name?: string } | null)?.full_name || "Anonymous",
+    role: r.author_role || "Student",
+    text: r.text,
+    rating: r.rating,
+  }));
+}
+
+export function dbToMentor(m: DbMentorProfile, reviews: Review[] = []): Mentor {
   const name = m.profiles?.full_name || "Mentor";
   return {
     slug: m.slug,
@@ -23,8 +42,10 @@ function dbToMentor(m: DbMentorProfile): Mentor {
     bio: m.bio,
     credentials: m.credentials,
     featured: m.featured,
-    reviews: [],
+    reviews,
     avatarUrl: m.profiles?.avatar_url ?? null,
+    calendlyUrl: (m as DbMentorProfile & { calendly_url?: string | null }).calendly_url ?? null,
+    verified: (m as DbMentorProfile & { verified?: boolean }).verified ?? false,
   };
 }
 
@@ -42,7 +63,7 @@ export async function getApprovedMentors(): Promise<Mentor[]> {
     .order("rating", { ascending: false });
 
   if (error || !data?.length) return [];
-  return data.map(dbToMentor);
+  return data.map((m) => dbToMentor(m as DbMentorProfile));
 }
 
 export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
@@ -59,7 +80,8 @@ export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
     .single();
 
   if (!data) return null;
-  return dbToMentor(data as DbMentorProfile);
+  const reviews = await loadReviews(data.id);
+  return dbToMentor(data as DbMentorProfile, reviews);
 }
 
 export async function getAllMentorProfilesForAdmin() {

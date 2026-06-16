@@ -24,6 +24,8 @@ export type Mentor = {
   featured: boolean;
   reviews: Review[];
   avatarUrl?: string | null;
+  calendlyUrl?: string | null;
+  verified?: boolean;
 };
 
 export type Testimonial = {
@@ -71,14 +73,18 @@ export type ForumPost = {
 };
 
 export type ForumReply = {
+  id: string;
   author: string;
   body: string;
   createdAt: string;
   isMentor: boolean;
   likes: number;
+  forumReputation?: number;
   imageUrls?: string[];
   authorAvatarUrl?: string | null;
 };
+
+export type AdminForumPost = ForumPost & { id: string };
 
 export type LiveStream = {
   slug: string;
@@ -97,6 +103,7 @@ export type LiveStream = {
   endedAt?: string;
   maxParticipants?: number;
   accessMode?: string;
+  recordingUrl?: string | null;
 };
 
 export type Video = {
@@ -109,6 +116,7 @@ export type Video = {
   views: number;
   publishedAt: string;
   tags: string[];
+  videoUrl?: string | null;
 };
 
 export type ListingCategory = "equipment" | "materials" | "services";

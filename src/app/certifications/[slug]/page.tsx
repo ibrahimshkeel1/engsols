@@ -5,6 +5,7 @@ import { getApprovedMentors } from "@/lib/data/mentors";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
+import { CertificationPrepPath } from "@/components/certifications/CertificationPrepPath";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -61,6 +62,7 @@ export default async function CertificationPage({ params }: Props) {
           </CardContent>
         </Card>
       </div>
+      <CertificationPrepPath cert={cert} />
       {relatedMentors.length > 0 && (
         <>
           <h2 className="mt-12 text-xl font-bold">Mentors who can help</h2>

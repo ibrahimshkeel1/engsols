@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, ArrowRight, Star, Users } from "lucide-react";
+import { Search, ArrowRight, Users } from "lucide-react";
 import type { Mentor } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { cn } from "@/lib/utils";
 import { getDisciplineColors } from "@/lib/discipline-colors";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { Avatar } from "@/components/ui/Avatar";
+import { MentorRating } from "@/components/mentors/MentorRating";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -35,10 +36,11 @@ function MiniMentorCard({ mentor, index, reducedMotion }: { mentor: Mentor; inde
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
       <Avatar name={mentor.name} discipline={mentor.discipline} size="md" className="ring-2 ring-white/20" src={mentor.avatarUrl} />
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 text-primary">
-          <Star className="h-3 w-3 fill-current" />
-          <span className="text-xs font-semibold">{mentor.rating.toFixed(1)}</span>
-        </div>
+        {mentor.reviewCount > 0 ? (
+          <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} size="sm" />
+        ) : (
+          <span className="text-xs text-white/50">New mentor</span>
+        )}
         <p className="truncate font-semibold text-white">{mentor.name}</p>
         <p className="truncate text-sm text-white/60">{mentor.headline}</p>
         <p className="mt-1 text-xs text-white/40">{mentor.company}</p>

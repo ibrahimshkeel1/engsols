@@ -43,23 +43,27 @@ export default async function PortfolioPage({ params }: Props) {
           {portfolio.credentials.length > 0 && (
             <p className="mt-4 text-sm text-muted-foreground">Credentials: {portfolio.credentials.join(", ")}</p>
           )}
-          <h2 className="mt-10 text-xl font-bold">Projects</h2>
-          <div className="mt-4 space-y-4">
-            {portfolio.projects.map((proj) => (
-              <Card key={proj.title} className="card-elevated">
-                <CardContent className="p-5">
-                  <h3 className="font-semibold">{proj.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{proj.description}</p>
-                  <div className="mt-2 flex gap-2">
-                    {proj.tags.map((t) => (
-                      <span key={t} className="rounded-md bg-muted px-2 py-0.5 text-xs">{t}</span>
-                    ))}
-                    <span className="text-xs text-muted-foreground">{proj.year}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {portfolio.projects.length > 0 && (
+            <>
+              <h2 className="mt-10 text-xl font-bold">Projects</h2>
+              <div className="mt-4 space-y-4">
+                {portfolio.projects.map((proj) => (
+                  <Card key={proj.title} className="card-elevated">
+                    <CardContent className="p-5">
+                      <h3 className="font-semibold">{proj.title}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{proj.description}</p>
+                      <div className="mt-2 flex gap-2">
+                        {proj.tags.map((t) => (
+                          <span key={t} className="rounded-md bg-muted px-2 py-0.5 text-xs">{t}</span>
+                        ))}
+                        <span className="text-xs text-muted-foreground">{proj.year}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
+          )}
           {portfolio.experience.length > 0 && (
             <>
               <h2 className="mt-10 text-xl font-bold">Experience</h2>

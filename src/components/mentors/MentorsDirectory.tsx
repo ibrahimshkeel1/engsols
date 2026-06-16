@@ -7,6 +7,7 @@ import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
+import { SkillGraphFilter } from "@/components/mentors/SkillGraphFilter";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
@@ -15,6 +16,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
+  const [skill, setSkill] = useState("");
   const [sort, setSort] = useState("rating");
 
   const filtered = useMemo(
@@ -23,17 +25,19 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
         search: search || undefined,
         discipline: discipline || undefined,
         goal: goal || undefined,
+        skill: skill || undefined,
         sort: sort as "rating" | "price-asc" | "price-desc",
       }),
-    [mentors, search, discipline, goal, sort],
+    [mentors, search, discipline, goal, skill, sort],
   );
 
-  const hasFilters = Boolean(search || discipline || goal);
+  const hasFilters = Boolean(search || discipline || goal || skill);
 
   function clearFilters() {
     setSearch("");
     setDiscipline("");
     setGoal("");
+    setSkill("");
     setSort("rating");
   }
 
@@ -50,6 +54,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
           onGoalChange={setGoal}
           onSortChange={setSort}
         />
+        <SkillGraphFilter selectedSkill={skill} onSkillChange={setSkill} />
         <p className="mt-4 hidden text-sm text-muted-foreground lg:block">
           {filtered.length} mentors match your filters
         </p>

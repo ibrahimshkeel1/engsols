@@ -18,11 +18,12 @@ const primaryNav = [
 ];
 
 const moreNav = [
-  { href: "/jobs", label: "Jobs", preview: true },
+  { href: "/jobs", label: "Jobs", preview: false },
   { href: "/certifications", label: "Certifications", preview: false },
-  { href: "/companies", label: "Companies", preview: true },
-  { href: "/marketplace", label: "Marketplace", preview: true },
-  { href: "/videos", label: "Videos", preview: true },
+  { href: "/companies", label: "Companies", preview: false },
+  { href: "/marketplace", label: "Marketplace", preview: false },
+  { href: "/videos", label: "Videos", preview: false },
+  { href: "/search", label: "Search", preview: false },
 ];
 
 export const navLinks = [...primaryNav, ...moreNav];

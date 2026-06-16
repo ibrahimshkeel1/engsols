@@ -617,41 +617,84 @@ async function insertContactRequest(fields: {
   message: string;
   requestType: string;
 }) {
-  if (!isSupabaseConfigured()) return;
+  if (!isSupabaseConfigured()) return { error: "Database not configured" };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  await supabase.from("booking_requests").insert({
+  if (!user) return { error: "You must be logged in to submit a request" };
+
+  const { checkRateLimit } = await import("@/lib/rate-limit");
+  const limited = await checkRateLimit(user.id, "booking");
+  if (!limited.ok) return { error: limited.error };
+
+  const { contactSchema } = await import("@/lib/validation");
+  const parsed = contactSchema.safeParse({
+    name: fields.requesterName,
+    email: fields.requesterEmail,
+    message: fields.message,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message || "Invalid input" };
+  }
+
+  let mentorUserId: string | null = null;
+  let mentorEmail: string | null = null;
+  if (fields.requestType === "intro" || fields.requestType === "monthly") {
+    const { data: mp } = await supabase
+      .from("mentor_profiles")
+      .select("user_id")
+      .eq("slug", fields.refSlug)
+      .maybeSingle();
+    mentorUserId = mp?.user_id ?? null;
+    if (mentorUserId) {
+      const { data: prof } = await supabase.from("profiles").select("email").eq("id", mentorUserId).single();
+      mentorEmail = prof?.email ?? null;
+    }
+  }
+
+  const { error } = await supabase.from("booking_requests").insert({
     mentor_slug: fields.refSlug,
     mentor_name: fields.refName,
-    requester_name: fields.requesterName,
-    requester_email: fields.requesterEmail,
-    message: fields.message,
+    requester_name: parsed.data.name,
+    requester_email: parsed.data.email,
+    message: parsed.data.message,
     request_type: fields.requestType,
-    user_id: user?.id ?? null,
+    user_id: user.id,
+    mentor_user_id: mentorUserId,
   });
+
+  if (error) return { error: error.message };
+
+  if (mentorEmail) {
+    const { notifyMentorOfBooking } = await import("@/actions/mentor");
+    await notifyMentorOfBooking({
+      mentorEmail,
+      mentorName: fields.refName,
+      requesterName: parsed.data.name,
+      requesterEmail: parsed.data.email,
+      message: parsed.data.message,
+      type: fields.requestType,
+    });
+  }
+
+  return { success: true };
 }
 
 export async function submitBookingRequest(formData: FormData) {
-  const mentorSlug = formData.get("mentorSlug") as string;
-  const mentorName = formData.get("mentorName") as string;
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const message = formData.get("message") as string;
-  const type = formData.get("type") as string;
-
-  await insertContactRequest({
-    refSlug: mentorSlug,
-    refName: mentorName,
-    requesterName: name,
-    requesterEmail: email,
-    message,
-    requestType: type,
+  const result = await insertContactRequest({
+    refSlug: formData.get("mentorSlug") as string,
+    refName: formData.get("mentorName") as string,
+    requesterName: formData.get("name") as string,
+    requesterEmail: formData.get("email") as string,
+    message: formData.get("message") as string,
+    requestType: formData.get("type") as string,
   });
+  if (result?.error) throw new Error(result.error);
   return { success: true };
 }
 
 export async function submitPortfolioContact(formData: FormData) {
-  await insertContactRequest({
+  const result = await insertContactRequest({
     refSlug: formData.get("portfolioSlug") as string,
     refName: formData.get("studentName") as string,
     requesterName: formData.get("name") as string,
@@ -659,13 +702,14 @@ export async function submitPortfolioContact(formData: FormData) {
     message: formData.get("message") as string,
     requestType: "portfolio",
   });
+  if (result?.error) throw new Error(result.error);
   return { success: true };
 }
 
 export async function submitJobApplication(formData: FormData) {
   const jobTitle = formData.get("jobTitle") as string;
   const company = formData.get("company") as string;
-  await insertContactRequest({
+  const result = await insertContactRequest({
     refSlug: formData.get("jobSlug") as string,
     refName: `${jobTitle} @ ${company}`,
     requesterName: formData.get("name") as string,
@@ -673,12 +717,13 @@ export async function submitJobApplication(formData: FormData) {
     message: formData.get("message") as string,
     requestType: "job_application",
   });
+  if (result?.error) throw new Error(result.error);
   return { success: true };
 }
 
 export async function submitMarketplaceInquiry(formData: FormData) {
   const listingTitle = formData.get("listingTitle") as string;
-  await insertContactRequest({
+  const result = await insertContactRequest({
     refSlug: formData.get("listingSlug") as string,
     refName: listingTitle,
     requesterName: formData.get("name") as string,
@@ -686,6 +731,7 @@ export async function submitMarketplaceInquiry(formData: FormData) {
     message: formData.get("message") as string,
     requestType: formData.get("type") as string === "contact" ? "marketplace_contact" : "marketplace_quote",
   });
+  if (result?.error) throw new Error(result.error);
   return { success: true };
 }
 
@@ -707,6 +753,7 @@ export async function completeStudentOnboarding(formData: FormData) {
 
   await supabase.from("profiles").update({
     full_name: formData.get("fullName") as string || undefined,
+    career_goals: [goal],
   }).eq("id", user.id);
 
   const headline = formData.get("headline") as string;

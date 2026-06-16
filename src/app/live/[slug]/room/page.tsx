@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getLiveSession } from "@/lib/data/live";
 import { getCurrentUser } from "@/lib/auth";
 import { LiveRoomClient } from "@/components/live/LiveRoomClient";
+import { LiveViewerTracker } from "@/components/live/LiveViewerTracker";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -20,6 +21,7 @@ export default async function LiveRoomPage({ params }: Props) {
 
   return (
     <div className="live-room-container mx-auto max-w-6xl px-4 py-4 sm:px-6">
+      <LiveViewerTracker slug={slug} />
       <LiveRoomClient slug={slug} title={stream.title} canEndCall={canEndCall} />
     </div>
   );

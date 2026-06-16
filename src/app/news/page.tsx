@@ -5,7 +5,7 @@ import { PageHero } from "@/components/shared/PageHero";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export default async function NewsPage() {
   const articles = await getPublishedNews();

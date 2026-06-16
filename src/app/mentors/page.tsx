@@ -3,7 +3,7 @@ import { getApprovedMentors } from "@/lib/data/mentors";
 import { PageHero } from "@/components/shared/PageHero";
 import { MentorsDirectory } from "@/components/mentors/MentorsDirectory";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function MentorsPage() {
   const mentors = await getApprovedMentors();

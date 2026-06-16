@@ -52,6 +52,9 @@ export default async function LoginPage({ searchParams }: Props) {
               </SubmitButton>
             </form>
             <p className="mt-5 text-center text-sm text-muted-foreground">
+              <Link href="/forgot-password" className="text-primary hover:underline">Forgot password?</Link>
+            </p>
+            <p className="mt-3 text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"} className="font-medium text-primary hover:underline">
                 Sign up

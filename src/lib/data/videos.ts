@@ -13,6 +13,7 @@ function toVideo(v: DbVideo): Video {
     views: v.views,
     publishedAt: v.published_at?.split("T")[0] ?? "",
     tags: v.tags,
+    videoUrl: v.video_url,
   };
 }
 

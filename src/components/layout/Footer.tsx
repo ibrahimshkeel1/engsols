@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 
 export function Footer() {
   return (
@@ -35,12 +36,17 @@ export function Footer() {
               <li><Link href="/forum" className="transition-colors hover:text-white">Forum</Link></li>
               <li><Link href="/live" className="transition-colors hover:text-white">Live</Link></li>
               <li><Link href="/news" className="transition-colors hover:text-white">News</Link></li>
+              <li><Link href="/assist" className="transition-colors hover:text-white">Career assist</Link></li>
+              <li><Link href="/search" className="transition-colors hover:text-white">Search</Link></li>
             </ul>
           </div>
         </div>
-        <p className="mt-14 border-t border-white/10 pt-8 text-center text-sm text-white/40">
-          © {new Date().getFullYear()} EngSols. All rights reserved.
-        </p>
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
+          <p className="text-sm text-white/40">
+            © {new Date().getFullYear()} EngSols. All rights reserved.
+          </p>
+          <LocaleSwitcher />
+        </div>
       </div>
     </footer>
   );

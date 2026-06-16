@@ -115,6 +115,7 @@ export type DbLiveSession = {
   access_mode: string;
   ended_at: string | null;
   viewer_count: number;
+  recording_url?: string | null;
   profiles?: DbProfile;
   mentor_profiles?: DbMentorProfile;
   forum_posts?: { slug: string } | null;

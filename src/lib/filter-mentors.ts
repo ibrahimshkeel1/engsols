@@ -1,9 +1,11 @@
 import type { Mentor } from "@/types";
+import { getSkillById } from "@/data/engineering-skills";
 
 export type MentorFilters = {
   search?: string;
   discipline?: string;
   goal?: string;
+  skill?: string;
   sort?: "rating" | "price-asc" | "price-desc";
 };
 
@@ -28,6 +30,18 @@ export function filterMentors(mentors: Mentor[], filters: MentorFilters): Mentor
 
   if (filters.goal) {
     result = result.filter((m) => m.goals.includes(filters.goal!));
+  }
+
+  if (filters.skill) {
+    const skill = getSkillById(filters.skill);
+    if (skill) {
+      const label = skill.label.toLowerCase();
+      result = result.filter(
+        (m) =>
+          m.discipline === skill.discipline ||
+          m.skills.some((s) => s.toLowerCase().includes(label) || label.includes(s.toLowerCase())),
+      );
+    }
   }
 
   switch (filters.sort) {

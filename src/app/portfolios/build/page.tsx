@@ -4,6 +4,8 @@ import { requireUser } from "@/lib/require-auth";
 import { getPortfolioByUserId } from "@/lib/data/portfolios";
 import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
+import { PortfolioProjectsBuilder } from "@/components/portfolios/PortfolioProjectsBuilder";
+import { PortfolioExperienceBuilder } from "@/components/portfolios/PortfolioExperienceBuilder";
 import { StepIndicator } from "@/components/shared/StepIndicator";
 import { FormField } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -57,6 +59,8 @@ export default async function BuildPortfolioPage({ searchParams }: Props) {
               Publish portfolio
             </SubmitButton>
           </form>
+          <PortfolioProjectsBuilder projects={existing?.portfolio_projects ?? []} />
+          <PortfolioExperienceBuilder experience={existing?.portfolio_experience ?? []} />
         </CardContent>
       </Card>
     </div>

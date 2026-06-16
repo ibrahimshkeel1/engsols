@@ -8,9 +8,14 @@ const adminNav = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/mentors", label: "Mentors" },
   { href: "/admin/bookings", label: "Bookings" },
+  { href: "/admin/jobs", label: "Jobs" },
+  { href: "/admin/companies", label: "Companies" },
+  { href: "/admin/certifications", label: "Certifications" },
+  { href: "/admin/videos", label: "Videos" },
   { href: "/admin/news", label: "News" },
   { href: "/admin/forum", label: "Forum" },
   { href: "/admin/live", label: "Live sessions" },
+  { href: "/admin/reports", label: "Reports" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -9,6 +9,9 @@ import { videoThumbnail } from "@/lib/placeholders";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { LiveSessionActions } from "@/components/live/LiveSessionActions";
+import { LiveRecordingForm } from "@/components/live/LiveRecordingForm";
+import { LiveRecordingPlayer } from "@/components/live/LiveRecordingPlayer";
+import { LiveStatusWatcher } from "@/components/live/LiveStatusWatcher";
 import Image from "next/image";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -26,6 +29,7 @@ export default async function LiveStreamPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
+      <LiveStatusWatcher slug={slug} />
       <div className="relative aspect-video overflow-hidden rounded-2xl bg-muted">
         <Image
           src={videoThumbnail(stream.title.slice(0, 24))}
@@ -86,6 +90,14 @@ export default async function LiveStreamPage({ params }: Props) {
             liveKitConfigured={liveKitConfigured}
           />
         </div>
+        {stream.recordingUrl && stream.status === "ended" && (
+          <LiveRecordingPlayer url={stream.recordingUrl} title={stream.title} />
+        )}
+        {(isHost || isAdmin) && stream.status === "ended" && (
+          <div className="mt-6">
+            <LiveRecordingForm slug={slug} initialUrl={stream.recordingUrl} />
+          </div>
+        )}
       </div>
     </div>
   );

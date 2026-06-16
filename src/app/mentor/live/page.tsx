@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getLiveSessionsForHost } from "@/lib/data/live";
+import { LiveRecordingForm } from "@/components/live/LiveRecordingForm";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -42,16 +43,22 @@ export default async function MentorLivePage() {
                 <h2 className="mt-2 font-semibold">{s.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {format(new Date(s.scheduledAt), "MMM d, yyyy h:mm a")}
+                  {s.recordingUrl && " · Recording available"}
                 </p>
               </div>
-              <div className="flex gap-3">
-                <Link href={`/live/${s.slug}`} className="text-sm font-medium text-primary hover:underline">
-                  View →
-                </Link>
-                {s.status === "live" && (
-                  <Link href={`/live/${s.slug}/room`} className="text-sm font-medium text-primary hover:underline">
-                    Join room →
+              <div className="flex flex-col gap-3 sm:items-end">
+                <div className="flex gap-3">
+                  <Link href={`/live/${s.slug}`} className="text-sm font-medium text-primary hover:underline">
+                    View →
                   </Link>
+                  {s.status === "live" && (
+                    <Link href={`/live/${s.slug}/room`} className="text-sm font-medium text-primary hover:underline">
+                      Join room →
+                    </Link>
+                  )}
+                </div>
+                {s.status === "ended" && (
+                  <LiveRecordingForm slug={s.slug} initialUrl={s.recordingUrl} />
                 )}
               </div>
             </CardContent>

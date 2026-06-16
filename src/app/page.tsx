@@ -10,7 +10,7 @@ import { getApprovedMentors } from "@/lib/data/mentors";
 import { getCompanyNamesFromMentors } from "@/lib/data/companies";
 import { getPlatformStats } from "@/lib/data/stats";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export default async function HomePage() {
   const mentors = await getApprovedMentors();

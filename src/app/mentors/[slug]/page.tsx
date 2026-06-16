@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star, Award } from "lucide-react";
-import { sessionTypes } from "@/data/sessionTypes";
+import { Award, BadgeCheck, Calendar } from "lucide-react";
 import { getSimilarMentors } from "@/lib/filter-mentors";
 import { getApprovedMentors, getMentorBySlug } from "@/lib/data/mentors";
+import { getCurrentUser } from "@/lib/auth";
+import { isMentorSaved } from "@/lib/data/saved-mentors";
 import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
@@ -11,25 +12,40 @@ import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
+import { MentorRating } from "@/components/mentors/MentorRating";
+import { MentorReviewForm } from "@/components/mentor/MentorReviewForm";
+import { SaveMentorButton } from "@/components/mentor/SaveMentorButton";
 import { SimilarMentors } from "@/components/mentors/SimilarMentors";
+import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  const mentor = await getMentorBySlug(slug);
+  if (!mentor) return { title: "Mentor not found" };
+  return {
+    title: `${mentor.name} — ${mentor.headline} | EngSols`,
+    description: mentor.bio.slice(0, 160),
+    openGraph: { title: mentor.name, description: mentor.headline },
+  };
+}
 
 export default async function MentorProfilePage({ params }: PageProps) {
   const { slug } = await params;
   const mentor = await getMentorBySlug(slug);
   if (!mentor) notFound();
 
-  const allMentors = await getApprovedMentors();
+  const [allMentors, user] = await Promise.all([getApprovedMentors(), getCurrentUser()]);
+  const saved = user ? await isMentorSaved(user.id, slug) : false;
   const similar = getSimilarMentors(allMentors, mentor);
   const stripe = getDisciplineColors(mentor.discipline).stripe;
 
   return (
     <div>
-      {/* Cover hero */}
       <section className="hero-dark relative overflow-hidden border-b border-white/10">
         <div className={cn("absolute inset-x-0 top-0 h-1", stripe)} />
         <div className="bg-grid absolute inset-0 opacity-20" />
@@ -38,14 +54,16 @@ export default async function MentorProfilePage({ params }: PageProps) {
             <Avatar name={mentor.name} discipline={mentor.discipline} size="xl" className="ring-4 ring-white/20" src={mentor.avatarUrl} />
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1.5 text-primary">
-                  <Star className="h-4 w-4 fill-current" />
-                  <span className="font-semibold">{mentor.rating.toFixed(1)}</span>
-                  <span className="text-sm text-white/50">({mentor.reviewCount} reviews)</span>
+                <div className="text-primary">
+                  <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
                 </div>
-                {mentor.featured && (
-                  <Badge className="bg-primary/20 text-primary">Featured mentor</Badge>
+                {mentor.featured && <Badge className="bg-primary/20 text-primary">Featured mentor</Badge>}
+                {mentor.verified && (
+                  <Badge className="bg-blue-500/20 text-blue-300">
+                    <BadgeCheck className="mr-1 h-3 w-3" /> Verified
+                  </Badge>
                 )}
+                {user && <SaveMentorButton mentorSlug={slug} initialSaved={saved} />}
               </div>
               <h1 className="font-display mt-2 text-4xl tracking-tight sm:text-5xl">{mentor.name}</h1>
               <p className="mt-2 text-xl text-white/80">{mentor.headline}</p>
@@ -55,6 +73,17 @@ export default async function MentorProfilePage({ params }: PageProps) {
                 <span className="text-white/40">·</span>
                 <span className="text-white/70">{mentor.yearsExperience} years experience</span>
               </div>
+              {mentor.calendlyUrl && (
+                <a
+                  href={mentor.calendlyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Book on calendar
+                </a>
+              )}
               <div className="mt-4 flex flex-wrap gap-2">
                 <DisciplineBadge discipline={mentor.discipline} />
                 {mentor.credentials.map((c) => (
@@ -99,8 +128,11 @@ export default async function MentorProfilePage({ params }: PageProps) {
             <section>
               <h2 className="text-xl font-semibold">Reviews</h2>
               <div className="mt-4 space-y-4">
+                {mentor.reviews.length === 0 && (
+                  <p className="text-sm text-muted-foreground">No reviews yet. Be the first after a session.</p>
+                )}
                 {mentor.reviews.map((review) => (
-                  <Card key={review.author} className="card-elevated">
+                  <Card key={review.author + review.text.slice(0, 20)} className="card-elevated">
                     <CardContent className="p-5">
                       <div className="flex items-center gap-1 text-accent">
                         {Array.from({ length: review.rating }).map((_, i) => (
@@ -113,6 +145,14 @@ export default async function MentorProfilePage({ params }: PageProps) {
                   </Card>
                 ))}
               </div>
+              {user && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold">Leave a review</h3>
+                  <div className="mt-3">
+                    <MentorReviewForm mentorSlug={slug} />
+                  </div>
+                </div>
+              )}
             </section>
           </div>
 

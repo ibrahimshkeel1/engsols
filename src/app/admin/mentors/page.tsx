@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { RejectMentorButton } from "@/components/admin/RejectMentorButton";
+import { FeaturedMentorToggle } from "@/components/admin/FeaturedMentorToggle";
+import { VerifyMentorToggle } from "@/components/admin/VerifyMentorToggle";
 
 export default async function AdminMentorsPage() {
   const mentors = await getAllMentorProfilesForAdmin();
@@ -46,6 +48,12 @@ export default async function AdminMentorsPage() {
                       </SubmitButton>
                     </form>
                     <RejectMentorButton mentorId={m.id} />
+                  </div>
+                )}
+                {m.status === "approved" && (
+                  <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+                    <FeaturedMentorToggle mentorId={m.id} featured={m.featured} />
+                    <VerifyMentorToggle mentorId={m.id} verified={m.verified ?? false} />
                   </div>
                 )}
               </CardContent>

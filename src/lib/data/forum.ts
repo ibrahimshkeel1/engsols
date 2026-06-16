@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import type { DbForumPost, DbForumReply } from "@/types/database";
-import type { ForumPost, ForumReply } from "@/types";
+import type { AdminForumPost, ForumPost, ForumReply } from "@/types";
 
 function toForumPost(p: DbForumPost): ForumPost {
   return {
@@ -47,6 +47,30 @@ export async function getForumPosts(): Promise<ForumPost[]> {
   return withCounts.map((p) => toForumPost(p as DbForumPost));
 }
 
+export async function getForumPostsForAdmin(): Promise<AdminForumPost[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = await createClient();
+  const { data: posts } = await supabase
+    .from("forum_posts")
+    .select("*, profiles(*)")
+    .order("created_at", { ascending: false });
+
+  if (!posts?.length) return [];
+
+  const withCounts = await Promise.all(
+    posts.map(async (post) => {
+      const { count } = await supabase
+        .from("forum_replies")
+        .select("*", { count: "exact", head: true })
+        .eq("post_id", post.id);
+      return { ...post, reply_count: count ?? 0 };
+    }),
+  );
+
+  return withCounts.map((p) => ({ ...toForumPost(p as DbForumPost), id: p.id }));
+}
+
 export async function getForumPost(slug: string) {
   if (!isSupabaseConfigured()) return null;
 
@@ -68,11 +92,13 @@ export async function getForumPost(slug: string) {
     .order("created_at", { ascending: true });
 
   const mappedReplies: ForumReply[] = (replies ?? []).map((r: DbForumReply) => ({
+    id: r.id,
     author: r.profiles?.full_name || "Anonymous",
     body: r.body,
     createdAt: r.created_at.split("T")[0],
     isMentor: r.profiles?.role === "mentor",
     likes: r.likes,
+    forumReputation: (r.profiles as { forum_reputation?: number } | null)?.forum_reputation ?? 0,
     imageUrls: r.image_urls ?? [],
     authorAvatarUrl: r.profiles?.avatar_url ?? null,
   }));
