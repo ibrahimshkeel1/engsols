@@ -3,6 +3,8 @@ import { getForumPosts } from "@/lib/data/forum";
 import { PageHero } from "@/components/shared/PageHero";
 import { ForumList } from "@/components/forum/ForumList";
 
+export const dynamic = "force-dynamic";
+
 export default async function ForumPage() {
   const posts = await getForumPosts();
 

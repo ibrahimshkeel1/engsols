@@ -10,6 +10,8 @@ import { getApprovedMentors } from "@/lib/data/mentors";
 import { getCompanyNamesFromMentors } from "@/lib/data/companies";
 import { getPlatformStats } from "@/lib/data/stats";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const mentors = await getApprovedMentors();
   const featuredMentors = mentors.filter((m) => m.featured).slice(0, 3);

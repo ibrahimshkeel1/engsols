@@ -5,6 +5,8 @@ import { PageHero } from "@/components/shared/PageHero";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewsPage() {
   const articles = await getPublishedNews();
   const featured = articles.filter((a) => a.featured);
@@ -18,6 +20,10 @@ export default async function NewsPage() {
         description="Industry updates, career insights, and certification news for applied engineers."
       />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        {articles.length === 0 ? (
+          <p className="text-muted-foreground">No articles published yet. Check back soon.</p>
+        ) : (
+          <>
         {featured.length > 0 && (
           <section>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">Featured</h2>
@@ -60,6 +66,8 @@ export default async function NewsPage() {
             ))}
           </div>
         </section>
+          </>
+        )}
       </div>
     </>
   );

@@ -13,6 +13,8 @@ import { ForumGoLiveButton } from "@/components/forum/ForumGoLiveButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
+export const dynamic = "force-dynamic";
+
 export default async function ForumThreadPage({ params }: Props) {
   const { slug } = await params;
   const data = await getForumPost(slug);

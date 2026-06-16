@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
+export const dynamic = "force-dynamic";
+
 export default async function MentorProfilePage({ params }: PageProps) {
   const { slug } = await params;
   const mentor = await getMentorBySlug(slug);
