@@ -4,12 +4,14 @@ import { useState } from "react";
 import { createForumReply } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 
 type Props = { postId?: string };
 
 export function ForumReplyForm({ postId }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,11 +22,12 @@ export function ForumReplyForm({ postId }: Props) {
     const form = e.currentTarget;
     const body = new FormData(form).get("body") as string;
     setPending(true);
-    const result = await createForumReply(postId, body);
+    const result = await createForumReply(postId, body, imageUrls);
     setPending(false);
     if (result?.error) setError(result.error);
     else {
       form.reset();
+      setImageUrls([]);
       window.location.reload();
     }
   }
@@ -32,6 +35,16 @@ export function ForumReplyForm({ postId }: Props) {
   return (
     <form className="mt-10" onSubmit={handleSubmit}>
       <Textarea name="body" required rows={4} placeholder="Write your reply..." />
+      <div className="mt-3">
+        <ImageUpload
+          folder="forum"
+          multiple
+          maxFiles={4}
+          value={imageUrls}
+          onChange={setImageUrls}
+          label="Attach images (optional)"
+        />
+      </div>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       {!postId && (
         <p className="mt-2 text-sm text-muted-foreground">

@@ -80,6 +80,7 @@ export type DbForumPost = {
   tags: string[];
   is_solved: boolean;
   view_count: number;
+  image_urls: string[];
   created_at: string;
   profiles?: DbProfile;
   reply_count?: number;
@@ -91,6 +92,7 @@ export type DbForumReply = {
   author_id: string;
   body: string;
   likes: number;
+  image_urls: string[];
   created_at: string;
   profiles?: DbProfile;
 };
@@ -127,6 +129,7 @@ export type DbNewsArticle = {
   category: string;
   featured: boolean;
   published: boolean;
+  cover_image_url: string | null;
   published_at: string | null;
   created_at: string;
   profiles?: DbProfile;

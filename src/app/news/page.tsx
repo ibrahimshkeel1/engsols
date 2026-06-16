@@ -30,7 +30,11 @@ export default async function NewsPage() {
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               {featured.map((a) => (
                 <Link key={a.id} href={`/news/${a.slug}`}>
-                  <Card className="card-elevated h-full transition hover:border-primary/40 hover:shadow-lg">
+                  <Card className="card-elevated h-full overflow-hidden transition hover:border-primary/40 hover:shadow-lg">
+                    {a.cover_image_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={a.cover_image_url} alt="" className="aspect-[16/9] w-full object-cover" />
+                    )}
                     <CardContent className="p-8">
                       <Badge>{a.category}</Badge>
                       <h3 className="mt-4 text-2xl font-bold leading-tight">{a.title}</h3>
@@ -50,8 +54,13 @@ export default async function NewsPage() {
           <div className="mt-6 space-y-4">
             {rest.map((a) => (
               <Link key={a.id} href={`/news/${a.slug}`}>
-                <Card className="card-elevated transition hover:border-primary/30">
-                  <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+                <Card className="card-elevated overflow-hidden transition hover:border-primary/30">
+                  <CardContent className="flex flex-col gap-3 p-0 sm:flex-row sm:items-stretch">
+                    {a.cover_image_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={a.cover_image_url} alt="" className="aspect-[16/10] w-full object-cover sm:max-w-[220px]" />
+                    )}
+                    <div className="flex flex-1 flex-col justify-center gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <Badge>{a.category}</Badge>
                       <h3 className="mt-2 text-lg font-semibold">{a.title}</h3>
@@ -60,6 +69,7 @@ export default async function NewsPage() {
                     <p className="shrink-0 text-sm text-muted-foreground">
                       {a.published_at && format(new Date(a.published_at), "MMM d, yyyy")}
                     </p>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>

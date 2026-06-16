@@ -16,6 +16,8 @@ function toForumPost(p: DbForumPost): ForumPost {
     viewCount: p.view_count,
     createdAt: p.created_at.split("T")[0],
     isSolved: p.is_solved,
+    imageUrls: p.image_urls ?? [],
+    authorAvatarUrl: p.profiles?.avatar_url ?? null,
   };
 }
 
@@ -71,6 +73,8 @@ export async function getForumPost(slug: string) {
     createdAt: r.created_at.split("T")[0],
     isMentor: r.profiles?.role === "mentor",
     likes: r.likes,
+    imageUrls: r.image_urls ?? [],
+    authorAvatarUrl: r.profiles?.avatar_url ?? null,
   }));
 
   return {

@@ -1,17 +1,25 @@
 import { savePortfolio } from "@/actions";
 import { disciplines } from "@/data/disciplines";
+import { getCurrentUser } from "@/lib/auth";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function BuildPortfolioPage() {
+export default async function BuildPortfolioPage() {
+  const user = await getCurrentUser();
+
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold">Build your portfolio</h1>
       <p className="mt-2 text-muted-foreground">Get discovered by mentors and employers on EngSols.</p>
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <form action={savePortfolio} className="space-y-5">
+          <ProfilePhotoUpload
+            name={user?.full_name || "Student"}
+            initialUrl={user?.avatar_url}
+          />
+          <form action={savePortfolio} className="mt-8 space-y-5">
             <div>
               <label className="text-sm font-medium">Headline</label>
               <Input name="headline" required placeholder="e.g. Petroleum Engineering Graduate" className="mt-1.5" />

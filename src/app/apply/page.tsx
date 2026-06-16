@@ -1,10 +1,14 @@
 import { submitMentorApplication } from "@/actions";
 import { disciplines } from "@/data/disciplines";
+import { getCurrentUser } from "@/lib/auth";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function ApplyPage() {
+export default async function ApplyPage() {
+  const user = await getCurrentUser();
+
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
       <h1 className="text-3xl font-bold">Become a mentor</h1>
@@ -13,7 +17,11 @@ export default function ApplyPage() {
       </p>
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <form action={submitMentorApplication} className="space-y-5">
+          <ProfilePhotoUpload
+            name={user?.full_name || "Mentor"}
+            initialUrl={user?.avatar_url}
+          />
+          <form action={submitMentorApplication} className="mt-8 space-y-5">
             <div>
               <label className="text-sm font-medium">Professional headline</label>
               <Input name="headline" required placeholder="Senior Drilling Engineer at Shell" className="mt-1.5" />

@@ -46,7 +46,7 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
               <div className={cn("w-1 shrink-0", stripe)} />
               <div className="flex-1 p-5">
                 <div className="flex items-start gap-4">
-                  <Avatar name={p.name} discipline={p.discipline} size="md" />
+                  <Avatar name={p.name} discipline={p.discipline} size="md" src={p.avatarUrl} />
                   <div>
                     {p.openToWork && (
                       <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">

@@ -33,7 +33,7 @@ function MiniMentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
         className="group relative flex gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-white/15"
       >
         <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
-        <Avatar name={mentor.name} discipline={mentor.discipline} size="md" className="ring-2 ring-white/20" />
+        <Avatar name={mentor.name} discipline={mentor.discipline} size="md" className="ring-2 ring-white/20" src={mentor.avatarUrl} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 text-primary">
             <Star className="h-3 w-3 fill-current" />

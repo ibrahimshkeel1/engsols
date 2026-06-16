@@ -2,8 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getMentorProfileByUserId } from "@/lib/data/mentors";
+import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 
 export default async function MentorProfilePage() {
   const user = await getCurrentUser();
@@ -15,6 +17,16 @@ export default async function MentorProfilePage() {
     <div className="max-w-2xl">
       <h1 className="text-2xl font-bold">My profile</h1>
       <p className="mt-1 text-muted-foreground">Your public mentor listing details.</p>
+
+      <Card className="card-elevated mt-8">
+        <CardContent className="p-6">
+          <ProfilePhotoUpload
+            name={user.full_name || "Mentor"}
+            discipline={profile?.discipline}
+            initialUrl={user.avatar_url}
+          />
+        </CardContent>
+      </Card>
 
       {!profile ? (
         <Card className="card-elevated mt-8">
@@ -28,13 +40,16 @@ export default async function MentorProfilePage() {
       ) : (
         <Card className="card-elevated mt-8">
           <CardContent className="space-y-4 p-6">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <Avatar name={user.full_name || "Mentor"} discipline={profile.discipline} size="lg" src={user.avatar_url} />
+              <div className="flex items-center gap-2">
               <Badge className="capitalize">{profile.status}</Badge>
               {profile.status === "approved" && (
                 <Link href={`/mentors/${profile.slug}`} className="text-sm text-primary hover:underline">
                   View public page →
                 </Link>
               )}
+            </div>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Headline</p>

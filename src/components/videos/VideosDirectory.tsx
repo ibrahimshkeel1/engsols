@@ -59,7 +59,7 @@ export function VideosDirectory({ videos, mentors }: Props) {
                   <h3 className="font-semibold">{video.title}</h3>
                   {author && (
                     <div className="mt-2 flex items-center gap-2">
-                      <Avatar name={author.name} discipline={author.discipline} size="sm" />
+                      <Avatar name={author.name} discipline={author.discipline} size="sm" src={author.avatarUrl} />
                       <span className="text-sm text-muted-foreground">{author.name}</span>
                     </div>
                   )}

@@ -24,6 +24,7 @@ function dbToMentor(m: DbMentorProfile): Mentor {
     credentials: m.credentials,
     featured: m.featured,
     reviews: [],
+    avatarUrl: m.profiles?.avatar_url ?? null,
   };
 }
 

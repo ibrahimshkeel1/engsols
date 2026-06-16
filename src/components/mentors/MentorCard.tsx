@@ -25,7 +25,7 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
         <div className="relative flex flex-1 flex-col p-5 pl-6">
           <div className="flex items-start gap-4">
             <div className="relative">
-              <Avatar name={mentor.name} discipline={mentor.discipline} size="md" />
+              <Avatar name={mentor.name} discipline={mentor.discipline} size="md" src={mentor.avatarUrl} />
               {mentor.featured && (
                 <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-sm">
                   <BadgeCheck className="h-3 w-3" />

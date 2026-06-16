@@ -18,7 +18,7 @@ export default async function PortfolioPage({ params }: Props) {
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="flex items-start gap-4">
-            <Avatar name={portfolio.name} discipline={portfolio.discipline} size="lg" className="ring-4 ring-border" />
+            <Avatar name={portfolio.name} discipline={portfolio.discipline} size="lg" className="ring-4 ring-border" src={portfolio.avatarUrl} />
             <div>
               {portfolio.openToWork && (
                 <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">

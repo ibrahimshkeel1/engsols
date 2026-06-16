@@ -162,6 +162,35 @@ export async function signOut() {
   redirect("/");
 }
 
+export async function updateProfileAvatar(avatarUrl: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_url: avatarUrl })
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/mentors");
+  revalidatePath("/portfolios");
+  revalidatePath("/settings");
+  return { success: true };
+}
+
+function parseImageUrls(raw: FormDataEntryValue | null): string[] {
+  if (!raw || typeof raw !== "string" || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? parsed.filter((u): u is string => typeof u === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function createForumPost(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -170,6 +199,7 @@ export async function createForumPost(formData: FormData) {
   const title = formData.get("title") as string;
   const body = formData.get("body") as string;
   const discipline = formData.get("discipline") as string;
+  const imageUrls = parseImageUrls(formData.get("imageUrls"));
   const slug = `${slugify(title)}-${Date.now().toString(36)}`;
 
   const { error } = await supabase.from("forum_posts").insert({
@@ -179,6 +209,7 @@ export async function createForumPost(formData: FormData) {
     body,
     discipline,
     tags: [],
+    image_urls: imageUrls,
   });
 
   if (error) redirect(`/forum/new?error=${encodeURIComponent(error.message)}`);
@@ -186,7 +217,7 @@ export async function createForumPost(formData: FormData) {
   redirect(`/forum/${slug}`);
 }
 
-export async function createForumReply(postId: string, body: string) {
+export async function createForumReply(postId: string, body: string, imageUrls: string[] = []) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You must be logged in" };
@@ -195,6 +226,7 @@ export async function createForumReply(postId: string, body: string) {
     post_id: postId,
     author_id: user.id,
     body,
+    image_urls: imageUrls,
   });
 
   if (error) return { error: error.message };
@@ -501,6 +533,7 @@ export async function createNewsArticle(formData: FormData) {
   const body = formData.get("body") as string;
   const category = formData.get("category") as string;
   const publish = formData.get("publish") === "true";
+  const coverImageUrl = (formData.get("coverImageUrl") as string | null)?.trim() || null;
   const slug = slugify(title);
 
   const { error } = await supabase.from("news_articles").insert({
@@ -513,6 +546,7 @@ export async function createNewsArticle(formData: FormData) {
     published: publish,
     published_at: publish ? new Date().toISOString() : null,
     featured: false,
+    cover_image_url: coverImageUrl,
   });
 
   if (error) redirect(`/admin/news/new?error=${encodeURIComponent(error.message)}`);

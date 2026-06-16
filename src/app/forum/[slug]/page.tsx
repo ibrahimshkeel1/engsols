@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ForumReplyForm } from "@/components/forum/ForumReplyForm";
 import { ForumGoLiveButton } from "@/components/forum/ForumGoLiveButton";
+import { AttachedImages } from "@/components/shared/AttachedImages";
+import { Avatar } from "@/components/ui/Avatar";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,8 +37,12 @@ export default async function ForumThreadPage({ params }: Props) {
           <DisciplineBadge discipline={post.discipline} />
           {post.isSolved && <Badge className="ml-2 bg-green-500/15 text-green-700 dark:text-green-400">Solved</Badge>}
           <h1 className="mt-4 text-3xl font-bold tracking-tight">{post.title}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{post.author} · {post.createdAt} · {post.viewCount} views</p>
+          <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+            <Avatar name={post.author} discipline={post.discipline} size="sm" src={post.authorAvatarUrl} />
+            <span>{post.author} · {post.createdAt} · {post.viewCount} views</span>
+          </div>
           <p className="mt-6 leading-relaxed text-foreground/90">{post.body}</p>
+          <AttachedImages urls={post.imageUrls ?? []} />
           <div className="mt-4 flex flex-wrap gap-2">
             {post.tags.map((t) => <Badge key={t}>{t}</Badge>)}
           </div>
@@ -51,11 +57,13 @@ export default async function ForumThreadPage({ params }: Props) {
                 )}
               >
                   <div className="flex items-center gap-2">
+                    <Avatar name={r.author} size="sm" src={r.authorAvatarUrl} />
                     <span className="font-medium">{r.author}</span>
                     {r.isMentor && <Badge className="bg-primary/10 text-primary">Mentor</Badge>}
                     <span className="text-xs text-muted-foreground">{r.createdAt}</span>
                   </div>
                   <p className="mt-2 text-foreground/90">{r.body}</p>
+                  <AttachedImages urls={r.imageUrls ?? []} />
                   <p className="mt-2 text-xs text-muted-foreground">{r.likes} likes</p>
               </div>
             ))}

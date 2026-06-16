@@ -22,6 +22,9 @@ export async function AuthLinks() {
 
   return (
     <>
+      <Link href="/settings" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
+        Settings
+      </Link>
       <Link href={panelHref} className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
         Dashboard
       </Link>

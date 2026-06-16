@@ -35,7 +35,7 @@ export default async function MentorProfilePage({ params }: PageProps) {
         <div className="bg-grid absolute inset-0 opacity-20" />
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
-            <Avatar name={mentor.name} discipline={mentor.discipline} size="xl" className="ring-4 ring-white/20" />
+            <Avatar name={mentor.name} discipline={mentor.discipline} size="xl" className="ring-4 ring-white/20" src={mentor.avatarUrl} />
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-1.5 text-primary">

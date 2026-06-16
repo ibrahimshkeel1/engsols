@@ -23,6 +23,7 @@ export type Mentor = {
   credentials: string[];
   featured: boolean;
   reviews: Review[];
+  avatarUrl?: string | null;
 };
 
 export type Testimonial = {
@@ -65,6 +66,8 @@ export type ForumPost = {
   createdAt: string;
   isSolved: boolean;
   mentorSlug?: string;
+  imageUrls?: string[];
+  authorAvatarUrl?: string | null;
 };
 
 export type ForumReply = {
@@ -73,6 +76,8 @@ export type ForumReply = {
   createdAt: string;
   isMentor: boolean;
   likes: number;
+  imageUrls?: string[];
+  authorAvatarUrl?: string | null;
 };
 
 export type LiveStream = {
@@ -192,6 +197,7 @@ export type Portfolio = {
   projects: PortfolioProject[];
   experience: PortfolioExperience[];
   mentorSlug?: string;
+  avatarUrl?: string | null;
 };
 
 export type JobType =

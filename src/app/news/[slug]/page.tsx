@@ -20,6 +20,16 @@ export default async function NewsArticlePage({ params }: Props) {
   return (
     <article>
       <header className="border-b border-border">
+        {article.cover_image_url && (
+          <div className="mx-auto max-w-5xl px-4 pt-8 sm:px-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.cover_image_url}
+              alt=""
+              className="aspect-[21/9] w-full rounded-2xl object-cover"
+            />
+          </div>
+        )}
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <Link href="/news" className="text-sm font-medium text-primary hover:underline">← Back to news</Link>
           <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-primary">{article.category}</p>

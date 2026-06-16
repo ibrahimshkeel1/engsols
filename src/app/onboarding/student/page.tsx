@@ -1,15 +1,18 @@
 import { completeStudentOnboarding } from "@/actions";
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
+import { getCurrentUser } from "@/lib/auth";
 import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
+import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { Button } from "@/components/ui/button";
-import { Input, Select, Textarea } from "@/components/ui/input";
+import { Input, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
 type Props = { searchParams: Promise<{ error?: string }> };
 
 export default async function StudentOnboardingPage({ searchParams }: Props) {
   const params = await searchParams;
+  const user = await getCurrentUser();
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
@@ -23,10 +26,14 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <form action={completeStudentOnboarding} className="space-y-5">
+          <ProfilePhotoUpload
+            name={user?.full_name || "Student"}
+            initialUrl={user?.avatar_url}
+          />
+          <form action={completeStudentOnboarding} className="mt-8 space-y-5">
             <div>
               <label className="text-sm font-medium">Full name</label>
-              <Input name="fullName" required className="mt-1.5" />
+              <Input name="fullName" required defaultValue={user?.full_name || ""} className="mt-1.5" />
             </div>
             <div>
               <label className="text-sm font-medium">Headline</label>
