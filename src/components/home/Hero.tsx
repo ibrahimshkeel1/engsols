@@ -6,7 +6,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, ArrowRight, Star } from "lucide-react";
 import type { Mentor } from "@/types";
-import { featuredMentors } from "@/data/mentors";
 import { disciplines } from "@/data/disciplines";
 import { cn } from "@/lib/utils";
 import { getDisciplineColors } from "@/lib/discipline-colors";
@@ -50,7 +49,7 @@ function MiniMentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
   );
 }
 
-export function Hero({ mentorCount }: { mentorCount: number }) {
+export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; featuredMentors: Mentor[] }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -120,17 +119,19 @@ export function Hero({ mentorCount }: { mentorCount: number }) {
             </motion.div>
           </div>
 
-          <div className="space-y-3">
-            <motion.p custom={3} initial="hidden" animate="visible" variants={fadeUp} className="text-xs font-semibold uppercase tracking-widest text-white/50">
-              Featured mentors
-            </motion.p>
-            {featuredMentors.slice(0, 3).map((m, i) => (
-              <MiniMentorCard key={m.slug} mentor={m} index={i} />
-            ))}
-            <motion.p custom={7} initial="hidden" animate="visible" variants={fadeUp} className="pt-2 text-center text-sm text-white/40">
-              {mentorCount}+ vetted mentors across {disciplines.length} disciplines
-            </motion.p>
-          </div>
+          {featuredMentors.length > 0 && (
+            <div className="space-y-3">
+              <motion.p custom={3} initial="hidden" animate="visible" variants={fadeUp} className="text-xs font-semibold uppercase tracking-widest text-white/50">
+                Featured mentors
+              </motion.p>
+              {featuredMentors.slice(0, 3).map((m, i) => (
+                <MiniMentorCard key={m.slug} mentor={m} index={i} />
+              ))}
+              <motion.p custom={7} initial="hidden" animate="visible" variants={fadeUp} className="pt-2 text-center text-sm text-white/40">
+                {mentorCount > 0 ? `${mentorCount}+ vetted mentors` : "Vetted mentors"} across {disciplines.length} disciplines
+              </motion.p>
+            </div>
+          )}
         </div>
       </div>
     </section>

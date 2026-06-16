@@ -1,24 +1,29 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { videos, getVideoBySlug } from "@/data/videos";
-import { mentors } from "@/data/mentors";
+import { getVideoBySlug, getVideos } from "@/lib/data/videos";
+import { getMentorBySlug } from "@/lib/data/mentors";
 import { videoThumbnail } from "@/lib/placeholders";
 import { Badge } from "@/components/ui/badge";
 import { MockMediaPlayer } from "@/components/shared/MockMediaPlayer";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const videos = await getVideos();
   return videos.map((v) => ({ slug: v.slug }));
 }
 
 export default async function VideoPage({ params }: Props) {
   const { slug } = await params;
-  const video = getVideoBySlug(slug);
+  const video = await getVideoBySlug(slug);
   if (!video) notFound();
 
-  const author = mentors.find((m) => m.slug === video.authorSlug);
-  const related = videos.filter((v) => v.slug !== slug && v.discipline === video.discipline).slice(0, 3);
+  const [author, allVideos] = await Promise.all([
+    video.authorSlug ? getMentorBySlug(video.authorSlug) : null,
+    getVideos(),
+  ]);
+
+  const related = allVideos.filter((v) => v.slug !== slug && v.discipline === video.discipline).slice(0, 3);
 
   return (
     <div className="py-12">

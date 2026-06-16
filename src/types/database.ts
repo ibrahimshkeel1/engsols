@@ -131,3 +131,108 @@ export type DbNewsArticle = {
   created_at: string;
   profiles?: DbProfile;
 };
+
+export type DbCompany = {
+  id: string;
+  slug: string;
+  name: string;
+  type: string;
+  headquarters: string;
+  country: string;
+  employee_count: string;
+  founded: number | null;
+  description: string;
+  disciplines: string[];
+  verified: boolean;
+  website: string;
+  published: boolean;
+  created_at: string;
+};
+
+export type DbJob = {
+  id: string;
+  slug: string;
+  title: string;
+  company_slug: string;
+  type: string;
+  discipline: string;
+  location: string;
+  remote: string;
+  salary_range: string | null;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  posted_at: string;
+  featured: boolean;
+  published: boolean;
+  created_at: string;
+};
+
+export type DbSeller = {
+  id: string;
+  slug: string;
+  name: string;
+  type: string;
+  location: string;
+  country: string;
+  description: string;
+  verified: boolean;
+  rating: number;
+  company_slug: string | null;
+  published: boolean;
+  created_at: string;
+};
+
+export type DbMarketplaceListing = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  subcategory: string;
+  price: number;
+  price_unit: string;
+  seller_slug: string;
+  company_slug: string | null;
+  discipline: string;
+  condition: string;
+  location: string;
+  specs: Record<string, string>;
+  in_stock: boolean;
+  featured: boolean;
+  published: boolean;
+  created_at: string;
+};
+
+export type DbCertification = {
+  id: string;
+  slug: string;
+  name: string;
+  short_name: string;
+  discipline: string;
+  description: string;
+  eligibility: string;
+  exam_format: string;
+  avg_prep_months: number;
+  pass_rate: string | null;
+  resources: unknown;
+  related_mentor_slugs: string[];
+  published: boolean;
+  created_at: string;
+};
+
+export type DbVideo = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  author_mentor_slug: string | null;
+  discipline: string;
+  duration: string;
+  views: number;
+  video_url: string | null;
+  tags: string[];
+  published_at: string | null;
+  published: boolean;
+  created_at: string;
+};

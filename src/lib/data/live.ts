@@ -1,7 +1,5 @@
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { liveStreams as mockStreams } from "@/data/liveStreams";
-import { mentors } from "@/data/mentors";
 import type { DbLiveSession } from "@/types/database";
 import type { LiveStream } from "@/types";
 
@@ -29,32 +27,17 @@ function toLiveStream(s: DbLiveSession): LiveStream & { hostName?: string } {
 }
 
 export async function getLiveSessions() {
-  if (!isSupabaseConfigured()) {
-    return mockStreams.map((s) => ({
-      ...s,
-      hostName: mentors.find((m) => m.slug === s.hostSlug)?.name,
-    }));
-  }
+  if (!isSupabaseConfigured()) return [];
 
   const supabase = createPublicClient();
-  if (!supabase) {
-    return mockStreams.map((s) => ({
-      ...s,
-      hostName: mentors.find((m) => m.slug === s.hostSlug)?.name,
-    }));
-  }
+  if (!supabase) return [];
 
   const { data } = await supabase
     .from("live_sessions")
     .select("*, profiles(*), mentor_profiles(*), forum_posts(slug)")
     .order("scheduled_at", { ascending: false });
 
-  if (!data?.length) {
-    return mockStreams.map((s) => ({
-      ...s,
-      hostName: mentors.find((m) => m.slug === s.hostSlug)?.name,
-    }));
-  }
+  if (!data?.length) return [];
   return data.map((s) => toLiveStream(s as DbLiveSession));
 }
 

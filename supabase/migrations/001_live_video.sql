@@ -17,4 +17,5 @@ create index if not exists idx_live_sessions_status on live_sessions(status);
 create index if not exists idx_live_sessions_forum on live_sessions(forum_post_id);
 
 drop policy if exists "Mentors manage own sessions" on live_sessions;
-create policy if not exists "Hosts manage own sessions" on live_sessions for all using (auth.uid() = host_id);
+drop policy if exists "Hosts manage own sessions" on live_sessions;
+create policy "Hosts manage own sessions" on live_sessions for all using (auth.uid() = host_id);

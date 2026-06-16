@@ -1,7 +1,5 @@
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 
-const companies = ["Shell", "Schlumberger", "BP", "Chevron", "Halliburton", "ExxonMobil", "Wood", "TotalEnergies", "Baker Hughes", "Saipem"];
-
 function CompanyItem({ name }: { name: string }) {
   return (
     <div className="flex shrink-0 items-center gap-3 px-6 opacity-80 transition-opacity hover:opacity-100">
@@ -11,8 +9,10 @@ function CompanyItem({ name }: { name: string }) {
   );
 }
 
-export function CompanyStrip() {
-  const track = [...companies, ...companies];
+export function CompanyStrip({ companyNames }: { companyNames: string[] }) {
+  if (companyNames.length === 0) return null;
+
+  const track = [...companyNames, ...companyNames];
 
   return (
     <section className="border-b border-border py-10">

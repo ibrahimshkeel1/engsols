@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { portfolios as mockPortfolios } from "@/data/portfolios";
 import type { DbPortfolio } from "@/types/database";
 import type { Portfolio } from "@/types";
 
@@ -35,10 +34,10 @@ function toPortfolio(p: DbPortfolio): Portfolio {
 }
 
 export async function getPublishedPortfolios(): Promise<Portfolio[]> {
-  if (!isSupabaseConfigured()) return mockPortfolios;
+  if (!isSupabaseConfigured()) return [];
 
   const supabase = createPublicClient();
-  if (!supabase) return mockPortfolios;
+  if (!supabase) return [];
 
   const { data } = await supabase
     .from("portfolios")
@@ -46,17 +45,15 @@ export async function getPublishedPortfolios(): Promise<Portfolio[]> {
     .eq("published", true)
     .order("updated_at", { ascending: false });
 
-  if (!data?.length) return mockPortfolios;
+  if (!data?.length) return [];
   return data.map((p) => toPortfolio(p as DbPortfolio));
 }
 
 export async function getPortfolio(slug: string) {
-  if (!isSupabaseConfigured()) {
-    return mockPortfolios.find((p) => p.slug === slug) ?? null;
-  }
+  if (!isSupabaseConfigured()) return null;
 
   const supabase = createPublicClient();
-  if (!supabase) return mockPortfolios.find((p) => p.slug === slug) ?? null;
+  if (!supabase) return null;
 
   const { data } = await supabase
     .from("portfolios")
@@ -64,7 +61,7 @@ export async function getPortfolio(slug: string) {
     .eq("slug", slug)
     .single();
 
-  if (!data) return mockPortfolios.find((p) => p.slug === slug) ?? null;
+  if (!data) return null;
   if (!data.published) {
     const authClient = await createClient();
     const { data: { user } } = await authClient.auth.getUser();
@@ -75,7 +72,7 @@ export async function getPortfolio(slug: string) {
         .eq("id", user?.id ?? "")
         .maybeSingle();
       if (profile?.role !== "admin" && data.user_id !== user?.id) {
-        return mockPortfolios.find((p) => p.slug === slug) ?? null;
+        return null;
       }
     }
   }

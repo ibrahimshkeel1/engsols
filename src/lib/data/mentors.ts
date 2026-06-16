@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { mentors as mockMentors } from "@/data/mentors";
 import type { Mentor } from "@/types";
 import type { DbMentorProfile } from "@/types/database";
 
@@ -29,10 +28,10 @@ function dbToMentor(m: DbMentorProfile): Mentor {
 }
 
 export async function getApprovedMentors(): Promise<Mentor[]> {
-  if (!isSupabaseConfigured()) return mockMentors;
+  if (!isSupabaseConfigured()) return [];
 
   const supabase = createPublicClient();
-  if (!supabase) return mockMentors;
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from("mentor_profiles")
@@ -41,17 +40,15 @@ export async function getApprovedMentors(): Promise<Mentor[]> {
     .order("featured", { ascending: false })
     .order("rating", { ascending: false });
 
-  if (error || !data?.length) return mockMentors;
+  if (error || !data?.length) return [];
   return data.map(dbToMentor);
 }
 
 export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
-  if (!isSupabaseConfigured()) {
-    return mockMentors.find((m) => m.slug === slug) ?? null;
-  }
+  if (!isSupabaseConfigured()) return null;
 
   const supabase = createPublicClient();
-  if (!supabase) return mockMentors.find((m) => m.slug === slug) ?? null;
+  if (!supabase) return null;
 
   const { data } = await supabase
     .from("mentor_profiles")
@@ -60,7 +57,7 @@ export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
     .eq("status", "approved")
     .single();
 
-  if (!data) return mockMentors.find((m) => m.slug === slug) ?? null;
+  if (!data) return null;
   return dbToMentor(data as DbMentorProfile);
 }
 

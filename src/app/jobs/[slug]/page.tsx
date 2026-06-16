@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { jobs, getJobBySlug } from "@/data/jobs";
-import { companies } from "@/data/companies";
-import { portfolios } from "@/data/portfolios";
+import { getJobBySlug, getJobs } from "@/lib/data/jobs";
+import { getCompanyBySlug } from "@/lib/data/companies";
+import { getPublishedPortfolios } from "@/lib/data/portfolios";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,17 +10,23 @@ import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const jobs = await getJobs();
   return jobs.map((j) => ({ slug: j.slug }));
 }
 
 export default async function JobPage({ params }: Props) {
   const { slug } = await params;
-  const job = getJobBySlug(slug);
+  const job = await getJobBySlug(slug);
   if (!job) notFound();
 
-  const company = companies.find((c) => c.slug === job.companySlug);
-  const similar = jobs.filter((j) => j.slug !== slug && j.discipline === job.discipline).slice(0, 3);
+  const [company, allJobs, portfolios] = await Promise.all([
+    getCompanyBySlug(job.companySlug),
+    getJobs(),
+    getPublishedPortfolios(),
+  ]);
+
+  const similar = allJobs.filter((j) => j.slug !== slug && j.discipline === job.discipline).slice(0, 3);
   const graduates = portfolios.filter((p) => p.discipline === job.discipline && p.openToWork).slice(0, 3);
 
   return (

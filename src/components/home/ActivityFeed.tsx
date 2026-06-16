@@ -40,19 +40,28 @@ export async function ActivityFeed() {
               )}
             </div>
           </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {recentPosts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/forum/${post.slug}`}
-                className="card-interactive rounded-xl p-4"
-              >
-                <p className="text-xs text-muted-foreground">{post.discipline}</p>
-                <p className="mt-1 line-clamp-2 font-medium">{post.title}</p>
-                <p className="mt-2 text-xs text-muted-foreground">{post.replyCount} replies</p>
+          {recentPosts.length > 0 ? (
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {recentPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/forum/${post.slug}`}
+                  className="card-interactive rounded-xl p-4"
+                >
+                  <p className="text-xs text-muted-foreground">{post.discipline}</p>
+                  <p className="mt-1 line-clamp-2 font-medium">{post.title}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{post.replyCount} replies</p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-8 text-sm text-muted-foreground">
+              No discussions yet.{" "}
+              <Link href="/forum/new" className="text-primary hover:underline">
+                Start the first thread →
               </Link>
-            ))}
-          </div>
+            </p>
+          )}
         </AnimateIn>
       </div>
     </section>

@@ -1,25 +1,25 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { certifications, getCertificationBySlug } from "@/data/certifications";
-import { mentors } from "@/data/mentors";
-import { forumPosts } from "@/data/forumPosts";
+import { getCertificationBySlug, getCertifications } from "@/lib/data/certifications";
+import { getApprovedMentors } from "@/lib/data/mentors";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const certifications = await getCertifications();
   return certifications.map((c) => ({ slug: c.slug }));
 }
 
 export default async function CertificationPage({ params }: Props) {
   const { slug } = await params;
-  const cert = getCertificationBySlug(slug);
+  const cert = await getCertificationBySlug(slug);
   if (!cert) notFound();
 
+  const mentors = await getApprovedMentors();
   const relatedMentors = mentors.filter((m) => cert.relatedMentorSlugs.includes(m.slug));
-  const relatedThreads = forumPosts.filter((p) => cert.forumThreadSlugs?.includes(p.slug));
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
@@ -40,14 +40,18 @@ export default async function CertificationPage({ params }: Props) {
         <Card className="card-elevated">
           <CardContent className="p-6">
             <h2 className="font-semibold">Study resources</h2>
-            <ul className="mt-3 space-y-2">
-              {cert.resources.map((r) => (
-                <li key={r.title} className="flex items-center justify-between text-sm">
-                  <span>{r.title}</span>
-                  <span className="rounded-md bg-muted px-2 py-0.5 text-xs capitalize">{r.type}</span>
-                </li>
-              ))}
-            </ul>
+            {cert.resources.length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">No resources listed yet.</p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {cert.resources.map((r) => (
+                  <li key={r.title} className="flex items-center justify-between text-sm">
+                    <span>{r.title}</span>
+                    <span className="rounded-md bg-muted px-2 py-0.5 text-xs capitalize">{r.type}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
             <Link
               href={`/mentors?discipline=${encodeURIComponent(cert.discipline)}`}
               className="mt-6 flex h-11 w-full items-center justify-center rounded-xl bg-accent text-sm font-semibold text-accent-foreground hover:brightness-110"
@@ -57,22 +61,14 @@ export default async function CertificationPage({ params }: Props) {
           </CardContent>
         </Card>
       </div>
-      <h2 className="mt-12 text-xl font-bold">Mentors who can help</h2>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {relatedMentors.map((m) => (
-          <MentorCard key={m.slug} mentor={m} />
-        ))}
-      </div>
-      {relatedThreads.length > 0 && (
+      {relatedMentors.length > 0 && (
         <>
-          <h2 className="mt-12 text-xl font-bold">Forum discussions</h2>
-          <ul className="mt-4 space-y-2">
-            {relatedThreads.map((t) => (
-              <li key={t.slug}>
-                <Link href={`/forum/${t.slug}`} className="text-primary">{t.title}</Link>
-              </li>
+          <h2 className="mt-12 text-xl font-bold">Mentors who can help</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {relatedMentors.map((m) => (
+              <MentorCard key={m.slug} mentor={m} />
             ))}
-          </ul>
+          </div>
         </>
       )}
       <Link

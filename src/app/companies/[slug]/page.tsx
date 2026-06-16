@@ -1,28 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { companies, getCompanyBySlug } from "@/data/companies";
-import { jobs } from "@/data/jobs";
-import { listings } from "@/data/listings";
-import { mentors } from "@/data/mentors";
+import { getCompanies, getCompanyBySlug } from "@/lib/data/companies";
+import { getJobsByCompanySlug } from "@/lib/data/jobs";
+import { getListingsByCompanySlug } from "@/lib/data/marketplace";
+import { getApprovedMentors } from "@/lib/data/mentors";
 import { companyLogo } from "@/lib/placeholders";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const companies = await getCompanies();
   return companies.map((c) => ({ slug: c.slug }));
 }
 
 export default async function CompanyPage({ params }: Props) {
   const { slug } = await params;
-  const company = getCompanyBySlug(slug);
+  const company = await getCompanyBySlug(slug);
   if (!company) notFound();
 
-  const companyJobs = jobs.filter((j) => j.companySlug === company.slug);
-  const companyListings = listings.filter((l) => company.listingSlugs.includes(l.slug));
-  const employees = mentors.filter((m) => m.company.toLowerCase().includes(company.name.split(" ")[0].toLowerCase())).slice(0, 4);
+  const [companyJobs, companyListings, mentors] = await Promise.all([
+    getJobsByCompanySlug(company.slug),
+    getListingsByCompanySlug(company.slug),
+    getApprovedMentors(),
+  ]);
+
+  const employees = mentors
+    .filter((m) => m.company.toLowerCase().includes(company.name.split(" ")[0].toLowerCase()))
+    .slice(0, 4);
 
   return (
     <div className="py-12">

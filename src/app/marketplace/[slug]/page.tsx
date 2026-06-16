@@ -1,25 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { listings, getListingBySlug } from "@/data/listings";
-import { sellers } from "@/data/sellers";
+import { getListingBySlug, getListings, getSellerBySlug } from "@/lib/data/marketplace";
 import { listingImage } from "@/lib/placeholders";
 import { Card, CardContent } from "@/components/ui/card";
 import { MarketplaceInquiryForm } from "@/components/marketplace/MarketplaceInquiryForm";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const listings = await getListings();
   return listings.map((l) => ({ slug: l.slug }));
 }
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
-  const listing = getListingBySlug(slug);
+  const listing = await getListingBySlug(slug);
   if (!listing) notFound();
 
-  const seller = sellers.find((s) => s.slug === listing.sellerSlug);
-  const related = listings.filter((l) => l.slug !== slug && l.category === listing.category).slice(0, 3);
+  const [seller, allListings] = await Promise.all([
+    getSellerBySlug(listing.sellerSlug),
+    getListings(),
+  ]);
+
+  const related = allListings.filter((l) => l.slug !== slug && l.category === listing.category).slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">

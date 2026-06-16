@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { forumPosts as mockPosts } from "@/data/forumPosts";
-import { forumReplies as mockReplies } from "@/data/forumReplies";
 import type { DbForumPost, DbForumReply } from "@/types/database";
 import type { ForumPost, ForumReply } from "@/types";
 
@@ -22,17 +20,17 @@ function toForumPost(p: DbForumPost): ForumPost {
 }
 
 export async function getForumPosts(): Promise<ForumPost[]> {
-  if (!isSupabaseConfigured()) return mockPosts;
+  if (!isSupabaseConfigured()) return [];
 
   const supabase = createPublicClient();
-  if (!supabase) return mockPosts;
+  if (!supabase) return [];
 
   const { data: posts } = await supabase
     .from("forum_posts")
     .select("*, profiles(*)")
     .order("created_at", { ascending: false });
 
-  if (!posts?.length) return mockPosts;
+  if (!posts?.length) return [];
 
   const withCounts = await Promise.all(
     posts.map(async (post) => {
@@ -48,21 +46,10 @@ export async function getForumPosts(): Promise<ForumPost[]> {
 }
 
 export async function getForumPost(slug: string) {
-  if (!isSupabaseConfigured()) {
-    const post = mockPosts.find((p) => p.slug === slug);
-    if (!post) return null;
-    const replies: ForumReply[] = (mockReplies[slug] ?? []).map((r) => ({
-      ...r,
-    }));
-    return { post, replies, dbPost: null };
-  }
+  if (!isSupabaseConfigured()) return null;
 
   const supabase = createPublicClient();
-  if (!supabase) {
-    const mock = mockPosts.find((p) => p.slug === slug);
-    if (!mock) return null;
-    return { post: mock, replies: mockReplies[slug] ?? [], dbPost: null };
-  }
+  if (!supabase) return null;
 
   const { data: post } = await supabase
     .from("forum_posts")
@@ -70,15 +57,7 @@ export async function getForumPost(slug: string) {
     .eq("slug", slug)
     .single();
 
-  if (!post) {
-    const mock = mockPosts.find((p) => p.slug === slug);
-    if (!mock) return null;
-    return {
-      post: mock,
-      replies: mockReplies[slug] ?? [],
-      dbPost: null,
-    };
-  }
+  if (!post) return null;
 
   const { data: replies } = await supabase
     .from("forum_replies")
