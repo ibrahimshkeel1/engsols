@@ -40,12 +40,16 @@ export function JobsDirectory({ jobs }: Props) {
     <ListPageLayout
       label="Careers"
       title="Engineering Jobs"
-      description="Roles from operators, service companies, and consultancies. Apply directly when listings go live."
-      preview
+      description="Roles from operators, service companies, and consultancies."
       action={
-        <Link href="/jobs/post" className="inline-flex h-11 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:brightness-110">
-          Post a job
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/jobs/inbox" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm font-semibold hover:bg-muted">
+            Applications inbox
+          </Link>
+          <Link href="/jobs/post" className="inline-flex h-11 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:brightness-110">
+            Post a job
+          </Link>
+        </div>
       }
     >
       <div className="flex flex-wrap gap-3">

@@ -1,6 +1,6 @@
+import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import type { DbNewsArticle } from "@/types/database";
 
 export async function getPublishedNews() {
   if (!isSupabaseConfigured()) return [];
@@ -34,8 +34,7 @@ export async function getNewsArticle(slug: string) {
 
 export async function getAllNewsForAdmin() {
   if (!isSupabaseConfigured()) return [];
-  const supabase = createPublicClient();
-  if (!supabase) return [];
+  const supabase = await createClient();
   const { data } = await supabase
     .from("news_articles")
     .select("*")

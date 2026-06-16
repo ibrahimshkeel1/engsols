@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getForumPosts } from "@/lib/data/forum";
 import { PageHero } from "@/components/shared/PageHero";
 import { ForumList } from "@/components/forum/ForumList";
+import { ForumListRealtime } from "@/components/forum/ForumListRealtime";
 
 export const revalidate = 60;
 
@@ -20,6 +21,7 @@ export default async function ForumPage() {
         </Link>
       </PageHero>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <ForumListRealtime />
         <ForumList posts={posts} />
       </div>
     </>

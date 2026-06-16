@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { VerifyJobEmployerButton } from "@/components/admin/VerifyJobEmployerButton";
+import { ToggleJobPublishedButton } from "@/components/admin/ToggleJobPublishedButton";
 
 export default async function AdminJobsPage() {
   const jobs = await getJobsForAdmin();
@@ -57,6 +58,7 @@ export default async function AdminJobsPage() {
                   <Link href={`/jobs/${job.slug}`} className="text-sm font-medium text-primary hover:underline">
                     View →
                   </Link>
+                  <ToggleJobPublishedButton jobId={job.id} published={job.published} />
                   <VerifyJobEmployerButton jobId={job.id} verified={job.employer_verified} />
                 </div>
               </CardContent>

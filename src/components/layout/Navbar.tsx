@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { AuthLinks } from "@/components/layout/AuthLinks";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { NavbarSearch } from "@/components/layout/NavbarSearch";
 import { NavbarShell, navLinks } from "@/components/layout/NavbarShell";
 
 export function Navbar() {
@@ -15,6 +16,7 @@ export function Navbar() {
         </MobileMenu>
       }
     >
+      <NavbarSearch />
       <ThemeToggle />
       <div className="hidden items-center gap-1 sm:flex">
         <AuthLinks />

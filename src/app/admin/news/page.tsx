@@ -5,6 +5,7 @@ import { getAllNewsForAdmin } from "@/lib/data/news";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { DeleteNewsButton } from "@/components/admin/DeleteNewsButton";
 
 export default async function AdminNewsPage() {
   const articles = await getAllNewsForAdmin();
@@ -44,11 +45,17 @@ export default async function AdminNewsPage() {
                   {a.published_at ? format(new Date(a.published_at), "MMM d, yyyy") : "Not published"}
                 </p>
               </div>
-              {a.published && (
-                <Link href={`/news/${a.slug}`} className="text-sm font-medium text-primary hover:underline">
-                  View →
+              <div className="flex shrink-0 flex-wrap items-center gap-3">
+                <Link href={`/admin/news/${a.id}/edit`} className="text-sm font-medium text-primary hover:underline">
+                  Edit
                 </Link>
-              )}
+                {a.published && (
+                  <Link href={`/news/${a.slug}`} className="text-sm font-medium text-primary hover:underline">
+                    View →
+                  </Link>
+                )}
+                <DeleteNewsButton articleId={a.id} title={a.title} />
+              </div>
             </CardContent>
           </Card>
           ))

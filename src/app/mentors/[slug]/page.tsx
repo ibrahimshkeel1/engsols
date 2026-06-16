@@ -157,7 +157,11 @@ export default async function MentorProfilePage({ params }: PageProps) {
           </div>
 
           <div>
-            <MentorBookingCard mentor={mentor} />
+            <MentorBookingCard
+              mentor={mentor}
+              defaultName={user?.full_name ?? ""}
+              defaultEmail={user?.email ?? ""}
+            />
           </div>
         </div>
         <SimilarMentors mentors={similar} />

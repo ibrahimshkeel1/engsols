@@ -8,6 +8,7 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
+import { SentryInit } from "@/components/analytics/SentryInit";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-background text-foreground antialiased">
         <Analytics />
+        <SentryInit />
         <ThemeProvider>
           <LocaleProvider>
             <Navbar />

@@ -45,11 +45,16 @@ export default async function AdminCertificationsPage() {
                   <p className="mt-1 text-sm text-muted-foreground">{cert.discipline}</p>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{cert.description}</p>
                 </div>
-                {cert.published && (
-                  <Link href={`/certifications/${cert.slug}`} className="shrink-0 text-sm font-medium text-primary hover:underline">
-                    View →
+                <div className="flex shrink-0 gap-3">
+                  <Link href={`/admin/certifications/${cert.id}/edit`} className="text-sm font-medium text-primary hover:underline">
+                    Edit
                   </Link>
-                )}
+                  {cert.published && (
+                    <Link href={`/certifications/${cert.slug}`} className="text-sm font-medium text-primary hover:underline">
+                      View →
+                    </Link>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))

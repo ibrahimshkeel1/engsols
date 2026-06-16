@@ -41,7 +41,7 @@ NEXT_PUBLIC_GA_ID=
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=
 ```
 
-3. Run Supabase migrations in order (`supabase/migrations/001` through `008`).
+3. Run Supabase migrations in order (`supabase/migrations/001` through `009`).
 
 4. Start dev server:
 
@@ -69,6 +69,8 @@ npm run dev
 | Admin | `/admin` |
 | Search | `/search` |
 | Career assist | `/assist` |
+| Job applications inbox | `/jobs/inbox` |
+| Admin sellers / marketplace | `/admin/sellers`, `/admin/marketplace` |
 
 ## Progress tracking
 

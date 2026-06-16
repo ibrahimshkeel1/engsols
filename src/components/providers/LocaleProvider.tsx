@@ -13,18 +13,28 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 const STORAGE_KEY = "engsols-locale";
 
+function readStoredLocale(): Locale {
+  if (typeof window === "undefined") return "en";
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored === "ar" ? "ar" : "en";
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("en");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (stored === "en" || stored === "ar") setLocaleState(stored);
+    // Hydrate locale from localStorage after mount (avoids SSR mismatch)
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only preference
+    setLocaleState(readStoredLocale());
+    setReady(true);
   }, []);
 
   useEffect(() => {
+    if (!ready) return;
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
-  }, [locale]);
+  }, [locale, ready]);
 
   function setLocale(next: Locale) {
     setLocaleState(next);

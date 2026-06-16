@@ -24,9 +24,13 @@ export function JobApplicationForm({ jobSlug, jobTitle, company }: Props) {
     form.set("jobTitle", jobTitle);
     form.set("company", company);
     try {
-      await submitJobApplication(form);
-      toast.success("Application submitted! The employer will follow up.");
-      e.currentTarget.reset();
+      const result = await submitJobApplication(form);
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Application submitted! The employer will follow up.");
+        e.currentTarget.reset();
+      }
     } catch {
       toast.error("Could not submit. Try again or log in first.");
     }

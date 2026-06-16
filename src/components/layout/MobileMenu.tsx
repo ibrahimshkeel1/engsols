@@ -5,14 +5,21 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { t, type Locale } from "@/lib/i18n/messages";
 
 type NavLink = { href: string; label: string };
+
+function navLabel(locale: Locale, key: string) {
+  return t(locale, key as Parameters<typeof t>[1]);
+}
 
 export function MobileMenu({ links, children }: { links: NavLink[]; children?: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const { locale } = useLocale();
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -80,6 +87,24 @@ export function MobileMenu({ links, children }: { links: NavLink[]; children?: R
               className="absolute left-0 right-0 top-16 z-50 border-t border-border bg-card/95 px-4 py-4 shadow-xl backdrop-blur-xl lg:hidden"
             >
               <nav className="flex flex-col gap-1" aria-label="Main">
+                <form
+                  className="mb-2 px-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const q = new FormData(e.currentTarget).get("q") as string;
+                    if (q?.trim()) {
+                      window.location.href = `/search?q=${encodeURIComponent(q.trim())}`;
+                      close();
+                    }
+                  }}
+                >
+                  <input
+                    name="q"
+                    placeholder="Search..."
+                    className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm"
+                    aria-label="Search"
+                  />
+                </form>
                 {links.map((l, i) => (
                   <motion.div
                     key={l.href}
@@ -92,7 +117,7 @@ export function MobileMenu({ links, children }: { links: NavLink[]; children?: R
                       onClick={close}
                       className="block rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted"
                     >
-                      {l.label}
+                      {navLabel(locale, l.label)}
                     </Link>
                   </motion.div>
                 ))}

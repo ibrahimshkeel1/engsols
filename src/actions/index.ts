@@ -707,17 +707,54 @@ export async function submitPortfolioContact(formData: FormData) {
 }
 
 export async function submitJobApplication(formData: FormData) {
-  const jobTitle = formData.get("jobTitle") as string;
-  const company = formData.get("company") as string;
-  const result = await insertContactRequest({
-    refSlug: formData.get("jobSlug") as string,
-    refName: `${jobTitle} @ ${company}`,
-    requesterName: formData.get("name") as string,
-    requesterEmail: formData.get("email") as string,
-    message: formData.get("message") as string,
-    requestType: "job_application",
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const { checkRateLimit } = await import("@/lib/rate-limit");
+  const limited = await checkRateLimit(user.id, "booking");
+  if (!limited.ok) return { error: limited.error };
+
+  const jobSlug = formData.get("jobSlug") as string;
+  const { data: job } = await supabase.from("jobs").select("id, title").eq("slug", jobSlug).single();
+  if (!job) return { error: "Job not found" };
+
+  const name = (formData.get("name") as string).trim();
+  const email = (formData.get("email") as string).trim();
+  const message = (formData.get("message") as string).trim();
+
+  const { error } = await supabase.from("job_applications").insert({
+    job_id: job.id,
+    job_slug: jobSlug,
+    applicant_id: user.id,
+    applicant_name: name,
+    applicant_email: email,
+    message,
   });
-  if (result?.error) throw new Error(result.error);
+
+  if (error) return { error: error.message };
+
+  const { sendEmail, jobApplicationEmail } = await import("@/lib/email");
+  if (job.id) {
+    const { data: poster } = await supabase.from("jobs").select("posted_by").eq("id", job.id).single();
+    if (poster?.posted_by) {
+      const { data: prof } = await supabase.from("profiles").select("email").eq("id", poster.posted_by).single();
+      if (prof?.email) {
+        const mail = jobApplicationEmail({ jobTitle: job.title, applicantName: name, applicantEmail: email, message });
+        await sendEmail({ to: prof.email, ...mail });
+      }
+      const { sendPushToUser } = await import("@/lib/push");
+      await sendPushToUser({
+        userId: poster.posted_by,
+        title: "New job application",
+        body: `${name} applied to ${job.title}`,
+        url: "/jobs/inbox",
+      });
+    }
+  }
+
+  revalidatePath("/jobs/inbox");
+  revalidatePath("/admin/applications");
   return { success: true };
 }
 

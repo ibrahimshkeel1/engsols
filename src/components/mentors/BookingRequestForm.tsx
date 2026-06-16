@@ -11,9 +11,11 @@ type Props = {
   mentorSlug: string;
   mentorName: string;
   type?: "intro" | "monthly";
+  defaultName?: string;
+  defaultEmail?: string;
 };
 
-export function BookingRequestForm({ mentorSlug, mentorName, type = "intro" }: Props) {
+export function BookingRequestForm({ mentorSlug, mentorName, type = "intro", defaultName = "", defaultEmail = "" }: Props) {
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -36,10 +38,10 @@ export function BookingRequestForm({ mentorSlug, mentorName, type = "intro" }: P
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <FormField label="Your name" id="booking-name">
-        <Input name="name" required autoComplete="name" />
+        <Input name="name" required autoComplete="name" defaultValue={defaultName} />
       </FormField>
       <FormField label="Email" id="booking-email">
-        <Input name="email" required type="email" autoComplete="email" />
+        <Input name="email" required type="email" autoComplete="email" defaultValue={defaultEmail} />
       </FormField>
       <FormField label="Message" id="booking-message">
         <Textarea

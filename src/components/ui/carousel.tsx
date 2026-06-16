@@ -40,14 +40,18 @@ export function Carousel({
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
     setSelectedIndex(api.selectedScrollSnap());
+    setScrollSnaps(api.scrollSnapList());
   }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
-    onSelect(emblaApi);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
+    queueMicrotask(() => onSelect(emblaApi));
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   return (

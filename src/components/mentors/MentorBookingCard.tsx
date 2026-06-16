@@ -17,9 +17,11 @@ const includes = [
 
 type Props = {
   mentor: Mentor;
+  defaultName?: string;
+  defaultEmail?: string;
 };
 
-export function MentorBookingCard({ mentor }: Props) {
+export function MentorBookingCard({ mentor, defaultName, defaultEmail }: Props) {
   const [tab, setTab] = useState<"intro" | "monthly">("intro");
 
   return (
@@ -51,7 +53,13 @@ export function MentorBookingCard({ mentor }: Props) {
       </div>
 
       <div className="p-5">
-        <BookingRequestForm mentorSlug={mentor.slug} mentorName={mentor.name} type={tab} />
+        <BookingRequestForm
+          mentorSlug={mentor.slug}
+          mentorName={mentor.name}
+          type={tab}
+          defaultName={defaultName}
+          defaultEmail={defaultEmail}
+        />
       </div>
 
       <div className="space-y-2.5 border-t border-border p-5">

@@ -51,3 +51,31 @@ export function bookingNotificationEmail(opts: {
     `,
   };
 }
+
+export function jobApplicationEmail(opts: {
+  jobTitle: string;
+  applicantName: string;
+  applicantEmail: string;
+  message: string;
+}) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: `New application for ${opts.jobTitle}`,
+    html: `
+      <p><strong>${opts.applicantName}</strong> (${opts.applicantEmail}) applied to <strong>${opts.jobTitle}</strong>.</p>
+      <p>${opts.message}</p>
+      <p><a href="${site}/jobs/inbox">View in your inbox</a></p>
+    `,
+  };
+}
+
+export function sellerApprovedEmail(opts: { sellerName: string }) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: "Your EngSols seller profile is live",
+    html: `
+      <p>Your seller profile <strong>${opts.sellerName}</strong> has been approved.</p>
+      <p><a href="${site}/marketplace/sell">List your first product</a></p>
+    `,
+  };
+}

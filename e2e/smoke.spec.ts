@@ -21,4 +21,19 @@ test.describe("smoke", () => {
     await page.goto("/search");
     await expect(page.getByRole("heading", { name: /search/i })).toBeVisible();
   });
+
+  test("login page loads", async ({ page }) => {
+    await page.goto("/login");
+    await expect(page.getByRole("heading", { name: /sign in to engsols/i })).toBeVisible();
+  });
+
+  test("assist page redirects when logged out", async ({ page }) => {
+    await page.goto("/assist");
+    await expect(page).toHaveURL(/login/);
+  });
+
+  test("jobs inbox redirects when logged out", async ({ page }) => {
+    await page.goto("/jobs/inbox");
+    await expect(page).toHaveURL(/login/);
+  });
 });

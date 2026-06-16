@@ -3,30 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { AuthLinks } from "@/components/layout/AuthLinks";
-import { MobileMenu } from "@/components/layout/MobileMenu";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { t } from "@/lib/i18n/messages";
 
 const primaryNav = [
-  { href: "/mentors", label: "Mentors" },
-  { href: "/portfolios", label: "Portfolios" },
-  { href: "/forum", label: "Forum" },
-  { href: "/live", label: "Live" },
-  { href: "/news", label: "News" },
+  { href: "/mentors", key: "mentors" as const },
+  { href: "/portfolios", key: "portfolios" as const },
+  { href: "/forum", key: "forum" as const },
+  { href: "/live", key: "live" as const },
+  { href: "/news", key: "news" as const },
 ];
 
 const moreNav = [
-  { href: "/jobs", label: "Jobs", preview: false },
-  { href: "/certifications", label: "Certifications", preview: false },
-  { href: "/companies", label: "Companies", preview: false },
-  { href: "/marketplace", label: "Marketplace", preview: false },
-  { href: "/videos", label: "Videos", preview: false },
-  { href: "/search", label: "Search", preview: false },
+  { href: "/jobs", key: "jobs" as const, preview: false },
+  { href: "/certifications", key: "certifications" as const, preview: false },
+  { href: "/companies", key: "companies" as const, preview: false },
+  { href: "/marketplace", key: "marketplace" as const, preview: false },
+  { href: "/videos", key: "videos" as const, preview: false },
+  { href: "/search", key: "search" as const, preview: false },
+  { href: "/assist", key: "assist" as const, preview: false },
 ];
 
-export const navLinks = [...primaryNav, ...moreNav];
+export const navLinks = [
+  ...primaryNav.map((l) => ({ href: l.href, label: l.key })),
+  ...moreNav.map((l) => ({ href: l.href, label: l.key })),
+];
 
 export function NavbarShell({
   children,
@@ -38,6 +41,7 @@ export function NavbarShell({
   const [scrolled, setScrolled] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const pathname = usePathname();
+  const { locale } = useLocale();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -63,7 +67,7 @@ export function NavbarShell({
                 pathname.startsWith(l.href) ? "text-accent" : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {l.label}
+              {t(locale, l.key)}
             </Link>
           ))}
           <div className="relative">
@@ -73,7 +77,7 @@ export function NavbarShell({
               onBlur={() => setTimeout(() => setMoreOpen(false), 150)}
               className="nav-link flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
             >
-              More <ChevronDown className={cn("h-3.5 w-3.5 transition", moreOpen && "rotate-180")} />
+              {t(locale, "more")} <ChevronDown className={cn("h-3.5 w-3.5 transition", moreOpen && "rotate-180")} />
             </button>
             {moreOpen && (
               <div className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
@@ -83,7 +87,7 @@ export function NavbarShell({
                     href={l.href}
                     className="flex items-center justify-between px-4 py-2.5 text-sm hover:bg-muted"
                   >
-                    {l.label}
+                    {t(locale, l.key)}
                     {l.preview && (
                       <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">Preview</span>
                     )}

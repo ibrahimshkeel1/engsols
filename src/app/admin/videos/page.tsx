@@ -47,11 +47,16 @@ export default async function AdminVideosPage() {
                   </p>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{video.description}</p>
                 </div>
-                {video.published && (
-                  <Link href={`/videos/${video.slug}`} className="shrink-0 text-sm font-medium text-primary hover:underline">
-                    View →
+                <div className="flex shrink-0 gap-3">
+                  <Link href={`/admin/videos/${video.id}/edit`} className="text-sm font-medium text-primary hover:underline">
+                    Edit
                   </Link>
-                )}
+                  {video.published && (
+                    <Link href={`/videos/${video.slug}`} className="text-sm font-medium text-primary hover:underline">
+                      View →
+                    </Link>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))

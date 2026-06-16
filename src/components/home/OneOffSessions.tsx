@@ -1,6 +1,12 @@
+import Link from "next/link";
 import { sessionTypes } from "@/data/sessionTypes";
-import { ComingSoonButton } from "@/components/shared/ComingSoonButton";
 import { Card, CardContent } from "@/components/ui/card";
+
+const goalMap: Record<string, string> = {
+  intro: "first-job",
+  "study-plan": "fe-pe",
+  "interview-prep": "ace-interviews",
+};
 
 export function OneOffSessions() {
   return (
@@ -10,8 +16,7 @@ export function OneOffSessions() {
           Not sure if mentorship is right for you? Try a one-off session
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-          A quick call with an expert is one click away. Pick a brain, talk through an issue,
-          or get to know an industry veteran.
+          Book a focused call with an expert — intro chats, study plans, or interview prep.
         </p>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {sessionTypes.map((session) => (
@@ -20,11 +25,14 @@ export function OneOffSessions() {
                 <h3 className="text-lg font-semibold text-foreground">{session.title}</h3>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{session.description}</p>
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Starting from <span className="text-lg font-bold text-foreground">${session.price}</span>/call
+                  From <span className="text-lg font-bold text-foreground">${session.price}</span>/session
                 </p>
-                <ComingSoonButton variant="outline" className="mt-4 w-full">
-                  Book session
-                </ComingSoonButton>
+                <Link
+                  href={`/mentors?goal=${goalMap[session.id] ?? ""}`}
+                  className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-card text-sm font-semibold hover:border-primary/40"
+                >
+                  Find a mentor
+                </Link>
               </CardContent>
             </Card>
           ))}
