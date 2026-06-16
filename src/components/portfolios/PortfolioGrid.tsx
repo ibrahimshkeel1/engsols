@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Briefcase } from "lucide-react";
 import type { Portfolio } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input, Select } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -29,48 +31,72 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
     return result;
   }, [portfolios, search, discipline]);
 
+  const hasFilters = Boolean(search || discipline);
+
+  function clearFilters() {
+    setSearch("");
+    setDiscipline("");
+  }
+
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Input placeholder="Search by name, skills, university..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" />
-        <Select value={discipline} onChange={(e) => setDiscipline(e.target.value)}>
+        <Input placeholder="Search by name, skills, university..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" aria-label="Search portfolios" />
+        <Select value={discipline} onChange={(e) => setDiscipline(e.target.value)} aria-label="Filter by discipline">
           <option value="">All disciplines</option>
           {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
         </Select>
       </div>
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => {
-          const stripe = getDisciplineColors(p.discipline).stripe;
-          return (
-            <Link key={p.slug} href={`/portfolios/${p.slug}`} className="card-interactive relative flex overflow-hidden rounded-2xl">
-              <div className={cn("w-1 shrink-0", stripe)} />
-              <div className="flex-1 p-5">
-                <div className="flex items-start gap-4">
-                  <Avatar name={p.name} discipline={p.discipline} size="md" src={p.avatarUrl} />
-                  <div>
-                    {p.openToWork && (
-                      <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
-                        Open to work
-                      </span>
-                    )}
-                    <h3 className="mt-1 font-semibold">{p.name}</h3>
-                    <p className="text-sm text-muted-foreground">{p.headline}</p>
-                    <p className="text-xs text-muted-foreground">{p.university}</p>
+      {portfolios.length === 0 ? (
+        <div className="mt-8">
+          <EmptyStateClient
+            icon={Briefcase}
+            title="No portfolios yet"
+            description="Students can build and publish portfolios to showcase their work."
+            action={{ href: "/portfolios/build", label: "Build your portfolio" }}
+          />
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="mt-8">
+          <EmptyStateClient
+            icon={Briefcase}
+            title="No portfolios match your search"
+            description="Try different keywords or clear your filters."
+            onClearFilters={hasFilters ? clearFilters : undefined}
+          />
+        </div>
+      ) : (
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((p) => {
+            const stripe = getDisciplineColors(p.discipline).stripe;
+            return (
+              <Link key={p.slug} href={`/portfolios/${p.slug}`} className="card-interactive relative flex overflow-hidden rounded-2xl">
+                <div className={cn("w-1 shrink-0", stripe)} />
+                <div className="flex-1 p-5">
+                  <div className="flex items-start gap-4">
+                    <Avatar name={p.name} discipline={p.discipline} size="md" src={p.avatarUrl} />
+                    <div>
+                      {p.openToWork && (
+                        <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                          Open to work
+                        </span>
+                      )}
+                      <h3 className="mt-1 font-semibold">{p.name}</h3>
+                      <p className="text-sm text-muted-foreground">{p.headline}</p>
+                      <p className="text-xs text-muted-foreground">{p.university}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    <DisciplineBadge discipline={p.discipline} />
+                    {p.skills.slice(0, 3).map((s) => (
+                      <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
+                    ))}
                   </div>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  <DisciplineBadge discipline={p.discipline} />
-                  {p.skills.slice(0, 3).map((s) => (
-                    <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
-                  ))}
-                </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-      {filtered.length === 0 && (
-        <p className="py-16 text-center text-muted-foreground">No portfolios match your search.</p>
+              </Link>
+            );
+          })}
+        </div>
       )}
     </>
   );

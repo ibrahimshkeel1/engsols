@@ -8,10 +8,10 @@ import { LiveVideoRoom } from "./LiveVideoRoom";
 type LiveRoomClientProps = {
   slug: string;
   title: string;
-  isHost: boolean;
+  canEndCall: boolean;
 };
 
-export function LiveRoomClient({ slug, title, isHost }: LiveRoomClientProps) {
+export function LiveRoomClient({ slug, title, canEndCall }: LiveRoomClientProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [ending, setEnding] = useState(false);
@@ -29,8 +29,8 @@ export function LiveRoomClient({ slug, title, isHost }: LiveRoomClientProps) {
     <LiveVideoRoom
       slug={slug}
       title={title}
-      isHost={isHost}
-      onEndCall={isHost ? handleEndCall : undefined}
+      isHost={canEndCall}
+      onEndCall={canEndCall ? handleEndCall : undefined}
       ending={ending || pending}
     />
   );

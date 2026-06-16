@@ -21,6 +21,7 @@ export default async function LiveStreamPage({ params }: Props) {
   const host = stream.hostSlug ? await getMentorBySlug(stream.hostSlug) : null;
   const hostName = "hostName" in stream ? stream.hostName : host?.name;
   const isHost = !!user && stream.hostId === user.id;
+  const isAdmin = user?.role === "admin";
   const liveKitConfigured = isLiveKitConfigured();
 
   return (
@@ -81,6 +82,7 @@ export default async function LiveStreamPage({ params }: Props) {
             slug={slug}
             status={stream.status}
             isHost={isHost}
+            isAdmin={isAdmin}
             liveKitConfigured={liveKitConfigured}
           />
         </div>

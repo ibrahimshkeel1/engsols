@@ -2,12 +2,14 @@
 
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { usePrefersReducedMotion } from "@/lib/motion";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const reducedMotion = usePrefersReducedMotion();
   const isLiveRoom = pathname.includes("/live/") && pathname.endsWith("/room");
 
-  if (isLiveRoom) {
+  if (isLiveRoom || reducedMotion) {
     return <>{children}</>;
   }
 

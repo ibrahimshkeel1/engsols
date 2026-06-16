@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
+import { usePrefersReducedMotion } from "@/lib/motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -24,6 +25,11 @@ export function AnimateIn({
 }: AnimateInProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once, margin: "-60px" });
+  const reducedMotion = usePrefersReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
@@ -67,6 +73,11 @@ const itemVariants: Variants = {
 export function Stagger({ children, className, stagger = 0.1, delayChildren = 0 }: StaggerProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const reducedMotion = usePrefersReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
@@ -83,6 +94,12 @@ export function Stagger({ children, className, stagger = 0.1, delayChildren = 0 
 }
 
 export function StaggerItem({ children, className }: { children: React.ReactNode; className?: string }) {
+  const reducedMotion = usePrefersReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div className={className} variants={itemVariants}>
       {children}
@@ -99,6 +116,12 @@ export function MotionCard({
   className?: string;
   delay?: number;
 }) {
+  const reducedMotion = usePrefersReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}

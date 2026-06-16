@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { format } from "date-fns";
+import { Newspaper } from "lucide-react";
 import { getAllNewsForAdmin } from "@/lib/data/news";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export default async function AdminNewsPage() {
   const articles = await getAllNewsForAdmin();
@@ -20,7 +21,15 @@ export default async function AdminNewsPage() {
         </Link>
       </div>
       <div className="mt-8 space-y-4">
-        {articles.map((a) => (
+        {articles.length === 0 ? (
+          <EmptyState
+            icon={Newspaper}
+            title="No articles yet"
+            description="Create your first news article to publish industry updates."
+            action={{ href: "/admin/news/new", label: "Write an article" }}
+          />
+        ) : (
+          articles.map((a) => (
           <Card key={a.id} className="card-elevated">
             <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -42,7 +51,8 @@ export default async function AdminNewsPage() {
               )}
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

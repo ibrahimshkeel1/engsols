@@ -10,10 +10,11 @@ type LiveSessionActionsProps = {
   slug: string;
   status: "upcoming" | "live" | "ended";
   isHost: boolean;
+  isAdmin?: boolean;
   liveKitConfigured: boolean;
 };
 
-export function LiveSessionActions({ slug, status, isHost, liveKitConfigured }: LiveSessionActionsProps) {
+export function LiveSessionActions({ slug, status, isHost, isAdmin = false, liveKitConfigured }: LiveSessionActionsProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -30,6 +31,8 @@ export function LiveSessionActions({ slug, status, isHost, liveKitConfigured }: 
       router.refresh();
     });
   }
+
+  const canEnd = isHost || isAdmin;
 
   if (status === "ended") {
     return <p className="text-sm text-muted-foreground">This session has ended.</p>;
@@ -61,9 +64,14 @@ export function LiveSessionActions({ slug, status, isHost, liveKitConfigured }: 
       {status === "upcoming" && !isHost && (
         <p className="text-sm text-muted-foreground">Waiting for the host to start the call.</p>
       )}
-      {status === "live" && isHost && (
+      {status === "live" && canEnd && (
         <Button type="button" variant="outline" onClick={handleEnd} disabled={pending}>
-          {pending ? "Ending..." : "End session"}
+          {pending ? "Ending..." : isAdmin && !isHost ? "End session (admin)" : "End session"}
+        </Button>
+      )}
+      {status === "upcoming" && isAdmin && (
+        <Button type="button" variant="outline" onClick={handleEnd} disabled={pending}>
+          {pending ? "Ending..." : "Cancel session (admin)"}
         </Button>
       )}
     </div>

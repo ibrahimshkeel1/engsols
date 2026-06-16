@@ -1,50 +1,61 @@
 import { savePortfolio } from "@/actions";
 import { disciplines } from "@/data/disciplines";
-import { getCurrentUser } from "@/lib/auth";
+import { requireUser } from "@/lib/require-auth";
+import { getPortfolioByUserId } from "@/lib/data/portfolios";
+import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
-import { Button } from "@/components/ui/button";
+import { StepIndicator } from "@/components/shared/StepIndicator";
+import { FormField } from "@/components/ui/FormField";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input, Textarea, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default async function BuildPortfolioPage() {
-  const user = await getCurrentUser();
+type Props = { searchParams: Promise<{ error?: string }> };
+
+export default async function BuildPortfolioPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const user = await requireUser("/portfolios/build");
+  const existing = await getPortfolioByUserId(user.id);
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold">Build your portfolio</h1>
+      <StepIndicator
+        steps={[{ label: "Profile" }, { label: "Portfolio" }]}
+        current={2}
+      />
+      <h1 className="mt-6 font-display text-3xl tracking-tight">Build your portfolio</h1>
       <p className="mt-2 text-muted-foreground">Get discovered by mentors and employers on EngSols.</p>
+      {params.error && (
+        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+          {safeDecodeURIComponent(params.error)}
+        </p>
+      )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <ProfilePhotoUpload
-            name={user?.full_name || "Student"}
-            initialUrl={user?.avatar_url}
-          />
+          <ProfilePhotoUpload name={user.full_name || "Student"} initialUrl={user.avatar_url} />
           <form action={savePortfolio} className="mt-8 space-y-5">
-            <div>
-              <label className="text-sm font-medium">Headline</label>
-              <Input name="headline" required placeholder="e.g. Petroleum Engineering Graduate" className="mt-1.5" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">University</label>
-              <Input name="university" required className="mt-1.5" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Discipline</label>
-              <Select name="discipline" required className="mt-1.5 w-full">
+            <FormField label="Headline" id="portfolio-headline">
+              <Input name="headline" required defaultValue={existing?.headline ?? ""} placeholder="e.g. Petroleum Engineering Graduate" />
+            </FormField>
+            <FormField label="University" id="portfolio-university">
+              <Input name="university" required defaultValue={existing?.university ?? ""} />
+            </FormField>
+            <FormField label="Discipline" id="portfolio-discipline">
+              <Select name="discipline" required className="w-full" defaultValue={existing?.discipline ?? ""}>
                 <option value="">Select discipline</option>
                 {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}
               </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Bio</label>
-              <Textarea name="bio" required rows={4} className="mt-1.5" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Skills (comma-separated)</label>
-              <Input name="skills" placeholder="Eclipse, Python, Reservoir Simulation" className="mt-1.5" />
-            </div>
+            </FormField>
+            <FormField label="Bio" id="portfolio-bio">
+              <Textarea name="bio" required rows={4} defaultValue={existing?.bio ?? ""} />
+            </FormField>
+            <FormField label="Skills (comma-separated)" id="portfolio-skills">
+              <Input name="skills" defaultValue={(existing?.skills ?? []).join(", ")} placeholder="Eclipse, Python, Reservoir Simulation" />
+            </FormField>
             <input type="hidden" name="publish" value="true" />
-            <Button type="submit" variant="accent" className="w-full">Publish portfolio</Button>
+            <SubmitButton variant="accent" className="w-full" pendingLabel="Publishing...">
+              Publish portfolio
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>

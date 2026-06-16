@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { MessageSquare } from "lucide-react";
 import { getForumPosts } from "@/lib/data/forum";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export default async function AdminForumPage() {
   const posts = await getForumPosts();
@@ -11,7 +13,15 @@ export default async function AdminForumPage() {
       <h1 className="text-2xl font-bold">Forum moderation</h1>
       <p className="mt-1 text-muted-foreground">Review community discussions.</p>
       <div className="mt-8 space-y-3">
-        {posts.map((post) => (
+        {posts.length === 0 ? (
+          <EmptyState
+            icon={MessageSquare}
+            title="No forum posts yet"
+            description="Community discussions will appear here once users start posting."
+            action={{ href: "/forum/new", label: "Start a discussion" }}
+          />
+        ) : (
+          posts.map((post) => (
           <Card key={post.slug} className="card-elevated">
             <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -29,7 +39,8 @@ export default async function AdminForumPage() {
               </Link>
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

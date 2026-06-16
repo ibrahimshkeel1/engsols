@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star, MessageSquare, Radio, Award } from "lucide-react";
+import { Star, Award } from "lucide-react";
 import { sessionTypes } from "@/data/sessionTypes";
 import { getSimilarMentors } from "@/lib/filter-mentors";
 import { getApprovedMentors, getMentorBySlug } from "@/lib/data/mentors";
@@ -72,21 +72,6 @@ export default async function MentorProfilePage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="space-y-10 lg:col-span-2">
-            {/* Activity signals */}
-            <div className="grid gap-3 sm:grid-cols-3">
-              {[
-                { icon: MessageSquare, label: "Forum contributor", value: "Active" },
-                { icon: Radio, label: "Live sessions", value: "Hosts Q&As" },
-                { icon: Star, label: "Response time", value: "< 24 hrs" },
-              ].map((item) => (
-                <div key={item.label} className="card-elevated rounded-xl p-4">
-                  <item.icon className="h-5 w-5 text-accent" />
-                  <p className="mt-2 text-sm font-semibold">{item.value}</p>
-                  <p className="text-xs text-muted-foreground">{item.label}</p>
-                </div>
-              ))}
-            </div>
-
             <section>
               <h2 className="text-xl font-semibold">About</h2>
               <p className="mt-3 leading-relaxed text-muted-foreground">{mentor.bio}</p>

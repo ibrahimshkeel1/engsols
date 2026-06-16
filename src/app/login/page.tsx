@@ -2,7 +2,9 @@ import Link from "next/link";
 import { signIn } from "@/actions";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
-import { Button } from "@/components/ui/button";
+import { getSafeNextPath } from "@/lib/safe-next";
+import { FormField } from "@/components/ui/FormField";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -12,6 +14,7 @@ export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
   const supabaseReady = isSupabaseConfigured();
   const configError = getSupabaseConfigError();
+  const next = getSafeNextPath(params.next);
 
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
@@ -37,19 +40,22 @@ export default async function LoginPage({ searchParams }: Props) {
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
             <form action={signIn} className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Email or username</label>
-                <Input name="email" required type="text" placeholder="admin" className="mt-1.5" autoComplete="username" />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Password</label>
-                <Input name="password" required type="password" placeholder="••••••••" className="mt-1.5" autoComplete="current-password" />
-              </div>
-              <Button type="submit" variant="accent" className="w-full">Log in</Button>
+              {next && <input type="hidden" name="next" value={next} />}
+              <FormField label="Email or username" id="login-email">
+                <Input name="email" required type="text" placeholder="admin" autoComplete="username" />
+              </FormField>
+              <FormField label="Password" id="login-password">
+                <Input name="password" required type="password" placeholder="••••••••" autoComplete="current-password" />
+              </FormField>
+              <SubmitButton variant="accent" className="w-full" pendingLabel="Signing in...">
+                Log in
+              </SubmitButton>
             </form>
             <p className="mt-5 text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="font-medium text-primary hover:underline">Sign up</Link>
+              <Link href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"} className="font-medium text-primary hover:underline">
+                Sign up
+              </Link>
             </p>
           </CardContent>
         </Card>

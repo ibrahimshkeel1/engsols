@@ -42,11 +42,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "This session has ended" }, { status: 403 });
   }
 
-  if (session.status === "upcoming" && session.host_id !== user.id) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, email, full_name")
+    .eq("id", user.id)
+    .single();
+
+  const isAdmin = profile?.role === "admin";
+
+  if (session.status === "upcoming" && session.host_id !== user.id && !isAdmin) {
     return NextResponse.json({ error: "This session has not started yet" }, { status: 403 });
   }
 
-  if (session.access_mode === "invite_only" && session.host_id !== user.id) {
+  if (session.access_mode === "invite_only" && session.host_id !== user.id && !isAdmin) {
     const { data: booking } = session.booking_request_id
       ? await supabase
           .from("booking_requests")
@@ -55,10 +63,10 @@ export async function POST(request: Request) {
           .single()
       : { data: null };
 
-    const profile = await supabase.from("profiles").select("email").eq("id", user.id).single();
+    const profileEmail = profile?.email;
     const isInvitee =
       booking?.user_id === user.id ||
-      (profile.data?.email && booking?.requester_email === profile.data.email);
+      (profileEmail && booking?.requester_email === profileEmail);
 
     if (!isInvitee) {
       return NextResponse.json({ error: "This is a private call" }, { status: 403 });
@@ -68,7 +76,7 @@ export async function POST(request: Request) {
   const roomName = session.room_name || session.slug;
   const isHost = session.host_id === user.id;
   const displayName =
-    (session.profiles as { full_name?: string } | null)?.full_name ||
+    profile?.full_name ||
     user.email?.split("@")[0] ||
     "Participant";
 

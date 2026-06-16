@@ -8,6 +8,7 @@ import { isLiveKitConfigured } from "@/lib/livekit/config";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { ensureUserProfile } from "@/lib/supabase/profile";
 import { requireRole } from "@/lib/auth";
+import { getSafeNextPath } from "@/lib/safe-next";
 
 function slugify(text: string) {
   return text
@@ -30,6 +31,7 @@ function isNextRedirect(error: unknown) {
 async function redirectAfterSignIn(
   supabase: Awaited<ReturnType<typeof createClient>>,
   user: User,
+  nextPath?: string | null,
 ) {
   let profile;
   try {
@@ -42,6 +44,9 @@ async function redirectAfterSignIn(
   }
 
   revalidatePath("/", "layout");
+
+  const safeNext = getSafeNextPath(nextPath ?? undefined);
+  if (safeNext) redirect(safeNext);
 
   if (profile.role === "admin") redirect("/admin");
 
@@ -127,6 +132,7 @@ export async function signIn(formData: FormData) {
     const supabase = await createClient();
     const emailInput = ((formData.get("email") as string | null) ?? "").trim();
     const password = (formData.get("password") as string | null) ?? "";
+    const nextPath = (formData.get("next") as string | null) ?? null;
 
     if (!emailInput || !password) {
       redirect("/login?error=" + encodeURIComponent("Enter username and password"));
@@ -148,7 +154,7 @@ export async function signIn(formData: FormData) {
       redirect("/login?error=" + encodeURIComponent("Sign-in failed. Try again."));
     }
 
-    await redirectAfterSignIn(supabase, user);
+    await redirectAfterSignIn(supabase, user, nextPath);
   } catch (error) {
     if (isNextRedirect(error)) throw error;
     const message = error instanceof Error ? error.message : "Sign-in failed";
@@ -177,6 +183,26 @@ export async function updateProfileAvatar(avatarUrl: string) {
   revalidatePath("/", "layout");
   revalidatePath("/mentors");
   revalidatePath("/portfolios");
+  revalidatePath("/settings");
+  return { success: true };
+}
+
+export async function updateProfileName(fullName: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const trimmed = fullName.trim();
+  if (!trimmed) return { error: "Name is required" };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ full_name: trimmed })
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
   revalidatePath("/settings");
   return { success: true };
 }
@@ -311,7 +337,7 @@ export async function submitMentorApplication(formData: FormData) {
     status: "pending" as const,
     sub_fields: [],
     skills: (formData.get("skills") as string || "").split(",").map((s) => s.trim()).filter(Boolean),
-    goals: [],
+    goals: formData.getAll("goals").map(String).filter(Boolean),
     credentials: [],
   };
 
@@ -342,6 +368,22 @@ export async function approveMentor(formData: FormData) {
 export async function rejectMentor(formData: FormData) {
   const id = formData.get("id") as string;
   await updateMentorStatus(id, "rejected");
+  revalidatePath("/admin/mentors");
+}
+
+export async function updateBookingStatus(bookingId: string, status: "pending" | "contacted" | "closed") {
+  const admin = await requireRole(["admin"]);
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("booking_requests")
+    .update({ status })
+    .eq("id", bookingId);
+
+  if (error) return { error: error.message };
+  revalidatePath("/admin/bookings");
+  return { success: true };
 }
 
 export async function createLiveSession(formData: FormData) {
@@ -498,13 +540,23 @@ export async function endLiveSession(slug: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isAdmin = profile?.role === "admin";
+
   const { data: session } = await supabase
     .from("live_sessions")
-    .select("host_id, room_name, slug")
+    .select("host_id, room_name, slug, status")
     .eq("slug", slug)
     .single();
 
-  if (!session || session.host_id !== user.id) return;
+  if (!session) return;
+  if (session.host_id !== user.id && !isAdmin) return;
+  if (session.status === "ended") return;
 
   const roomName = session.room_name || session.slug;
   if (isLiveKitConfigured()) {
@@ -521,6 +573,8 @@ export async function endLiveSession(slug: string) {
   revalidatePath(`/live/${slug}`);
   revalidatePath("/calls");
   revalidatePath("/forum");
+  revalidatePath("/admin");
+  revalidatePath("/admin/live");
 }
 
 export async function createNewsArticle(formData: FormData) {

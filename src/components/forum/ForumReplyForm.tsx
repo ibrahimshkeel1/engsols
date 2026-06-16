@@ -1,40 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createForumReply } from "@/actions";
-import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/ui/FormField";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Textarea } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 
 type Props = { postId?: string };
 
 export function ForumReplyForm({ postId }: Props) {
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(formData: FormData) {
     if (!postId) {
       setError("Sign in and connect Supabase to post replies.");
       return;
     }
-    const form = e.currentTarget;
-    const body = new FormData(form).get("body") as string;
-    setPending(true);
+    const body = formData.get("body") as string;
     const result = await createForumReply(postId, body, imageUrls);
-    setPending(false);
-    if (result?.error) setError(result.error);
-    else {
-      form.reset();
-      setImageUrls([]);
-      window.location.reload();
+    if (result?.error) {
+      setError(result.error);
+      return;
     }
+    setError(null);
+    setImageUrls([]);
+    formRef.current?.reset();
+    router.refresh();
   }
 
   return (
-    <form className="mt-10" onSubmit={handleSubmit}>
-      <Textarea name="body" required rows={4} placeholder="Write your reply..." />
+    <form ref={formRef} className="mt-10" action={handleSubmit}>
+      <FormField label="Your reply" id="forum-reply-body">
+        <Textarea name="body" required rows={4} placeholder="Write your reply..." />
+      </FormField>
       <div className="mt-3">
         <ImageUpload
           folder="forum"
@@ -51,9 +54,9 @@ export function ForumReplyForm({ postId }: Props) {
           Replies are saved when Supabase is configured. You can still read all discussions.
         </p>
       )}
-      <Button type="submit" variant="accent" className="mt-3" disabled={pending}>
-        {pending ? "Posting..." : "Post reply"}
-      </Button>
+      <SubmitButton variant="accent" className="mt-3" pendingLabel="Posting...">
+        Post reply
+      </SubmitButton>
     </form>
   );
 }

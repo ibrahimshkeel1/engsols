@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { submitJobApplication } from "@/actions";
+import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 
@@ -34,9 +35,15 @@ export function JobApplicationForm({ jobSlug, jobTitle, company }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <Input name="name" required placeholder="Your name" />
-      <Input name="email" required type="email" placeholder="you@email.com" />
-      <Textarea name="message" required rows={3} placeholder="Brief cover note and relevant experience..." />
+      <FormField label="Your name" id="job-app-name">
+        <Input name="name" required autoComplete="name" />
+      </FormField>
+      <FormField label="Email" id="job-app-email">
+        <Input name="email" required type="email" autoComplete="email" />
+      </FormField>
+      <FormField label="Cover note" id="job-app-message">
+        <Textarea name="message" required rows={3} placeholder="Brief cover note and relevant experience..." />
+      </FormField>
       <Button type="submit" variant="accent" className="w-full" disabled={pending}>
         {pending ? "Submitting..." : "Apply now"}
       </Button>

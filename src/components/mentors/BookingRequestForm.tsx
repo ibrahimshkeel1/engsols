@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { submitBookingRequest } from "@/actions";
+import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 
@@ -34,14 +35,20 @@ export function BookingRequestForm({ mentorSlug, mentorName, type = "intro" }: P
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <Input name="name" required placeholder="Your name" />
-      <Input name="email" required type="email" placeholder="you@email.com" />
-      <Textarea
-        name="message"
-        required
-        rows={3}
-        placeholder={type === "intro" ? "What would you like to discuss on the intro call?" : "Tell the mentor about your goals..."}
-      />
+      <FormField label="Your name" id="booking-name">
+        <Input name="name" required autoComplete="name" />
+      </FormField>
+      <FormField label="Email" id="booking-email">
+        <Input name="email" required type="email" autoComplete="email" />
+      </FormField>
+      <FormField label="Message" id="booking-message">
+        <Textarea
+          name="message"
+          required
+          rows={3}
+          placeholder={type === "intro" ? "What would you like to discuss on the intro call?" : "Tell the mentor about your goals..."}
+        />
+      </FormField>
       <Button type="submit" variant="accent" className="w-full" disabled={pending}>
         {pending ? "Sending..." : type === "intro" ? "Request free intro call" : "Request mentorship"}
       </Button>

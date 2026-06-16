@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Users } from "lucide-react";
 import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
 import { MentorCard } from "@/components/mentors/MentorCard";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input } from "@/components/ui/input";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
@@ -27,17 +29,31 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-sm"
+              aria-label="Search featured mentors"
             />
           </AnimateIn>
         </div>
-        <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={0.08}>
-          {filtered.map((mentor) => (
-            <StaggerItem key={mentor.slug}>
-              <MentorCard mentor={mentor} />
-            </StaggerItem>
-          ))}
-        </Stagger>
-        <AnimateIn delay={0.2} className="mt-12 text-center">
+        {filtered.length === 0 ? (
+          <div className="mt-10">
+            <EmptyStateClient
+              icon={Users}
+              title={search ? "No mentors match your search" : "No mentors yet"}
+              description={search ? "Try a different search term." : "Be among the first mentors on EngSols."}
+              action={{ href: search ? "/mentors" : "/apply", label: search ? "Browse all mentors" : "Become a mentor" }}
+              onClearFilters={search ? () => setSearch("") : undefined}
+            />
+          </div>
+        ) : (
+          <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={0.08}>
+            {filtered.map((mentor) => (
+              <StaggerItem key={mentor.slug}>
+                <MentorCard mentor={mentor} />
+              </StaggerItem>
+            ))}
+          </Stagger>
+        )}
+        {filtered.length > 0 && (
+          <AnimateIn delay={0.2} className="mt-12 text-center">
           <Link
             href="/mentors"
             className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-8 text-sm font-semibold shadow-sm transition-all hover:border-accent/40 hover:shadow-md active:scale-95"
@@ -45,6 +61,7 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
             View all mentors
           </Link>
         </AnimateIn>
+        )}
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import { createLiveSession } from "@/actions";
 import { disciplines } from "@/data/disciplines";
-import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/ui/FormField";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input, Textarea, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -26,33 +27,32 @@ export function LiveSessionForm({
           <form action={createLiveSession} className="space-y-5">
             <input type="hidden" name="next" value={next} />
             <input type="hidden" name="callType" value={defaultCallType} />
-            <div>
-              <label className="text-sm font-medium">Title</label>
-              <Input name="title" required placeholder="e.g. Reservoir simulation Q&A" className="mt-1.5" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Discipline</label>
-              <Select name="discipline" required className="mt-1.5 w-full">
+            <FormField label="Title" id="live-title">
+              <Input name="title" required placeholder="e.g. Reservoir simulation Q&A" />
+            </FormField>
+            <FormField label="Discipline" id="live-discipline">
+              <Select name="discipline" required className="w-full">
                 <option value="">Select discipline</option>
                 {disciplines.map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}
               </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Scheduled date & time</label>
-              <Input name="scheduledAt" type="datetime-local" className="mt-1.5" />
-              <p className="mt-1 text-xs text-muted-foreground">Leave empty to save as draft, or use Go live now below.</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Description</label>
-              <Textarea name="description" required rows={5} placeholder="What will you cover?" className="mt-1.5" />
-            </div>
+            </FormField>
+            <FormField
+              label="Scheduled date & time"
+              id="live-scheduled"
+              hint="Leave empty to save as draft, or use Go live now below."
+            >
+              <Input name="scheduledAt" type="datetime-local" />
+            </FormField>
+            <FormField label="Description" id="live-description">
+              <Textarea name="description" required rows={5} placeholder="What will you cover?" />
+            </FormField>
             <div className="flex flex-wrap gap-3">
-              <Button type="submit" variant="accent">Schedule session</Button>
-              <Button type="submit" name="startNow" value="true" variant="outline">
+              <SubmitButton variant="accent" pendingLabel="Scheduling...">Schedule session</SubmitButton>
+              <SubmitButton name="startNow" value="true" variant="outline" pendingLabel="Starting...">
                 Go live now
-              </Button>
+              </SubmitButton>
             </div>
           </form>
         </CardContent>

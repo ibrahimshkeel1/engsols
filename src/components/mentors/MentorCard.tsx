@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Star, ArrowRight, BadgeCheck } from "lucide-react";
 import type { Mentor } from "@/types";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { usePrefersReducedMotion } from "@/lib/motion";
 import { Avatar } from "@/components/ui/Avatar";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
@@ -16,10 +17,10 @@ type MentorCardProps = {
 
 export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
   const stripe = getDisciplineColors(mentor.discipline).stripe;
+  const reducedMotion = usePrefersReducedMotion();
 
-  return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href={`/mentors/${mentor.slug}`} className="card-interactive group relative flex h-full flex-col overflow-hidden rounded-2xl">
+  const card = (
+    <Link href={`/mentors/${mentor.slug}`} className="card-interactive group relative flex h-full flex-col overflow-hidden rounded-2xl">
         <div className={`absolute left-0 top-0 h-full w-1 ${stripe}`} />
         <div className="absolute inset-0 bg-gradient-to-br from-accent/0 to-accent/0 transition-all duration-500 group-hover:from-accent/[0.03] group-hover:to-transparent" />
         <div className="relative flex flex-1 flex-col p-5 pl-6">
@@ -66,6 +67,13 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
           )}
         </div>
       </Link>
+  );
+
+  if (reducedMotion) return card;
+
+  return (
+    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}>
+      {card}
     </motion.div>
   );
 }
