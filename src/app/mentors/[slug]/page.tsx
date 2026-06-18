@@ -19,7 +19,7 @@ import { SimilarMentors } from "@/components/mentors/SimilarMentors";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type PageProps = { params: Promise<{ slug: string }> };
+type PageProps = { params: Promise<{ slug: string }>; searchParams: Promise<{ session?: string }> };
 
 export const revalidate = 60;
 
@@ -34,8 +34,9 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function MentorProfilePage({ params }: PageProps) {
+export default async function MentorProfilePage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const { session } = await searchParams;
   const mentor = await getMentorBySlug(slug);
   if (!mentor) notFound();
 
@@ -161,6 +162,7 @@ export default async function MentorProfilePage({ params }: PageProps) {
               mentor={mentor}
               defaultName={user?.full_name ?? ""}
               defaultEmail={user?.email ?? ""}
+              initialSession={session}
             />
           </div>
         </div>

@@ -45,6 +45,9 @@ export function dbToMentor(m: DbMentorProfile, reviews: Review[] = []): Mentor {
     reviews,
     avatarUrl: m.profiles?.avatar_url ?? null,
     calendlyUrl: (m as DbMentorProfile & { calendly_url?: string | null }).calendly_url ?? null,
+    introCalendlyUrl: (m as DbMentorProfile & { intro_calendly_url?: string | null }).intro_calendly_url ?? null,
+    studyPlanCalendlyUrl: (m as DbMentorProfile & { study_plan_calendly_url?: string | null }).study_plan_calendly_url ?? null,
+    interviewCalendlyUrl: (m as DbMentorProfile & { interview_calendly_url?: string | null }).interview_calendly_url ?? null,
     verified: (m as DbMentorProfile & { verified?: boolean }).verified ?? false,
   };
 }

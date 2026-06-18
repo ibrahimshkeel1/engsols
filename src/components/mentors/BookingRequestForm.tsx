@@ -10,7 +10,7 @@ import { Input, Textarea } from "@/components/ui/input";
 type Props = {
   mentorSlug: string;
   mentorName: string;
-  type?: "intro" | "monthly";
+  type?: "intro" | "monthly" | "study-plan" | "interview-prep";
   defaultName?: string;
   defaultEmail?: string;
 };
@@ -48,11 +48,17 @@ export function BookingRequestForm({ mentorSlug, mentorName, type = "intro", def
           name="message"
           required
           rows={3}
-          placeholder={type === "intro" ? "What would you like to discuss on the intro call?" : "Tell the mentor about your goals..."}
+          placeholder={
+            type === "intro"
+              ? "What would you like to discuss on the intro call?"
+              : type === "monthly"
+                ? "Tell the mentor about your goals..."
+                : `What do you need help with for your ${type.replace(/-/g, " ")} session?`
+          }
         />
       </FormField>
       <Button type="submit" variant="accent" className="w-full" disabled={pending}>
-        {pending ? "Sending..." : type === "intro" ? "Request free intro call" : "Request mentorship"}
+        {pending ? "Sending..." : type === "intro" ? "Request free intro call" : type === "monthly" ? "Request mentorship" : "Request one-off session"}
       </Button>
     </form>
   );

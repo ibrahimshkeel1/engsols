@@ -14,6 +14,7 @@ import { MarkSolvedButton } from "@/components/forum/MarkSolvedButton";
 import { ReplyLikeButton } from "@/components/forum/ReplyLikeButton";
 import { ForumViewTracker } from "@/components/forum/ForumViewTracker";
 import { ForumRealtimeWatcher } from "@/components/forum/ForumRealtimeWatcher";
+import { ForumPostActions } from "@/components/forum/ForumPostActions";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
@@ -68,6 +69,9 @@ export default async function ForumThreadPage({ params }: Props) {
             {post.tags.map((t) => <Badge key={t}>{t}</Badge>)}
             {dbPost?.id && <ReportContentButton contentType="forum_post" contentId={dbPost.id} />}
           </div>
+          {(isAuthor || isAdmin) && dbPost?.id && (
+            <ForumPostActions postId={dbPost.id} title={post.title} body={post.body} canDelete />
+          )}
           <h2 className="mt-12 text-xl font-bold">{replies.length} Replies</h2>
           <div className="mt-4 space-y-4">
             {replies.map((r) => (

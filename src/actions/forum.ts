@@ -74,15 +74,42 @@ export async function toggleReplyLike(replyId: string) {
 }
 
 export async function deleteForumPost(postId: string) {
-  const admin = await requireRole(["admin"]);
-  if (!admin) return { error: "Unauthorized" };
-
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: post } = await supabase.from("forum_posts").select("author_id").eq("id", postId).single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  const isAuthor = post?.author_id === user.id;
+  const isAdmin = profile?.role === "admin";
+  if (!isAuthor && !isAdmin) return { error: "Unauthorized" };
+
   const { error } = await supabase.from("forum_posts").delete().eq("id", postId);
   if (error) return { error: error.message };
 
   revalidatePath("/forum");
   revalidatePath("/admin/forum");
+  return { success: true };
+}
+
+export async function updateForumPost(postId: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const { data: post } = await supabase.from("forum_posts").select("author_id, slug").eq("id", postId).single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (post?.author_id !== user.id && profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const title = (formData.get("title") as string).trim();
+  const body = (formData.get("body") as string).trim();
+  if (!title || !body) return { error: "Title and body are required" };
+
+  const { error } = await supabase.from("forum_posts").update({ title, body }).eq("id", postId);
+  if (error) return { error: error.message };
+
+  revalidatePath(`/forum/${post?.slug}`);
+  revalidatePath("/forum");
   return { success: true };
 }
 

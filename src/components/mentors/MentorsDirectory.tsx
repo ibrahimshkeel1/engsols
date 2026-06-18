@@ -16,6 +16,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
+  const [sessionFilter] = useState(searchParams.get("session") ?? "");
   const [skill, setSkill] = useState("");
   const [sort, setSort] = useState("rating");
 
@@ -43,6 +44,12 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
 
   return (
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-10">
+      {sessionFilter && (
+        <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm lg:col-span-2">
+          Browsing mentors for <strong className="capitalize">{sessionFilter.replace(/-/g, " ")}</strong> sessions.
+          Select a mentor and use the One-off tab to book.
+        </div>
+      )}
       <aside className="lg:sticky lg:top-24 lg:self-start">
         <MentorFilters
           search={search}
@@ -54,7 +61,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
           onGoalChange={setGoal}
           onSortChange={setSort}
         />
-        <SkillGraphFilter selectedSkill={skill} onSkillChange={setSkill} />
+        <SkillGraphFilter selectedSkill={skill} onSkillChange={setSkill} mentors={mentors} />
         <p className="mt-4 hidden text-sm text-muted-foreground lg:block">
           {filtered.length} mentors match your filters
         </p>

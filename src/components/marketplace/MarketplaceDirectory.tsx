@@ -37,7 +37,6 @@ export function MarketplaceDirectory({ listings, sellers }: Props) {
       label="Marketplace"
       title="Industrial Marketplace"
       description="Equipment, materials, and services from factories and suppliers. Full transactions launch with verified seller onboarding."
-      preview
       action={
         <Link href="/marketplace/sell" className="inline-flex h-11 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:brightness-110">
           List your product

@@ -8,6 +8,9 @@ import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { ProfileNameForm } from "@/components/profile/ProfileNameForm";
 import { GoalsProgress } from "@/components/settings/GoalsProgress";
 import { SessionNotesSection } from "@/components/settings/SessionNotesSection";
+import { StudentBookingsSection } from "@/components/settings/StudentBookingsSection";
+import { StudentJobApplicationsSection } from "@/components/settings/StudentJobApplicationsSection";
+import { getStudentBookings, getStudentJobApplications } from "@/lib/data/student-activity";
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
@@ -23,9 +26,11 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  const [savedMentors, { data: notes }] = await Promise.all([
+  const [savedMentors, { data: notes }, bookings, jobApplications] = await Promise.all([
     getSavedMentors(user.id),
     supabase.from("session_notes").select("*").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(20),
+    getStudentBookings(user.id),
+    getStudentJobApplications(user.id),
   ]);
 
   const careerGoals = profile?.career_goals?.length ? profile.career_goals : goals.map((g) => g.label);
@@ -103,6 +108,21 @@ export default async function SettingsPage() {
               {savedMentors.map((m) => <MentorCard key={m.slug} mentor={m} showPrice={false} />)}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="card-elevated mt-8">
+        <CardContent className="p-6">
+          <h2 className="font-semibold">My booking requests</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Track mentorship and one-off session requests.</p>
+          <StudentBookingsSection bookings={bookings} />
+        </CardContent>
+      </Card>
+
+      <Card className="card-elevated mt-8">
+        <CardContent className="p-6">
+          <h2 className="font-semibold">My job applications</h2>
+          <StudentJobApplicationsSection applications={jobApplications} />
         </CardContent>
       </Card>
 

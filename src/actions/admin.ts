@@ -19,6 +19,32 @@ export async function resolveContentReport(reportId: string, status: "resolved" 
   return { success: true };
 }
 
+export async function deleteReportedContent(reportId: string) {
+  const admin = await requireRole(["admin"]);
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = await createClient();
+  const { data: report } = await supabase
+    .from("content_reports")
+    .select("content_type, content_id")
+    .eq("id", reportId)
+    .single();
+
+  if (!report) return { error: "Report not found" };
+
+  if (report.content_type === "forum_post") {
+    await supabase.from("forum_posts").delete().eq("id", report.content_id);
+  } else if (report.content_type === "forum_reply") {
+    await supabase.from("forum_replies").delete().eq("id", report.content_id);
+  }
+
+  await supabase.from("content_reports").update({ status: "resolved" }).eq("id", reportId);
+
+  revalidatePath("/admin/reports");
+  revalidatePath("/forum");
+  return { success: true };
+}
+
 export async function publishSeller(sellerId: string, published: boolean) {
   const admin = await requireRole(["admin"]);
   if (!admin) return { error: "Unauthorized" };
@@ -131,6 +157,7 @@ export async function updateCertification(certId: string, formData: FormData) {
     avg_prep_months: parseInt(formData.get("avgPrepMonths") as string, 10) || 6,
     pass_rate: (formData.get("passRate") as string) || null,
     related_mentor_slugs: (formData.get("mentorSlugs") as string || "").split(",").map((s) => s.trim()).filter(Boolean),
+    prep_steps: JSON.parse((formData.get("prepSteps") as string) || "[]"),
     published: formData.get("published") === "true",
   }).eq("id", certId);
 

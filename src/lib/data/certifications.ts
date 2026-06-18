@@ -15,6 +15,7 @@ function toCertification(c: DbCertification): Certification {
     passRate: c.pass_rate ?? undefined,
     resources: (c.resources as CertificationResource[]) ?? [],
     relatedMentorSlugs: c.related_mentor_slugs,
+    prepSteps: ((c as DbCertification & { prep_steps?: { phase: string; description: string; week?: number }[] }).prep_steps) ?? [],
   };
 }
 

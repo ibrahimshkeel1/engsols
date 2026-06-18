@@ -1,16 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { engineeringSkills } from "@/data/engineering-skills";
-import { getRelatedSkills } from "@/data/engineering-skills";
+import { engineeringSkills, getRelatedSkills } from "@/data/engineering-skills";
+import { buildSkillGraph, getRelatedFromGraph } from "@/lib/skills-graph";
+import type { Mentor } from "@/types";
 
 type Props = {
   selectedSkill: string;
   onSkillChange: (id: string) => void;
+  mentorSkills?: string[];
+  mentors?: Mentor[];
 };
 
-export function SkillGraphFilter({ selectedSkill, onSkillChange }: Props) {
-  const related = selectedSkill ? getRelatedSkills(selectedSkill) : [];
+export function SkillGraphFilter({ selectedSkill, onSkillChange, mentorSkills = [], mentors = [] }: Props) {
+  const graph = mentors.length
+    ? buildSkillGraph(mentors)
+    : mentorSkills.map((s, i) => ({ id: `skill-${i}`, label: s, mentorCount: 1 }));
+
+  const skillOptions = graph.length
+    ? graph
+    : engineeringSkills.map((s) => ({ id: s.id, label: s.label, mentorCount: 0 }));
+
+  const related = selectedSkill
+    ? graph.length
+      ? getRelatedFromGraph(selectedSkill, graph)
+      : getRelatedSkills(selectedSkill).map((s) => ({ id: s.id, label: s.label, mentorCount: 0 }))
+    : [];
 
   return (
     <div className="mt-4 space-y-3">
@@ -21,8 +36,10 @@ export function SkillGraphFilter({ selectedSkill, onSkillChange }: Props) {
         className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
       >
         <option value="">All skills</option>
-        {engineeringSkills.map((s) => (
-          <option key={s.id} value={s.id}>{s.label}</option>
+        {skillOptions.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.label}{s.mentorCount > 0 ? ` (${s.mentorCount})` : ""}
+          </option>
         ))}
       </select>
       {related.length > 0 && (

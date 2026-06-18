@@ -64,8 +64,14 @@ export function MentorProfileForm({ profile }: { profile: Profile }) {
       <FormField label="Skills (comma-separated)" id="edit-skills">
         <Input name="skills" defaultValue={profile.skills.join(", ")} />
       </FormField>
-      <FormField label="Calendly / Cal.com link" id="edit-calendly" hint="Students can book intro calls directly.">
+      <FormField label="Calendly / Cal.com link (intro & monthly)" id="edit-calendly" hint="Students can book intro calls directly.">
         <Input name="calendlyUrl" type="url" placeholder="https://calendly.com/your-link" defaultValue={profile.calendly_url ?? ""} />
+      </FormField>
+      <FormField label="Study plan session link" id="edit-study-calendly" hint="Optional paid Calendly link for study-plan sessions.">
+        <Input name="studyPlanCalendlyUrl" type="url" placeholder="https://calendly.com/study-plan" defaultValue={(profile as { study_plan_calendly_url?: string }).study_plan_calendly_url ?? ""} />
+      </FormField>
+      <FormField label="Interview prep session link" id="edit-interview-calendly">
+        <Input name="interviewCalendlyUrl" type="url" placeholder="https://calendly.com/interview-prep" defaultValue={(profile as { interview_calendly_url?: string }).interview_calendly_url ?? ""} />
       </FormField>
       <Button type="submit" variant="accent" disabled={pending}>
         {pending ? "Saving..." : "Save profile"}

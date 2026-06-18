@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getApprovedMentors } from "@/lib/data/mentors";
 import { createClient } from "@/lib/supabase/server";
-import { goals } from "@/data/goals";
-import { engineeringSkills } from "@/data/engineering-skills";
+import { getCareerAssist } from "@/lib/ai-assist";
+import { buildSkillGraph } from "@/lib/skills-graph";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -22,41 +22,22 @@ export default async function AssistPage() {
   const mentors = await getApprovedMentors();
   const userGoals: string[] = profile?.career_goals?.length
     ? profile.career_goals
-    : goals.map((g) => g.label);
+    : ["Land first engineering role", "Pass FE/PE exam", "Improve technical interviews"];
 
-  const goalIds = goals.filter((g) => userGoals.some((ug: string) => ug.includes(g.label) || g.label.includes(ug))).map((g) => g.id);
+  const assist = await getCareerAssist({ goals: userGoals, mentors });
+  const recommendations = assist.mentorSlugs
+    .map((slug) => mentors.find((m) => m.slug === slug))
+    .filter(Boolean);
 
-  const scored = mentors
-    .map((m) => {
-      let score = 0;
-      score += m.goals.filter((g) => goalIds.includes(g)).length * 2;
-      score += m.rating * (m.reviewCount > 0 ? 0.5 : 0);
-      if (m.verified) score += 1;
-      return { mentor: m, score };
-    })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6);
-
-  const recommendations = scored.length > 0
-    ? scored
-    : mentors
-        .filter((m) => m.reviewCount > 0)
-        .sort((a, b) => b.rating - a.rating)
-        .slice(0, 6)
-        .map((mentor) => ({ mentor, score: 0 }));
-
-  const tips = [
-    "Update your portfolio with recent projects — mentors respond faster to specific experience.",
-    "Set career goals in Settings so matching improves over time.",
-    "Join forum discussions in your discipline to build visibility before booking calls.",
-  ];
+  const skillGraph = buildSkillGraph(mentors).slice(0, 10);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <h1 className="font-display text-3xl tracking-tight">Career assist</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Personalized mentor suggestions based on your goals and discipline. No external AI — matching uses your profile data.
+        {assist.usedAi
+          ? "AI-powered mentor matching based on your goals and profile."
+          : "Personalized mentor suggestions based on your goals. Set OPENAI_API_KEY for AI-enhanced matching."}
       </p>
 
       <Card className="card-elevated mt-8">
@@ -67,6 +48,7 @@ export default async function AssistPage() {
               <li key={g} className="rounded-lg bg-muted px-3 py-1 text-sm">{g}</li>
             ))}
           </ul>
+          <p className="mt-4 text-sm text-muted-foreground">{assist.summary}</p>
         </CardContent>
       </Card>
 
@@ -79,31 +61,30 @@ export default async function AssistPage() {
         </p>
       ) : (
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recommendations.map(({ mentor }) => (
-            <MentorCard key={mentor.slug} mentor={mentor} />
-          ))}
+          {recommendations.map((mentor) => mentor && <MentorCard key={mentor.slug} mentor={mentor} />)}
         </div>
       )}
 
       <h2 className="mt-12 text-xl font-bold">Skill graph highlights</h2>
-      <p className="mt-2 text-sm text-muted-foreground">Related competencies in your field</p>
+      <p className="mt-2 text-sm text-muted-foreground">Skills from mentors in your field</p>
       <div className="mt-4 flex flex-wrap gap-2">
-        {engineeringSkills
-          .slice(0, 8)
-          .map((s) => (
-            <Link
-              key={s.id}
-              href={`/mentors?search=${encodeURIComponent(s.label)}`}
-              className="rounded-xl border border-border bg-card px-4 py-2 text-sm hover:border-primary/40"
-            >
-              {s.label}
-            </Link>
-          ))}
+        {skillGraph.map((s) => (
+          <Link
+            key={s.id}
+            href={`/mentors?search=${encodeURIComponent(s.label)}`}
+            className="rounded-xl border border-border bg-card px-4 py-2 text-sm hover:border-primary/40"
+          >
+            {s.label}
+            {s.mentorCount > 0 && (
+              <span className="ml-1.5 text-xs text-muted-foreground">({s.mentorCount})</span>
+            )}
+          </Link>
+        ))}
       </div>
 
       <h2 className="mt-12 text-xl font-bold">Quick tips</h2>
       <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-        {tips.map((t) => <li key={t}>{t}</li>)}
+        {assist.tips.map((t) => <li key={t}>{t}</li>)}
       </ul>
     </div>
   );

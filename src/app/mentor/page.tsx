@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { getMentorProfileByUserId } from "@/lib/data/mentors";
 import { getLiveSessionsForHost } from "@/lib/data/live";
+import { getMentorBookingStats } from "@/lib/data/mentor-stats";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -9,13 +10,16 @@ export default async function MentorDashboardPage() {
   const user = await getCurrentUser();
   const profile = user ? await getMentorProfileByUserId(user.id) : null;
   const sessions = user ? await getLiveSessionsForHost(user.id) : [];
+  const stats = profile && user
+    ? await getMentorBookingStats(profile.slug, user.id)
+    : null;
 
   return (
     <div>
       <h1 className="text-2xl font-bold">Mentor dashboard</h1>
-      <p className="mt-1 text-muted-foreground">Manage your profile and live sessions.</p>
+      <p className="mt-1 text-muted-foreground">Manage your profile, bookings, and live sessions.</p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="card-elevated">
           <CardContent className="p-6">
             <p className="text-sm text-muted-foreground">Profile status</p>
@@ -27,14 +31,22 @@ export default async function MentorDashboardPage() {
         </Card>
         <Card className="card-elevated">
           <CardContent className="p-6">
-            <p className="text-sm text-muted-foreground">Live sessions</p>
-            <p className="mt-2 text-2xl font-bold">{sessions.length}</p>
+            <p className="text-sm text-muted-foreground">Open bookings</p>
+            <p className="mt-2 text-2xl font-bold">{stats?.pending ?? 0}</p>
+            <p className="text-xs text-muted-foreground">{stats?.total ?? 0} total requests</p>
           </CardContent>
         </Card>
         <Card className="card-elevated">
           <CardContent className="p-6">
-            <p className="text-sm text-muted-foreground">Monthly rate</p>
-            <p className="mt-2 text-2xl font-bold">${profile?.monthly_rate ?? "—"}</p>
+            <p className="text-sm text-muted-foreground">Response rate</p>
+            <p className="mt-2 text-2xl font-bold">{stats?.responseRate ?? 0}%</p>
+            <p className="text-xs text-muted-foreground">{stats?.reviewCount ?? 0} reviews · {stats?.avgRating?.toFixed(1) ?? "—"} avg</p>
+          </CardContent>
+        </Card>
+        <Card className="card-elevated">
+          <CardContent className="p-6">
+            <p className="text-sm text-muted-foreground">Live sessions</p>
+            <p className="mt-2 text-2xl font-bold">{sessions.length}</p>
           </CardContent>
         </Card>
       </div>
@@ -44,8 +56,8 @@ export default async function MentorDashboardPage() {
           <CardContent className="p-6">
             <h2 className="font-semibold">Quick actions</h2>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/mentor/bookings" className="text-primary hover:underline">View booking inbox</Link></li>
-              <li><Link href="/mentor/profile" className="text-primary hover:underline">Edit public profile</Link></li>
+              <li><Link href="/mentor/bookings" className="text-primary hover:underline">View booking inbox ({stats?.pending ?? 0} pending)</Link></li>
+              <li><Link href="/mentor/profile" className="text-primary hover:underline">Edit public profile & Calendly links</Link></li>
               <li><Link href="/mentor/live/new" className="text-primary hover:underline">Schedule a live session</Link></li>
               <li><Link href="/forum/new" className="text-primary hover:underline">Answer a forum question</Link></li>
             </ul>

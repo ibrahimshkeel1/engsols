@@ -6,6 +6,7 @@ import { getPublishedPortfolios } from "@/lib/data/portfolios";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
+import { getCurrentUser } from "@/lib/auth";
 import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -20,10 +21,11 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobBySlug(slug);
   if (!job) notFound();
 
-  const [company, allJobs, portfolios] = await Promise.all([
+  const [company, allJobs, portfolios, user] = await Promise.all([
     getCompanyBySlug(job.companySlug),
     getJobs(),
     getPublishedPortfolios(),
+    getCurrentUser(),
   ]);
 
   const similar = allJobs.filter((j) => j.slug !== slug && j.discipline === job.discipline).slice(0, 3);
@@ -64,7 +66,13 @@ export default async function JobPage({ params }: Props) {
               <h3 className="font-semibold">Apply for this role</h3>
               <p className="mt-1 text-sm text-muted-foreground">Submit your details — employers receive applications when partnerships go live.</p>
               <div className="mt-4">
-                <JobApplicationForm jobSlug={job.slug} jobTitle={job.title} company={job.company} />
+                <JobApplicationForm
+                  jobSlug={job.slug}
+                  jobTitle={job.title}
+                  company={job.company}
+                  defaultName={user?.full_name ?? ""}
+                  defaultEmail={user?.email ?? ""}
+                />
               </div>
             </CardContent>
           </Card>

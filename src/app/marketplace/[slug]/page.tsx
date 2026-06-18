@@ -29,13 +29,12 @@ export default async function ListingPage({ params }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
-          <Image src={listingImage(listing.title.slice(0, 12))} alt="" fill className="object-cover" unoptimized />
+          <Image src={listing.imageUrl ?? listingImage(listing.title.slice(0, 12))} alt="" fill className="object-cover" unoptimized />
         </div>
         <div>
           <div className="flex gap-2">
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs capitalize">{listing.category}</span>
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs">{listing.condition}</span>
-            <span className="rounded-full bg-muted px-3 py-0.5 text-xs font-semibold text-muted-foreground">Preview</span>
           </div>
           <h1 className="mt-3 font-display text-3xl tracking-tight">{listing.title}</h1>
           <p className="mt-4 text-2xl font-bold">

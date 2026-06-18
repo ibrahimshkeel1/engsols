@@ -10,13 +10,13 @@
 
 | Area | Progress | Notes |
 |------|----------|-------|
-| Community shell (forum, live, mentors, news) | ~95% | Realtime, recordings, reputation |
-| Business loop (booking → call → pay → review) | ~70% | Inbox + reviews + calendar; **no Stripe** |
-| Career verticals (jobs, marketplace, videos) | ~75% | Seller onboarding + admin CMS |
-| Trust & security | ~80% | Auth, rate limits, verified badges |
-| Ops (tests, CI, SEO, docs) | ~90% | E2E smoke tests, ISR, analytics hooks |
+| Community shell (forum, live, mentors, news) | ~98% | Notifications, forum edit, markdown news |
+| Business loop (booking → call → pay → review) | ~90% | One-off sessions, student inbox, Calendly; **no Stripe** |
+| Career verticals (jobs, marketplace, videos) | ~95% | Seller dashboard, listing images, job pre-fill |
+| Trust & security | ~90% | Google OAuth, email verify on signup, verified badges |
+| Ops (tests, CI, SEO, docs) | ~95% | Unit tests, 11 E2E smokes, OG images, `.env.example` |
 
-**Next priority:** Run migrations `007` + `008` on Supabase, then Stripe when ready.
+**Next priority:** Run migration `010` on Supabase, enable Google OAuth in Supabase dashboard, set production env vars.
 
 ---
 
@@ -47,7 +47,8 @@
 | 2026-06 | Password reset + change password | `/forgot-password`, `/settings/password` |
 | 2026-06 | Auth required on booking requests + rate limiting | `insertContactRequest` |
 | 2026-06 | Mentor booking inbox | `/mentor/bookings` |
-| 2026-06 | Email notifications (Resend optional) | `lib/email.ts` |
+| 2026-06 | Migration 010 — notifications, one-off calendly, cert prep_steps, marketplace images | `010_platform_completion.sql` |
+| 2026-06 | Platform completion batch — seller dashboard, AI assist, OAuth, PWA, unit tests | see commit |
 | 2026-06 | Calendly link on mentor profiles | `calendly_url` column + editor |
 | 2026-06 | Mentor reviews system | `mentor_reviews` + trigger |
 | 2026-06 | Mentor profile editor | `/mentor/profile` |

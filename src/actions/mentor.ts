@@ -20,6 +20,9 @@ export async function updateMentorProfile(formData: FormData) {
     yearsExperience: parseInt(formData.get("yearsExperience") as string, 10) || 0,
     skills: (formData.get("skills") as string || "").split(",").map((s) => s.trim()).filter(Boolean),
     calendlyUrl: (formData.get("calendlyUrl") as string) || "",
+    introCalendlyUrl: (formData.get("introCalendlyUrl") as string) || "",
+    studyPlanCalendlyUrl: (formData.get("studyPlanCalendlyUrl") as string) || "",
+    interviewCalendlyUrl: (formData.get("interviewCalendlyUrl") as string) || "",
   });
 
   if (!parsed.success) {
@@ -38,6 +41,9 @@ export async function updateMentorProfile(formData: FormData) {
       years_experience: d.yearsExperience,
       skills: d.skills,
       calendly_url: d.calendlyUrl || null,
+      intro_calendly_url: d.introCalendlyUrl || null,
+      study_plan_calendly_url: d.studyPlanCalendlyUrl || null,
+      interview_calendly_url: d.interviewCalendlyUrl || null,
     })
     .eq("user_id", user.id);
 
@@ -118,7 +124,7 @@ export async function updateMentorBookingStatus(bookingId: string, status: "pend
 
   const { data: booking } = await supabase
     .from("booking_requests")
-    .select("id, mentor_slug, mentor_user_id")
+    .select("id, mentor_slug, mentor_user_id, requester_name, requester_email, request_type, user_id")
     .eq("id", bookingId)
     .single();
 
@@ -138,6 +144,41 @@ export async function updateMentorBookingStatus(bookingId: string, status: "pend
 
   const { error } = await supabase.from("booking_requests").update({ status }).eq("id", bookingId);
   if (error) return { error: error.message };
+
+  if (booking.user_id && (status === "contacted" || status === "closed")) {
+    const { data: mentorProfile } = await supabase
+      .from("mentor_profiles")
+      .select("profiles(full_name)")
+      .eq("slug", booking.mentor_slug)
+      .maybeSingle();
+    const mentorName =
+      (mentorProfile?.profiles as { full_name?: string } | null)?.full_name ?? booking.mentor_slug;
+
+    const { bookingStatusEmail, sendEmail } = await import("@/lib/email");
+    const mail = bookingStatusEmail({
+      studentName: booking.requester_name,
+      mentorName,
+      status,
+      requestType: booking.request_type,
+    });
+    await sendEmail({ to: booking.requester_email, ...mail });
+
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: booking.user_id,
+      title: `Booking ${status}`,
+      body: `${mentorName} updated your ${booking.request_type.replace(/_/g, " ")} request.`,
+      url: "/settings",
+    });
+
+    const { sendPushToUser } = await import("@/lib/push");
+    await sendPushToUser({
+      userId: booking.user_id,
+      title: `Booking ${status}`,
+      body: `${mentorName} updated your request.`,
+      url: "/settings",
+    });
+  }
 
   revalidatePath("/mentor/bookings");
   revalidatePath("/admin/bookings");

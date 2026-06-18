@@ -11,7 +11,7 @@ export default async function CertificationsPage() {
       label="Credentials"
       title="Certifications & Exams"
       description="FE, PE, IWCF, and industry credentials — resources and mentors to help you prepare."
-      preview
+      preview={false}
     >
       {certifications.length === 0 ? (
         <p className="text-muted-foreground">No certifications listed yet.</p>

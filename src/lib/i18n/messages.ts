@@ -15,6 +15,9 @@ type Messages = {
   search: string;
   settings: string;
   assist: string;
+  notifications: string;
+  login: string;
+  signup: string;
   tagline: string;
   mentors: string;
   portfolios: string;
@@ -24,6 +27,8 @@ type Messages = {
   companies: string;
   marketplace: string;
   videos: string;
+  welcomeBack: string;
+  joinEngsols: string;
 };
 
 export const messages: Record<Locale, Messages> = {
@@ -35,6 +40,9 @@ export const messages: Record<Locale, Messages> = {
     search: "Search",
     settings: "Settings",
     assist: "Career assist",
+    notifications: "Notifications",
+    login: "Log in",
+    signup: "Sign up",
     tagline: "Engineering mentorship, careers, and community",
     mentors: "Mentors",
     portfolios: "Portfolios",
@@ -44,6 +52,8 @@ export const messages: Record<Locale, Messages> = {
     companies: "Companies",
     marketplace: "Marketplace",
     videos: "Videos",
+    welcomeBack: "Welcome back",
+    joinEngsols: "Join EngSols",
   },
   ar: {
     findMentors: "ابحث عن مرشد",
@@ -53,6 +63,9 @@ export const messages: Record<Locale, Messages> = {
     search: "بحث",
     settings: "الإعدادات",
     assist: "مساعدة مهنية",
+    notifications: "الإشعارات",
+    login: "تسجيل الدخول",
+    signup: "إنشاء حساب",
     tagline: "إرشاد هندسي ووظائف ومجتمع",
     mentors: "المرشدون",
     portfolios: "المحافظ",
@@ -62,6 +75,8 @@ export const messages: Record<Locale, Messages> = {
     companies: "الشركات",
     marketplace: "السوق",
     videos: "فيديو",
+    welcomeBack: "مرحباً بعودتك",
+    joinEngsols: "انضم إلى إنجسولز",
   },
 };
 

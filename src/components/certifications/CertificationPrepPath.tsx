@@ -14,10 +14,14 @@ type Props = {
 
 export function CertificationPrepPath({ cert }: Props) {
   const months = cert.avgPrepMonths;
-  const steps = defaultSteps.map((step, i) => ({
-    ...step,
-    week: Math.ceil(((i + 1) / defaultSteps.length) * months * 4),
-  }));
+  const baseSteps = cert.prepSteps?.length ? cert.prepSteps : defaultSteps;
+  const steps = baseSteps.map((step, i) => {
+    const week =
+      typeof step === "object" && step !== null && "week" in step && typeof step.week === "number"
+        ? step.week
+        : Math.ceil(((i + 1) / baseSteps.length) * months * 4);
+    return { phase: step.phase, description: step.description, week };
+  });
 
   return (
     <div className="mt-10">
@@ -27,7 +31,7 @@ export function CertificationPrepPath({ cert }: Props) {
       </p>
       <ol className="mt-6 space-y-4">
         {steps.map((step, i) => (
-          <li key={step.phase} className="relative flex gap-4 rounded-2xl border border-border bg-card p-5">
+          <li key={`${step.phase}-${i}`} className="relative flex gap-4 rounded-2xl border border-border bg-card p-5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary">
               {i + 1}
             </span>

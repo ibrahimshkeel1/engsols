@@ -7,6 +7,7 @@ import { FormField } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 type Props = { searchParams: Promise<{ message?: string; error?: string; next?: string }> };
 
@@ -51,6 +52,11 @@ export default async function LoginPage({ searchParams }: Props) {
                 Log in
               </SubmitButton>
             </form>
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>
+            </div>
+            <GoogleSignInButton nextPath={next ?? undefined} />
             <p className="mt-5 text-center text-sm text-muted-foreground">
               <Link href="/forgot-password" className="text-primary hover:underline">Forgot password?</Link>
             </p>

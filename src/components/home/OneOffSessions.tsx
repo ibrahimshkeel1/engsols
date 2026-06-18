@@ -2,12 +2,6 @@ import Link from "next/link";
 import { sessionTypes } from "@/data/sessionTypes";
 import { Card, CardContent } from "@/components/ui/card";
 
-const goalMap: Record<string, string> = {
-  intro: "first-job",
-  "study-plan": "fe-pe",
-  "interview-prep": "ace-interviews",
-};
-
 export function OneOffSessions() {
   return (
     <section className="bg-muted/50 py-16">
@@ -28,7 +22,7 @@ export function OneOffSessions() {
                   From <span className="text-lg font-bold text-foreground">${session.price}</span>/session
                 </p>
                 <Link
-                  href={`/mentors?goal=${goalMap[session.id] ?? ""}`}
+                  href={`/mentors?session=${session.id}`}
                   className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-card text-sm font-semibold hover:border-primary/40"
                 >
                   Find a mentor

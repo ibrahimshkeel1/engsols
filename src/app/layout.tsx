@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
 import { SentryInit } from "@/components/analytics/SentryInit";
+import { PwaInstallPrompt } from "@/components/layout/PwaInstallPrompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,6 +54,7 @@ export default function RootLayout({
             <Footer />
             <CommunityBottomNav />
             <Toaster position="bottom-center" richColors />
+            <PwaInstallPrompt />
           </LocaleProvider>
         </ThemeProvider>
       </body>

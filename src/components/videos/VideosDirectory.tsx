@@ -34,7 +34,6 @@ export function VideosDirectory({ videos, mentors }: Props) {
       label="Learning"
       title="Engineering Videos"
       description="Tutorials, career talks, and technical deep-dives from industry engineers. Full library launches with mentor content partnerships."
-      preview
     >
       <div className="flex flex-wrap gap-3">
         <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />

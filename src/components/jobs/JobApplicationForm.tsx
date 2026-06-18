@@ -11,9 +11,11 @@ type Props = {
   jobSlug: string;
   jobTitle: string;
   company: string;
+  defaultName?: string;
+  defaultEmail?: string;
 };
 
-export function JobApplicationForm({ jobSlug, jobTitle, company }: Props) {
+export function JobApplicationForm({ jobSlug, jobTitle, company, defaultName = "", defaultEmail = "" }: Props) {
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -40,10 +42,10 @@ export function JobApplicationForm({ jobSlug, jobTitle, company }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <FormField label="Your name" id="job-app-name">
-        <Input name="name" required autoComplete="name" />
+        <Input name="name" required autoComplete="name" defaultValue={defaultName} />
       </FormField>
       <FormField label="Email" id="job-app-email">
-        <Input name="email" required type="email" autoComplete="email" />
+        <Input name="email" required type="email" autoComplete="email" defaultValue={defaultEmail} />
       </FormField>
       <FormField label="Cover note" id="job-app-message">
         <Textarea name="message" required rows={3} placeholder="Brief cover note and relevant experience..." />

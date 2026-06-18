@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getNewsArticle, getPublishedNews } from "@/lib/data/news";
+import { MarkdownBody } from "@/components/shared/MarkdownBody";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -41,9 +42,7 @@ export default async function NewsArticlePage({ params }: Props) {
         </div>
       </header>
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-        <div className="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90">
-          {article.body}
-        </div>
+        <MarkdownBody content={article.body} className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-foreground/90" />
       </div>
     </article>
   );

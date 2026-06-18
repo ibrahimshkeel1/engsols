@@ -168,6 +168,31 @@ export async function signOut() {
   redirect("/");
 }
 
+export async function signInWithGoogle(nextPath?: string) {
+  const configError = getSupabaseConfigError();
+  if (configError) {
+    redirect("/login?error=" + encodeURIComponent(configError));
+  }
+
+  const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const safeNext = getSafeNextPath(nextPath);
+  const redirectTo = safeNext
+    ? `${siteUrl}/auth/callback?next=${encodeURIComponent(safeNext)}`
+    : `${siteUrl}/auth/callback`;
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo },
+  });
+
+  if (error || !data.url) {
+    redirect("/login?error=" + encodeURIComponent(error?.message ?? "Google sign-in failed"));
+  }
+
+  redirect(data.url);
+}
+
 export async function updateProfileAvatar(avatarUrl: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -248,6 +273,12 @@ export async function createForumReply(postId: string, body: string, imageUrls: 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You must be logged in" };
 
+  const { data: post } = await supabase
+    .from("forum_posts")
+    .select("author_id, title, slug")
+    .eq("id", postId)
+    .single();
+
   const { error } = await supabase.from("forum_replies").insert({
     post_id: postId,
     author_id: user.id,
@@ -256,6 +287,38 @@ export async function createForumReply(postId: string, body: string, imageUrls: 
   });
 
   if (error) return { error: error.message };
+
+  if (post?.author_id && post.author_id !== user.id) {
+    const { data: replier } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
+    const { data: author } = await supabase.from("profiles").select("email").eq("id", post.author_id).single();
+
+    if (author?.email) {
+      const { forumReplyEmail, sendEmail } = await import("@/lib/email");
+      const mail = forumReplyEmail({
+        postTitle: post.title,
+        replierName: replier?.full_name ?? "Someone",
+        postSlug: post.slug,
+      });
+      await sendEmail({ to: author.email, ...mail });
+    }
+
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: post.author_id,
+      title: "New forum reply",
+      body: `${replier?.full_name ?? "Someone"} replied to "${post.title}".`,
+      url: `/forum/${post.slug}`,
+    });
+
+    const { sendPushToUser } = await import("@/lib/push");
+    await sendPushToUser({
+      userId: post.author_id,
+      title: "New forum reply",
+      body: `Someone replied to your thread.`,
+      url: `/forum/${post.slug}`,
+    });
+  }
+
   revalidatePath("/forum");
   return { success: true };
 }
@@ -639,7 +702,11 @@ async function insertContactRequest(fields: {
 
   let mentorUserId: string | null = null;
   let mentorEmail: string | null = null;
-  if (fields.requestType === "intro" || fields.requestType === "monthly") {
+  let sellerSlug: string | null = null;
+  let listingSlug: string | null = null;
+  const mentorTypes = ["intro", "monthly", "study-plan", "interview-prep"];
+
+  if (mentorTypes.includes(fields.requestType)) {
     const { data: mp } = await supabase
       .from("mentor_profiles")
       .select("user_id")
@@ -652,6 +719,28 @@ async function insertContactRequest(fields: {
     }
   }
 
+  if (fields.requestType.startsWith("marketplace_")) {
+    listingSlug = fields.refSlug;
+    const { data: listing } = await supabase
+      .from("marketplace_listings")
+      .select("seller_slug")
+      .eq("slug", listingSlug)
+      .maybeSingle();
+    if (listing?.seller_slug) {
+      sellerSlug = listing.seller_slug;
+      const { data: seller } = await supabase
+        .from("sellers")
+        .select("owner_id, name")
+        .eq("slug", sellerSlug)
+        .maybeSingle();
+      if (seller?.owner_id) {
+        mentorUserId = seller.owner_id;
+        const { data: prof } = await supabase.from("profiles").select("email").eq("id", seller.owner_id).single();
+        mentorEmail = prof?.email ?? null;
+      }
+    }
+  }
+
   const { error } = await supabase.from("booking_requests").insert({
     mentor_slug: fields.refSlug,
     mentor_name: fields.refName,
@@ -661,11 +750,13 @@ async function insertContactRequest(fields: {
     request_type: fields.requestType,
     user_id: user.id,
     mentor_user_id: mentorUserId,
+    seller_slug: sellerSlug,
+    listing_slug: listingSlug,
   });
 
   if (error) return { error: error.message };
 
-  if (mentorEmail) {
+  if (mentorEmail && mentorTypes.includes(fields.requestType)) {
     const { notifyMentorOfBooking } = await import("@/actions/mentor");
     await notifyMentorOfBooking({
       mentorEmail,
@@ -675,6 +766,77 @@ async function insertContactRequest(fields: {
       message: parsed.data.message,
       type: fields.requestType,
     });
+    if (mentorUserId) {
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: mentorUserId,
+        title: "New booking request",
+        body: `${parsed.data.name} requested a ${fields.requestType.replace(/-/g, " ")} session.`,
+        url: "/mentor/bookings",
+      });
+      const { sendPushToUser } = await import("@/lib/push");
+      await sendPushToUser({
+        userId: mentorUserId,
+        title: "New booking request",
+        body: `${parsed.data.name} sent a request.`,
+        url: "/mentor/bookings",
+      });
+    }
+  }
+
+  if (fields.requestType.startsWith("marketplace_") && mentorUserId && mentorEmail) {
+    const { marketplaceInquiryEmail, sendEmail } = await import("@/lib/email");
+    const mail = marketplaceInquiryEmail({
+      sellerName: fields.refName,
+      listingTitle: fields.refName,
+      requesterName: parsed.data.name,
+      requesterEmail: parsed.data.email,
+      message: parsed.data.message,
+    });
+    await sendEmail({ to: mentorEmail, ...mail });
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: mentorUserId,
+      title: "New marketplace inquiry",
+      body: `${parsed.data.name} inquired about ${fields.refName}.`,
+      url: "/marketplace/seller",
+    });
+    const { sendPushToUser } = await import("@/lib/push");
+    await sendPushToUser({
+      userId: mentorUserId,
+      title: "New marketplace inquiry",
+      body: `${parsed.data.name} sent an inquiry.`,
+      url: "/marketplace/seller",
+    });
+  }
+
+  if (fields.requestType === "portfolio") {
+    const { data: portfolio } = await supabase
+      .from("portfolios")
+      .select("user_id, profiles(full_name)")
+      .eq("slug", fields.refSlug)
+      .maybeSingle();
+    if (portfolio?.user_id) {
+      const studentName = (portfolio.profiles as { full_name?: string } | null)?.full_name ?? fields.refName;
+      const { data: prof } = await supabase.from("profiles").select("email").eq("id", portfolio.user_id).single();
+      if (prof?.email) {
+        const { portfolioContactEmail, sendEmail } = await import("@/lib/email");
+        const mail = portfolioContactEmail({
+          studentName,
+          requesterName: parsed.data.name,
+          requesterEmail: parsed.data.email,
+          message: parsed.data.message,
+        });
+        await sendEmail({ to: prof.email, ...mail });
+      }
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: portfolio.user_id,
+        title: "Portfolio contact",
+        body: `${parsed.data.name} reached out via your portfolio.`,
+        url: `/portfolios/${fields.refSlug}`,
+      });
+    }
   }
 
   return { success: true };

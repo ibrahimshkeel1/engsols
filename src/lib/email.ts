@@ -79,3 +79,67 @@ export function sellerApprovedEmail(opts: { sellerName: string }) {
     `,
   };
 }
+
+export function bookingStatusEmail(opts: {
+  studentName: string;
+  mentorName: string;
+  status: string;
+  requestType: string;
+}) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  const statusLabel = opts.status === "contacted" ? "contacted you" : "closed your request";
+  return {
+    subject: `Booking update: ${opts.mentorName}`,
+    html: `
+      <p>Hi ${opts.studentName},</p>
+      <p><strong>${opts.mentorName}</strong> has ${statusLabel} regarding your ${opts.requestType.replace(/_/g, " ")} request.</p>
+      <p><a href="${site}/settings">View your bookings</a></p>
+    `,
+  };
+}
+
+export function forumReplyEmail(opts: { postTitle: string; replierName: string; postSlug: string }) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: `New reply on "${opts.postTitle}"`,
+    html: `
+      <p><strong>${opts.replierName}</strong> replied to your forum thread.</p>
+      <p><a href="${site}/forum/${opts.postSlug}">View the discussion</a></p>
+    `,
+  };
+}
+
+export function marketplaceInquiryEmail(opts: {
+  sellerName: string;
+  listingTitle: string;
+  requesterName: string;
+  requesterEmail: string;
+  message: string;
+}) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: `New inquiry for ${opts.listingTitle}`,
+    html: `
+      <p>You have a new marketplace inquiry on <strong>${opts.listingTitle}</strong>.</p>
+      <p><strong>${opts.requesterName}</strong> (${opts.requesterEmail})</p>
+      <p>${opts.message}</p>
+      <p><a href="${site}/marketplace/seller">View in seller inbox</a></p>
+    `,
+  };
+}
+
+export function portfolioContactEmail(opts: {
+  studentName: string;
+  requesterName: string;
+  requesterEmail: string;
+  message: string;
+}) {
+  return {
+    subject: `Someone reached out about your portfolio`,
+    html: `
+      <p><strong>${opts.requesterName}</strong> (${opts.requesterEmail}) sent you a message:</p>
+      <p>${opts.message}</p>
+      <p>Check your email to respond directly.</p>
+    `,
+  };
+}

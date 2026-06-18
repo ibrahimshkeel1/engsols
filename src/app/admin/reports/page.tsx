@@ -65,7 +65,7 @@ export default async function AdminReportsPage() {
                     View reported content →
                   </Link>
                 )}
-                <ReportActionButtons reportId={report.id} status={report.status} />
+                <ReportActionButtons reportId={report.id} status={report.status} contentType={report.content_type} />
               </CardContent>
             </Card>
           ))

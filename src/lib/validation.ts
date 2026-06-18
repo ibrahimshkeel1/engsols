@@ -31,6 +31,9 @@ export const mentorProfileSchema = z.object({
   yearsExperience: z.number().int().min(0).max(60),
   skills: z.array(z.string()).max(30),
   calendlyUrl: z.string().url().optional().or(z.literal("")),
+  introCalendlyUrl: z.string().url().optional().or(z.literal("")),
+  studyPlanCalendlyUrl: z.string().url().optional().or(z.literal("")),
+  interviewCalendlyUrl: z.string().url().optional().or(z.literal("")),
 });
 
 export const jobPostSchema = z.object({

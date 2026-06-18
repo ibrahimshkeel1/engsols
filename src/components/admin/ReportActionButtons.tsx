@@ -2,17 +2,27 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { resolveContentReport } from "@/actions/admin";
+import { resolveContentReport, deleteReportedContent } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 
-export function ReportActionButtons({ reportId, status }: { reportId: string; status: string }) {
+export function ReportActionButtons({
+  reportId,
+  status,
+  contentType,
+}: {
+  reportId: string;
+  status: string;
+  contentType: string;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   if (status !== "pending") return null;
 
+  const canDelete = contentType === "forum_post" || contentType === "forum_reply";
+
   return (
-    <div className="mt-4 flex gap-2">
+    <div className="mt-4 flex flex-wrap gap-2">
       <Button
         type="button"
         size="sm"
@@ -27,6 +37,22 @@ export function ReportActionButtons({ reportId, status }: { reportId: string; st
       >
         Resolve
       </Button>
+      {canDelete && (
+        <Button
+          type="button"
+          size="sm"
+          variant="destructive"
+          disabled={pending}
+          onClick={() =>
+            startTransition(async () => {
+              await deleteReportedContent(reportId);
+              router.refresh();
+            })
+          }
+        >
+          Delete content
+        </Button>
+      )}
       <Button
         type="button"
         size="sm"

@@ -34,6 +34,7 @@ function toListing(l: DbMarketplaceListing): Listing {
     specs: (l.specs as Record<string, string>) ?? {},
     inStock: l.in_stock,
     featured: l.featured,
+    imageUrl: (l as DbMarketplaceListing & { image_url?: string | null }).image_url ?? null,
   };
 }
 

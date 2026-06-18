@@ -54,6 +54,9 @@ export default async function AdminCompaniesPage() {
                     View →
                   </Link>
                 )}
+                <Link href={`/admin/companies/${company.id}/edit`} className="shrink-0 text-sm font-medium text-muted-foreground hover:text-primary">
+                  Edit
+                </Link>
               </CardContent>
             </Card>
           ))

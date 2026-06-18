@@ -32,8 +32,23 @@ test.describe("smoke", () => {
     await expect(page).toHaveURL(/login/);
   });
 
-  test("jobs inbox redirects when logged out", async ({ page }) => {
-    await page.goto("/jobs/inbox");
+  test("notifications page redirects when logged out", async ({ page }) => {
+    await page.goto("/notifications");
     await expect(page).toHaveURL(/login/);
+  });
+
+  test("seller dashboard redirects when logged out", async ({ page }) => {
+    await page.goto("/marketplace/seller");
+    await expect(page).toHaveURL(/login/);
+  });
+
+  test("companies page loads", async ({ page }) => {
+    await page.goto("/companies");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("marketplace page loads", async ({ page }) => {
+    await page.goto("/marketplace");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });

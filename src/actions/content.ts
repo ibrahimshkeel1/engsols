@@ -85,6 +85,43 @@ export async function createCompanyListing(formData: FormData) {
   redirect("/admin/companies");
 }
 
+export async function updateCompany(companyId: string, formData: FormData) {
+  const admin = await requireRole(["admin"]);
+  if (!admin) redirect("/login?next=/admin/companies");
+
+  const supabase = await createClient();
+  const name = (formData.get("name") as string).trim();
+
+  const { error } = await supabase.from("companies").update({
+    name,
+    type: formData.get("type") as string,
+    headquarters: formData.get("headquarters") as string,
+    country: formData.get("country") as string,
+    description: formData.get("description") as string,
+    disciplines: (formData.get("disciplines") as string || "").split(",").map((s) => s.trim()).filter(Boolean),
+    website: formData.get("website") as string,
+    verified: formData.get("verified") === "true",
+    published: formData.get("published") === "true",
+  }).eq("id", companyId);
+
+  if (error) redirect(`/admin/companies/${companyId}/edit?error=${encodeURIComponent(error.message)}`);
+  revalidatePath("/companies");
+  revalidatePath("/admin/companies");
+  redirect("/admin/companies");
+}
+
+export async function deleteCompany(companyId: string) {
+  const admin = await requireRole(["admin"]);
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("companies").delete().eq("id", companyId);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/companies");
+  revalidatePath("/companies");
+  return { success: true };
+}
+
 export async function createMarketplaceListing(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -106,6 +143,7 @@ export async function createMarketplaceListing(formData: FormData) {
     discipline: formData.get("discipline") as string,
     condition: formData.get("condition") as string || "new",
     location: formData.get("location") as string || "",
+    image_url: (formData.get("imageUrl") as string) || null,
     published: false,
   });
 

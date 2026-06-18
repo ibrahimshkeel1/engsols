@@ -31,7 +31,6 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."
-      preview
     >
       <div className="flex flex-wrap gap-3">
         <Input placeholder="Search companies..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />

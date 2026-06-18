@@ -25,6 +25,9 @@ export type Mentor = {
   reviews: Review[];
   avatarUrl?: string | null;
   calendlyUrl?: string | null;
+  introCalendlyUrl?: string | null;
+  studyPlanCalendlyUrl?: string | null;
+  interviewCalendlyUrl?: string | null;
   verified?: boolean;
 };
 
@@ -149,6 +152,7 @@ export type Listing = {
   specs: Record<string, string>;
   inStock: boolean;
   featured: boolean;
+  imageUrl?: string | null;
 };
 
 export type CompanyType =
@@ -249,4 +253,5 @@ export type Certification = {
   resources: CertificationResource[];
   relatedMentorSlugs: string[];
   forumThreadSlugs?: string[];
+  prepSteps?: { phase: string; description: string; week?: number }[];
 };

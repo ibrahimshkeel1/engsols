@@ -2,7 +2,7 @@ export const MEDIA_BUCKET = "media";
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
 
-export type MediaFolder = "avatars" | "forum" | "news";
+export type MediaFolder = "avatars" | "forum" | "news" | "marketplace";
 
 export function validateImageFile(file: File): string | null {
   if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
