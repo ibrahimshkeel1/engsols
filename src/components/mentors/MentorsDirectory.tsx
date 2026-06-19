@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Users } from "lucide-react";
 import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
@@ -16,6 +17,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
+  const [company] = useState(searchParams.get("company") ?? "");
   const [sessionFilter] = useState(searchParams.get("session") ?? "");
   const [skill, setSkill] = useState("");
   const [sort, setSort] = useState("rating");
@@ -26,10 +28,11 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
         search: search || undefined,
         discipline: discipline || undefined,
         goal: goal || undefined,
+        company: company || undefined,
         skill: skill || undefined,
         sort: sort as "rating" | "price-asc" | "price-desc",
       }),
-    [mentors, search, discipline, goal, skill, sort],
+    [mentors, search, discipline, goal, company, skill, sort],
   );
 
   const hasFilters = Boolean(search || discipline || goal || skill);
@@ -44,6 +47,12 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
 
   return (
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-10">
+      {company && (
+        <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm lg:col-span-2">
+          Showing mentors at <strong>{company}</strong>.{" "}
+          <Link href="/mentors" className="text-primary hover:underline">Clear filter</Link>
+        </div>
+      )}
       {sessionFilter && (
         <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm lg:col-span-2">
           Browsing mentors for <strong className="capitalize">{sessionFilter.replace(/-/g, " ")}</strong> sessions.

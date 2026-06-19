@@ -1,4 +1,5 @@
 import type { Mentor } from "@/types";
+import { matchMentorsByGoals } from "@/lib/match-mentors";
 
 type AssistInput = {
   goals: string[];
@@ -13,31 +14,7 @@ type AssistResult = {
 };
 
 function ruleBasedAssist({ goals, mentors }: AssistInput): AssistResult {
-  const goalKeywords = goals.join(" ").toLowerCase();
-  const scored = mentors
-    .map((m) => {
-      let score = 0;
-      if (m.verified) score += 1;
-      score += m.rating * (m.reviewCount > 0 ? 0.5 : 0);
-      for (const g of m.goals) {
-        if (goalKeywords.includes(g.replace(/-/g, " "))) score += 2;
-      }
-      for (const s of m.skills) {
-        if (goalKeywords.includes(s.toLowerCase())) score += 1;
-      }
-      return { mentor: m, score };
-    })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6);
-
-  const picks = scored.length
-    ? scored
-    : mentors
-        .filter((m) => m.reviewCount > 0)
-        .sort((a, b) => b.rating - a.rating)
-        .slice(0, 6)
-        .map((mentor) => ({ mentor, score: 0 }));
+  const picks = matchMentorsByGoals(goals, mentors, 6);
 
   return {
     summary: `Based on your goals (${goals.slice(0, 3).join(", ")}), we matched mentors with relevant experience and strong reviews.`,
@@ -46,7 +23,7 @@ function ruleBasedAssist({ goals, mentors }: AssistInput): AssistResult {
       "Set career goals in Settings so matching improves over time.",
       "Join forum discussions in your discipline to build visibility before booking calls.",
     ],
-    mentorSlugs: picks.map((p) => p.mentor.slug),
+    mentorSlugs: picks.map((m) => m.slug),
     usedAi: false,
   };
 }

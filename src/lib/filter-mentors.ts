@@ -6,6 +6,7 @@ export type MentorFilters = {
   discipline?: string;
   goal?: string;
   skill?: string;
+  company?: string;
   sort?: "rating" | "price-asc" | "price-desc";
 };
 
@@ -26,6 +27,11 @@ export function filterMentors(mentors: Mentor[], filters: MentorFilters): Mentor
 
   if (filters.discipline) {
     result = result.filter((m) => m.discipline === filters.discipline);
+  }
+
+  if (filters.company) {
+    const company = filters.company.toLowerCase();
+    result = result.filter((m) => m.company.toLowerCase().includes(company));
   }
 
   if (filters.goal) {

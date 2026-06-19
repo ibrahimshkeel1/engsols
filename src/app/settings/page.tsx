@@ -98,7 +98,7 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="card-elevated mt-8">
+      <Card className="card-elevated mt-8" id="saved-mentors">
         <CardContent className="p-6">
           <h2 className="font-semibold">Saved mentors</h2>
           {savedMentors.length === 0 ? (
@@ -118,7 +118,7 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="card-elevated mt-8">
+      <Card className="card-elevated mt-8" id="my-bookings">
         <CardContent className="p-6">
           <LocalizedText messageKey="myBookings" as="h2" className="font-semibold" />
           <p className="mt-1 text-sm text-muted-foreground">Track mentorship and one-off session requests.</p>
@@ -126,7 +126,7 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="card-elevated mt-8">
+      <Card className="card-elevated mt-8" id="job-applications">
         <CardContent className="p-6">
           <LocalizedText messageKey="myApplications" as="h2" className="font-semibold" />
           <StudentJobApplicationsSection applications={jobApplications} />
