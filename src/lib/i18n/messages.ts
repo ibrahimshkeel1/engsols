@@ -27,6 +27,7 @@ type Messages = {
   companies: string;
   marketplace: string;
   videos: string;
+  forYou: string;
   welcomeBack: string;
   joinEngsols: string;
   signInTitle: string;
@@ -65,6 +66,7 @@ export const messages: Record<Locale, Messages> = {
     companies: "Companies",
     marketplace: "Marketplace",
     videos: "Videos",
+    forYou: "For you",
     welcomeBack: "Welcome back",
     joinEngsols: "Join EngSols",
     signInTitle: "Sign in to EngSols",
@@ -101,6 +103,7 @@ export const messages: Record<Locale, Messages> = {
     companies: "الشركات",
     marketplace: "السوق",
     videos: "فيديو",
+    forYou: "لك",
     welcomeBack: "مرحباً بعودتك",
     joinEngsols: "انضم إلى إنجسولز",
     signInTitle: "تسجيل الدخول إلى إنجسولز",

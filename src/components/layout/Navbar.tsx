@@ -4,12 +4,16 @@ import { AuthLinks } from "@/components/layout/AuthLinks";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { NavbarSearch } from "@/components/layout/NavbarSearch";
 import { NavbarShell, navLinks } from "@/components/layout/NavbarShell";
+import { getCurrentUser } from "@/lib/auth";
 
-export function Navbar() {
+export async function Navbar() {
+  const user = await getCurrentUser();
+
   return (
     <NavbarShell
+      showForYou={Boolean(user)}
       mobileMenu={
-        <MobileMenu links={navLinks}>
+        <MobileMenu links={navLinks} showForYou={Boolean(user)}>
           <div className="flex flex-col gap-2 sm:hidden">
             <AuthLinks />
           </div>

@@ -7,6 +7,7 @@ import { getJobs } from "@/lib/data/jobs";
 import { getCertifications } from "@/lib/data/certifications";
 import { getPortfolioByUserId } from "@/lib/data/portfolios";
 import { matchMentorsForStudent } from "@/lib/match-mentors";
+import { goals as defaultGoals } from "@/data/goals";
 import type { Certification, ForumPost, Job, LiveStream, Mentor } from "@/types";
 
 export type ForYouDigest = {
@@ -30,8 +31,12 @@ function isUpcomingThisWeek(iso: string): boolean {
   return t > Date.now() && t - Date.now() < WEEK_MS;
 }
 
-export async function getForYouDigest(userId: string): Promise<ForYouDigest | null> {
-  if (!isSupabaseConfigured()) return null;
+async function loadUserContext(userId: string) {
+  const defaultGoalLabels = defaultGoals.slice(0, 2).map((g) => g.label);
+
+  if (!isSupabaseConfigured()) {
+    return { goals: defaultGoalLabels, discipline: "Mechanical" };
+  }
 
   const supabase = await createClient();
   const [{ data: profile }, portfolio] = await Promise.all([
@@ -39,8 +44,14 @@ export async function getForYouDigest(userId: string): Promise<ForYouDigest | nu
     getPortfolioByUserId(userId),
   ]);
 
-  const goals: string[] = profile?.career_goals?.length ? profile.career_goals : [];
-  const discipline = portfolio?.discipline ?? "Mechanical";
+  return {
+    goals: profile?.career_goals?.length ? profile.career_goals : defaultGoalLabels,
+    discipline: portfolio?.discipline ?? "Mechanical",
+  };
+}
+
+export async function getForYouDigest(userId: string): Promise<ForYouDigest> {
+  const { goals, discipline } = await loadUserContext(userId);
 
   const [allMentors, forumThreads, sessions, allJobs, certs] = await Promise.all([
     getApprovedMentors(),
@@ -51,11 +62,8 @@ export async function getForYouDigest(userId: string): Promise<ForYouDigest | nu
   ]);
 
   const matched = matchMentorsForStudent(discipline, goals[0] ?? "", allMentors, 6);
-  const newMentors = allMentors
-    .filter((m) => m.discipline === discipline)
-    .slice(0, 3);
-
-  const picks = matched.length ? matched.slice(0, 3) : newMentors;
+  const disciplineMentors = allMentors.filter((m) => m.discipline === discipline).slice(0, 3);
+  const picks = matched.length ? matched.slice(0, 3) : disciplineMentors.length ? disciplineMentors : allMentors.slice(0, 3);
 
   const liveThisWeek = sessions.filter(
     (s) => s.discipline === discipline && (s.status === "live" || isUpcomingThisWeek(s.scheduledAt)),
@@ -70,7 +78,7 @@ export async function getForYouDigest(userId: string): Promise<ForYouDigest | nu
     .slice(0, 3);
 
   const threads = forumThreads
-    .filter((p) => isWithinWeek(p.lastReplyAt ?? p.createdAt) || goals.some((g) => p.title.toLowerCase().includes(g.toLowerCase().slice(0, 8))))
+    .filter((p) => isWithinWeek(p.lastReplyAt ?? p.createdAt) || goals.some((g: string) => p.title.toLowerCase().includes(g.toLowerCase().slice(0, 8))))
     .slice(0, 5);
 
   return {
@@ -78,8 +86,8 @@ export async function getForYouDigest(userId: string): Promise<ForYouDigest | nu
     goals,
     newMentors: picks,
     forumThreads: threads.length ? threads : forumThreads.slice(0, 3),
-    liveThisWeek,
-    jobs,
-    certMilestones,
+    liveThisWeek: liveThisWeek.length ? liveThisWeek : sessions.filter((s) => s.status !== "ended").slice(0, 3),
+    jobs: jobs.length ? jobs : allJobs.slice(0, 4),
+    certMilestones: certMilestones.length ? certMilestones : certs.slice(0, 3),
   };
 }

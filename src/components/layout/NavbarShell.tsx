@@ -17,6 +17,7 @@ const primaryNav = [
 ];
 
 const moreNav = [
+  { href: "/for-you", key: "forYou" as const, preview: false, authOnly: true },
   { href: "/jobs", key: "jobs" as const, preview: false },
   { href: "/certifications", key: "certifications" as const, preview: false },
   { href: "/companies", key: "companies" as const, preview: false },
@@ -28,15 +29,17 @@ const moreNav = [
 
 export const navLinks = [
   ...primaryNav.map((l) => ({ href: l.href, label: l.key })),
-  ...moreNav.map((l) => ({ href: l.href, label: l.key })),
+  ...moreNav.filter((l) => !("authOnly" in l && l.authOnly)).map((l) => ({ href: l.href, label: l.key })),
 ];
 
 export function NavbarShell({
   children,
   mobileMenu,
+  showForYou = false,
 }: {
   children: React.ReactNode;
   mobileMenu: React.ReactNode;
+  showForYou?: boolean;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -81,7 +84,9 @@ export function NavbarShell({
             </button>
             {moreOpen && (
               <div className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
-                {moreNav.map((l) => (
+                {moreNav.map((l) => {
+                  if (l.authOnly && !showForYou) return null;
+                  return (
                   <Link
                     key={l.href}
                     href={l.href}
@@ -92,7 +97,8 @@ export function NavbarShell({
                       <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">Preview</span>
                     )}
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

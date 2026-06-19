@@ -14,7 +14,7 @@ function navLabel(locale: Locale, key: string) {
   return t(locale, key as Parameters<typeof t>[1]);
 }
 
-export function MobileMenu({ links, children }: { links: NavLink[]; children?: React.ReactNode }) {
+export function MobileMenu({ links, children, showForYou = false }: { links: NavLink[]; children?: React.ReactNode; showForYou?: boolean }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -106,6 +106,13 @@ export function MobileMenu({ links, children }: { links: NavLink[]; children?: R
                     aria-label="Search"
                   />
                 </form>
+                {showForYou && (
+                  <motion.div initial={reducedMotion ? false : { opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}>
+                    <Link href="/for-you" onClick={close} className="block rounded-lg px-3 py-3 text-sm font-medium text-primary transition-colors hover:bg-muted">
+                      {navLabel(locale, "forYou")}
+                    </Link>
+                  </motion.div>
+                )}
                 {links.map((l, i) => (
                   <motion.div
                     key={l.href}
