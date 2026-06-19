@@ -5,10 +5,28 @@ type Step = { label: string };
 type StepIndicatorProps = {
   steps: Step[];
   current: number;
+  progressPercent?: number;
 };
 
-export function StepIndicator({ steps, current }: StepIndicatorProps) {
+export function StepIndicator({ steps, current, progressPercent }: StepIndicatorProps) {
+  const percent = progressPercent ?? Math.round((current / steps.length) * 100);
+
   return (
+    <div>
+      <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
+        <span>Progress</span>
+        <span className="font-medium text-foreground">{percent}%</span>
+      </div>
+      <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-accent transition-all duration-300"
+          style={{ width: `${percent}%` }}
+          role="progressbar"
+          aria-valuenow={percent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
+      </div>
     <ol className="flex items-center gap-2" aria-label="Progress">
       {steps.map((step, index) => {
         const stepNum = index + 1;
@@ -35,5 +53,6 @@ export function StepIndicator({ steps, current }: StepIndicatorProps) {
         );
       })}
     </ol>
+    </div>
   );
 }

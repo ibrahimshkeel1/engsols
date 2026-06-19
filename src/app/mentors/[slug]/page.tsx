@@ -11,10 +11,13 @@ import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
+import { MentorIntroVideo } from "@/components/mentors/MentorIntroVideo";
 import { MentorRating } from "@/components/mentors/MentorRating";
 import { MentorReviewForm } from "@/components/mentor/MentorReviewForm";
+import { MentorStudentQuestions } from "@/components/mentors/MentorStudentQuestions";
 import { SaveMentorButton } from "@/components/mentor/SaveMentorButton";
 import { SimilarMentors } from "@/components/mentors/SimilarMentors";
+import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -71,17 +74,6 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 <span>·</span>
                 <span>{mentor.yearsExperience} years experience</span>
               </div>
-              {mentor.calendlyUrl && (
-                <a
-                  href={mentor.calendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm hover:bg-muted"
-                >
-                  <Calendar className="h-4 w-4" />
-                  Book on calendar
-                </a>
-              )}
               <div className="mt-4 flex flex-wrap gap-2">
                 <DisciplineBadge discipline={mentor.discipline} />
                 {mentor.credentials.map((c) => (
@@ -91,39 +83,47 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                   </span>
                 ))}
               </div>
+              <a
+                href="#book-intro"
+                className="mt-4 inline-flex w-fit items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground hover:brightness-110"
+              >
+                <Calendar className="h-4 w-4" />
+                Book free intro call
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-3">
-          <div className="space-y-10 lg:col-span-2">
-            <section>
-              <h2 className="text-xl font-semibold">About</h2>
+        <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
+          <div className="space-y-12 lg:col-span-2">
+            <section id="why-mentor">
+              <h2 className="text-xl font-semibold">Why mentor with me</h2>
               <p className="mt-3 leading-relaxed text-muted-foreground">{mentor.bio}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold">Skills & expertise</h2>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {mentor.skills.map((skill) => (
-                  <Badge key={skill}>{skill}</Badge>
-                ))}
-              </div>
-              {mentor.subFields.length > 0 && (
-                <div className="mt-4">
-                  <p className="text-sm font-medium text-muted-foreground">Specializations</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
+              {mentor.introVideoUrl && (
+                <div className="mt-6">
+                  <MentorIntroVideo url={mentor.introVideoUrl} name={mentor.name} />
+                </div>
+              )}
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Skills & expertise</h3>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {mentor.skills.map((skill) => (
+                    <Badge key={skill}>{skill}</Badge>
+                  ))}
+                </div>
+                {mentor.subFields.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
                     {mentor.subFields.map((f) => (
                       <span key={f} className="rounded-lg bg-muted px-3 py-1 text-sm">{f}</span>
                     ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </section>
 
-            <section>
+            <section id="reviews">
               <h2 className="text-xl font-semibold">Reviews</h2>
               <div className="mt-4 space-y-4">
                 {mentor.reviews.length === 0 && (
@@ -152,9 +152,24 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 </div>
               )}
             </section>
+
+            <MentorStudentQuestions mentor={mentor} />
+
+            <section className="scroll-mt-28 rounded-2xl border border-border bg-muted/20 p-6 lg:hidden">
+              <h2 className="text-xl font-semibold">Book your intro</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Start with a free 30-minute call — no commitment required.
+              </p>
+              <a
+                href="#book-intro"
+                className="mt-4 inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground hover:brightness-110"
+              >
+                See booking options ↑
+              </a>
+            </section>
           </div>
 
-          <div>
+          <div id="book-intro" className="scroll-mt-28 lg:sticky lg:top-24 lg:self-start">
             <MentorBookingCard
               mentor={mentor}
               defaultName={user?.full_name ?? ""}
@@ -163,6 +178,11 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
             />
           </div>
         </div>
+
+        <div className="mt-12 lg:hidden">
+          <ContentCrossLinks discipline={mentor.discipline} />
+        </div>
+
         <SimilarMentors mentors={similar} />
       </div>
     </div>

@@ -29,6 +29,17 @@ export type Mentor = {
   studyPlanCalendlyUrl?: string | null;
   interviewCalendlyUrl?: string | null;
   verified?: boolean;
+  introVideoUrl?: string | null;
+};
+
+export type FeaturedTestimonial = {
+  quote: string;
+  name: string;
+  role: string;
+  discipline: string;
+  avatarUrl?: string | null;
+  mentorSlug?: string;
+  portfolioSlug?: string;
 };
 
 export type Testimonial = {
@@ -73,6 +84,15 @@ export type ForumPost = {
   mentorSlug?: string;
   imageUrls?: string[];
   authorAvatarUrl?: string | null;
+  authorReputation?: number;
+  lastReplyAt?: string | null;
+  topReplyPreview?: {
+    author: string;
+    body: string;
+    isMentor: boolean;
+    reputation: number;
+    avatarUrl?: string | null;
+  };
 };
 
 export type ForumReply = {

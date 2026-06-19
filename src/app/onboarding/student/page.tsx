@@ -1,4 +1,4 @@
-import { completeStudentOnboarding } from "@/actions";
+import { saveStudentOnboardingStep1 } from "@/actions";
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
 import { requireUser } from "@/lib/require-auth";
@@ -10,6 +10,8 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
+const STEPS = [{ label: "Your goal" }, { label: "Mentor matches" }, { label: "Portfolio" }];
+
 type Props = { searchParams: Promise<{ error?: string }> };
 
 export default async function StudentOnboardingPage({ searchParams }: Props) {
@@ -18,9 +20,11 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-      <StepIndicator steps={[{ label: "Profile" }, { label: "Portfolio" }]} current={1} />
-      <h1 className="mt-6 font-display text-3xl tracking-tight">Set up your profile</h1>
-      <p className="mt-2 text-muted-foreground">Tell us about your goals so we can match you with the right mentors.</p>
+      <StepIndicator steps={STEPS} current={1} progressPercent={33} />
+      <h1 className="mt-6 font-display text-3xl tracking-tight">What are you working toward?</h1>
+      <p className="mt-2 text-muted-foreground">
+        Add a photo and tell us your goal — we&apos;ll match you with mentors who&apos;ve been there.
+      </p>
       {params.error && (
         <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
           {safeDecodeURIComponent(params.error)}
@@ -29,15 +33,9 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
           <ProfilePhotoUpload name={user.full_name || "Student"} initialUrl={user.avatar_url} />
-          <form action={completeStudentOnboarding} className="mt-8 space-y-5">
+          <form action={saveStudentOnboardingStep1} className="mt-8 space-y-5">
             <FormField label="Full name" id="onboard-name">
               <Input name="fullName" required defaultValue={user.full_name || ""} autoComplete="name" />
-            </FormField>
-            <FormField label="Headline" id="onboard-headline">
-              <Input name="headline" required placeholder="e.g. Petroleum Engineering Graduate" />
-            </FormField>
-            <FormField label="University" id="onboard-university">
-              <Input name="university" autoComplete="organization" />
             </FormField>
             <FormField label="Discipline" id="onboard-discipline">
               <Select name="discipline" required className="w-full">
@@ -51,8 +49,8 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
                 {goals.map((g) => <option key={g.id} value={g.label}>{g.label}</option>)}
               </Select>
             </FormField>
-            <SubmitButton variant="accent" className="w-full" pendingLabel="Continuing...">
-              Continue to portfolio →
+            <SubmitButton variant="accent" className="w-full" pendingLabel="Finding mentors...">
+              See my mentor matches →
             </SubmitButton>
           </form>
         </CardContent>

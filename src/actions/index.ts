@@ -953,7 +953,7 @@ export async function submitMarketplaceInquiry(formData: FormData) {
   return { success: true };
 }
 
-export async function completeStudentOnboarding(formData: FormData) {
+export async function saveStudentOnboardingStep1(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/onboarding/student");
@@ -967,15 +967,13 @@ export async function completeStudentOnboarding(formData: FormData) {
 
   const discipline = formData.get("discipline") as string;
   const goal = formData.get("goal") as string;
-  const university = formData.get("university") as string;
 
   await supabase.from("profiles").update({
     full_name: formData.get("fullName") as string || undefined,
     career_goals: [goal],
   }).eq("id", user.id);
 
-  const headline = formData.get("headline") as string;
-  const slug = `${slugify(headline || user.id)}-${user.id.slice(0, 8)}`;
+  const slug = `${slugify(goal || discipline || user.id)}-${user.id.slice(0, 8)}`;
 
   const { data: existing } = await supabase
     .from("portfolios")
@@ -986,8 +984,8 @@ export async function completeStudentOnboarding(formData: FormData) {
   const payload = {
     user_id: user.id,
     slug,
-    headline: headline || goal,
-    university: university || "",
+    headline: goal || `Student in ${discipline}`,
+    university: "",
     discipline,
     bio: `Looking for mentorship in ${discipline}. Goal: ${goal}.`,
     skills: [] as string[],
@@ -1006,7 +1004,19 @@ export async function completeStudentOnboarding(formData: FormData) {
     redirect(`/onboarding/student?error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect("/portfolios/build");
+  redirect("/onboarding/student/matches");
+}
+
+/** @deprecated Use saveStudentOnboardingStep1 — kept for any stale form references. */
+export async function completeStudentOnboarding(formData: FormData) {
+  return saveStudentOnboardingStep1(formData);
+}
+
+export async function skipPortfolioOnboarding() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/onboarding/student");
+  redirect("/");
 }
 
 export async function completeMentorOnboarding() {

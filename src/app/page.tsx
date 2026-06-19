@@ -11,6 +11,7 @@ import { CommunityStrip } from "@/components/home/CommunityStrip";
 import { OneOffSessions } from "@/components/home/OneOffSessions";
 import { TestimonialCTA } from "@/components/home/TestimonialCTA";
 import { getApprovedMentors } from "@/lib/data/mentors";
+import { getFeaturedTestimonials } from "@/lib/data/testimonials";
 import { getCompanyNamesFromMentors } from "@/lib/data/companies";
 import { getPlatformStats } from "@/lib/data/stats";
 import { getCurrentUser } from "@/lib/auth";
@@ -22,10 +23,11 @@ export default async function HomePage() {
   const user = await getCurrentUser();
   const mentors = await getApprovedMentors();
   const featuredMentors = mentors.filter((m) => m.featured).slice(0, 3);
-  const [stats, companyNames, journey] = await Promise.all([
+  const [stats, companyNames, journey, testimonials] = await Promise.all([
     getPlatformStats(),
     getCompanyNamesFromMentors(mentors.map((m) => m.company)),
     user ? getHomeJourneyState(user.id) : null,
+    getFeaturedTestimonials(3),
   ]);
 
   return (
@@ -47,7 +49,7 @@ export default async function HomePage() {
       <SocialProof stats={stats} />
       <CompanyStrip companyNames={companyNames} />
       <CommunityStrip />
-      <TestimonialCTA />
+      <TestimonialCTA testimonials={testimonials} />
     </>
   );
 }

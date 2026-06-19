@@ -1,4 +1,4 @@
-import { savePortfolio } from "@/actions";
+import { savePortfolio, skipPortfolioOnboarding } from "@/actions";
 import { disciplines } from "@/data/disciplines";
 import { requireUser } from "@/lib/require-auth";
 import { getPortfolioByUserId } from "@/lib/data/portfolios";
@@ -12,6 +12,8 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input, Textarea, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
+const STEPS = [{ label: "Your goal" }, { label: "Mentor matches" }, { label: "Portfolio" }];
+
 type Props = { searchParams: Promise<{ error?: string }> };
 
 export default async function BuildPortfolioPage({ searchParams }: Props) {
@@ -21,12 +23,9 @@ export default async function BuildPortfolioPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
-      <StepIndicator
-        steps={[{ label: "Profile" }, { label: "Portfolio" }]}
-        current={2}
-      />
+      <StepIndicator steps={STEPS} current={3} progressPercent={100} />
       <h1 className="mt-6 font-display text-3xl tracking-tight">Build your portfolio</h1>
-      <p className="mt-2 text-muted-foreground">Get discovered by mentors and employers on EngSols.</p>
+      <p className="mt-2 text-muted-foreground">Optional but powerful — get discovered by mentors and employers.</p>
       {params.error && (
         <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
           {safeDecodeURIComponent(params.error)}
@@ -58,6 +57,14 @@ export default async function BuildPortfolioPage({ searchParams }: Props) {
             <SubmitButton variant="accent" className="w-full" pendingLabel="Publishing...">
               Publish portfolio
             </SubmitButton>
+          </form>
+          <form action={skipPortfolioOnboarding} className="mt-3">
+            <button
+              type="submit"
+              className="w-full rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted"
+            >
+              Skip for now
+            </button>
           </form>
           <PortfolioProjectsBuilder projects={existing?.portfolio_projects ?? []} />
           <PortfolioExperienceBuilder experience={existing?.portfolio_experience ?? []} />

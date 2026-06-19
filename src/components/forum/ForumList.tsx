@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { MessageSquare } from "lucide-react";
+import { Award, MessageSquare } from "lucide-react";
 import type { ForumPost } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { formatRelativeTime } from "@/lib/format-relative-time";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
+import { Avatar } from "@/components/ui/Avatar";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input, Select } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+
+function activityTimestamp(post: ForumPost): string {
+  return post.lastReplyAt ?? post.createdAt;
+}
 
 export function ForumList({ posts }: { posts: ForumPost[] }) {
   const [search, setSearch] = useState("");
@@ -29,7 +35,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
     }
     if (discipline) result = result.filter((p) => p.discipline === discipline);
     if (sort === "replies") result.sort((a, b) => b.replyCount - a.replyCount);
-    else result.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    else result.sort((a, b) => activityTimestamp(b).localeCompare(activityTimestamp(a)));
     return result;
   }, [posts, search, discipline, sort]);
 
@@ -72,6 +78,8 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
         ) : (
           filtered.map((post) => {
             const stripe = getDisciplineColors(post.discipline).stripe;
+            const lastActive = formatRelativeTime(activityTimestamp(post));
+
             return (
               <Link
                 key={post.slug}
@@ -79,20 +87,58 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
                 className="card-interactive group relative flex overflow-hidden rounded-2xl"
               >
                 <div className={cn("w-1 shrink-0", stripe)} />
-                <div className="flex-1 p-5 pl-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <DisciplineBadge discipline={post.discipline} />
-                    {post.isSolved && (
-                      <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
-                        Solved
-                      </span>
+                <div className="flex min-w-0 flex-1 gap-4 p-5 pl-4">
+                  <Avatar
+                    name={post.author}
+                    discipline={post.discipline}
+                    size="md"
+                    src={post.authorAvatarUrl}
+                    className="hidden shrink-0 sm:flex"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <DisciplineBadge discipline={post.discipline} />
+                      {post.isSolved && (
+                        <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                          Solved
+                        </span>
+                      )}
+                      {(post.authorReputation ?? 0) > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                          <Award className="h-3 w-3" />
+                          {post.authorReputation} rep
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-2 text-lg font-semibold group-hover:text-primary">{post.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.body}</p>
+                    {post.topReplyPreview && (
+                      <div className="mt-3 rounded-lg border border-border/80 bg-muted/30 px-3 py-2">
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Top reply · {post.topReplyPreview.author}
+                          {post.topReplyPreview.isMentor && (
+                            <span className="ml-1.5 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                              Mentor
+                            </span>
+                          )}
+                        </p>
+                        <p className="mt-1 line-clamp-2 text-sm text-foreground/80">{post.topReplyPreview.body}</p>
+                      </div>
                     )}
+                    <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                      <span className="inline-flex items-center gap-1.5 sm:hidden">
+                        <Avatar name={post.author} discipline={post.discipline} size="sm" src={post.authorAvatarUrl} />
+                        {post.author}
+                      </span>
+                      <span className="hidden sm:inline">{post.author}</span>
+                      <span>·</span>
+                      <span>{post.replyCount} replies</span>
+                      <span>·</span>
+                      <span>{post.viewCount} views</span>
+                      <span>·</span>
+                      <span>Active {lastActive}</span>
+                    </div>
                   </div>
-                  <h3 className="mt-2 text-lg font-semibold group-hover:text-primary">{post.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.body}</p>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    {post.author} · {post.replyCount} replies · {post.viewCount} views
-                  </p>
                 </div>
               </Link>
             );

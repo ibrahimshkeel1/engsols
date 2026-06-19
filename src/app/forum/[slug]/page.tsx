@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getForumPost } from "@/lib/data/forum";
 import { getLiveSessionForForumPost } from "@/lib/data/live";
-import { getApprovedMentors } from "@/lib/data/mentors";
 import { getCurrentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
@@ -16,6 +14,7 @@ import { ForumViewTracker } from "@/components/forum/ForumViewTracker";
 import { ForumRealtimeWatcher } from "@/components/forum/ForumRealtimeWatcher";
 import { ForumPostActions } from "@/components/forum/ForumPostActions";
 import { ForumReplyActions } from "@/components/forum/ForumReplyActions";
+import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
@@ -37,12 +36,10 @@ export default async function ForumThreadPage({ params }: Props) {
   if (!data) notFound();
 
   const { post, replies, dbPost } = data;
-  const [mentors, user, activeLive] = await Promise.all([
-    getApprovedMentors(),
+  const [user, activeLive] = await Promise.all([
     getCurrentUser(),
     dbPost?.id ? getLiveSessionForForumPost(dbPost.id) : Promise.resolve(null),
   ]);
-  const relatedMentors = mentors.filter((m) => m.discipline === post.discipline).slice(0, 3);
   const isAuthor = user?.id === dbPost?.author_id;
   const isAdmin = user?.role === "admin";
 
@@ -131,20 +128,7 @@ export default async function ForumThreadPage({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="card-elevated">
-            <CardContent className="p-6">
-              <h3 className="font-semibold">Related mentors</h3>
-              <ul className="mt-4 space-y-3">
-                {relatedMentors.map((m) => (
-                  <li key={m.slug}>
-                    <Link href={`/mentors/${m.slug}`} className="text-sm text-primary hover:underline">
-                      {m.name} — {m.discipline}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+          <ContentCrossLinks discipline={post.discipline} excludeForumSlug={slug} />
         </div>
       </div>
     </div>

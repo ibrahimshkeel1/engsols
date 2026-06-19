@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { CertificationPrepPath } from "@/components/certifications/CertificationPrepPath";
+import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,6 +26,8 @@ export default async function CertificationPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
+      <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
+        <div className="lg:col-span-2">
       <DisciplineBadge discipline={cert.discipline} />
       <h1 className="mt-3 font-display text-3xl tracking-tight">{cert.name}</h1>
       <p className="mt-4 text-foreground/90">{cert.description}</p>
@@ -83,6 +86,9 @@ export default async function CertificationPage({ params }: Props) {
       >
         Browse all exam mentors
       </Link>
+        </div>
+        <ContentCrossLinks discipline={cert.discipline} className="lg:sticky lg:top-24 lg:self-start" />
+      </div>
     </div>
   );
 }

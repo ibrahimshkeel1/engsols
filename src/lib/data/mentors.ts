@@ -49,6 +49,7 @@ export function dbToMentor(m: DbMentorProfile, reviews: Review[] = []): Mentor {
     studyPlanCalendlyUrl: (m as DbMentorProfile & { study_plan_calendly_url?: string | null }).study_plan_calendly_url ?? null,
     interviewCalendlyUrl: (m as DbMentorProfile & { interview_calendly_url?: string | null }).interview_calendly_url ?? null,
     verified: (m as DbMentorProfile & { verified?: boolean }).verified ?? false,
+    introVideoUrl: (m as DbMentorProfile & { intro_video_url?: string | null }).intro_video_url ?? null,
   };
 }
 
@@ -85,6 +86,11 @@ export async function getMentorBySlug(slug: string): Promise<Mentor | null> {
   if (!data) return null;
   const reviews = await loadReviews(data.id);
   return dbToMentor(data as DbMentorProfile, reviews);
+}
+
+export async function getMentorsByDiscipline(discipline: string, limit = 3): Promise<Mentor[]> {
+  const mentors = await getApprovedMentors();
+  return mentors.filter((m) => m.discipline === discipline).slice(0, limit);
 }
 
 export async function getAllMentorProfilesForAdmin() {

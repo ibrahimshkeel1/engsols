@@ -29,6 +29,7 @@ export type DbMentorProfile = {
   featured: boolean;
   rating: number;
   review_count: number;
+  intro_video_url?: string | null;
   profiles?: DbProfile;
 };
 

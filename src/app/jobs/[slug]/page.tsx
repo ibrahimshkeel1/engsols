@@ -8,6 +8,7 @@ import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
+import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -108,6 +109,7 @@ export default async function JobPage({ params }: Props) {
               </CardContent>
             </Card>
           )}
+          <ContentCrossLinks discipline={job.discipline} />
         </div>
       </div>
       {similar.length > 0 && (

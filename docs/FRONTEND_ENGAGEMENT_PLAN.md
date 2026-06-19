@@ -51,24 +51,24 @@
 
 *Proof, personality, and rabbit holes between features.*
 
-- [ ] **2.1 Real testimonials section**
+- [x] **2.1 Real testimonials section**
   - 2–3 cards: photo, name, discipline, outcome quote
   - Link to mentor or portfolio where relevant
   - Replace or enrich generic `TestimonialCTA`
 
-- [ ] **2.2 Forum cards that feel alive**
+- [x] **2.2 Forum cards that feel alive**
   - Author avatar, discipline stripe, last reply time
   - Solved badge, reputation chip, top-reply preview
 
-- [ ] **2.3 Mentor profile as a story**
+- [x] **2.3 Mentor profile as a story**
   - Sequential sections: Why mentor with me → Reviews → What students ask → Book intro
   - Sticky booking sidebar on desktop
   - Optional: intro video field + player
 
-- [ ] **2.4 Cross-link rails on all content types**
+- [x] **2.4 Cross-link rails on all content types**
   - Forum posts, news, certs, jobs: “Mentors who can help”, related discussions, upcoming live
 
-- [ ] **2.5 Onboarding as a 3-step story**
+- [x] **2.5 Onboarding as a 3-step story**
   - Step 1: Photo + goal
   - Step 2: Instant “3 mentors for you” match screen
   - Step 3: Portfolio build (skippable)
@@ -161,10 +161,10 @@
 | Wave | Total | Done | % |
 |------|-------|------|---|
 | Wave 1 — Guided journey | 6 | 6 | 100% |
-| Wave 2 — Human & alive | 5 | 0 | 0% |
+| Wave 2 — Human & alive | 5 | 5 | 100% |
 | Wave 3 — Return visits | 10 | 0 | 0% |
 | Wave 4 — Premium polish | 10 | 0 | 0% |
-| **Total** | **31** | **6** | **19%** |
+| **Total** | **31** | **11** | **35%** |
 
 *Update the table counts when checking boxes above.*
 
@@ -175,6 +175,7 @@
 | Date | Item | Notes |
 |------|------|-------|
 | 2026-06-16 | Wave 1 (1.1–1.6) | Start here, continue journey, homepage reorder, assist preview, happening now hub, company filter |
+| 2026-06-16 | Wave 2 (2.1–2.5) | Testimonials, alive forum cards, mentor story profile, cross-link rails, 3-step onboarding |
 
 ---
 
