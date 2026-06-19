@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -97,11 +98,11 @@ export function StaggerItem({ children, className }: { children: React.ReactNode
   const reducedMotion = usePrefersReducedMotion();
 
   if (reducedMotion) {
-    return <div className={className}>{children}</div>;
+    return <div className={cn("min-w-0", className)}>{children}</div>;
   }
 
   return (
-    <motion.div className={className} variants={itemVariants}>
+    <motion.div className={cn("min-w-0", className)} variants={itemVariants}>
       {children}
     </motion.div>
   );

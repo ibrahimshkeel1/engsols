@@ -8,12 +8,18 @@ import {
 } from "lucide-react";
 import type { HomeJourneyState } from "@/lib/data/home-journey";
 import { Avatar } from "@/components/ui/Avatar";
-import { AnimateIn } from "@/components/motion/AnimateIn";
+import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
 type ContinueJourneyHeroProps = {
   userName: string | null;
   journey: HomeJourneyState;
 };
+
+const simpleCardClassName =
+  "group flex h-full min-w-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/35";
+
+const actionCardClassName =
+  "group flex h-full min-w-0 flex-row items-start gap-4 rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/35";
 
 export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroProps) {
   const firstName = userName?.split(" ")[0] || "there";
@@ -72,38 +78,32 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
         </AnimateIn>
 
         {actions.length > 0 ? (
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {actions.map((action, i) => (
-              <AnimateIn key={action.href + action.label} delay={i * 0.06} className="h-full">
-                <Link
-                  href={action.href}
-                  className="group flex h-full items-start gap-4 rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/35"
-                >
+          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
+            {actions.map((action) => (
+              <StaggerItem key={action.href + action.label} className="min-w-0">
+                <Link href={action.href} className={actionCardClassName}>
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <action.icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium">{action.label}</p>
+                    <p className="font-medium leading-snug">{action.label}</p>
                     <p className="mt-1 text-sm text-primary group-hover:underline">{action.cta} →</p>
                   </div>
                 </Link>
-              </AnimateIn>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         ) : (
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            {fallbackActions.map((action, i) => (
-              <AnimateIn key={action.href} delay={i * 0.06}>
-                <Link
-                  href={action.href}
-                  className="group rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/35"
-                >
-                  <p className="font-medium">{action.label}</p>
-                  <p className="mt-1 text-sm text-primary">{action.cta} →</p>
+          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
+            {fallbackActions.map((action) => (
+              <StaggerItem key={action.href} className="min-w-0">
+                <Link href={action.href} className={simpleCardClassName}>
+                  <p className="font-medium leading-snug">{action.label}</p>
+                  <p className="mt-1 text-sm text-primary group-hover:underline">{action.cta} →</p>
                 </Link>
-              </AnimateIn>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         )}
 
         {journey.savedMentors.length > 0 && (
