@@ -62,3 +62,18 @@ export const portfolioExperienceSchema = z.object({
   duration: z.string().trim().max(100),
   description: z.string().trim().max(2000),
 });
+
+export const specialistRequestSchema = z.object({
+  requesterName: z.string().trim().min(1, "Name is required").max(120),
+  requesterEmail: z.string().trim().email("Valid email required"),
+  discipline: z.string().trim().min(1, "Discipline is required").max(120),
+  subField: z.string().trim().max(120).optional().default(""),
+  skillsRequested: z.array(z.string().trim().min(1).max(80)).max(20).optional().default([]),
+  careerRequirements: z
+    .string()
+    .trim()
+    .min(10, "Please describe your career requirements (at least 10 characters)")
+    .max(5000),
+  searchQuery: z.string().trim().max(200).optional().default(""),
+  filtersSnapshot: z.record(z.string(), z.unknown()).optional().default({}),
+});

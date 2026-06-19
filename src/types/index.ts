@@ -203,11 +203,23 @@ export type Company = {
   sellerSlug?: string;
 };
 
+export type ProjectEndorsement = {
+  id: string;
+  mentorName: string;
+  mentorCompany: string;
+  mentorHeadline: string;
+  mentorSlug?: string;
+  endorsementText: string;
+  verified?: boolean;
+};
+
 export type PortfolioProject = {
+  id: string;
   title: string;
   description: string;
   tags: string[];
   year: number;
+  endorsements?: ProjectEndorsement[];
 };
 
 export type PortfolioExperience = {
@@ -218,6 +230,8 @@ export type PortfolioExperience = {
 };
 
 export type Portfolio = {
+  id: string;
+  userId: string;
   slug: string;
   name: string;
   headline: string;
@@ -235,6 +249,8 @@ export type Portfolio = {
   mentorSlug?: string;
   avatarUrl?: string | null;
   updatedAt?: string;
+  endorsementCount: number;
+  hasMentorEndorsement: boolean;
 };
 
 export type JobType =

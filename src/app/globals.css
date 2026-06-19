@@ -353,3 +353,22 @@ html.live-room-active main {
   position: relative;
   z-index: 20;
 }
+
+.live-video-shell--compact {
+  height: 100%;
+  min-height: 240px;
+  max-height: none;
+}
+
+.live-video-shell--compact .live-video-conference-wrap .lk-grid-layout-wrapper,
+.live-video-shell--compact .live-video-conference-wrap .lk-focus-layout-wrapper {
+  height: calc(100% - var(--lk-control-bar-height));
+}
+
+.live-kit-room-provider {
+  display: contents;
+}
+
+.live-video-shell--compact .lk-participant-tile {
+  min-height: 80px;
+}

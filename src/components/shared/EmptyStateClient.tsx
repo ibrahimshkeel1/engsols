@@ -1,6 +1,12 @@
+"use client";
+
 import type { PromptChip } from "@/data/empty-state-prompts";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import {
+  SpecialistRequestTrigger,
+  type SpecialistRequestContext,
+} from "@/components/mentors/SpecialistRequestModal";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -10,6 +16,7 @@ type Props = {
   action?: { href: string; label: string };
   promptChips?: PromptChip[];
   onClearFilters?: () => void;
+  specialistRequest?: SpecialistRequestContext;
   className?: string;
 };
 
@@ -20,6 +27,7 @@ export function EmptyStateClient({
   action,
   promptChips,
   onClearFilters,
+  specialistRequest,
   className,
 }: Props) {
   return (
@@ -58,6 +66,7 @@ export function EmptyStateClient({
             Clear filters
           </button>
         )}
+        {specialistRequest && <SpecialistRequestTrigger context={specialistRequest} />}
       </div>
     </div>
   );

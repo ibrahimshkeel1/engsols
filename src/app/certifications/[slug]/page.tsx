@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { CertificationPrepPath } from "@/components/certifications/CertificationPrepPath";
+import { getPublishedMockExams } from "@/lib/data/exams";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 import { ShareButton } from "@/components/shared/ShareButton";
 
@@ -36,6 +37,10 @@ export default async function CertificationPage({ params }: Props) {
 
   const mentors = await getApprovedMentors();
   const relatedMentors = mentors.filter((m) => cert.relatedMentorSlugs.includes(m.slug));
+  const mockExams = await getPublishedMockExams();
+  const relatedExams = mockExams.filter(
+    (e) => e.discipline === cert.discipline || e.examType === "FE" || e.examType === "PE",
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
@@ -83,6 +88,29 @@ export default async function CertificationPage({ params }: Props) {
         </Card>
       </div>
       <CertificationPrepPath cert={cert} />
+      {relatedExams.length > 0 && (
+        <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+          <h2 className="font-semibold">Practice exams</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Timed mock exams with a technical scratchpad — no install required.
+          </p>
+          <ul className="mt-4 space-y-2">
+            {relatedExams.map((exam) => (
+              <li key={exam.slug}>
+                <Link
+                  href={`/certifications/exams/${exam.slug}`}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 hover:border-primary/40"
+                >
+                  <span className="font-medium">{exam.title}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {exam.durationMinutes} min · {exam.questionCount} questions · Pass {exam.passingScore}%
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {relatedMentors.length > 0 && (
         <>
           <h2 className="mt-12 text-xl font-bold">Mentors who can help</h2>

@@ -58,6 +58,7 @@ export default async function MentorDashboardPage() {
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/mentor/bookings" className="text-primary hover:underline">View booking inbox ({stats?.pending ?? 0} pending)</Link></li>
               <li><Link href="/mentor/profile" className="text-primary hover:underline">Edit public profile & Calendly links</Link></li>
+              <li><Link href="/mentor/roadmaps" className="text-primary hover:underline">Manage student roadmaps</Link></li>
               <li><Link href="/mentor/live/new" className="text-primary hover:underline">Schedule a live session</Link></li>
               <li><Link href="/forum/new" className="text-primary hover:underline">Answer a forum question</Link></li>
             </ul>

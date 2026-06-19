@@ -20,7 +20,7 @@ export default async function LiveRoomPage({ params }: Props) {
   const canEndCall = stream.hostId === user.id || user.role === "admin";
 
   return (
-    <div className="live-room-container mx-auto max-w-6xl px-4 py-4 sm:px-6">
+    <div className="live-room-container mx-auto max-w-[min(100%,1600px)] px-4 py-4 sm:px-6">
       <LiveViewerTracker slug={slug} />
       <LiveRoomClient slug={slug} title={stream.title} canEndCall={canEndCall} />
     </div>

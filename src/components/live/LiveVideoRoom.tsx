@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { LiveKitSession } from "./LiveKitSession";
+import { CollaborationWorkspace } from "@/components/live/CollaborationWorkspace";
 
 type LiveVideoRoomProps = {
   slug: string;
@@ -72,29 +71,14 @@ export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVi
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">Live now</p>
-          <h1 className="font-display text-xl tracking-tight sm:text-2xl">{title}</h1>
-        </div>
-        <div className="flex gap-2">
-          <Link
-            href={`/live/${slug}`}
-            className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm font-medium hover:bg-muted"
-          >
-            Session info
-          </Link>
-          {isHost && onEndCall && (
-            <Button type="button" variant="outline" onClick={onEndCall} disabled={ending}>
-              {ending ? "Ending..." : "End call"}
-            </Button>
-          )}
-        </div>
-      </div>
-      <div className="live-video-shell overflow-hidden rounded-2xl border border-border">
-        <LiveKitSession serverUrl={serverUrl} token={token} />
-      </div>
-    </div>
+    <CollaborationWorkspace
+      slug={slug}
+      title={title}
+      serverUrl={serverUrl}
+      token={token}
+      isHost={isHost}
+      onEndCall={onEndCall}
+      ending={ending}
+    />
   );
 }

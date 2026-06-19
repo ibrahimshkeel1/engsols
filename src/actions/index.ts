@@ -687,6 +687,7 @@ async function insertContactRequest(fields: {
 
   let mentorUserId: string | null = null;
   let mentorEmail: string | null = null;
+  let monthlyRate = 0;
   let sellerSlug: string | null = null;
   let listingSlug: string | null = null;
   const mentorTypes = ["intro", "monthly", "study-plan", "interview-prep"];
@@ -694,10 +695,11 @@ async function insertContactRequest(fields: {
   if (mentorTypes.includes(fields.requestType)) {
     const { data: mp } = await supabase
       .from("mentor_profiles")
-      .select("user_id")
+      .select("user_id, monthly_rate")
       .eq("slug", fields.refSlug)
       .maybeSingle();
     mentorUserId = mp?.user_id ?? null;
+    monthlyRate = mp?.monthly_rate ?? 0;
     if (mentorUserId) {
       const { data: prof } = await supabase.from("profiles").select("email").eq("id", mentorUserId).single();
       mentorEmail = prof?.email ?? null;
@@ -726,7 +728,9 @@ async function insertContactRequest(fields: {
     }
   }
 
-  const { error } = await supabase.from("booking_requests").insert({
+  const requiresPayment = fields.requestType === "monthly" && monthlyRate > 0;
+
+  const { data: booking, error } = await supabase.from("booking_requests").insert({
     mentor_slug: fields.refSlug,
     mentor_name: fields.refName,
     requester_name: parsed.data.name,
@@ -737,11 +741,11 @@ async function insertContactRequest(fields: {
     mentor_user_id: mentorUserId,
     seller_slug: sellerSlug,
     listing_slug: listingSlug,
-  });
+  }).select("id").single();
 
-  if (error) return { error: error.message };
+  if (error || !booking) return { error: error?.message ?? "Could not create booking request" };
 
-  if (mentorEmail && mentorTypes.includes(fields.requestType)) {
+  if (mentorEmail && mentorTypes.includes(fields.requestType) && !requiresPayment) {
     const { notifyMentorOfBooking } = await import("@/actions/mentor");
     await notifyMentorOfBooking({
       mentorEmail,
@@ -824,7 +828,11 @@ async function insertContactRequest(fields: {
     }
   }
 
-  return { success: true };
+  return {
+    success: true,
+    bookingRequestId: booking.id,
+    requiresPayment,
+  };
 }
 
 export async function submitBookingRequest(formData: FormData) {
@@ -837,7 +845,11 @@ export async function submitBookingRequest(formData: FormData) {
     requestType: formData.get("type") as string,
   });
   if (result?.error) throw new Error(result.error);
-  return { success: true };
+  return {
+    success: true,
+    bookingRequestId: result.bookingRequestId,
+    requiresPayment: result.requiresPayment ?? false,
+  };
 }
 
 export async function submitPortfolioContact(formData: FormData) {

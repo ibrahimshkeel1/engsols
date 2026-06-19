@@ -58,6 +58,11 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
                 Open to work
               </span>
             )}
+            {portfolio.hasMentorEndorsement && (
+              <span className="inline-flex w-fit rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                Mentor vetted
+              </span>
+            )}
             <h3 className={cn("font-semibold leading-tight", isHero ? "text-lg sm:text-xl" : "text-base")}>
               {portfolio.name}
             </h3>

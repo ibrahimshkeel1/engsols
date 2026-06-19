@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import type { PromptChip } from "@/data/empty-state-prompts";
+import {
+  SpecialistRequestTrigger,
+  type SpecialistRequestContext,
+} from "@/components/mentors/SpecialistRequestModal";
 import { cn } from "@/lib/utils";
 
 type EmptyStateProps = {
@@ -10,6 +14,7 @@ type EmptyStateProps = {
   action?: { href: string; label: string };
   secondaryAction?: { label: string; onClick?: () => void; href?: string };
   promptChips?: PromptChip[];
+  specialistRequest?: SpecialistRequestContext;
   className?: string;
 };
 
@@ -20,6 +25,7 @@ export function EmptyState({
   action,
   secondaryAction,
   promptChips,
+  specialistRequest,
   className,
 }: EmptyStateProps) {
   return (
@@ -66,6 +72,7 @@ export function EmptyState({
               {secondaryAction.label}
             </button>
           ))}
+        {specialistRequest && <SpecialistRequestTrigger context={specialistRequest} />}
       </div>
     </div>
   );

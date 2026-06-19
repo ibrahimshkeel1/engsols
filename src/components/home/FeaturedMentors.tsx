@@ -13,7 +13,7 @@ import { AnimateIn } from "@/components/motion/AnimateIn";
 
 export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState("");
-  const filtered = filterMentors(mentors, { search: search || undefined }).slice(0, 6);
+  const filtered = filterMentors(mentors, { search: search || undefined }).items.slice(0, 6);
 
   return (
     <section className="border-t border-border bg-muted/30 py-24">

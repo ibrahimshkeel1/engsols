@@ -1,6 +1,8 @@
 # EngSols
 
-Engineering mentorship platform — mentors, forum, live video, portfolios, jobs, and more.
+Engineering mentorship platform — mentors, forum, live video, portfolios, jobs, mock exams, Stripe billing, and more.
+
+**New here?** Read [`ARCHITECTURAL_MANIFESTO.md`](ARCHITECTURAL_MANIFESTO.md) first — env vars, database schema, Stripe webhooks, and local verification checklist.
 
 ## Stack
 
@@ -17,31 +19,9 @@ Engineering mentorship platform — mentors, forum, live video, portfolios, jobs
 npm install
 ```
 
-2. Copy environment variables (create `.env.local`):
+2. Copy environment variables into `.env.local` — see the full template in [`ARCHITECTURAL_MANIFESTO.md`](ARCHITECTURAL_MANIFESTO.md#1-required-environment-variables).
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-
-# Optional — live video
-LIVEKIT_URL=
-LIVEKIT_API_KEY=
-LIVEKIT_API_SECRET=
-
-# Optional — email notifications (Resend)
-RESEND_API_KEY=
-EMAIL_FROM=EngSols <notifications@engsols.com>
-
-# Optional — analytics
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=
-NEXT_PUBLIC_GA_ID=
-
-# Optional — web push (generate VAPID keys)
-NEXT_PUBLIC_VAPID_PUBLIC_KEY=
-```
-
-3. Run Supabase migrations in order (`supabase/migrations/001` through `009`).
+3. Run Supabase migrations in order (`supabase/migrations/001` through `017`).
 
 4. Start dev server:
 
@@ -56,6 +36,7 @@ npm run dev
 | `npm run dev` | Development server |
 | `npm run build` | Production build |
 | `npm run lint` | ESLint |
+| `npm run test:unit` | Vitest unit tests |
 | `npm run test:e2e` | Playwright smoke tests (requires `npm run build && npm run start`) |
 
 ## Key routes

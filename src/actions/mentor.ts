@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth";
-import { mentorProfileSchema, mentorReviewSchema } from "@/lib/validation";
+import { mentorProfileSchema, mentorReviewSchema, specialistRequestSchema } from "@/lib/validation";
+import type { MentorFilters } from "@/lib/filter-mentors";
 import { bookingNotificationEmail, sendEmail } from "@/lib/email";
 import { z } from "zod";
 
@@ -314,6 +315,53 @@ export async function updateGoalProgress(goal: string, completed: boolean) {
   if (error) return { error: error.message };
   revalidatePath("/settings");
   return { success: true };
+}
+
+export async function submitSpecialistRequest(input: {
+  requesterName: string;
+  requesterEmail: string;
+  discipline: string;
+  subField?: string;
+  skillsRequested?: string[];
+  careerRequirements: string;
+  searchQuery?: string;
+  filtersSnapshot?: MentorFilters;
+}) {
+  const supabase = await createClient();
+
+  const parsed = specialistRequestSchema.safeParse({
+    requesterName: input.requesterName,
+    requesterEmail: input.requesterEmail,
+    discipline: input.discipline,
+    subField: input.subField ?? "",
+    skillsRequested: input.skillsRequested ?? [],
+    careerRequirements: input.careerRequirements,
+    searchQuery: input.searchQuery ?? "",
+    filtersSnapshot: input.filtersSnapshot ?? {},
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message || "Invalid request" };
+  }
+
+  const d = parsed.data;
+
+  const { data, error } = await supabase.rpc("submit_specialist_mentor_request", {
+    p_requester_name: d.requesterName,
+    p_requester_email: d.requesterEmail,
+    p_discipline: d.discipline,
+    p_sub_field: d.subField,
+    p_skills_requested: d.skillsRequested,
+    p_career_requirements: d.careerRequirements,
+    p_search_query: d.searchQuery,
+    p_filters_snapshot: d.filtersSnapshot,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true, id: data as string };
 }
 
 export async function updateMentorExtrasByAdmin(formData: FormData) {

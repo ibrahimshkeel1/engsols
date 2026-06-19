@@ -128,6 +128,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
                 mentorSlug={mentor.slug}
                 mentorName={mentor.name}
                 type={oneOffType}
+                monthlyRate={mentor.monthlyRate}
                 defaultName={defaultName}
                 defaultEmail={defaultEmail}
               />
@@ -140,6 +141,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
             mentorSlug={mentor.slug}
             mentorName={mentor.name}
             type={tab}
+            monthlyRate={mentor.monthlyRate}
             defaultName={defaultName}
             defaultEmail={defaultEmail}
           />

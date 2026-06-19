@@ -12,6 +12,9 @@ import { StudentBookingsSection } from "@/components/settings/StudentBookingsSec
 import { StudentJobApplicationsSection } from "@/components/settings/StudentJobApplicationsSection";
 import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { getStudentBookings, getStudentJobApplications } from "@/lib/data/student-activity";
+import { getRoadmapsForStudent } from "@/lib/data/roadmaps";
+import { MilestoneTracker } from "@/components/dashboard/MilestoneTracker";
+import { ManageBillingButton } from "@/components/settings/ManageBillingButton";
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { CompareSavedMentorsButton } from "@/components/mentors/CompareSavedMentorsButton";
@@ -31,11 +34,12 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  const [savedMentors, { data: notes }, bookings, jobApplications] = await Promise.all([
+  const [savedMentors, { data: notes }, bookings, jobApplications, roadmaps] = await Promise.all([
     getSavedMentors(user.id),
     supabase.from("session_notes").select("*").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(20),
     getStudentBookings(user.id),
     getStudentJobApplications(user.id),
+    getRoadmapsForStudent(user.id),
   ]);
 
   const careerGoals = profile?.career_goals?.length ? profile.career_goals : goals.map((g) => g.label);
@@ -83,6 +87,10 @@ export default async function SettingsPage() {
                 Change password →
               </Link>
               <div>
+                <p className="mb-2 text-sm text-muted-foreground">Billing & subscriptions</p>
+                <ManageBillingButton />
+              </div>
+              <div>
                 <p className="mb-2 text-sm text-muted-foreground">Browser notifications</p>
                 <PushNotificationPrompt />
               </div>
@@ -97,6 +105,22 @@ export default async function SettingsPage() {
           <p className="mt-1 text-sm text-muted-foreground">Track progress on goals you set during onboarding.</p>
           <div className="mt-4">
             <GoalsProgress goals={careerGoals} completed={completedGoals} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="card-elevated mt-8">
+        <CardContent className="p-6">
+          <h2 className="font-semibold">Mentorship roadmaps</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Milestones your mentor sets — track deadlines and study resources.
+          </p>
+          <div className="mt-4">
+            <MilestoneTracker
+              roadmaps={roadmaps}
+              viewerRole="student"
+              emptyMessage="Your mentor hasn't created a roadmap yet. Book a session to get started."
+            />
           </div>
         </CardContent>
       </Card>

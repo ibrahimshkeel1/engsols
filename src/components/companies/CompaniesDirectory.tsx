@@ -33,6 +33,14 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."
+      action={
+        <Link
+          href="/companies/talent"
+          className="inline-flex h-11 items-center rounded-xl border border-primary/30 bg-primary/5 px-5 text-sm font-semibold text-primary hover:bg-primary/10"
+        >
+          Recruiter talent hub
+        </Link>
+      }
     >
       <div className="flex flex-wrap gap-3">
         <Input placeholder="Search companies..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />

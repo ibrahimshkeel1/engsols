@@ -3,12 +3,14 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { GitCompareArrows, Users } from "lucide-react";
+import { AlertTriangle, GitCompareArrows, Users } from "lucide-react";
 import type { Mentor } from "@/types";
-import { filterMentors } from "@/lib/filter-mentors";
+import { filterMentors, type MentorFilters as MentorFilterState } from "@/lib/filter-mentors";
+import { getSkillById } from "@/data/engineering-skills";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
 import { SkillGraphFilter } from "@/components/mentors/SkillGraphFilter";
+import { SpecialistRequestTrigger } from "@/components/mentors/SpecialistRequestModal";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
@@ -19,24 +21,39 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
   const [company] = useState(searchParams.get("company") ?? "");
   const [sessionFilter] = useState(searchParams.get("session") ?? "");
+  const [subField] = useState(searchParams.get("sub_field") ?? "");
   const [skill, setSkill] = useState("");
   const [sort, setSort] = useState("rating");
 
-  const filtered = useMemo(
-    () =>
-      filterMentors(mentors, {
-        search: search || undefined,
-        discipline: discipline || undefined,
-        goal: goal || undefined,
-        company: company || undefined,
-        session: sessionFilter || undefined,
-        skill: skill || undefined,
-        sort: sort as "rating" | "price-asc" | "price-desc",
-      }),
-    [mentors, search, discipline, goal, company, sessionFilter, skill, sort],
+  const activeFilters: MentorFilterState = useMemo(
+    () => ({
+      search: search || undefined,
+      discipline: discipline || undefined,
+      subField: subField || undefined,
+      goal: goal || undefined,
+      company: company || undefined,
+      session: sessionFilter || undefined,
+      skill: skill || undefined,
+      sort: sort as MentorFilterState["sort"],
+    }),
+    [search, discipline, subField, goal, company, sessionFilter, skill, sort],
   );
 
-  const hasFilters = Boolean(search || discipline || goal || skill);
+  const filterResult = useMemo(() => filterMentors(mentors, activeFilters), [mentors, activeFilters]);
+
+  const { items: filtered, isFallback, fallbackReason } = filterResult;
+  const hasFilters = Boolean(search || discipline || goal || skill || subField);
+  const showSpecialistEmpty = mentors.length > 0 && filtered.length === 0;
+
+  const specialistContext = useMemo(
+    () => ({
+      discipline: discipline || getSkillById(skill)?.discipline || search || "",
+      subField: subField || getSkillById(skill)?.label || "",
+      searchQuery: search,
+      filtersSnapshot: activeFilters,
+    }),
+    [discipline, subField, search, skill, activeFilters],
+  );
 
   function clearFilters() {
     setSearch("");
@@ -75,6 +92,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
         <SkillGraphFilter selectedSkill={skill} onSkillChange={setSkill} mentors={mentors} />
         <p className="mt-4 hidden text-sm text-muted-foreground lg:block">
           {filtered.length} mentors match your filters
+          {isFallback ? " (recommendations)" : ""}
         </p>
       </aside>
       <div>
@@ -87,7 +105,28 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
             Compare {Math.min(savedSlugs.length, 3)} saved mentors
           </Link>
         )}
-        <p className="mb-6 text-sm text-muted-foreground lg:hidden">{filtered.length} mentors found</p>
+        <p className="mb-6 text-sm text-muted-foreground lg:hidden">
+          {filtered.length} mentors found{isFallback ? " (recommendations)" : ""}
+        </p>
+
+        {isFallback && filtered.length > 0 && (
+          <div
+            role="status"
+            className="mb-6 flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-sm text-amber-950 dark:text-amber-100 sm:flex-row sm:items-start sm:gap-3"
+          >
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
+            <p>
+              {fallbackReason ?? "We couldn't find an exact match for your active filters, so we are showing top recommendations in related fields."}{" "}
+              Can&apos;t find what you need?{" "}
+              <SpecialistRequestTrigger
+                variant="link"
+                triggerLabel="Request a Specialist Mentor"
+                context={specialistContext}
+              />
+            </p>
+          </div>
+        )}
+
         {mentors.length === 0 ? (
           <EmptyStateClient
             icon={Users}
@@ -95,12 +134,13 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
             description="Mentors appear here after applying and being approved by the team."
             action={{ href: "/apply", label: "Become a mentor" }}
           />
-        ) : filtered.length === 0 ? (
+        ) : showSpecialistEmpty ? (
           <EmptyStateClient
             icon={Users}
             title="No mentors match your filters"
-            description={goal ? "Try a different goal or clear filters — mentors must list matching goals on their profile." : "Try adjusting your search or filters."}
+            description="We couldn't find anyone for this niche — not even in related disciplines. Tell us what you need and we'll work to match you."
             onClearFilters={hasFilters ? clearFilters : undefined}
+            specialistRequest={specialistContext}
             action={{ href: "/apply", label: "Apply as a mentor" }}
           />
         ) : (

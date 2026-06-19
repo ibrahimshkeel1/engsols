@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getForYouDigest } from "@/lib/data/for-you-digest";
+import { getRoadmapsForStudent } from "@/lib/data/roadmaps";
+import { MilestoneTracker } from "@/components/dashboard/MilestoneTracker";
 import { disciplineToSlug } from "@/lib/discipline-slug";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +16,7 @@ export default async function ForYouPage() {
   if (!user) redirect("/login?next=/for-you");
 
   const digest = await getForYouDigest(user.id);
+  const roadmaps = await getRoadmapsForStudent(user.id);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
@@ -32,6 +35,20 @@ export default async function ForYouPage() {
             to sharpen mentor matches and goal tracking.
           </p>
         )}
+      </SectionReveal>
+
+      <SectionReveal className="mt-10" delay={0.06}>
+        <section>
+          <h2 className="text-lg font-semibold">Mentorship milestones</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Progress on roadmaps your mentor assigned.</p>
+          <div className="mt-4">
+            <MilestoneTracker
+              roadmaps={roadmaps}
+              viewerRole="student"
+              emptyMessage="No active roadmaps — ask your mentor to set one up after your next session."
+            />
+          </div>
+        </section>
       </SectionReveal>
 
       <SectionReveal className="mt-10" delay={0.05}>

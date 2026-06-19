@@ -32,6 +32,7 @@ export type DbMentorProfile = {
   intro_video_url?: string | null;
   responds_within_hours?: number | null;
   intro_slots_this_week?: number | null;
+  verified?: boolean;
   profiles?: DbProfile;
 };
 
@@ -245,4 +246,235 @@ export type DbVideo = {
   published_at: string | null;
   published: boolean;
   created_at: string;
+};
+
+// --- Phase 7 (migration 013) ---
+
+export type RoadmapStatus = "active" | "completed" | "archived";
+export type MilestoneStatus = "pending" | "in_progress" | "completed";
+export type ExamType = "FE" | "PE" | "custom";
+export type ExamAttemptStatus = "in_progress" | "completed" | "abandoned";
+export type SpecialistRequestStatus = "pending" | "reviewing" | "matched" | "closed";
+
+export type RoadmapResourceLink = {
+  title: string;
+  url: string;
+};
+
+export type MockExamQuestion = {
+  id: string;
+  prompt: string;
+  options: string[];
+  correct_index: number;
+  code_reference?: string;
+  explanation?: string;
+};
+
+export type DbMentorshipRoadmap = {
+  id: string;
+  mentor_user_id: string;
+  student_user_id: string;
+  mentor_profile_id: string | null;
+  booking_request_id: string | null;
+  title: string;
+  description: string;
+  status: RoadmapStatus;
+  target_deadline: string | null;
+  created_at: string;
+  updated_at: string;
+  roadmap_milestones?: DbRoadmapMilestone[];
+};
+
+export type DbRoadmapMilestone = {
+  id: string;
+  roadmap_id: string;
+  title: string;
+  description: string;
+  status: MilestoneStatus;
+  target_date: string | null;
+  resource_links: RoadmapResourceLink[];
+  sort_order: number;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type DbProjectEndorsement = {
+  id: string;
+  mentor_profile_id: string;
+  portfolio_id: string;
+  portfolio_project_id: string;
+  mentor_user_id: string;
+  endorsement_text: string;
+  created_at: string;
+  mentor_profiles?: Pick<DbMentorProfile, "slug" | "headline" | "company" | "verified">;
+};
+
+export type DbMockExam = {
+  id: string;
+  slug: string;
+  title: string;
+  discipline: string;
+  exam_type: ExamType;
+  description: string;
+  duration_minutes: number;
+  questions: MockExamQuestion[];
+  passing_score: number;
+  published: boolean;
+  is_premium: boolean;
+  price_cents: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type DbUserPurchasedExam = {
+  id: string;
+  user_id: string;
+  exam_id: string;
+  stripe_session_id: string;
+  stripe_customer_id: string | null;
+  purchased_at: string;
+};
+
+export type DbBookingRequest = {
+  id: string;
+  mentor_slug: string;
+  mentor_name: string;
+  requester_name: string;
+  requester_email: string;
+  message: string;
+  request_type: string;
+  user_id: string | null;
+  mentor_user_id: string | null;
+  status: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  created_at: string;
+};
+
+export type DbExamAttempt = {
+  id: string;
+  user_id: string;
+  exam_id: string;
+  score: number | null;
+  status: ExamAttemptStatus;
+  answers: Record<string, number>;
+  notepad_content: string;
+  started_at: string;
+  completed_at: string | null;
+  time_spent_seconds: number | null;
+  mock_exams?: Pick<DbMockExam, "slug" | "title" | "exam_type" | "duration_minutes">;
+};
+
+export type DbSpecialistMentorRequest = {
+  id: string;
+  user_id: string | null;
+  requester_name: string;
+  requester_email: string;
+  discipline: string;
+  sub_field: string;
+  skills_requested: string[];
+  career_requirements: string;
+  search_query: string;
+  filters_snapshot: Record<string, unknown>;
+  status: SpecialistRequestStatus;
+  admin_notes: string;
+  matched_mentor_slug: string | null;
+  created_at: string;
+};
+
+export type AppDatabase = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: { id: string; email: string; full_name: string };
+        Insert: { id: string; email: string; full_name: string };
+        Update: Partial<{ email: string; full_name: string }>;
+        Relationships: [];
+      };
+      mentor_profiles: {
+        Row: { slug: string; user_id: string; monthly_rate: number };
+        Insert: { slug: string; user_id: string; monthly_rate?: number };
+        Update: Partial<{ monthly_rate: number }>;
+        Relationships: [];
+      };
+      mock_exams: {
+        Row: { id: string; title: string; price_cents: number };
+        Insert: { id?: string; title: string; price_cents?: number };
+        Update: Partial<{ title: string; price_cents: number }>;
+        Relationships: [];
+      };
+      user_purchased_exams: {
+        Row: DbUserPurchasedExam & {
+          mock_exams?: { title: string; price_cents: number } | null;
+        };
+        Insert: {
+          user_id: string;
+          exam_id: string;
+          stripe_session_id: string;
+          stripe_customer_id?: string | null;
+          id?: string;
+          purchased_at?: string;
+        };
+        Update: Partial<{
+          user_id: string;
+          exam_id: string;
+          stripe_session_id: string;
+          stripe_customer_id: string | null;
+          purchased_at: string;
+        }>;
+        Relationships: [];
+      };
+      booking_requests: {
+        Row: DbBookingRequest;
+        Insert: {
+          mentor_slug: string;
+          mentor_name: string;
+          requester_name: string;
+          requester_email: string;
+          message?: string;
+          request_type: string;
+          user_id?: string | null;
+          mentor_user_id?: string | null;
+          status?: string;
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<{
+          status: string;
+          mentor_user_id: string | null;
+          stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
+        }>;
+        Relationships: [];
+      };
+      mentorship_roadmaps: {
+        Row: {
+          id: string;
+          mentor_user_id: string;
+          student_user_id: string;
+          booking_request_id: string | null;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          mentor_user_id: string;
+          student_user_id: string;
+          booking_request_id?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: Partial<{
+          status: string;
+          updated_at: string;
+        }>;
+        Relationships: [];
+      };
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
+  };
 };
