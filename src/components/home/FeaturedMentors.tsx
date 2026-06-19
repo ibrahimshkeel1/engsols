@@ -56,7 +56,7 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
           <AnimateIn delay={0.2} className="mt-12 text-center">
           <Link
             href="/mentors"
-            className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-8 text-sm font-semibold shadow-sm transition-all hover:border-accent/40 hover:shadow-md active:scale-95"
+            className="inline-flex h-11 items-center rounded-lg border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-muted"
           >
             View all mentors
           </Link>

@@ -33,12 +33,11 @@ export function HowItWorks() {
         <Stagger className="mt-14 grid gap-6 md:grid-cols-3" stagger={0.12}>
           {steps.map((step, i) => (
             <StaggerItem key={step.title}>
-              <div className="group relative h-full overflow-hidden rounded-2xl border border-border bg-card p-8 transition-shadow duration-500 hover:shadow-xl hover:shadow-accent/5">
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-accent/5 transition-transform duration-500 group-hover:scale-150" />
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors duration-300 group-hover:bg-accent group-hover:text-accent-foreground">
+              <div className="group relative h-full overflow-hidden rounded-xl border border-border bg-card p-8 transition-shadow hover:shadow-md">
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <step.icon className="h-5 w-5" />
                 </div>
-                <span className="absolute right-6 top-6 font-display text-5xl text-muted/60">{i + 1}</span>
+                <span className="absolute right-6 top-6 font-display text-4xl text-muted/80">{i + 1}</span>
                 <h3 className="relative mt-6 text-lg font-semibold">{step.title}</h3>
                 <p className="relative mt-3 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
               </div>

@@ -108,7 +108,7 @@ export async function updateJobApplicationStatus(applicationId: string, status: 
 
   const { data: app } = await supabase
     .from("job_applications")
-    .select("job_id")
+    .select("job_id, applicant_id, applicant_name, applicant_email, jobs(title)")
     .eq("id", applicationId)
     .single();
 
@@ -124,8 +124,38 @@ export async function updateJobApplicationStatus(applicationId: string, status: 
   const { error } = await supabase.from("job_applications").update({ status }).eq("id", applicationId);
   if (error) return { error: error.message };
 
+  if (app.applicant_id && (status === "reviewed" || status === "rejected")) {
+    const jobs = app.jobs as { title: string } | { title: string }[] | null;
+    const jobTitle = (Array.isArray(jobs) ? jobs[0] : jobs)?.title ?? "your job application";
+
+    const { jobApplicationStatusEmail, sendEmail } = await import("@/lib/email");
+    const mail = jobApplicationStatusEmail({
+      applicantName: app.applicant_name,
+      jobTitle,
+      status,
+    });
+    await sendEmail({ to: app.applicant_email, ...mail });
+
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: app.applicant_id,
+      title: `Application ${status}`,
+      body: `Your application for ${jobTitle} was ${status}.`,
+      url: "/settings",
+    });
+
+    const { sendPushToUser } = await import("@/lib/push");
+    await sendPushToUser({
+      userId: app.applicant_id,
+      title: `Application ${status}`,
+      body: `Update on ${jobTitle}`,
+      url: "/settings",
+    });
+  }
+
   revalidatePath("/jobs/inbox");
   revalidatePath("/admin/applications");
+  revalidatePath("/settings");
   return { success: true };
 }
 

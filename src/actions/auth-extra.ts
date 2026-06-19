@@ -3,10 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/auth";
 import { getSupabaseConfigError } from "@/lib/supabase/config";
-import { mentorProfileSchema, mentorReviewSchema } from "@/lib/validation";
-import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function requestPasswordReset(formData: FormData) {
   const configError = getSupabaseConfigError();

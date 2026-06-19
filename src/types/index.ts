@@ -85,6 +85,7 @@ export type ForumReply = {
   forumReputation?: number;
   imageUrls?: string[];
   authorAvatarUrl?: string | null;
+  authorId?: string;
 };
 
 export type AdminForumPost = ForumPost & { id: string };

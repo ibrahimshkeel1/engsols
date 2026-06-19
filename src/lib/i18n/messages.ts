@@ -29,6 +29,19 @@ type Messages = {
   videos: string;
   welcomeBack: string;
   joinEngsols: string;
+  signInTitle: string;
+  signInSubtitle: string;
+  joinSubtitle: string;
+  email: string;
+  password: string;
+  myBookings: string;
+  myApplications: string;
+  applyNow: string;
+  footerMentorship: string;
+  footerCareers: string;
+  footerCommunity: string;
+  becomeMentor: string;
+  careerAssist: string;
 };
 
 export const messages: Record<Locale, Messages> = {
@@ -54,6 +67,19 @@ export const messages: Record<Locale, Messages> = {
     videos: "Videos",
     welcomeBack: "Welcome back",
     joinEngsols: "Join EngSols",
+    signInTitle: "Sign in to EngSols",
+    signInSubtitle: "Mentorship, portfolios, and your community in one place.",
+    joinSubtitle: "Students get mentorship. Professionals can apply to mentor.",
+    email: "Email",
+    password: "Password",
+    myBookings: "My booking requests",
+    myApplications: "My job applications",
+    applyNow: "Apply now",
+    footerMentorship: "Mentorship",
+    footerCareers: "Careers",
+    footerCommunity: "Community",
+    becomeMentor: "Become a mentor",
+    careerAssist: "Career assist",
   },
   ar: {
     findMentors: "ابحث عن مرشد",
@@ -77,6 +103,19 @@ export const messages: Record<Locale, Messages> = {
     videos: "فيديو",
     welcomeBack: "مرحباً بعودتك",
     joinEngsols: "انضم إلى إنجسولز",
+    signInTitle: "تسجيل الدخول إلى إنجسولز",
+    signInSubtitle: "الإرشاد والمحافظ ومجتمعك في مكان واحد.",
+    joinSubtitle: "الطلاب يحصلون على إرشاد. المحترفون يمكنهم التقديم كمرشدين.",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    myBookings: "طلبات الحجز",
+    myApplications: "طلبات التوظيف",
+    applyNow: "قدّم الآن",
+    footerMentorship: "الإرشاد",
+    footerCareers: "المسارات المهنية",
+    footerCommunity: "المجتمع",
+    becomeMentor: "كن مرشداً",
+    careerAssist: "مساعدة مهنية",
   },
 };
 

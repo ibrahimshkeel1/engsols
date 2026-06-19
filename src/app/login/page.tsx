@@ -8,6 +8,7 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+import { LoginHeader } from "@/components/auth/AuthPageHeader";
 
 type Props = { searchParams: Promise<{ message?: string; error?: string; next?: string }> };
 
@@ -20,9 +21,7 @@ export default async function LoginPage({ searchParams }: Props) {
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
-        <p className="text-center section-label">Welcome back</p>
-        <h1 className="mt-2 text-center font-display text-3xl tracking-tight">Sign in to EngSols</h1>
-        <p className="mt-2 text-center text-muted-foreground">Mentorship, portfolios, and your community in one place.</p>
+        <LoginHeader />
         {!supabaseReady && (
           <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800 dark:text-amber-200">
             {configError ?? "Supabase is not configured on this deployment. Add API keys in Vercel → Settings → Environment Variables."}

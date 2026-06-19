@@ -188,3 +188,40 @@ export async function getReportsForAdmin(): Promise<AdminContentReport[]> {
     .order("created_at", { ascending: false });
   return (data ?? []) as AdminContentReport[];
 }
+
+export type AdminMarketplaceInquiry = {
+  id: string;
+  listing_slug: string | null;
+  listing_title: string;
+  seller_slug: string | null;
+  requester_name: string;
+  requester_email: string;
+  message: string;
+  request_type: string;
+  status: string;
+  created_at: string;
+};
+
+export async function getMarketplaceInquiriesForAdmin(): Promise<AdminMarketplaceInquiry[]> {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("booking_requests")
+    .select("*")
+    .like("request_type", "marketplace_%")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  return (data ?? []).map((row) => ({
+    id: row.id as string,
+    listing_slug: row.listing_slug as string | null,
+    listing_title: row.mentor_name as string,
+    seller_slug: row.seller_slug as string | null,
+    requester_name: row.requester_name as string,
+    requester_email: row.requester_email as string,
+    message: row.message as string,
+    request_type: row.request_type as string,
+    status: row.status as string,
+    created_at: row.created_at as string,
+  }));
+}

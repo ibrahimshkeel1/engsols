@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { DM_Sans, Geist_Mono, Fraunces } from "next/font/google";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -12,9 +12,10 @@ import { SentryInit } from "@/components/analytics/SentryInit";
 import { PwaInstallPrompt } from "@/components/layout/PwaInstallPrompt";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -22,10 +23,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -41,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-background text-foreground antialiased">
         <Analytics />
         <SentryInit />

@@ -10,6 +10,7 @@ import { GoalsProgress } from "@/components/settings/GoalsProgress";
 import { SessionNotesSection } from "@/components/settings/SessionNotesSection";
 import { StudentBookingsSection } from "@/components/settings/StudentBookingsSection";
 import { StudentJobApplicationsSection } from "@/components/settings/StudentJobApplicationsSection";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { getStudentBookings, getStudentJobApplications } from "@/lib/data/student-activity";
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
@@ -113,7 +114,7 @@ export default async function SettingsPage() {
 
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <h2 className="font-semibold">My booking requests</h2>
+          <LocalizedText messageKey="myBookings" as="h2" className="font-semibold" />
           <p className="mt-1 text-sm text-muted-foreground">Track mentorship and one-off session requests.</p>
           <StudentBookingsSection bookings={bookings} />
         </CardContent>
@@ -121,7 +122,7 @@ export default async function SettingsPage() {
 
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <h2 className="font-semibold">My job applications</h2>
+          <LocalizedText messageKey="myApplications" as="h2" className="font-semibold" />
           <StudentJobApplicationsSection applications={jobApplications} />
         </CardContent>
       </Card>

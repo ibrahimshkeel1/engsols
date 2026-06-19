@@ -188,8 +188,30 @@
 | Migration | Status | Purpose |
 |-----------|--------|---------|
 | `001`–`006` | ✅ | See prior log |
-| `007_platform_features.sql` | ⚠️ **Run on Supabase** | Reviews, saved mentors, notes, reports, rate limits, RLS |
-| `008_platform_expansion.sql` | ⚠️ **Run on Supabase** | Seller onboarding, push subscriptions |
+| `007_platform_features.sql` | ✅ | Reviews, saved mentors, notes, reports, rate limits, RLS |
+| `008_platform_expansion.sql` | ✅ | Seller onboarding, push subscriptions |
+| `009_job_applications_and_fts.sql` | ✅ | Job applications table + FTS search RPC |
+| `010_platform_completion.sql` | ⚠️ **Run on Supabase** | Notifications, one-off calendly, cert prep_steps, marketplace images |
+
+---
+
+## Polish batch (2026-06)
+
+| Status | Item |
+|--------|------|
+| ✅ | Job application status emails + notifications to applicants |
+| ✅ | Applicant confirmation on submit + separate job_application rate limit |
+| ✅ | Notification bell polling via `/api/notifications/unread-count` |
+| ✅ | Admin marketplace inquiries page |
+| ✅ | Forum reply edit/delete |
+| ✅ | News cover re-upload + markdown hint |
+| ✅ | Cert prep_steps admin JSON editor |
+| ✅ | OG images for forum + jobs |
+| ✅ | Self-hosted SVG placeholders (no placehold.co) |
+| ✅ | Live recording notification + auto-end status |
+| ✅ | Google OAuth + optional email verification enforcement |
+| ✅ | Expanded i18n (footer, auth, settings headings) |
+| ✅ | Unit tests (markdown, skills-graph) + auth E2E scaffold |
 
 ---
 

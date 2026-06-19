@@ -128,6 +128,46 @@ export function marketplaceInquiryEmail(opts: {
   };
 }
 
+export function jobApplicationStatusEmail(opts: {
+  applicantName: string;
+  jobTitle: string;
+  status: "reviewed" | "rejected";
+}) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  const label = opts.status === "reviewed" ? "reviewed" : "not moving forward with";
+  return {
+    subject: `Update on your application for ${opts.jobTitle}`,
+    html: `
+      <p>Hi ${opts.applicantName},</p>
+      <p>Your application for <strong>${opts.jobTitle}</strong> has been ${label}.</p>
+      <p><a href="${site}/settings">View your applications</a></p>
+    `,
+  };
+}
+
+export function jobApplicationConfirmationEmail(opts: { applicantName: string; jobTitle: string }) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: `Application submitted: ${opts.jobTitle}`,
+    html: `
+      <p>Hi ${opts.applicantName},</p>
+      <p>Your application for <strong>${opts.jobTitle}</strong> was submitted successfully. The employer will review it in their inbox.</p>
+      <p><a href="${site}/settings">Track your applications</a></p>
+    `,
+  };
+}
+
+export function liveRecordingReadyEmail(opts: { sessionTitle: string; recordingUrl: string; sessionSlug: string }) {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://engsols.com";
+  return {
+    subject: `Recording available: ${opts.sessionTitle}`,
+    html: `
+      <p>A recording is now available for <strong>${opts.sessionTitle}</strong>.</p>
+      <p><a href="${site}/live/${opts.sessionSlug}">Watch the recording</a></p>
+    `,
+  };
+}
+
 export function portfolioContactEmail(opts: {
   studentName: string;
   requesterName: string;

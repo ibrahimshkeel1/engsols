@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const LIMITS: Record<string, { max: number; windowMinutes: number }> = {
   booking: { max: 5, windowMinutes: 60 },
+  job_application: { max: 10, windowMinutes: 60 },
   forum_post: { max: 10, windowMinutes: 60 },
   forum_reply: { max: 30, windowMinutes: 60 },
   report: { max: 10, windowMinutes: 60 },

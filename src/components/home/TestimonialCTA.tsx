@@ -6,10 +6,10 @@ export function TestimonialCTA() {
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn>
-          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl shadow-accent/5">
-            <div className="flex flex-col items-start justify-center gap-6 p-10 sm:p-14 lg:max-w-2xl">
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="flex flex-col items-start justify-center gap-6 bg-primary/5 p-10 sm:p-14 lg:max-w-2xl">
               <div>
-                <h3 className="text-2xl font-display tracking-tight sm:text-3xl">Ready to start?</h3>
+                <h3 className="font-display text-2xl sm:text-3xl">Ready to start?</h3>
                 <p className="mt-3 text-muted-foreground">
                   Join engineers getting real guidance from professionals who have done the work — not generic career advice.
                 </p>
@@ -17,13 +17,13 @@ export function TestimonialCTA() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/mentors"
-                  className="inline-flex h-12 items-center rounded-xl bg-accent px-8 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition-all hover:brightness-110 active:scale-95"
+                  className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   Find a mentor
                 </Link>
                 <Link
                   href="/apply"
-                  className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-8 text-sm font-semibold transition-all hover:bg-muted active:scale-95"
+                  className="inline-flex h-11 items-center rounded-lg border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-muted"
                 >
                   Become a mentor
                 </Link>

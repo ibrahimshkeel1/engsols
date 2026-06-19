@@ -21,7 +21,7 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
   const reducedMotion = usePrefersReducedMotion();
 
   const card = (
-    <Link href={`/mentors/${mentor.slug}`} className="card-interactive group relative flex h-full flex-col overflow-hidden rounded-2xl">
+    <Link href={`/mentors/${mentor.slug}`} className="card-interactive group relative flex h-full flex-col overflow-hidden rounded-xl">
         <div className={`absolute left-0 top-0 h-full w-1 ${stripe}`} />
         <div className="absolute inset-0 bg-gradient-to-br from-accent/0 to-accent/0 transition-all duration-500 group-hover:from-accent/[0.03] group-hover:to-transparent" />
         <div className="relative flex flex-1 flex-col p-5 pl-6">

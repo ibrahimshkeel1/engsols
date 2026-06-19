@@ -13,6 +13,7 @@ const adminNav = [
   { href: "/admin/companies", label: "Companies" },
   { href: "/admin/sellers", label: "Sellers" },
   { href: "/admin/marketplace", label: "Marketplace" },
+  { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/certifications", label: "Certifications" },
   { href: "/admin/videos", label: "Videos" },
   { href: "/admin/news", label: "News" },

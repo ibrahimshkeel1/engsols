@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { requireRole } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function incrementForumView(postId: string) {
@@ -113,6 +112,41 @@ export async function updateForumPost(postId: string, formData: FormData) {
   return { success: true };
 }
 
+export async function updateForumReply(replyId: string, body: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const trimmed = body.trim();
+  if (!trimmed) return { error: "Reply cannot be empty" };
+
+  const { data: reply } = await supabase.from("forum_replies").select("author_id, post_id").eq("id", replyId).single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (reply?.author_id !== user.id && profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const { error } = await supabase.from("forum_replies").update({ body: trimmed }).eq("id", replyId);
+  if (error) return { error: error.message };
+
+  revalidatePath("/forum");
+  return { success: true };
+}
+
+export async function deleteForumReply(replyId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: reply } = await supabase.from("forum_replies").select("author_id").eq("id", replyId).single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (reply?.author_id !== user.id && profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const { error } = await supabase.from("forum_replies").delete().eq("id", replyId);
+  if (error) return { error: error.message };
+
+  revalidatePath("/forum");
+  return { success: true };
+}
+
 export async function reportContent(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -158,7 +192,7 @@ export async function setLiveRecordingUrl(slug: string, recordingUrl: string) {
 
   const { data: session } = await supabase
     .from("live_sessions")
-    .select("host_id")
+    .select("host_id, title, slug, forum_post_id")
     .eq("slug", slug)
     .single();
 
@@ -167,12 +201,45 @@ export async function setLiveRecordingUrl(slug: string, recordingUrl: string) {
     return { error: "Unauthorized" };
   }
 
+  const trimmed = recordingUrl.trim();
+  const updates: { recording_url: string | null; status?: string } = { recording_url: trimmed || null };
+  if (trimmed) updates.status = "ended";
+
   const { error } = await supabase
     .from("live_sessions")
-    .update({ recording_url: recordingUrl.trim() || null })
+    .update(updates)
     .eq("slug", slug);
 
   if (error) return { error: error.message };
+
+  if (trimmed && session?.forum_post_id) {
+    const { data: post } = await supabase
+      .from("forum_posts")
+      .select("author_id, slug, title")
+      .eq("id", session.forum_post_id)
+      .single();
+
+    if (post?.author_id && post.author_id !== user.id) {
+      const { liveRecordingReadyEmail, sendEmail } = await import("@/lib/email");
+      const { data: prof } = await supabase.from("profiles").select("email").eq("id", post.author_id).single();
+      if (prof?.email) {
+        const mail = liveRecordingReadyEmail({
+          sessionTitle: session.title ?? "Live session",
+          recordingUrl: trimmed,
+          sessionSlug: session.slug ?? slug,
+        });
+        await sendEmail({ to: prof.email, ...mail });
+      }
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: post.author_id,
+        title: "Live recording ready",
+        body: `Recording for "${session.title}" is available.`,
+        url: `/live/${session.slug ?? slug}`,
+      });
+    }
+  }
+
   revalidatePath(`/live/${slug}`);
   return { success: true };
 }

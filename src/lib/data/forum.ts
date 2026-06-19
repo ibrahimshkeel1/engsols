@@ -101,6 +101,7 @@ export async function getForumPost(slug: string) {
     forumReputation: (r.profiles as { forum_reputation?: number } | null)?.forum_reputation ?? 0,
     imageUrls: r.image_urls ?? [],
     authorAvatarUrl: r.profiles?.avatar_url ?? null,
+    authorId: r.author_id,
   }));
 
   return {

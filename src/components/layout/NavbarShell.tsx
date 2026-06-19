@@ -53,8 +53,8 @@ export function NavbarShell({
   return (
     <header className={cn("glass sticky top-0 z-50", scrolled && "glass-scrolled")}>
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="group shrink-0 text-xl font-bold tracking-tight transition-transform hover:scale-[1.02]">
-          Eng<span className="text-accent transition-colors group-hover:text-primary">Sols</span>
+        <Link href="/" className="group shrink-0 font-display text-xl tracking-tight transition-opacity hover:opacity-80">
+          Eng<span className="text-primary">Sols</span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">

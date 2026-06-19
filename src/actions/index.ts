@@ -140,7 +140,7 @@ export async function signIn(formData: FormData) {
 
     const email = emailInput.includes("@") ? emailInput : `${emailInput}@engsols.com`;
 
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: signInData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) {
       const message =
         authError.message.includes("Invalid path specified in request URL")
@@ -149,9 +149,17 @@ export async function signIn(formData: FormData) {
       redirect(`/login?error=${encodeURIComponent(message)}`);
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = signInData.user;
     if (!user) {
       redirect("/login?error=" + encodeURIComponent("Sign-in failed. Try again."));
+    }
+
+    if (process.env.ENFORCE_EMAIL_VERIFICATION === "true" && !user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      redirect(
+        "/login?error=" +
+          encodeURIComponent("Please confirm your email before signing in. Check your inbox for the verification link."),
+      );
     }
 
     await redirectAfterSignIn(supabase, user, nextPath);
@@ -874,7 +882,7 @@ export async function submitJobApplication(formData: FormData) {
   if (!user) return { error: "You must be logged in" };
 
   const { checkRateLimit } = await import("@/lib/rate-limit");
-  const limited = await checkRateLimit(user.id, "booking");
+  const limited = await checkRateLimit(user.id, "job_application");
   if (!limited.ok) return { error: limited.error };
 
   const jobSlug = formData.get("jobSlug") as string;
@@ -896,7 +904,18 @@ export async function submitJobApplication(formData: FormData) {
 
   if (error) return { error: error.message };
 
-  const { sendEmail, jobApplicationEmail } = await import("@/lib/email");
+  const { sendEmail, jobApplicationEmail, jobApplicationConfirmationEmail } = await import("@/lib/email");
+  const confirmMail = jobApplicationConfirmationEmail({ applicantName: name, jobTitle: job.title });
+  await sendEmail({ to: email, ...confirmMail });
+
+  const { createNotification } = await import("@/lib/notifications");
+  await createNotification({
+    userId: user.id,
+    title: "Application submitted",
+    body: `You applied to ${job.title}.`,
+    url: "/settings",
+  });
+
   if (job.id) {
     const { data: poster } = await supabase.from("jobs").select("posted_by").eq("id", job.id).single();
     if (poster?.posted_by) {
@@ -990,7 +1009,7 @@ export async function completeStudentOnboarding(formData: FormData) {
   redirect("/portfolios/build");
 }
 
-export async function completeMentorOnboarding(formData: FormData) {
+export async function completeMentorOnboarding() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/onboarding/mentor");

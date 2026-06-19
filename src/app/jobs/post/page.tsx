@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { createJobListing } from "@/actions/content";
 import { disciplines } from "@/data/disciplines";
 import { requireUser } from "@/lib/require-auth";

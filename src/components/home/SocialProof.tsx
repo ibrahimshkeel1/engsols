@@ -24,7 +24,7 @@ export function SocialProof({ stats }: { stats: PlatformStats }) {
         {items.map((s, i) => (
           <AnimateIn key={s.label} delay={i * 0.08} y={16}>
             <div className="px-6 py-8 text-center sm:py-10">
-              <p className="font-display text-3xl text-accent sm:text-4xl">{s.value}</p>
+              <p className="font-display text-3xl sm:text-4xl">{s.value}</p>
               <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
             </div>
           </AnimateIn>

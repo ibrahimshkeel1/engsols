@@ -51,4 +51,29 @@ test.describe("smoke", () => {
     await page.goto("/marketplace");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
+
+  test("certifications page loads", async ({ page }) => {
+    await page.goto("/certifications");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("signup page loads", async ({ page }) => {
+    await page.goto("/signup");
+    await expect(page.getByRole("heading", { name: /join engsols/i })).toBeVisible();
+  });
+});
+
+test.describe("authenticated", () => {
+  test("login and view settings", async ({ page }) => {
+    const email = process.env.E2E_TEST_EMAIL;
+    const password = process.env.E2E_TEST_PASSWORD;
+    test.skip(!email || !password, "Set E2E_TEST_EMAIL and E2E_TEST_PASSWORD for auth tests");
+
+    await page.goto("/login");
+    await page.getByLabel(/email/i).fill(email!);
+    await page.getByLabel(/password/i).fill(password!);
+    await page.getByRole("button", { name: /log in/i }).click();
+    await page.goto("/settings");
+    await expect(page.getByRole("heading", { name: /account settings/i })).toBeVisible();
+  });
 });

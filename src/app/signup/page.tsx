@@ -7,6 +7,7 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Input, Select } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+import { SignupHeader } from "@/components/auth/AuthPageHeader";
 import { getSafeNextPath } from "@/lib/safe-next";
 
 type Props = { searchParams: Promise<{ error?: string; next?: string }> };
@@ -20,9 +21,7 @@ export default async function SignupPage({ searchParams }: Props) {
   return (
     <div className="gradient-hero flex min-h-[70vh] items-center py-12">
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
-        <p className="text-center section-label">Get started</p>
-        <h1 className="mt-2 text-center font-display text-3xl tracking-tight">Join EngSols</h1>
-        <p className="mt-2 text-center text-muted-foreground">Students get mentorship. Professionals can apply to mentor.</p>
+        <SignupHeader />
         {!supabaseReady && (
           <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800 dark:text-amber-200">
             {configError ?? "Supabase is not configured on this deployment."}

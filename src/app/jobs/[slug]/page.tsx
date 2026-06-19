@@ -64,7 +64,7 @@ export default async function JobPage({ params }: Props) {
           <Card className="card-elevated">
             <CardContent className="p-6">
               <h3 className="font-semibold">Apply for this role</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Submit your details — employers receive applications when partnerships go live.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Submit your details — the employer receives your application in their inbox.</p>
               <div className="mt-4">
                 <JobApplicationForm
                   jobSlug={job.slug}

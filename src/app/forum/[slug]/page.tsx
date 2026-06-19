@@ -15,6 +15,7 @@ import { ReplyLikeButton } from "@/components/forum/ReplyLikeButton";
 import { ForumViewTracker } from "@/components/forum/ForumViewTracker";
 import { ForumRealtimeWatcher } from "@/components/forum/ForumRealtimeWatcher";
 import { ForumPostActions } from "@/components/forum/ForumPostActions";
+import { ForumReplyActions } from "@/components/forum/ForumReplyActions";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
@@ -99,6 +100,11 @@ export default async function ForumThreadPage({ params }: Props) {
                   <ReplyLikeButton replyId={r.id} likes={r.likes} />
                   <ReportContentButton contentType="forum_reply" contentId={r.id} />
                 </div>
+                <ForumReplyActions
+                  replyId={r.id}
+                  body={r.body}
+                  canEdit={user?.id === r.authorId || isAdmin}
+                />
               </div>
             ))}
             {replies.length === 0 && <p className="text-muted-foreground">No replies yet. Be the first!</p>}

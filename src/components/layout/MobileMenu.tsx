@@ -35,11 +35,12 @@ export function MobileMenu({ links, children }: { links: NavLink[]; children?: R
 
     document.addEventListener("keydown", onKeyDown);
     menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    const triggerButton = buttonRef.current;
 
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
-      buttonRef.current?.focus();
+      triggerButton?.focus();
     };
   }, [open, close]);
 
