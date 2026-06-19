@@ -395,13 +395,13 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card">
-      <div className="flex flex-wrap items-center gap-3 border-b border-border px-3 py-2">
+      <div className="flex items-center gap-2 overflow-x-auto border-b border-border px-3 py-2 scrollbar-none sm:gap-3">
         <div className="flex items-center gap-1 rounded-lg bg-muted/60 p-1">
           <button
             type="button"
             onClick={() => setTool("pencil")}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium",
+              "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
               tool === "pencil" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "pencil"}
@@ -413,7 +413,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             type="button"
             onClick={() => setTool("line")}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium",
+              "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
               tool === "line" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "line"}
@@ -449,7 +449,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
               aria-pressed={lineWidth === w}
               onClick={() => setLineWidth(w)}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-md border text-xs font-medium",
+                "flex h-8 w-8 items-center justify-center rounded-md border text-xs font-medium transition-all duration-200 active:scale-[0.98]",
                 lineWidth === w ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground",
               )}
             >

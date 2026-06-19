@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { signIn } from "@/actions";
 import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/config";
 import { safeDecodeURIComponent } from "@/lib/utils/safe-decode";
 import { getSafeNextPath } from "@/lib/safe-next";
-import { FormField } from "@/components/ui/FormField";
-import { SubmitButton } from "@/components/ui/SubmitButton";
-import { Input } from "@/components/ui/input";
+import { LoginForm } from "@/components/auth/LoginForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { LoginHeader } from "@/components/auth/AuthPageHeader";
@@ -39,18 +36,7 @@ export default async function LoginPage({ searchParams }: Props) {
         )}
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
-            <form action={signIn} className="space-y-4">
-              {next && <input type="hidden" name="next" value={next} />}
-              <FormField label="Email or username" id="login-email">
-                <Input name="email" required type="text" placeholder="you@example.com" autoComplete="username" />
-              </FormField>
-              <FormField label="Password" id="login-password">
-                <Input name="password" required type="password" placeholder="••••••••" autoComplete="current-password" />
-              </FormField>
-              <SubmitButton variant="accent" className="w-full" pendingLabel="Signing in...">
-                Log in
-              </SubmitButton>
-            </form>
+            <LoginForm next={next} />
             <div className="relative my-5">
               <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
               <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or</span></div>

@@ -89,23 +89,22 @@ function CollaborationWorkspaceInner({
   }, [room, isHost]);
 
   return (
-    <div className="flex h-[calc(100vh-80px)] min-h-0 flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">Live now</p>
-          <h1 className="font-display text-xl tracking-tight sm:text-2xl">{title}</h1>
+    <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-red-600 sm:text-xs dark:text-red-400">
+            Live now
+          </p>
+          <h1 className="truncate font-display text-lg tracking-tight sm:text-2xl">{title}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <SyncStatusIndicator room={room} />
+          <SyncStatusIndicator room={room} className="hidden sm:inline-flex" />
           <WorkspaceSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
-          <Link
-            href={`/live/${slug}`}
-            className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm font-medium hover:bg-muted"
-          >
+          <Link href={`/live/${slug}`} className="btn-secondary hidden h-10 sm:inline-flex">
             Session info
           </Link>
           {isHost && onEndCall && (
-            <Button type="button" variant="outline" onClick={onEndCall} disabled={ending}>
+            <Button type="button" variant="outline" onClick={onEndCall} disabled={ending} size="sm" className="sm:h-10">
               {ending ? "Ending..." : "End call"}
             </Button>
           )}
@@ -114,28 +113,18 @@ function CollaborationWorkspaceInner({
 
       <div
         className={cn(
-          "grid min-h-0 flex-1 grid-cols-1 gap-3",
-          isSplit && "h-[calc(100vh-80px)] lg:grid-cols-12 lg:gap-4",
+          "grid min-h-0 flex-1 grid-cols-1 gap-2 sm:gap-3",
+          isSplit && "lg:grid-cols-12 lg:gap-4",
         )}
       >
-        <div
-          className={cn(
-            "live-video-shell live-kit-room min-h-0 overflow-hidden rounded-2xl border border-border",
-            isSplit ? "h-[280px] lg:col-span-5 lg:h-full lg:max-h-none" : "h-full max-h-none flex-1",
-            isSplit && "live-video-shell--compact",
-          )}
-        >
-          <LiveKitVideoPane />
-        </div>
-
         {isSplit && (
           <div
             id={`workspace-panel-${activeTab}`}
             role="tabpanel"
             aria-labelledby={`workspace-tab-${activeTab}`}
-            className="flex min-h-0 flex-col lg:col-span-7 lg:h-full"
+            className="order-1 flex min-h-0 flex-1 flex-col lg:order-2 lg:col-span-7 lg:h-full"
           >
-            <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/40 px-3 py-2 text-xs text-muted-foreground backdrop-blur-sm">
+            <div className="mb-2 hidden items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/40 px-3 py-2 text-xs text-muted-foreground backdrop-blur-sm sm:flex">
               <span>
                 {activeTab === "whiteboard"
                   ? "Collaborative whiteboard — synced live with all participants"
@@ -149,6 +138,18 @@ function CollaborationWorkspaceInner({
             </div>
           </div>
         )}
+
+        <div
+          className={cn(
+            "live-video-shell live-kit-room min-h-0 overflow-hidden rounded-2xl border border-border transition-all duration-200",
+            isSplit
+              ? "order-2 h-[100px] max-h-[24dvh] shrink-0 lg:order-1 lg:col-span-5 lg:h-full lg:max-h-none"
+              : "h-full max-h-none flex-1",
+            isSplit && "live-video-shell--compact",
+          )}
+        >
+          <LiveKitVideoPane />
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,18 @@
-import { cn } from "@/lib/utils";
+import { fieldControlClassName } from "@/lib/input-styles";
+
+type ControlProps = {
+  invalid?: boolean;
+};
 
 export function Input({
   className,
+  invalid,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: React.InputHTMLAttributes<HTMLInputElement> & ControlProps) {
   return (
     <input
-      className={cn(
-        "flex h-10 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        className,
-      )}
+      aria-invalid={invalid || undefined}
+      className={fieldControlClassName({ className, invalid })}
       {...props}
     />
   );
@@ -17,14 +20,13 @@ export function Input({
 
 export function Textarea({
   className,
+  invalid,
   ...props
-}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement> & ControlProps) {
   return (
     <textarea
-      className={cn(
-        "flex min-h-[100px] w-full rounded-lg border border-border bg-card px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        className,
-      )}
+      aria-invalid={invalid || undefined}
+      className={fieldControlClassName({ className, invalid, multiline: true })}
       {...props}
     />
   );
@@ -32,15 +34,14 @@ export function Textarea({
 
 export function Select({
   className,
+  invalid,
   children,
   ...props
-}: React.SelectHTMLAttributes<HTMLSelectElement>) {
+}: React.SelectHTMLAttributes<HTMLSelectElement> & ControlProps) {
   return (
     <select
-      className={cn(
-        "h-10 rounded-lg border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        className,
-      )}
+      aria-invalid={invalid || undefined}
+      className={fieldControlClassName({ className, invalid })}
       {...props}
     >
       {children}

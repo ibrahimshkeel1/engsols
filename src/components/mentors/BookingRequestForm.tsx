@@ -19,6 +19,24 @@ type Props = {
   defaultEmail?: string;
 };
 
+type FieldErrors = {
+  name?: string;
+  email?: string;
+  message?: string;
+};
+
+function validateBooking(fields: { name: string; email: string; message: string }): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!fields.name.trim()) errors.name = "Enter your name";
+  if (!fields.email.trim()) {
+    errors.email = "Enter your email";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
+    errors.email = "Enter a valid email address";
+  }
+  if (!fields.message.trim()) errors.message = "Add a short message for the mentor";
+  return errors;
+}
+
 export function BookingRequestForm({
   mentorSlug,
   mentorName,
@@ -28,12 +46,31 @@ export function BookingRequestForm({
   defaultEmail = "",
 }: Props) {
   const [pending, setPending] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const requiresPaidMonthly = type === "monthly" && monthlyRate > 0;
+
+  function touchField(name: keyof FieldErrors, value: string, all: { name: string; email: string; message: string }) {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const nextErrors = validateBooking({ ...all, [name]: value });
+    setErrors((prev) => ({ ...prev, [name]: nextErrors[name] }));
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formEl = e.currentTarget;
+    const fields = {
+      name: (formEl.elements.namedItem("name") as HTMLInputElement).value,
+      email: (formEl.elements.namedItem("email") as HTMLInputElement).value,
+      message: (formEl.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+    const nextErrors = validateBooking(fields);
+    setErrors(nextErrors);
+    setTouched({ name: true, email: true, message: true });
+    if (Object.keys(nextErrors).length > 0) return;
+
     setPending(true);
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formEl);
     form.set("mentorSlug", mentorSlug);
     form.set("mentorName", mentorName);
     form.set("type", type);
@@ -53,7 +90,9 @@ export function BookingRequestForm({
       }
 
       toast.success("Request sent! The mentor will follow up by email.");
-      e.currentTarget.reset();
+      formEl.reset();
+      setErrors({});
+      setTouched({});
     } catch {
       toast.error("Could not send request. Try again or log in first.");
     }
@@ -71,17 +110,41 @@ export function BookingRequestForm({
         : "Request one-off session";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <FormField label="Your name" id="booking-name">
-        <Input name="name" required autoComplete="name" defaultValue={defaultName} />
+    <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+      <FormField label="Your name" id="booking-name" error={touched.name ? errors.name : undefined}>
+        <Input
+          name="name"
+          autoComplete="name"
+          defaultValue={defaultName}
+          invalid={Boolean(touched.name && errors.name)}
+          onBlur={(e) =>
+            touchField("name", e.target.value, {
+              name: e.target.value,
+              email: (e.currentTarget.form?.elements.namedItem("email") as HTMLInputElement | null)?.value ?? "",
+              message: (e.currentTarget.form?.elements.namedItem("message") as HTMLTextAreaElement | null)?.value ?? "",
+            })
+          }
+        />
       </FormField>
-      <FormField label="Email" id="booking-email">
-        <Input name="email" required type="email" autoComplete="email" defaultValue={defaultEmail} />
+      <FormField label="Email" id="booking-email" error={touched.email ? errors.email : undefined}>
+        <Input
+          name="email"
+          type="email"
+          autoComplete="email"
+          defaultValue={defaultEmail}
+          invalid={Boolean(touched.email && errors.email)}
+          onBlur={(e) =>
+            touchField("email", e.target.value, {
+              name: (e.currentTarget.form?.elements.namedItem("name") as HTMLInputElement | null)?.value ?? "",
+              email: e.target.value,
+              message: (e.currentTarget.form?.elements.namedItem("message") as HTMLTextAreaElement | null)?.value ?? "",
+            })
+          }
+        />
       </FormField>
-      <FormField label="Message" id="booking-message">
+      <FormField label="Message" id="booking-message" error={touched.message ? errors.message : undefined}>
         <Textarea
           name="message"
-          required
           rows={3}
           placeholder={
             type === "intro"
@@ -89,6 +152,14 @@ export function BookingRequestForm({
               : type === "monthly"
                 ? "Tell the mentor about your goals..."
                 : `What do you need help with for your ${type.replace(/-/g, " ")} session?`
+          }
+          invalid={Boolean(touched.message && errors.message)}
+          onBlur={(e) =>
+            touchField("message", e.target.value, {
+              name: (e.currentTarget.form?.elements.namedItem("name") as HTMLInputElement | null)?.value ?? "",
+              email: (e.currentTarget.form?.elements.namedItem("email") as HTMLInputElement | null)?.value ?? "",
+              message: e.target.value,
+            })
           }
         />
       </FormField>

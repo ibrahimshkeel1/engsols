@@ -41,7 +41,7 @@ export function EmptyStateClient({
             <Link
               key={chip.href + chip.label}
               href={chip.href}
-              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary active:scale-[0.98]"
             >
               {chip.label}
             </Link>
@@ -52,7 +52,7 @@ export function EmptyStateClient({
         {action && (
           <Link
             href={action.href}
-            className="inline-flex h-10 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground hover:brightness-110"
+            className="btn-cta"
           >
             {action.label}
           </Link>
@@ -61,7 +61,7 @@ export function EmptyStateClient({
           <button
             type="button"
             onClick={onClearFilters}
-            className="inline-flex h-10 items-center rounded-xl border border-border bg-card px-5 text-sm font-medium hover:bg-muted"
+            className="btn-secondary"
           >
             Clear filters
           </button>

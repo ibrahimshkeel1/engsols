@@ -1,6 +1,6 @@
-import { BentoDirectorySkeletonGrid, PageHeaderSkeleton } from "@/components/ui/DirectorySkeletons";
+import { CompanyGridSkeleton, PageHeaderSkeleton } from "@/components/ui/DirectorySkeletons";
 
-export default function MentorsLoading() {
+export default function CompaniesLoading() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <PageHeaderSkeleton />
@@ -9,7 +9,7 @@ export default function MentorsLoading() {
         <div className="h-10 w-36 animate-pulse rounded-lg bg-muted" />
       </div>
       <div className="mt-8">
-        <BentoDirectorySkeletonGrid count={8} />
+        <CompanyGridSkeleton count={6} />
       </div>
     </div>
   );

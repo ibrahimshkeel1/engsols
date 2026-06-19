@@ -38,7 +38,7 @@ export function WorkspaceSwitcher({ activeTab, onTabChange, className }: Props) 
             id={`workspace-tab-${id}`}
             onClick={() => onTabChange(id)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.98]",
               selected
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",

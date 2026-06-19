@@ -1,9 +1,14 @@
+import { PageHeaderSkeleton } from "@/components/ui/DirectorySkeletons";
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function Loading() {
   return (
-    <div className="flex min-h-[40vh] items-center justify-center px-4">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-accent" aria-hidden />
-        <p className="text-sm text-muted-foreground">Loading...</p>
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <PageHeaderSkeleton />
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-40 rounded-2xl" />
+        ))}
       </div>
     </div>
   );

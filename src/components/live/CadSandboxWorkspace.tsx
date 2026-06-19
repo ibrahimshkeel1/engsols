@@ -357,10 +357,10 @@ export function CadSandboxWorkspace({ room }: Props) {
   }
 
   return (
-    <div className="flex h-full min-h-0 rounded-xl border border-border bg-card">
+    <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card lg:flex-row">
       <div
         ref={containerRef}
-        className="relative min-w-0 flex-1 touch-none"
+        className="relative min-h-0 min-w-0 flex-1 touch-none"
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -387,7 +387,7 @@ export function CadSandboxWorkspace({ room }: Props) {
             <Upload className="h-10 w-10 text-muted-foreground" aria-hidden />
             <p className="mt-3 text-sm font-medium">Drop an engineering asset</p>
             <p className="mt-1 text-xs text-muted-foreground">.STL or .OBJ blueprint files</p>
-            <label className="mt-4 cursor-pointer rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90">
+            <label className="btn-cta mt-4 cursor-pointer px-4 py-2 text-xs">
               Browse files
               <input
                 type="file"
@@ -410,12 +410,12 @@ export function CadSandboxWorkspace({ room }: Props) {
         )}
       </div>
 
-      <aside className="flex w-44 shrink-0 flex-col border-l border-border bg-muted/30 p-3 sm:w-52">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-t border-border bg-muted/30 p-2 lg:w-52 lg:flex-col lg:overflow-visible lg:border-l lg:border-t-0 lg:p-3">
+        <div className="hidden items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:flex">
           <Box className="h-3.5 w-3.5" aria-hidden />
           Render mode
         </div>
-        <div className="mt-3 space-y-1.5" role="radiogroup" aria-label="3D render mode">
+        <div className="flex flex-1 gap-1.5 lg:mt-3 lg:flex-col lg:space-y-1.5" role="radiogroup" aria-label="3D render mode">
           {RENDER_MODES.map((mode) => (
             <button
               key={mode.id}
@@ -425,9 +425,9 @@ export function CadSandboxWorkspace({ room }: Props) {
               disabled={!unlocked}
               onClick={() => handleRenderModeChange(mode.id)}
               className={cn(
-                "w-full rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors disabled:opacity-40",
+                "shrink-0 rounded-lg px-3 py-2 text-left text-xs font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-40 lg:w-full",
                 renderMode === mode.id
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
@@ -435,7 +435,7 @@ export function CadSandboxWorkspace({ room }: Props) {
             </button>
           ))}
         </div>
-        <p className="mt-auto pt-4 text-[10px] leading-relaxed text-muted-foreground">
+        <p className="hidden pt-4 text-[10px] leading-relaxed text-muted-foreground lg:block lg:mt-auto">
           Camera orientation syncs across the live session via LiveKit data channels.
         </p>
       </aside>

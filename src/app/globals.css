@@ -165,15 +165,61 @@ body {
   background: var(--surface-elevated);
   border: 1px solid var(--border);
   transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .card-interactive:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
   box-shadow: 0 8px 24px var(--glow);
   transform: translateY(-2px);
+}
+
+.card-interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-cta {
+  display: inline-flex;
+  height: 2.5rem;
+  align-items: center;
+  border-radius: 0.75rem;
+  background: var(--primary);
+  padding-inline: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-foreground);
+  transition: all 0.2s ease;
+}
+
+.btn-cta:hover {
+  filter: brightness(1.05);
+}
+
+.btn-cta:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  height: 2.5rem;
+  align-items: center;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding-inline: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--muted);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
 }
 
 /* Ambient animations — kept minimal */
@@ -371,4 +417,40 @@ html.live-room-active main {
 
 .live-video-shell--compact .lk-participant-tile {
   min-height: 80px;
+}
+
+@media (max-width: 1023px) {
+  .live-room-container {
+    min-height: 100dvh;
+    padding-inline: 0.75rem;
+    padding-block: 0.75rem;
+  }
+
+  .live-video-shell {
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - 8rem);
+  }
+
+  .live-video-shell--compact {
+    min-height: 88px;
+    max-height: 24dvh;
+  }
+
+  .live-video-shell--compact .lk-participant-tile {
+    min-height: 44px;
+  }
+
+  .live-video-shell--compact .lk-control-bar {
+    --lk-control-bar-height: 44px;
+  }
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

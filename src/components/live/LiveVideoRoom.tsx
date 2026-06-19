@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
 import { CollaborationWorkspace } from "@/components/live/CollaborationWorkspace";
+import { LiveRoomSkeleton } from "@/components/ui/DirectorySkeletons";
 
 type LiveVideoRoomProps = {
   slug: string;
@@ -49,11 +49,7 @@ export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVi
   }, [slug]);
 
   if (loading) {
-    return (
-      <div className="flex aspect-video items-center justify-center rounded-2xl bg-muted">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <LiveRoomSkeleton />;
   }
 
   if (error || !token || !serverUrl) {
