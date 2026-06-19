@@ -1,5 +1,6 @@
 import type { Mentor } from "@/types";
 import { MentorCard } from "./MentorCard";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 type SimilarMentorsProps = {
   mentors: Mentor[];
@@ -10,12 +11,14 @@ export function SimilarMentors({ mentors }: SimilarMentorsProps) {
 
   return (
     <section className="mt-16">
-      <h2 className="font-display text-2xl tracking-tight">Similar mentors</h2>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {mentors.map((mentor) => (
-          <MentorCard key={mentor.slug} mentor={mentor} />
-        ))}
-      </div>
+      <h2 className="font-display text-2xl">Similar mentors</h2>
+      <ProfileBentoGrid
+        className="mt-6"
+        items={mentors}
+        getKey={(mentor) => mentor.slug}
+        isFeatured={(mentor) => mentor.featured}
+        renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+      />
     </section>
   );
 }

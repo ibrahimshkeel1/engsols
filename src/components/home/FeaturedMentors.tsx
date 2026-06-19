@@ -8,8 +8,8 @@ import { filterMentors } from "@/lib/filter-mentors";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input } from "@/components/ui/input";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { AnimateIn } from "@/components/motion/AnimateIn";
-import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
 export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState("");
@@ -44,13 +44,13 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
             />
           </div>
         ) : (
-          <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" stagger={0.08}>
-            {filtered.map((mentor) => (
-              <StaggerItem key={mentor.slug}>
-                <MentorCard mentor={mentor} />
-              </StaggerItem>
-            ))}
-          </Stagger>
+          <ProfileBentoGrid
+            className="mt-10"
+            items={filtered}
+            getKey={(mentor) => mentor.slug}
+            isFeatured={(mentor) => mentor.featured}
+            renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+          />
         )}
         {filtered.length > 0 && (
           <AnimateIn delay={0.2} className="mt-12 text-center">

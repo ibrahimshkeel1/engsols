@@ -15,6 +15,7 @@ import { getStudentBookings, getStudentJobApplications } from "@/lib/data/studen
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 export default async function SettingsPage() {
   const user = await getCurrentUser();
@@ -105,9 +106,14 @@ export default async function SettingsPage() {
               Save mentors from their profile page. <Link href="/mentors" className="text-primary hover:underline">Browse mentors</Link>
             </p>
           ) : (
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {savedMentors.map((m) => <MentorCard key={m.slug} mentor={m} showPrice={false} />)}
-            </div>
+            <ProfileBentoGrid
+              className="mt-4"
+              items={savedMentors}
+              getKey={(m) => m.slug}
+              isFeatured={(m) => m.featured}
+              animated={false}
+              renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} showPrice={false} />}
+            />
           )}
         </CardContent>
       </Card>

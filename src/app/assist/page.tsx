@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCareerAssist } from "@/lib/ai-assist";
 import { buildSkillGraph } from "@/lib/skills-graph";
 import { MentorCard } from "@/components/mentors/MentorCard";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function AssistPage() {
@@ -60,9 +61,14 @@ export default async function AssistPage() {
           for better matches.
         </p>
       ) : (
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recommendations.map((mentor) => mentor && <MentorCard key={mentor.slug} mentor={mentor} />)}
-        </div>
+        <ProfileBentoGrid
+          className="mt-6"
+          items={recommendations.filter((m): m is NonNullable<typeof m> => Boolean(m))}
+          getKey={(mentor) => mentor.slug}
+          isFeatured={(mentor) => mentor.featured}
+          animated={false}
+          renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+        />
       )}
 
       <h2 className="mt-12 text-xl font-bold">Skill graph highlights</h2>

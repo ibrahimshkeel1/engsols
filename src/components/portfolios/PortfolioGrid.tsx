@@ -1,16 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Briefcase } from "lucide-react";
 import type { Portfolio } from "@/types";
 import { disciplines } from "@/data/disciplines";
-import { getDisciplineColors } from "@/lib/discipline-colors";
-import { Avatar } from "@/components/ui/Avatar";
-import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
+import { PortfolioCard } from "@/components/portfolios/PortfolioCard";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input, Select } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
   const [search, setSearch] = useState("");
@@ -66,37 +63,13 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
           />
         </div>
       ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => {
-            const stripe = getDisciplineColors(p.discipline).stripe;
-            return (
-              <Link key={p.slug} href={`/portfolios/${p.slug}`} className="card-interactive relative flex overflow-hidden rounded-2xl">
-                <div className={cn("w-1 shrink-0", stripe)} />
-                <div className="flex-1 p-5">
-                  <div className="flex items-start gap-4">
-                    <Avatar name={p.name} discipline={p.discipline} size="md" src={p.avatarUrl} />
-                    <div>
-                      {p.openToWork && (
-                        <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
-                          Open to work
-                        </span>
-                      )}
-                      <h3 className="mt-1 font-semibold">{p.name}</h3>
-                      <p className="text-sm text-muted-foreground">{p.headline}</p>
-                      <p className="text-xs text-muted-foreground">{p.university}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    <DisciplineBadge discipline={p.discipline} />
-                    {p.skills.slice(0, 3).map((s) => (
-                      <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <ProfileBentoGrid
+          className="mt-8"
+          items={filtered}
+          getKey={(portfolio) => portfolio.slug}
+          isFeatured={(portfolio) => portfolio.openToWork}
+          renderCard={(portfolio, variant) => <PortfolioCard portfolio={portfolio} variant={variant} />}
+        />
       )}
     </>
   );

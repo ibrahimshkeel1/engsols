@@ -9,7 +9,7 @@ import { MentorCard } from "@/components/mentors/MentorCard";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
 import { SkillGraphFilter } from "@/components/mentors/SkillGraphFilter";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
-import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
   const searchParams = useSearchParams();
@@ -84,13 +84,12 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
             action={{ href: "/apply", label: "Apply as a mentor" }}
           />
         ) : (
-          <Stagger className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" stagger={0.06}>
-            {filtered.map((mentor) => (
-              <StaggerItem key={mentor.slug}>
-                <MentorCard mentor={mentor} />
-              </StaggerItem>
-            ))}
-          </Stagger>
+          <ProfileBentoGrid
+            items={filtered}
+            getKey={(mentor) => mentor.slug}
+            isFeatured={(mentor) => mentor.featured}
+            renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+          />
         )}
       </div>
     </div>

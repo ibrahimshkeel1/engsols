@@ -5,6 +5,7 @@ import { getApprovedMentors } from "@/lib/data/mentors";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
+import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { CertificationPrepPath } from "@/components/certifications/CertificationPrepPath";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -66,11 +67,14 @@ export default async function CertificationPage({ params }: Props) {
       {relatedMentors.length > 0 && (
         <>
           <h2 className="mt-12 text-xl font-bold">Mentors who can help</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {relatedMentors.map((m) => (
-              <MentorCard key={m.slug} mentor={m} />
-            ))}
-          </div>
+          <ProfileBentoGrid
+            className="mt-6"
+            items={relatedMentors}
+            getKey={(m) => m.slug}
+            isFeatured={(m) => m.featured}
+            animated={false}
+            renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} />}
+          />
         </>
       )}
       <Link
