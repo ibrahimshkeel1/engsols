@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MessageSquare, Radio, Users } from "lucide-react";
+import { SessionCountdown } from "@/components/shared/SessionCountdown";
 import { Avatar } from "@/components/ui/Avatar";
 import { RelativeTime } from "@/components/shared/RelativeTime";
 import { AnimateIn } from "@/components/motion/AnimateIn";
@@ -97,6 +98,7 @@ function LiveColumn({ data }: { data: ActivityPayload }) {
             <p className="mt-2 font-semibold leading-snug">{session.title}</p>
             <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
             <p className="mt-4 text-sm text-muted-foreground">
+              <SessionCountdown scheduledAt={session.scheduledAt} className="mr-2 font-medium text-primary" />
               {new Date(session.scheduledAt).toLocaleString("en-US", {
                 month: "short",
                 day: "numeric",

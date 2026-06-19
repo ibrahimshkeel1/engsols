@@ -25,6 +25,9 @@ export async function AuthLinks() {
 
   return (
     <>
+      <Link href="/for-you" className="rounded-lg px-3 py-2 text-sm font-medium text-primary hover:bg-muted hover:underline">
+        For you
+      </Link>
       <NotificationBell initialCount={unread} />
       <Link href="/settings" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
         Settings

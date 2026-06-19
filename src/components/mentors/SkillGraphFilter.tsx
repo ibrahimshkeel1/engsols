@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { engineeringSkills, getRelatedSkills } from "@/data/engineering-skills";
 import { buildSkillGraph, getRelatedFromGraph } from "@/lib/skills-graph";
+import { SkillGraphBubbleChart } from "@/components/mentors/SkillGraphBubbleChart";
 import type { Mentor } from "@/types";
 
 type Props = {
@@ -28,20 +29,13 @@ export function SkillGraphFilter({ selectedSkill, onSkillChange, mentorSkills = 
     : [];
 
   return (
-    <div className="mt-4 space-y-3">
+    <div className="mt-4 space-y-4">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Skill graph</p>
-      <select
-        value={selectedSkill}
-        onChange={(e) => onSkillChange(e.target.value)}
-        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
-      >
-        <option value="">All skills</option>
-        {skillOptions.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.label}{s.mentorCount > 0 ? ` (${s.mentorCount})` : ""}
-          </option>
-        ))}
-      </select>
+      <SkillGraphBubbleChart
+        nodes={skillOptions}
+        selectedSkill={selectedSkill}
+        onSkillChange={onSkillChange}
+      />
       {related.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {related.map((s) => (

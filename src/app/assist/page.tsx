@@ -8,6 +8,7 @@ import { buildSkillGraph } from "@/lib/skills-graph";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { Card, CardContent } from "@/components/ui/card";
+import { AssistSkillGraph } from "@/components/assist/AssistSkillGraph";
 
 export default async function AssistPage() {
   const user = await getCurrentUser();
@@ -30,7 +31,7 @@ export default async function AssistPage() {
     .map((slug) => mentors.find((m) => m.slug === slug))
     .filter(Boolean);
 
-  const skillGraph = buildSkillGraph(mentors).slice(0, 10);
+  const skillGraph = buildSkillGraph(mentors);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -71,21 +72,10 @@ export default async function AssistPage() {
         />
       )}
 
-      <h2 className="mt-12 text-xl font-bold">Skill graph highlights</h2>
-      <p className="mt-2 text-sm text-muted-foreground">Skills from mentors in your field</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {skillGraph.map((s) => (
-          <Link
-            key={s.id}
-            href={`/mentors?search=${encodeURIComponent(s.label)}`}
-            className="rounded-xl border border-border bg-card px-4 py-2 text-sm hover:border-primary/40"
-          >
-            {s.label}
-            {s.mentorCount > 0 && (
-              <span className="ml-1.5 text-xs text-muted-foreground">({s.mentorCount})</span>
-            )}
-          </Link>
-        ))}
+      <h2 className="mt-12 text-xl font-bold">Interactive skill graph</h2>
+      <p className="mt-2 text-sm text-muted-foreground">Click a skill bubble to find mentors with that expertise</p>
+      <div className="card-elevated mt-4 rounded-2xl border border-border bg-card p-6">
+        <AssistSkillGraph nodes={skillGraph} />
       </div>
 
       <h2 className="mt-12 text-xl font-bold">Quick tips</h2>

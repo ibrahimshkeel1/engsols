@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 import { getCertifications } from "@/lib/data/certifications";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { certPromptChips } from "@/data/empty-state-prompts";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 
 export default async function CertificationsPage() {
@@ -14,7 +17,13 @@ export default async function CertificationsPage() {
       preview={false}
     >
       {certifications.length === 0 ? (
-        <p className="text-muted-foreground">No certifications listed yet.</p>
+        <EmptyState
+          icon={GraduationCap}
+          title="No certifications listed yet"
+          description="Exam guides and mentor prep paths will appear here as we expand credentials."
+          action={{ href: "/mentors?goal=fe-pe", label: "Find exam mentors" }}
+          promptChips={certPromptChips}
+        />
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {certifications.map((cert) => {

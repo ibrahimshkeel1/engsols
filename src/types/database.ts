@@ -48,6 +48,8 @@ export type DbPortfolio = {
   skills: string[];
   credentials: string[];
   published: boolean;
+  created_at?: string;
+  updated_at?: string;
   profiles?: DbProfile;
   portfolio_projects?: DbPortfolioProject[];
   portfolio_experience?: DbPortfolioExperience[];

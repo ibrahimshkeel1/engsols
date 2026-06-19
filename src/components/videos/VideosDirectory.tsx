@@ -6,6 +6,8 @@ import { useMemo, useState } from "react";
 import { videoThumbnail } from "@/lib/placeholders";
 import { disciplines } from "@/data/disciplines";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { videoPromptChips } from "@/data/empty-state-prompts";
 import { Avatar } from "@/components/ui/Avatar";
 import { Input } from "@/components/ui/input";
 import type { Mentor, Video } from "@/types";
@@ -43,7 +45,12 @@ export function VideosDirectory({ videos, mentors }: Props) {
         </select>
       </div>
       {filtered.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">No videos published yet.</p>
+        <EmptyStateClient
+          title="No videos published yet"
+          description="Tutorials and career talks from mentors will appear here as content partnerships launch."
+          action={{ href: "/live", label: "Join live sessions" }}
+          promptChips={videoPromptChips}
+        />
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((video) => {

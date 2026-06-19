@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { companyPromptChips } from "@/data/empty-state-prompts";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { Input } from "@/components/ui/input";
 import type { Company, Job } from "@/types";
@@ -44,7 +46,12 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
         </select>
       </div>
       {filtered.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">No companies listed yet.</p>
+        <EmptyStateClient
+          title="No companies match"
+          description={companies.length === 0 ? "Employer profiles will appear as partners join the directory." : "Try a different search or company type."}
+          action={companies.length === 0 ? { href: "/jobs", label: "Browse jobs" } : undefined}
+          promptChips={companyPromptChips}
+        />
       ) : (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((company) => {

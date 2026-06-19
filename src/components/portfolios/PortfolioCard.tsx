@@ -36,6 +36,12 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
     >
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
 
+      {portfolio.projects[0] && (variant === "hero" || variant === "wide") && (
+        <div className="absolute right-4 top-4 hidden h-16 w-16 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary sm:flex">
+          {portfolio.projects[0].title.slice(0, 2).toUpperCase()}
+        </div>
+      )}
+
       <div className="relative flex min-w-0 flex-1 flex-col p-4 pl-5 sm:p-5 sm:pl-6">
         <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <Avatar

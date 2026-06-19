@@ -5,8 +5,10 @@ import {
   Briefcase,
   Bookmark,
   ClipboardList,
+  Sparkles,
 } from "lucide-react";
 import type { HomeJourneyState } from "@/lib/data/home-journey";
+import { GoalsProgressCompact } from "@/components/home/GoalsProgressCompact";
 import { Avatar } from "@/components/ui/Avatar";
 import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
@@ -58,9 +60,9 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
   ].filter(Boolean) as { href: string; icon: typeof Bell; label: string; cta: string }[];
 
   const fallbackActions = [
+    { href: "/for-you", label: "Your weekly digest", cta: "See what's new" },
     { href: "/mentors", label: "Find a mentor", cta: "Browse directory" },
     { href: "/forum", label: "Join a discussion", cta: "Go to forum" },
-    { href: "/assist", label: "Career assist", cta: "Get matches" },
   ];
 
   return (
@@ -73,9 +75,19 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
             Continue your journey, {firstName}
           </h1>
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Pick up where you left off — your mentors, portfolio, and applications are one click away.
+            {journey.suggestedAction.description}
           </p>
+          <Link
+            href={journey.suggestedAction.href}
+            className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground hover:brightness-110"
+          >
+            <Sparkles className="h-4 w-4" />
+            {journey.suggestedAction.label}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </AnimateIn>
+
+        <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />
 
         {actions.length > 0 ? (
           <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>

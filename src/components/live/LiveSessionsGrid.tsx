@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Radio } from "lucide-react";
 import { videoThumbnail } from "@/lib/placeholders";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { SessionCountdown } from "@/components/shared/SessionCountdown";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
@@ -112,6 +113,7 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
                     </div>
                   )}
                   <p className="mt-3 text-xs text-muted-foreground">
+                    {stream.status === "upcoming" && <SessionCountdown scheduledAt={stream.scheduledAt} className="mr-2" />}
                     {format(new Date(stream.scheduledAt), "MMM d, yyyy h:mm a")}
                     {stream.status === "live" && stream.viewerCount != null && ` · ${stream.viewerCount} watching`}
                   </p>

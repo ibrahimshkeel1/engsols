@@ -31,6 +31,7 @@ function toPortfolio(p: DbPortfolio): Portfolio {
       description: e.description,
     })),
     avatarUrl: p.profiles?.avatar_url ?? null,
+    updatedAt: p.updated_at ?? p.created_at,
   };
 }
 

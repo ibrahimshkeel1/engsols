@@ -231,6 +231,7 @@ export type Portfolio = {
   experience: PortfolioExperience[];
   mentorSlug?: string;
   avatarUrl?: string | null;
+  updatedAt?: string;
 };
 
 export type JobType =

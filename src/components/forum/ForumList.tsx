@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Award, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type { ForumPost } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { getDisciplineColors } from "@/lib/discipline-colors";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
+import { ForumGamificationBadges, isActiveThisWeek } from "@/components/forum/ForumGamificationBadges";
+import { forumPromptChips } from "@/data/empty-state-prompts";
 import { Avatar } from "@/components/ui/Avatar";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { RelativeTime } from "@/components/shared/RelativeTime";
@@ -69,6 +71,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
             title="No discussions yet"
             description="Be the first to ask a question or share knowledge with the community."
             action={{ href: "/forum/new", label: "Start a discussion" }}
+            promptChips={forumPromptChips}
           />
         ) : filtered.length === 0 ? (
           <EmptyStateClient
@@ -99,15 +102,13 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <DisciplineBadge discipline={post.discipline} />
+                      <ForumGamificationBadges
+                        reputation={post.authorReputation}
+                        activeThisWeek={isActiveThisWeek(post.lastReplyAt ?? post.createdAt)}
+                      />
                       {post.isSolved && (
                         <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
                           Solved
-                        </span>
-                      )}
-                      {(post.authorReputation ?? 0) > 0 && (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                          <Award className="h-3 w-3" />
-                          {post.authorReputation} rep
                         </span>
                       )}
                     </div>

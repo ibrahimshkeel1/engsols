@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { listingImage } from "@/lib/placeholders";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { marketplacePromptChips } from "@/data/empty-state-prompts";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { Listing, ListingCategory, Seller } from "@/types";
@@ -66,7 +68,12 @@ export function MarketplaceDirectory({ listings, sellers }: Props) {
         </select>
       </div>
       {filtered.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">No listings yet. Sellers can list products when onboarding opens.</p>
+        <EmptyStateClient
+          title="No listings yet"
+          description="Sellers can list equipment, materials, and services when onboarding opens."
+          action={{ href: "/marketplace/sell", label: "List your product" }}
+          promptChips={marketplacePromptChips}
+        />
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((listing) => {

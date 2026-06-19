@@ -14,7 +14,10 @@ import { ForumViewTracker } from "@/components/forum/ForumViewTracker";
 import { ForumRealtimeWatcher } from "@/components/forum/ForumRealtimeWatcher";
 import { ForumPostActions } from "@/components/forum/ForumPostActions";
 import { ForumReplyActions } from "@/components/forum/ForumReplyActions";
+import { ForumGamificationBadges, isActiveThisWeek } from "@/components/forum/ForumGamificationBadges";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { forumPromptChips } from "@/data/empty-state-prompts";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
@@ -57,9 +60,13 @@ export default async function ForumThreadPage({ params }: Props) {
             )}
           </div>
           <h1 className="mt-4 text-3xl font-bold tracking-tight">{post.title}</h1>
-          <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <Avatar name={post.author} discipline={post.discipline} size="sm" src={post.authorAvatarUrl} />
             <span>{post.author} · {post.createdAt} · {post.viewCount} views</span>
+            <ForumGamificationBadges
+              reputation={post.authorReputation}
+              activeThisWeek={isActiveThisWeek(post.lastReplyAt ?? post.createdAt)}
+            />
           </div>
           <p className="mt-6 leading-relaxed text-foreground/90">{post.body}</p>
           <AttachedImages urls={post.imageUrls ?? []} />
@@ -83,12 +90,12 @@ export default async function ForumThreadPage({ params }: Props) {
                 <div className="flex items-center gap-2">
                   <Avatar name={r.author} size="sm" src={r.authorAvatarUrl} />
                   <span className="font-medium">{r.author}</span>
-                  {r.isMentor && <Badge className="bg-primary/10 text-primary">Mentor</Badge>}
-                  {(r.forumReputation ?? 0) > 0 && (
-                    <Badge className="bg-muted text-xs text-muted-foreground">
-                      {r.forumReputation} rep
-                    </Badge>
-                  )}
+                  <ForumGamificationBadges
+                    reputation={r.forumReputation}
+                    likes={r.likes}
+                    isMentor={r.isMentor}
+                    activeThisWeek={isActiveThisWeek(r.createdAt)}
+                  />
                   <span className="text-xs text-muted-foreground">{r.createdAt}</span>
                 </div>
                 <p className="mt-2 text-foreground/90">{r.body}</p>
@@ -104,7 +111,14 @@ export default async function ForumThreadPage({ params }: Props) {
                 />
               </div>
             ))}
-            {replies.length === 0 && <p className="text-muted-foreground">No replies yet. Be the first!</p>}
+            {replies.length === 0 && (
+              <EmptyStateClient
+                title="No replies yet"
+                description="Be the first to share your experience or ask a follow-up."
+                action={{ href: "#reply-form", label: "Write a reply" }}
+                promptChips={forumPromptChips}
+              />
+            )}
           </div>
           <ForumReplyForm postId={dbPost?.id} />
         </div>

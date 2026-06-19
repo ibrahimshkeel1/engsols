@@ -6,6 +6,9 @@ import { getMentorBySlug } from "@/lib/data/mentors";
 import { getCurrentUser } from "@/lib/auth";
 import { isLiveKitConfigured } from "@/lib/livekit/config";
 import { videoThumbnail } from "@/lib/placeholders";
+import { SessionCountdown } from "@/components/shared/SessionCountdown";
+import { AddToCalendarButton } from "@/components/shared/AddToCalendarButton";
+import { SessionReminderButton } from "@/components/shared/SessionReminderButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { LiveSessionActions } from "@/components/live/LiveSessionActions";
@@ -58,6 +61,15 @@ export default async function LiveStreamPage({ params }: Props) {
         </div>
         <h1 className="mt-4 font-display text-3xl tracking-tight">{stream.title}</h1>
         <p className="mt-4 text-muted-foreground">{stream.description}</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          {stream.status === "upcoming" && <SessionCountdown scheduledAt={stream.scheduledAt} />}
+          {stream.status === "upcoming" && (
+            <>
+              <AddToCalendarButton title={stream.title} description={stream.description} scheduledAt={stream.scheduledAt} />
+              <SessionReminderButton sessionSlug={stream.slug} sessionTitle={stream.title} />
+            </>
+          )}
+        </div>
         <p className="mt-2 text-sm text-muted-foreground">
           {format(new Date(stream.scheduledAt), "MMMM d, yyyy h:mm a")}
           {stream.endedAt && ` · Ended ${format(new Date(stream.endedAt), "MMM d, h:mm a")}`}

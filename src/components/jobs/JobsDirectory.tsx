@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { disciplines } from "@/data/disciplines";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { jobPromptChips } from "@/data/empty-state-prompts";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Input, Select } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -67,7 +69,12 @@ export function JobsDirectory({ jobs }: Props) {
         </Select>
       </div>
       {filtered.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">No jobs posted yet. Check back soon or post a role for your company.</p>
+        <EmptyStateClient
+          title="No jobs match"
+          description={jobs.length === 0 ? "New roles from operators and service companies appear here regularly." : "Try adjusting your search or filters."}
+          action={{ href: "/jobs/post", label: "Post a job" }}
+          promptChips={jobPromptChips}
+        />
       ) : (
         <div className="mt-8 space-y-4">
           {filtered.map((job) => {

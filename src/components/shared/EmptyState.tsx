@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import type { PromptChip } from "@/data/empty-state-prompts";
 import { cn } from "@/lib/utils";
 
 type EmptyStateProps = {
@@ -8,6 +9,7 @@ type EmptyStateProps = {
   description?: string;
   action?: { href: string; label: string };
   secondaryAction?: { label: string; onClick?: () => void; href?: string };
+  promptChips?: PromptChip[];
   className?: string;
 };
 
@@ -17,6 +19,7 @@ export function EmptyState({
   description,
   action,
   secondaryAction,
+  promptChips,
   className,
 }: EmptyStateProps) {
   return (
@@ -24,6 +27,19 @@ export function EmptyState({
       {Icon && <Icon className="h-10 w-10 text-muted-foreground/60" aria-hidden />}
       <h3 className={cn("font-semibold", Icon && "mt-4")}>{title}</h3>
       {description && <p className="mt-2 max-w-sm text-sm text-muted-foreground">{description}</p>}
+      {promptChips && promptChips.length > 0 && (
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
+          {promptChips.map((chip) => (
+            <Link
+              key={chip.href + chip.label}
+              href={chip.href}
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+            >
+              {chip.label}
+            </Link>
+          ))}
+        </div>
+      )}
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         {action && (
           <Link

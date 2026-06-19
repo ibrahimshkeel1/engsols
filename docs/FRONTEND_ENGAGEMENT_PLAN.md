@@ -80,34 +80,34 @@
 
 *Reasons to come back tomorrow.*
 
-- [ ] **3.1 Personalized logged-in homepage**
+- [x] **3.1 Personalized logged-in homepage**
   - Welcome by name, goals progress, next suggested action, saved mentors row
 
-- [ ] **3.2 `/for-you` weekly digest page**
+- [x] **3.2 `/for-you` weekly digest page**
   - New mentors in discipline, matching forum threads, live this week, jobs, cert milestones
 
-- [ ] **3.3 Interactive skill graph visualization**
+- [x] **3.3 Interactive skill graph visualization**
   - Clickable bubble chart on `/mentors` and `/assist` (size = mentor count, click = filter)
 
-- [ ] **3.4 Discipline landing pages**
+- [x] **3.4 Discipline landing pages**
   - e.g. `/disciplines/reservoir-engineering`: mentors, forum, certs, live, stats
 
-- [ ] **3.5 Forum gamification surfaced in UI**
+- [x] **3.5 Forum gamification surfaced in UI**
   - Reputation on cards and profiles, “helpful answer” badges, “active this week”
 
-- [ ] **3.6 Live session countdown + calendar**
+- [x] **3.6 Live session countdown + calendar**
   - “Starts in Xh Ym”, Add to Google Calendar, push reminder hook
 
-- [ ] **3.7 Portfolio discovery feed**
+- [x] **3.7 Portfolio discovery feed**
   - Open-to-work filter prominent, project thumbnails, “Recently updated” sort
 
-- [ ] **3.8 News magazine layout**
+- [x] **3.8 News magazine layout**
   - Hero article, editorial grid, sidebar links to mentors/certs
 
-- [ ] **3.9 Search as exploration**
+- [x] **3.9 Search as exploration**
   - Trending, grouped results (mentors / forum / jobs / news), rich previews
 
-- [ ] **3.10 Empty states that invite action**
+- [x] **3.10 Empty states that invite action**
   - Every empty state: one concrete CTA + template actions (e.g. forum prompt chips)
 
 ---
@@ -162,9 +162,9 @@
 |------|-------|------|---|
 | Wave 1 — Guided journey | 6 | 6 | 100% |
 | Wave 2 — Human & alive | 5 | 5 | 100% |
-| Wave 3 — Return visits | 10 | 0 | 0% |
+| Wave 3 — Return visits | 10 | 10 | 100% |
 | Wave 4 — Premium polish | 10 | 0 | 0% |
-| **Total** | **31** | **11** | **35%** |
+| **Total** | **31** | **21** | **68%** |
 
 *Update the table counts when checking boxes above.*
 
@@ -176,6 +176,7 @@
 |------|------|-------|
 | 2026-06-16 | Wave 1 (1.1–1.6) | Start here, continue journey, homepage reorder, assist preview, happening now hub, company filter |
 | 2026-06-16 | Wave 2 (2.1–2.5) | Testimonials, alive forum cards, mentor story profile, cross-link rails, 3-step onboarding |
+| 2026-06-16 | Wave 3 (3.1–3.10) | Personalized home, /for-you digest, skill graph, discipline hubs, forum gamification, live countdown, portfolio feed, news magazine, search exploration, empty-state chips |
 
 ---
 
