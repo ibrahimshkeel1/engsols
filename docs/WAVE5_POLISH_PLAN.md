@@ -12,17 +12,17 @@
 
 | Bucket | Focus | Items | Done |
 |--------|--------|-------|------|
-| 5A — Trust & correctness | Bugs, migrations, honest copy | 6 | 5 code + 1 ops |
+| 5A — Trust & correctness | Bugs, migrations, honest copy | 6 | 6 |
 | 5B — Finish partial Wave 4 | UX gaps users notice | 9 | 9 |
 | 5C — i18n & SEO | Arabic, metadata, accessibility | 5 | 5 core |
 | 5D — Platform & backend | Env, payments, realtime search | 5 | 3 code + 2 deferred |
-| **Total** | | **25** | **22 in code** |
+| **Total** | | **25** | **23** |
 
 ---
 
 ## Wave 5A — Trust & correctness
 
-- [ ] **5A.1 Apply Supabase migrations 010–012** *(manual — see Wave 6)*
+- [x] **5A.1 Apply Supabase migrations 010–012** *(applied on Supabase)*
 - [x] **5A.2** OAuth post-login routing (`post-auth-redirect.ts`)
 - [x] **5A.3** Booking login gate
 - [x] **5A.4** Honest availability copy
@@ -80,7 +80,7 @@
 | Date | Item | Notes |
 |------|------|-------|
 | 2026-06-19 | Wave 5 code complete | lint/build/test 0 errors; 17 e2e smoke tests |
-| 2026-06-19 | Wave 6 plan | Ops + deferred items documented |
+| 2026-06-19 | 5A.1 migrations 010–012 | Applied on Supabase |
 
 ---
 

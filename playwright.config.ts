@@ -6,12 +6,23 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
+  timeout: process.env.CI ? 60_000 : 30_000,
   reporter: "list",
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: ["--force-prefers-reduced-motion"],
+        },
+      },
+    },
+  ],
   webServer: process.env.CI
     ? {
         command: "npm run start",

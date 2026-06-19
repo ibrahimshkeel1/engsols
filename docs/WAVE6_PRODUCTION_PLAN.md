@@ -12,7 +12,7 @@
 
 | Bucket | Status |
 |--------|--------|
-| **5A** Trust & correctness | 5/6 code items done — **5A.1 migrations** still manual on Supabase |
+| **5A** Trust & correctness | **Done** — migrations 010–012 applied on Supabase |
 | **5B** Finish partial Wave 4 | **Done in code** — compare bar, disciplines hub, share/OG, thumbnails, skeletons, reveals, empty states, admin mentor fields |
 | **5C** i18n & SEO | **Core done** — outcome heroes, SSR `lang`/`dir`, sitemap, metadata, alt text, hreflang alternates. Full Arabic UI (~95% English) deferred below |
 | **5D** Platform | **Feasible parts done** — search expansion, login placeholder removed, client session reminders. Stripe/blocked items deferred |
@@ -21,15 +21,13 @@
 
 ## What you must do manually (blocks full production)
 
-### 6.1 Apply Supabase migrations 010–012
+### 6.1 Apply Supabase migrations 010–012 — ✅ done
 
-Run in Supabase SQL editor (in order):
+Applied on Supabase (2026-06-19):
 
-1. `supabase/migrations/010_platform_completion.sql`
-2. `supabase/migrations/011_wave2_engagement.sql`
-3. `supabase/migrations/012_wave4_polish.sql`
-
-Without these: intro video, availability badges, video thumbnails, notifications, and some booking fields will not persist.
+1. `010_platform_completion.sql` — notifications, one-off Calendly, cert prep_steps, marketplace images
+2. `011_wave2_engagement.sql` — `mentor_profiles.intro_video_url`
+3. `012_wave4_polish.sql` — availability fields, `videos.thumbnail_url`
 
 ### 6.2 Production environment
 
@@ -111,7 +109,7 @@ Push and confirm GitHub Actions: `lint` → `build` → `e2e` all pass.
 
 ## Suggested launch checklist
 
-1. [ ] Run migrations 010–012 on Supabase
+1. [x] Run migrations 010–012 on Supabase
 2. [ ] Set production env vars (especially `NEXT_PUBLIC_SITE_URL`)
 3. [ ] Enable Google OAuth in Supabase
 4. [ ] Push → verify CI green

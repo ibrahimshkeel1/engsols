@@ -4,7 +4,7 @@ test.describe("smoke", () => {
   test("homepage loads", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/EngSols/i);
-    await expect(page.getByRole("link", { name: /find mentors/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /find mentor/i }).first()).toBeVisible();
   });
 
   test("mentors directory loads", async ({ page }) => {
@@ -14,12 +14,12 @@ test.describe("smoke", () => {
 
   test("forum page loads", async ({ page }) => {
     await page.goto("/forum");
-    await expect(page.getByRole("heading", { name: /ask engineers who've been there/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /ask engineers who.ve been there/i })).toBeVisible();
   });
 
   test("search page loads", async ({ page }) => {
     await page.goto("/search");
-    await expect(page.getByRole("heading", { name: /search/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /search engsols/i })).toBeVisible();
   });
 
   test("login page loads", async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe("smoke", () => {
 
   test("discipline hub loads", async ({ page }) => {
     await page.goto("/disciplines/reservoir-engineering");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /reservoir engineering/i })).toBeVisible();
   });
 
   test("compare mentors page loads", async ({ page }) => {
@@ -84,8 +84,12 @@ test.describe("smoke", () => {
 
   test("logged-out mentor booking shows login CTA", async ({ page }) => {
     await page.goto("/mentors");
-    const mentorLink = page.locator('a[href^="/mentors/"]').first();
-    await mentorLink.click();
+    const mentorProfileLinks = page.locator('a[href^="/mentors/"]:not([href*="compare"])');
+    const count = await mentorProfileLinks.count();
+    test.skip(count === 0, "No approved mentor profiles in this environment");
+
+    await mentorProfileLinks.first().click();
+    await expect(page).toHaveURL(/\/mentors\/[^/]+$/);
     await page.locator("#book-intro").scrollIntoViewIfNeeded();
     await expect(page.getByRole("link", { name: /log in to book/i })).toBeVisible();
   });

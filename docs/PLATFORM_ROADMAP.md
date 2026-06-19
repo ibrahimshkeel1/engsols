@@ -16,7 +16,7 @@
 | Trust & security | ~90% | Google OAuth, email verify on signup, verified badges |
 | Ops (tests, CI, SEO, docs) | ~95% | Unit tests, 11 E2E smokes, OG images, `.env.example` |
 
-**Next priority:** Run migrations `010`–`012` on Supabase, enable Google OAuth in Supabase dashboard, set production env vars. See [WAVE5_POLISH_PLAN.md](./WAVE5_POLISH_PLAN.md) for post–Wave 4 polish backlog.
+**Next priority:** Enable Google OAuth in Supabase dashboard, set production env vars (`NEXT_PUBLIC_SITE_URL` especially). See [WAVE6_PRODUCTION_PLAN.md](./WAVE6_PRODUCTION_PLAN.md).
 
 ---
 
@@ -191,9 +191,9 @@
 | `007_platform_features.sql` | ✅ | Reviews, saved mentors, notes, reports, rate limits, RLS |
 | `008_platform_expansion.sql` | ✅ | Seller onboarding, push subscriptions |
 | `009_job_applications_and_fts.sql` | ✅ | Job applications table + FTS search RPC |
-| `010_platform_completion.sql` | ⚠️ **Run on Supabase** | Notifications, one-off calendly, cert prep_steps, marketplace images |
-| `011_wave2_engagement.sql` | ⚠️ **Run on Supabase** | `mentor_profiles.intro_video_url` |
-| `012_wave4_polish.sql` | ⚠️ **Run on Supabase** | Availability fields, `videos.thumbnail_url` |
+| `010_platform_completion.sql` | ✅ Applied | Notifications, one-off calendly, cert prep_steps, marketplace images |
+| `011_wave2_engagement.sql` | ✅ Applied | `mentor_profiles.intro_video_url` |
+| `012_wave4_polish.sql` | ✅ Applied | Availability fields, `videos.thumbnail_url` |
 
 ---
 
