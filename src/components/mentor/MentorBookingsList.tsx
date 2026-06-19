@@ -3,10 +3,12 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { Calendar } from "lucide-react";
 import { updateMentorBookingStatus } from "@/actions/mentor";
 import type { BookingRequest } from "@/lib/data/bookings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 
 export function MentorBookingsList({ bookings }: { bookings: BookingRequest[] }) {
   const router = useRouter();
@@ -20,7 +22,14 @@ export function MentorBookingsList({ bookings }: { bookings: BookingRequest[] })
   }
 
   if (bookings.length === 0) {
-    return <p className="text-muted-foreground">No booking requests yet. They appear here when students reach out.</p>;
+    return (
+      <EmptyStateClient
+        icon={Calendar}
+        title="No booking requests yet"
+        description="They appear here when students reach out from your public profile."
+        action={{ href: "/mentor/profile", label: "Update profile" }}
+      />
+    );
   }
 
   return (

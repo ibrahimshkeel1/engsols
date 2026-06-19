@@ -1,3 +1,4 @@
+import { SectionReveal } from "@/components/motion/SectionReveal";
 import Link from "next/link";
 import { searchPlatform, groupSearchResults } from "@/lib/data/search";
 import { searchTrendingChips } from "@/data/empty-state-prompts";
@@ -14,6 +15,10 @@ const typeLabels: Record<string, string> = {
   portfolio: "Portfolios",
   job: "Jobs",
   news: "News",
+  video: "Videos",
+  live: "Live sessions",
+  certification: "Certifications",
+  marketplace: "Marketplace",
 };
 
 export default async function SearchPage({ searchParams }: Props) {
@@ -24,8 +29,10 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="font-display text-3xl tracking-tight">Search EngSols</h1>
-      <p className="mt-2 text-muted-foreground">Explore mentors, discussions, portfolios, jobs, and news.</p>
+      <SectionReveal>
+        <h1 className="font-display text-3xl tracking-tight">Search EngSols</h1>
+        <p className="mt-2 text-muted-foreground">Explore mentors, discussions, jobs, videos, live sessions, certifications, and marketplace.</p>
+      </SectionReveal>
       <form className="mt-8" action="/search" method="get">
         <Input name="q" defaultValue={query} placeholder="Search..." className="h-12" aria-label="Search query" />
       </form>

@@ -194,6 +194,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
               defaultName={user?.full_name ?? ""}
               defaultEmail={user?.email ?? ""}
               initialSession={session}
+              isLoggedIn={!!user}
             />
             <ContentCrossLinks discipline={mentor.discipline} />
           </div>

@@ -14,7 +14,7 @@ test.describe("smoke", () => {
 
   test("forum page loads", async ({ page }) => {
     await page.goto("/forum");
-    await expect(page.getByRole("heading", { name: /engineering forum/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /ask engineers who've been there/i })).toBeVisible();
   });
 
   test("search page loads", async ({ page }) => {
@@ -60,6 +60,34 @@ test.describe("smoke", () => {
   test("signup page loads", async ({ page }) => {
     await page.goto("/signup");
     await expect(page.getByRole("heading", { name: /join engsols/i })).toBeVisible();
+  });
+
+  test("for-you redirects when logged out", async ({ page }) => {
+    await page.goto("/for-you");
+    await expect(page).toHaveURL(/login/);
+  });
+
+  test("disciplines hub loads", async ({ page }) => {
+    await page.goto("/disciplines");
+    await expect(page.getByRole("heading", { name: /engineering disciplines/i })).toBeVisible();
+  });
+
+  test("discipline hub loads", async ({ page }) => {
+    await page.goto("/disciplines/reservoir-engineering");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("compare mentors page loads", async ({ page }) => {
+    await page.goto("/mentors/compare");
+    await expect(page.getByRole("heading", { name: /compare mentors/i })).toBeVisible();
+  });
+
+  test("logged-out mentor booking shows login CTA", async ({ page }) => {
+    await page.goto("/mentors");
+    const mentorLink = page.locator('a[href^="/mentors/"]').first();
+    await mentorLink.click();
+    await page.locator("#book-intro").scrollIntoViewIfNeeded();
+    await expect(page.getByRole("link", { name: /log in to book/i })).toBeVisible();
   });
 });
 

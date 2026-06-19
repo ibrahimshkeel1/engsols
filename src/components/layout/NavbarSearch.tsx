@@ -17,11 +17,11 @@ export function NavbarSearch() {
       }}
     >
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           name="q"
           placeholder="Search..."
-          className="h-9 w-36 pl-9 lg:w-44"
+          className="h-9 w-36 ps-9 lg:w-44"
           aria-label="Search"
         />
       </div>

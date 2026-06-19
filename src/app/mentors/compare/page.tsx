@@ -6,6 +6,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { MentorRating } from "@/components/mentors/MentorRating";
 import { SectionReveal } from "@/components/motion/SectionReveal";
+import { formatMentorAvailabilitySummary } from "@/lib/mentor-availability";
 
 type Props = { searchParams: Promise<{ slugs?: string }> };
 
@@ -53,12 +54,7 @@ export default async function CompareMentorsPage({ searchParams }: Props) {
     { label: "Helps with", values: mentors.map((m) => m!.goals.slice(0, 3).join(", ") || "—") },
     {
       label: "Availability",
-      values: mentors.map((m) => {
-        const parts = [];
-        if (m!.respondsWithinHours) parts.push(`Responds in ${m!.respondsWithinHours}h`);
-        if (m!.introSlotsThisWeek) parts.push("Intro slots this week");
-        return parts.join(" · ") || "Usually within 48h";
-      }),
+      values: mentors.map((m) => formatMentorAvailabilitySummary(m!) ?? "Ask on intro call"),
     },
   ];
 

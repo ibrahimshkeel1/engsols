@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Calendar, Check, ExternalLink, MessageSquare, Video } from "lucide-react";
 import type { Mentor } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { BookingRequestForm } from "@/components/mentors/BookingRequestForm";
 import { sessionTypes } from "@/data/sessionTypes";
+import { formatMentorAvailabilitySummary } from "@/lib/mentor-availability";
 import { cn } from "@/lib/utils";
 
 const includes = [
@@ -23,9 +25,25 @@ type Props = {
   defaultName?: string;
   defaultEmail?: string;
   initialSession?: string;
+  isLoggedIn?: boolean;
 };
 
-export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSession }: Props) {
+function BookingLoginGate({ mentorSlug }: { mentorSlug: string }) {
+  const next = encodeURIComponent(`/mentors/${mentorSlug}#book-intro`);
+  return (
+    <div className="rounded-xl border border-border bg-muted/40 p-4 text-center">
+      <p className="text-sm text-muted-foreground">Log in to request a booking with this mentor.</p>
+      <Link
+        href={`/login?next=${next}`}
+        className="mt-3 inline-flex h-10 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground hover:brightness-110"
+      >
+        Log in to book
+      </Link>
+    </div>
+  );
+}
+
+export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSession, isLoggedIn = false }: Props) {
   const initialTab: Tab =
     initialSession === "study-plan" || initialSession === "interview-prep" ? "one-off" : "intro";
   const [tab, setTab] = useState<Tab>(initialTab);
@@ -38,6 +56,8 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
       ? mentor.studyPlanCalendlyUrl ?? mentor.calendlyUrl
       : mentor.interviewCalendlyUrl ?? mentor.calendlyUrl;
 
+  const availabilitySummary = formatMentorAvailabilitySummary(mentor);
+
   return (
     <div className="card-elevated overflow-hidden rounded-2xl">
       <div className="border-b border-border bg-muted/40 p-5">
@@ -48,11 +68,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
           <span className="text-base font-normal text-muted-foreground">/mo</span>
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          {mentor.respondsWithinHours
-            ? `Typically responds within ${mentor.respondsWithinHours} hours`
-            : mentor.introSlotsThisWeek
-              ? "Intro calls available this week"
-              : "Next slot: usually within 48 hours"}
+          {availabilitySummary ?? "Book a free intro to check availability"}
         </p>
       </div>
 
@@ -107,15 +123,19 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
                 Book & pay via Calendly <ExternalLink className="h-4 w-4" />
               </a>
             ) : null}
-            <BookingRequestForm
-              mentorSlug={mentor.slug}
-              mentorName={mentor.name}
-              type={oneOffType}
-              defaultName={defaultName}
-              defaultEmail={defaultEmail}
-            />
+            {isLoggedIn ? (
+              <BookingRequestForm
+                mentorSlug={mentor.slug}
+                mentorName={mentor.name}
+                type={oneOffType}
+                defaultName={defaultName}
+                defaultEmail={defaultEmail}
+              />
+            ) : (
+              <BookingLoginGate mentorSlug={mentor.slug} />
+            )}
           </div>
-        ) : (
+        ) : isLoggedIn ? (
           <BookingRequestForm
             mentorSlug={mentor.slug}
             mentorName={mentor.name}
@@ -123,6 +143,8 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
             defaultName={defaultName}
             defaultEmail={defaultEmail}
           />
+        ) : (
+          <BookingLoginGate mentorSlug={mentor.slug} />
         )}
       </div>
 

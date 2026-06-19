@@ -42,7 +42,7 @@ export default async function LoginPage({ searchParams }: Props) {
             <form action={signIn} className="space-y-4">
               {next && <input type="hidden" name="next" value={next} />}
               <FormField label="Email or username" id="login-email">
-                <Input name="email" required type="text" placeholder="admin" autoComplete="username" />
+                <Input name="email" required type="text" placeholder="you@example.com" autoComplete="username" />
               </FormField>
               <FormField label="Password" id="login-password">
                 <Input name="password" required type="password" placeholder="••••••••" autoComplete="current-password" />

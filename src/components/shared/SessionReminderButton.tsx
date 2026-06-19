@@ -10,6 +10,10 @@ function reminderKey(sessionSlug: string) {
   return `engsols-reminder-${sessionSlug}`;
 }
 
+function timerKey(sessionSlug: string) {
+  return `engsols-reminder-timer-${sessionSlug}`;
+}
+
 function subscribe(onStoreChange: () => void) {
   window.addEventListener("storage", onStoreChange);
   window.addEventListener(REMINDER_EVENT, onStoreChange);
@@ -19,12 +23,33 @@ function subscribe(onStoreChange: () => void) {
   };
 }
 
+function scheduleBrowserReminder(sessionSlug: string, sessionTitle: string, scheduledAt: string) {
+  const when = new Date(scheduledAt).getTime();
+  const delay = when - Date.now();
+  if (!Number.isFinite(when) || delay <= 0 || delay > 7 * 24 * 60 * 60 * 1000) return;
+
+  const existing = sessionStorage.getItem(timerKey(sessionSlug));
+  if (existing) window.clearTimeout(Number(existing));
+
+  const id = window.setTimeout(() => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("EngSols live session", {
+        body: `"${sessionTitle}" is starting`,
+        tag: sessionSlug,
+      });
+    }
+  }, delay);
+
+  sessionStorage.setItem(timerKey(sessionSlug), String(id));
+}
+
 type Props = {
   sessionSlug: string;
   sessionTitle: string;
+  scheduledAt?: string;
 };
 
-export function SessionReminderButton({ sessionSlug, sessionTitle }: Props) {
+export function SessionReminderButton({ sessionSlug, sessionTitle, scheduledAt }: Props) {
   const stored = useSyncExternalStore(
     subscribe,
     () => localStorage.getItem(reminderKey(sessionSlug)),
@@ -50,6 +75,7 @@ export function SessionReminderButton({ sessionSlug, sessionTitle }: Props) {
           try {
             localStorage.setItem(reminderKey(sessionSlug), sessionTitle);
             window.dispatchEvent(new Event(REMINDER_EVENT));
+            if (scheduledAt) scheduleBrowserReminder(sessionSlug, sessionTitle, scheduledAt);
             if ("Notification" in window && "serviceWorker" in navigator && "PushManager" in window) {
               const permission = await Notification.requestPermission();
               if (permission === "granted") {

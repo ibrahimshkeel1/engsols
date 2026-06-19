@@ -3,14 +3,27 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListingBySlug, getListings, getSellerBySlug } from "@/lib/data/marketplace";
 import { listingImage } from "@/lib/placeholders";
+import { buildDetailMetadata } from "@/lib/page-metadata";
 import { Card, CardContent } from "@/components/ui/card";
 import { MarketplaceInquiryForm } from "@/components/marketplace/MarketplaceInquiryForm";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const listings = await getListings();
   return listings.map((l) => ({ slug: l.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const listing = await getListingBySlug(slug);
+  if (!listing) return { title: "Listing not found" };
+  return buildDetailMetadata({
+    title: `${listing.title} | EngSols Marketplace`,
+    description: listing.description.slice(0, 160),
+    path: `/marketplace/${slug}`,
+  });
 }
 
 export default async function ListingPage({ params }: Props) {
@@ -29,7 +42,7 @@ export default async function ListingPage({ params }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
-          <Image src={listing.imageUrl ?? listingImage(listing.title.slice(0, 12))} alt="" fill className="object-cover" unoptimized />
+          <Image src={listing.imageUrl ?? listingImage(listing.title.slice(0, 12))} alt={listing.title} fill className="object-cover" unoptimized />
         </div>
         <div>
           <div className="flex gap-2">
@@ -37,9 +50,12 @@ export default async function ListingPage({ params }: Props) {
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs">{listing.condition}</span>
           </div>
           <h1 className="mt-3 font-display text-3xl tracking-tight">{listing.title}</h1>
-          <p className="mt-4 text-2xl font-bold">
-            {listing.priceUnit === "quote" ? "Price on request" : `$${listing.price.toLocaleString()} / ${listing.priceUnit.replace("per ", "")}`}
-          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <p className="text-2xl font-bold">
+              {listing.priceUnit === "quote" ? "Price on request" : `$${listing.price.toLocaleString()} / ${listing.priceUnit.replace("per ", "")}`}
+            </p>
+            <ShareButton title={listing.title} text={listing.description.slice(0, 120)} />
+          </div>
           <p className="mt-4 text-muted-foreground">{listing.description}</p>
           <p className="mt-2 text-sm text-muted-foreground">{listing.location} · {listing.inStock ? "In stock" : "Lead time applies"}</p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">

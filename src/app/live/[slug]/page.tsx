@@ -82,7 +82,7 @@ export default async function LiveStreamPage({ params }: Props) {
           {stream.status === "upcoming" && (
             <>
               <AddToCalendarButton title={stream.title} description={stream.description} scheduledAt={stream.scheduledAt} />
-              <SessionReminderButton sessionSlug={stream.slug} sessionTitle={stream.title} />
+              <SessionReminderButton sessionSlug={stream.slug} sessionTitle={stream.title} scheduledAt={stream.scheduledAt} />
             </>
           )}
         </div>

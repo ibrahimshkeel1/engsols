@@ -43,7 +43,7 @@ export default async function NewsPage() {
                 <Link href={`/news/${hero.slug}`} className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:border-primary/30">
                   {hero.cover_image_url && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={hero.cover_image_url} alt="" className="aspect-[21/9] w-full object-cover transition group-hover:opacity-95" />
+                    <img src={hero.cover_image_url} alt={hero.title} className="aspect-[21/9] w-full object-cover transition group-hover:opacity-95" />
                   )}
                   <div className="p-8">
                     <Badge>{hero.category}</Badge>
@@ -63,7 +63,7 @@ export default async function NewsPage() {
                     <Link key={a.id} href={`/news/${a.slug}`} className="card-interactive overflow-hidden rounded-xl border border-border bg-card">
                       {a.cover_image_url && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={a.cover_image_url} alt="" className="aspect-video w-full object-cover" />
+                        <img src={a.cover_image_url} alt={a.title} className="aspect-video w-full object-cover" />
                       )}
                       <CardContent className="p-5">
                         <Badge>{a.category}</Badge>

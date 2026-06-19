@@ -2,18 +2,31 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCertificationBySlug, getCertifications } from "@/lib/data/certifications";
 import { getApprovedMentors } from "@/lib/data/mentors";
+import { buildDetailMetadata } from "@/lib/page-metadata";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { CertificationPrepPath } from "@/components/certifications/CertificationPrepPath";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const certifications = await getCertifications();
   return certifications.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const cert = await getCertificationBySlug(slug);
+  if (!cert) return { title: "Certification not found" };
+  return buildDetailMetadata({
+    title: `${cert.name} | EngSols Certifications`,
+    description: cert.description.slice(0, 160),
+    path: `/certifications/${slug}`,
+  });
 }
 
 export default async function CertificationPage({ params }: Props) {
@@ -29,7 +42,10 @@ export default async function CertificationPage({ params }: Props) {
       <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
         <div className="lg:col-span-2">
       <DisciplineBadge discipline={cert.discipline} />
-      <h1 className="mt-3 font-display text-3xl tracking-tight">{cert.name}</h1>
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
+        <h1 className="font-display text-3xl tracking-tight">{cert.name}</h1>
+        <ShareButton title={cert.name} text={cert.description.slice(0, 120)} />
+      </div>
       <p className="mt-4 text-foreground/90">{cert.description}</p>
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <div>

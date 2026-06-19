@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/messages";
+import { LOCALE_COOKIE } from "@/lib/i18n/locale-cookie";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -13,32 +14,38 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 const STORAGE_KEY = "engsols-locale";
 
-function readStoredLocale(): Locale {
-  if (typeof window === "undefined") return "en";
+function readStoredLocale(fallback: Locale): Locale {
+  if (typeof window === "undefined") return fallback;
   const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === "ar" ? "ar" : "en";
+  return stored === "ar" ? "ar" : stored === "en" ? "en" : fallback;
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+function persistLocale(locale: Locale) {
+  localStorage.setItem(STORAGE_KEY, locale);
+  document.cookie = `${LOCALE_COOKIE}=${locale};path=/;max-age=31536000;samesite=lax`;
+}
+
+export function LocaleProvider({ children, initialLocale = "en" }: { children: ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Hydrate locale from localStorage after mount (avoids SSR mismatch)
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only preference
-    setLocaleState(readStoredLocale());
+    const stored = readStoredLocale(initialLocale);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate client locale preference
+    setLocaleState(stored);
     setReady(true);
-  }, []);
+  }, [initialLocale]);
 
   useEffect(() => {
     if (!ready) return;
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    persistLocale(locale);
   }, [locale, ready]);
 
   function setLocale(next: Locale) {
     setLocaleState(next);
-    localStorage.setItem(STORAGE_KEY, next);
+    persistLocale(next);
   }
 
   return (

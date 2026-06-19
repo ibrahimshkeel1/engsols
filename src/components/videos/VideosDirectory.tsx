@@ -58,7 +58,7 @@ export function VideosDirectory({ videos, mentors }: Props) {
             return (
               <Link key={video.slug} href={`/videos/${video.slug}`} className="card-interactive overflow-hidden rounded-2xl">
                 <div className="relative aspect-video bg-muted">
-                  <Image src={resolveVideoThumbnail(video.title, video.videoUrl, video.thumbnailUrl)} alt="" fill className="object-cover" unoptimized />
+                  <Image src={resolveVideoThumbnail(video.title, video.videoUrl, video.thumbnailUrl)} alt={video.title} fill className="object-cover" unoptimized />
                   <span className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">{video.duration}</span>
                 </div>
                 <div className="p-5">

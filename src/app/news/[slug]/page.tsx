@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getNewsArticle, getPublishedNews } from "@/lib/data/news";
 import { categoryToDiscipline } from "@/lib/data/content-crosslinks";
+import { buildDetailMetadata } from "@/lib/page-metadata";
 import { MarkdownBody } from "@/components/shared/MarkdownBody";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -13,6 +15,17 @@ export const revalidate = 300;
 export async function generateStaticParams() {
   const articles = await getPublishedNews();
   return articles.map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const article = await getNewsArticle(slug);
+  if (!article) return { title: "Article not found" };
+  return buildDetailMetadata({
+    title: `${article.title} | EngSols News`,
+    description: article.excerpt.slice(0, 160),
+    path: `/news/${slug}`,
+  });
 }
 
 export default async function NewsArticlePage({ params }: Props) {
@@ -32,7 +45,7 @@ export default async function NewsArticlePage({ params }: Props) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={article.cover_image_url}
-                  alt=""
+                  alt={article.title}
                   className="aspect-[21/9] w-full rounded-2xl object-cover"
                 />
               </div>
@@ -42,9 +55,12 @@ export default async function NewsArticlePage({ params }: Props) {
               <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-primary">{article.category}</p>
               <h1 className="font-display mt-3 text-4xl leading-tight tracking-tight sm:text-5xl">{article.title}</h1>
               <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{article.excerpt}</p>
-              <p className="mt-6 text-sm text-muted-foreground">
-                {article.published_at && format(new Date(article.published_at), "MMMM d, yyyy")}
-              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <p className="text-sm text-muted-foreground">
+                  {article.published_at && format(new Date(article.published_at), "MMMM d, yyyy")}
+                </p>
+                <ShareButton title={article.title} text={article.excerpt} />
+              </div>
             </div>
           </header>
           <div className="py-12">

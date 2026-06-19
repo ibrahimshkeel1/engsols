@@ -3,18 +3,31 @@ import { notFound } from "next/navigation";
 import { getJobBySlug, getJobs } from "@/lib/data/jobs";
 import { getCompanyBySlug } from "@/lib/data/companies";
 import { getPublishedPortfolios } from "@/lib/data/portfolios";
+import { buildDetailMetadata } from "@/lib/page-metadata";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const jobs = await getJobs();
   return jobs.map((j) => ({ slug: j.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const job = await getJobBySlug(slug);
+  if (!job) return { title: "Job not found" };
+  return buildDetailMetadata({
+    title: `${job.title} at ${job.company} | EngSols Jobs`,
+    description: job.description.slice(0, 160),
+    path: `/jobs/${slug}`,
+  });
 }
 
 export default async function JobPage({ params }: Props) {
@@ -42,10 +55,13 @@ export default async function JobPage({ params }: Props) {
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs">{job.remote}</span>
           </div>
           <h1 className="mt-3 font-display text-3xl tracking-tight">{job.title}</h1>
-          <p className="mt-2 text-muted-foreground">
-            <Link href={`/companies/${job.companySlug}`} className="font-medium text-primary">{job.company}</Link>
-            {" · "}{job.location}
-          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <p className="text-muted-foreground">
+              <Link href={`/companies/${job.companySlug}`} className="font-medium text-primary">{job.company}</Link>
+              {" · "}{job.location}
+            </p>
+            <ShareButton title={job.title} text={`${job.company} — ${job.discipline}`} className="shrink-0" />
+          </div>
           {job.salaryRange && <p className="mt-2 text-lg font-semibold">{job.salaryRange}</p>}
           <p className="mt-6 leading-relaxed text-foreground/90">{job.description}</p>
           <h2 className="mt-8 font-semibold">Requirements</h2>

@@ -15,8 +15,10 @@ import { getStudentBookings, getStudentJobApplications } from "@/lib/data/studen
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { CompareSavedMentorsButton } from "@/components/mentors/CompareSavedMentorsButton";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
+import { Users } from "lucide-react";
 
 export default async function SettingsPage() {
   const user = await getCurrentUser();
@@ -103,9 +105,13 @@ export default async function SettingsPage() {
         <CardContent className="p-6">
           <h2 className="font-semibold">Saved mentors</h2>
           {savedMentors.length === 0 ? (
-            <p className="mt-2 text-sm text-muted-foreground">
-              Save mentors from their profile page. <Link href="/mentors" className="text-primary hover:underline">Browse mentors</Link>
-            </p>
+            <EmptyState
+              icon={Users}
+              title="No saved mentors"
+              description="Save mentors from their profile to compare and revisit later."
+              action={{ href: "/mentors", label: "Browse mentors" }}
+              promptChips={[{ label: "Compare mentors", href: "/mentors/compare" }]}
+            />
           ) : (
             <>
               <CompareSavedMentorsButton mentors={savedMentors} />

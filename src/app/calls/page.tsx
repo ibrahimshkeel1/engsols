@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { format } from "date-fns";
+import { Video } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { getLiveSessionsForHost } from "@/lib/data/live";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export default async function CallsPage() {
   const user = await getCurrentUser();
@@ -27,7 +29,13 @@ export default async function CallsPage() {
       }
     >
       {sessions.length === 0 ? (
-        <p className="text-muted-foreground">You haven&apos;t hosted any sessions yet.</p>
+        <EmptyState
+          icon={Video}
+          title="No hosted sessions yet"
+          description="Schedule a live Q&A or workshop — your sessions appear here."
+          action={{ href: "/live/new", label: "Start a session" }}
+          promptChips={[{ label: "Browse live", href: "/live" }]}
+        />
       ) : (
         <div className="space-y-3">
           {sessions.map((s) => (

@@ -5,6 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth";
 import { mentorProfileSchema, mentorReviewSchema } from "@/lib/validation";
 import { bookingNotificationEmail, sendEmail } from "@/lib/email";
+import { z } from "zod";
+
+const adminMentorExtrasSchema = z.object({
+  mentorId: z.string().uuid(),
+  respondsWithinHours: z.number().int().min(1).max(168).optional().nullable(),
+  introSlotsThisWeek: z.number().int().min(0).max(20).optional().nullable(),
+  introVideoUrl: z.string().url().optional().or(z.literal("")),
+});
 
 export async function updateMentorProfile(formData: FormData) {
   const supabase = await createClient();
@@ -23,6 +31,7 @@ export async function updateMentorProfile(formData: FormData) {
     introCalendlyUrl: (formData.get("introCalendlyUrl") as string) || "",
     studyPlanCalendlyUrl: (formData.get("studyPlanCalendlyUrl") as string) || "",
     interviewCalendlyUrl: (formData.get("interviewCalendlyUrl") as string) || "",
+    introVideoUrl: (formData.get("introVideoUrl") as string) || "",
     respondsWithinHours: (() => {
       const raw = formData.get("respondsWithinHours") as string;
       if (!raw?.trim()) return null;
@@ -56,6 +65,7 @@ export async function updateMentorProfile(formData: FormData) {
       intro_calendly_url: d.introCalendlyUrl || null,
       study_plan_calendly_url: d.studyPlanCalendlyUrl || null,
       interview_calendly_url: d.interviewCalendlyUrl || null,
+      intro_video_url: d.introVideoUrl || null,
       responds_within_hours: d.respondsWithinHours ?? null,
       intro_slots_this_week: d.introSlotsThisWeek ?? null,
     })
@@ -303,5 +313,48 @@ export async function updateGoalProgress(goal: string, completed: boolean) {
 
   if (error) return { error: error.message };
   revalidatePath("/settings");
+  return { success: true };
+}
+
+export async function updateMentorExtrasByAdmin(formData: FormData) {
+  await requireRole(["admin"]);
+  const supabase = await createClient();
+
+  const parsed = adminMentorExtrasSchema.safeParse({
+    mentorId: formData.get("mentorId"),
+    respondsWithinHours: (() => {
+      const raw = formData.get("respondsWithinHours") as string;
+      if (!raw?.trim()) return null;
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) ? n : null;
+    })(),
+    introSlotsThisWeek: (() => {
+      const raw = formData.get("introSlotsThisWeek") as string;
+      if (!raw?.trim()) return null;
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) ? n : null;
+    })(),
+    introVideoUrl: (formData.get("introVideoUrl") as string) || "",
+  });
+
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message || "Invalid input" };
+
+  const d = parsed.data;
+  const { data: mentor, error } = await supabase
+    .from("mentor_profiles")
+    .update({
+      responds_within_hours: d.respondsWithinHours ?? null,
+      intro_slots_this_week: d.introSlotsThisWeek ?? null,
+      intro_video_url: d.introVideoUrl || null,
+    })
+    .eq("id", d.mentorId)
+    .select("slug")
+    .single();
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/mentors");
+  revalidatePath("/mentors");
+  if (mentor?.slug) revalidatePath(`/mentors/${mentor.slug}`);
   return { success: true };
 }

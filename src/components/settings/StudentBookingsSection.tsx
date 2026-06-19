@@ -1,14 +1,21 @@
 "use client";
 
 import { format } from "date-fns";
+import { Calendar } from "lucide-react";
 import type { BookingRequest } from "@/lib/data/bookings";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { mentorPromptChips } from "@/data/empty-state-prompts";
 
 export function StudentBookingsSection({ bookings }: { bookings: BookingRequest[] }) {
   if (bookings.length === 0) {
     return (
-      <p className="mt-2 text-sm text-muted-foreground">
-        No booking requests yet. Book a mentor from their profile page.
-      </p>
+      <EmptyStateClient
+        icon={Calendar}
+        title="No booking requests yet"
+        description="Book a free intro with a mentor — your requests appear here."
+        action={{ href: "/mentors", label: "Find a mentor" }}
+        promptChips={mentorPromptChips.slice(0, 3)}
+      />
     );
   }
 

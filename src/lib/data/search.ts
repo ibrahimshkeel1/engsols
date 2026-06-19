@@ -2,7 +2,7 @@ import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export type SearchResult = {
-  type: "mentor" | "forum" | "portfolio" | "job" | "news";
+  type: "mentor" | "forum" | "portfolio" | "job" | "news" | "video" | "live" | "certification" | "marketplace";
   title: string;
   subtitle: string;
   href: string;
@@ -24,12 +24,16 @@ async function searchFallback(query: string): Promise<SearchResult[]> {
   const pattern = `%${query.trim()}%`;
   const results: SearchResult[] = [];
 
-  const [mentors, posts, portfolios, jobs, news] = await Promise.all([
-    supabase.from("mentor_profiles").select("slug, headline, company, discipline").eq("status", "approved").or(`headline.ilike.${pattern},company.ilike.${pattern},bio.ilike.${pattern}`).limit(8),
-    supabase.from("forum_posts").select("slug, title, discipline, reply_count").or(`title.ilike.${pattern},body.ilike.${pattern}`).limit(8),
-    supabase.from("portfolios").select("slug, headline, discipline, profiles(full_name)").eq("published", true).or(`headline.ilike.${pattern},bio.ilike.${pattern}`).limit(8),
-    supabase.from("jobs").select("slug, title, discipline, company").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(8),
-    supabase.from("news_articles").select("slug, title, category, excerpt").eq("published", true).or(`title.ilike.${pattern},excerpt.ilike.${pattern},body.ilike.${pattern}`).limit(8),
+  const [mentors, posts, portfolios, jobs, news, videos, live, certs, listings] = await Promise.all([
+    supabase.from("mentor_profiles").select("slug, headline, company, discipline").eq("status", "approved").or(`headline.ilike.${pattern},company.ilike.${pattern},bio.ilike.${pattern}`).limit(6),
+    supabase.from("forum_posts").select("slug, title, discipline, reply_count").or(`title.ilike.${pattern},body.ilike.${pattern}`).limit(6),
+    supabase.from("portfolios").select("slug, headline, discipline, profiles(full_name)").eq("published", true).or(`headline.ilike.${pattern},bio.ilike.${pattern}`).limit(6),
+    supabase.from("jobs").select("slug, title, discipline, company").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
+    supabase.from("news_articles").select("slug, title, category, excerpt").eq("published", true).or(`title.ilike.${pattern},excerpt.ilike.${pattern},body.ilike.${pattern}`).limit(6),
+    supabase.from("videos").select("slug, title, discipline, duration").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
+    supabase.from("live_sessions").select("slug, title, discipline, status").or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
+    supabase.from("certifications").select("slug, name, discipline").or(`name.ilike.${pattern},description.ilike.${pattern}`).limit(6),
+    supabase.from("marketplace_listings").select("slug, title, category, location").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
   ]);
 
   for (const m of mentors.data ?? []) {
@@ -48,6 +52,18 @@ async function searchFallback(query: string): Promise<SearchResult[]> {
   for (const n of news.data ?? []) {
     results.push({ type: "news", title: n.title, subtitle: n.category, href: `/news/${n.slug}`, meta: n.excerpt?.slice(0, 60) });
   }
+  for (const v of videos.data ?? []) {
+    results.push({ type: "video", title: v.title, subtitle: v.discipline, href: `/videos/${v.slug}`, meta: v.duration });
+  }
+  for (const s of live.data ?? []) {
+    results.push({ type: "live", title: s.title, subtitle: s.discipline, href: `/live/${s.slug}`, meta: s.status });
+  }
+  for (const c of certs.data ?? []) {
+    results.push({ type: "certification", title: c.name, subtitle: c.discipline, href: `/certifications/${c.slug}` });
+  }
+  for (const l of listings.data ?? []) {
+    results.push({ type: "marketplace", title: l.title, subtitle: l.category, href: `/marketplace/${l.slug}`, meta: l.location });
+  }
   return results;
 }
 
@@ -63,16 +79,26 @@ export async function searchPlatform(query: string): Promise<SearchResult[]> {
     return searchFallback(query);
   }
 
-  return (data as { result_type: string; title: string; subtitle: string; href: string }[]).map((row) => ({
+  const ftsResults = (data as { result_type: string; title: string; subtitle: string; href: string }[]).map((row) => ({
     type: typeMap[row.result_type] ?? "mentor",
     title: row.title,
     subtitle: row.subtitle,
     href: row.href,
   }));
+
+  if (ftsResults.length < 8) {
+    const fallback = await searchFallback(query);
+    const seen = new Set(ftsResults.map((r) => r.href));
+    for (const row of fallback) {
+      if (!seen.has(row.href)) ftsResults.push(row);
+    }
+  }
+
+  return ftsResults;
 }
 
 export function groupSearchResults(results: SearchResult[]) {
-  const order: SearchResult["type"][] = ["mentor", "forum", "job", "portfolio", "news"];
+  const order: SearchResult["type"][] = ["mentor", "forum", "job", "portfolio", "news", "video", "live", "certification", "marketplace"];
   const groups = new Map<SearchResult["type"], SearchResult[]>();
   for (const r of results) {
     const list = groups.get(r.type) ?? [];

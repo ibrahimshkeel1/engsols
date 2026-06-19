@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
+import { Bell } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { getNotificationsForUser, getUnreadNotificationCount } from "@/lib/notifications";
 import { markAllNotificationsAsRead } from "@/actions/notifications-ui";
-import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { NotificationList } from "@/components/notifications/NotificationList";
+import { forumPromptChips } from "@/data/empty-state-prompts";
 
 export default async function NotificationsPage() {
   const user = await getCurrentUser();
@@ -33,11 +35,13 @@ export default async function NotificationsPage() {
 
       <div className="mt-8 space-y-3">
         {notifications.length === 0 ? (
-          <Card className="card-elevated">
-            <CardContent className="p-8 text-center text-muted-foreground">
-              No notifications yet. You&apos;ll see booking updates, forum replies, and marketplace inquiries here.
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Bell}
+            title="No notifications yet"
+            description="You'll see booking updates, forum replies, and marketplace inquiries here."
+            action={{ href: "/forum", label: "Browse forum" }}
+            promptChips={forumPromptChips.slice(0, 3)}
+          />
         ) : (
           <NotificationList notifications={notifications} />
         )}

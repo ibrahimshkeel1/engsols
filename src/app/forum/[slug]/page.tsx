@@ -21,6 +21,8 @@ import { forumPromptChips } from "@/data/empty-state-prompts";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
+import { buildDetailMetadata } from "@/lib/page-metadata";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -30,7 +32,11 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const data = await getForumPost(slug);
   if (!data) return { title: "Discussion not found" };
-  return { title: `${data.post.title} | EngSols Forum`, description: data.post.body.slice(0, 160) };
+  return buildDetailMetadata({
+    title: `${data.post.title} | EngSols Forum`,
+    description: data.post.body.slice(0, 160),
+    path: `/forum/${slug}`,
+  });
 }
 
 export default async function ForumThreadPage({ params }: Props) {
@@ -59,7 +65,10 @@ export default async function ForumThreadPage({ params }: Props) {
               <MarkSolvedButton postId={dbPost.id} isSolved={post.isSolved} />
             )}
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight">{post.title}</h1>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-3xl font-bold tracking-tight">{post.title}</h1>
+            <ShareButton title={post.title} text={post.body.slice(0, 120)} className="shrink-0" />
+          </div>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <Avatar name={post.author} discipline={post.discipline} size="sm" src={post.authorAvatarUrl} />
             <span>{post.author} · {post.createdAt} · {post.viewCount} views</span>

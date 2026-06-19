@@ -1,11 +1,13 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { format } from "date-fns";
+import { Inbox } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { getJobApplicationsForPoster } from "@/lib/data/admin-content";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { JobApplicationStatusButton } from "@/components/jobs/JobApplicationStatusButton";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { jobPromptChips } from "@/data/empty-state-prompts";
 
 export default async function JobInboxPage() {
   const user = await getCurrentUser();
@@ -19,12 +21,13 @@ export default async function JobInboxPage() {
       <p className="mt-2 text-muted-foreground">Applications for jobs you posted.</p>
       <div className="mt-8 space-y-4">
         {applications.length === 0 ? (
-          <Card className="card-elevated">
-            <CardContent className="p-8 text-center text-muted-foreground">
-              No applications yet.{" "}
-              <Link href="/jobs/post" className="text-primary hover:underline">Post a job</Link> to start receiving candidates.
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Inbox}
+            title="No applications yet"
+            description="Post a role to start receiving candidates from the EngSols community."
+            action={{ href: "/jobs/post", label: "Post a job" }}
+            promptChips={jobPromptChips.slice(0, 3)}
+          />
         ) : (
           applications.map((app) => (
             <Card key={app.id} className="card-elevated">

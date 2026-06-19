@@ -34,6 +34,7 @@ export const mentorProfileSchema = z.object({
   introCalendlyUrl: z.string().url().optional().or(z.literal("")),
   studyPlanCalendlyUrl: z.string().url().optional().or(z.literal("")),
   interviewCalendlyUrl: z.string().url().optional().or(z.literal("")),
+  introVideoUrl: z.string().url().optional().or(z.literal("")),
   respondsWithinHours: z.number().int().min(1).max(168).optional().nullable(),
   introSlotsThisWeek: z.number().int().min(0).max(20).optional().nullable(),
 });

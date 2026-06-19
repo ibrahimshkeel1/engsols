@@ -18,6 +18,7 @@ type Profile = {
   years_experience: number;
   skills: string[];
   calendly_url?: string | null;
+  intro_video_url?: string | null;
   responds_within_hours?: number | null;
   intro_slots_this_week?: number | null;
 };
@@ -68,6 +69,9 @@ export function MentorProfileForm({ profile }: { profile: Profile }) {
       </FormField>
       <FormField label="Calendly / Cal.com link (intro & monthly)" id="edit-calendly" hint="Students can book intro calls directly.">
         <Input name="calendlyUrl" type="url" placeholder="https://calendly.com/your-link" defaultValue={profile.calendly_url ?? ""} />
+      </FormField>
+      <FormField label="Intro video URL" id="edit-intro-video" hint="YouTube or Vimeo link shown on your public profile.">
+        <Input name="introVideoUrl" type="url" placeholder="https://youtube.com/watch?v=..." defaultValue={profile.intro_video_url ?? ""} />
       </FormField>
       <FormField label="Study plan session link" id="edit-study-calendly" hint="Optional paid Calendly link for study-plan sessions.">
         <Input name="studyPlanCalendlyUrl" type="url" placeholder="https://calendly.com/study-plan" defaultValue={(profile as { study_plan_calendly_url?: string }).study_plan_calendly_url ?? ""} />

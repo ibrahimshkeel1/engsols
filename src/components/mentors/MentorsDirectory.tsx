@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import { GitCompareArrows, Users } from "lucide-react";
 import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
 import { MentorCard } from "@/components/mentors/MentorCard";
@@ -12,7 +12,7 @@ import { SkillGraphFilter } from "@/components/mentors/SkillGraphFilter";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
-export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
+export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor[]; savedSlugs?: string[] }) {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
@@ -78,6 +78,15 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
         </p>
       </aside>
       <div>
+        {savedSlugs.length >= 2 && (
+          <Link
+            href={`/mentors/compare?slugs=${encodeURIComponent(savedSlugs.slice(0, 3).join(","))}`}
+            className="mb-6 inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+          >
+            <GitCompareArrows className="h-4 w-4" />
+            Compare {Math.min(savedSlugs.length, 3)} saved mentors
+          </Link>
+        )}
         <p className="mb-6 text-sm text-muted-foreground lg:hidden">{filtered.length} mentors found</p>
         {mentors.length === 0 ? (
           <EmptyStateClient

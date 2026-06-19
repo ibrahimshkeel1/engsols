@@ -1,13 +1,20 @@
 import { Suspense } from "react";
 import { JobsDirectory } from "@/components/jobs/JobsDirectory";
 import { getJobs } from "@/lib/data/jobs";
+import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { SectionReveal } from "@/components/motion/SectionReveal";
 
-export default async function JobsPage() {
+async function JobsContent() {
   const jobs = await getJobs();
+  return <JobsDirectory jobs={jobs} />;
+}
 
+export default function JobsPage() {
   return (
-    <Suspense fallback={<p className="mx-auto max-w-7xl px-4 py-12 text-muted-foreground">Loading jobs...</p>}>
-      <JobsDirectory jobs={jobs} />
-    </Suspense>
+    <SectionReveal>
+      <Suspense fallback={<div className="mx-auto max-w-7xl px-4 py-12"><BentoSkeletonGrid count={6} /></div>}>
+        <JobsContent />
+      </Suspense>
+    </SectionReveal>
   );
 }

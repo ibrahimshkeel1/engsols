@@ -7,7 +7,7 @@ export const localeLabels: Record<Locale, string> = {
   ar: "العربية",
 };
 
-type Messages = {
+export type Messages = {
   findMentors: string;
   forum: string;
   live: string;

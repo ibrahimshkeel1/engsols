@@ -183,4 +183,5 @@
 
 ## Related docs
 
+- [WAVE5_POLISH_PLAN.md](./WAVE5_POLISH_PLAN.md) — post–Wave 4 audit: trust fixes, partial completions, i18n, platform
 - [PLATFORM_ROADMAP.md](./PLATFORM_ROADMAP.md) — platform features, migrations, backend gaps

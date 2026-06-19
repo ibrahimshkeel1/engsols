@@ -9,10 +9,10 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { t } from "@/lib/i18n/messages";
 
 const primaryNav = [
-  { href: "/mentors", key: "mentors" as const },
-  { href: "/portfolios", key: "portfolios" as const },
-  { href: "/forum", key: "forum" as const },
-  { href: "/live", key: "live" as const },
+  { href: "/mentors", key: "mentors" as const, outcome: "mentorsOutcome" as const },
+  { href: "/portfolios", key: "portfolios" as const, outcome: "portfoliosOutcome" as const },
+  { href: "/forum", key: "forum" as const, outcome: "forumOutcome" as const },
+  { href: "/live", key: "live" as const, outcome: "liveOutcome" as const },
   { href: "/news", key: "news" as const },
 ];
 
@@ -61,10 +61,13 @@ export function NavbarShell({
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
-          {primaryNav.map((l) => (
+          {primaryNav.map((l) => {
+            const outcomeTitle = "outcome" in l && l.outcome ? t(locale, l.outcome) : undefined;
+            return (
             <Link
               key={l.href}
               href={l.href}
+              title={outcomeTitle}
               className={cn(
                 "nav-link rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted/80",
                 pathname.startsWith(l.href) ? "text-accent" : "text-muted-foreground hover:text-foreground",
@@ -72,7 +75,8 @@ export function NavbarShell({
             >
               {t(locale, l.key)}
             </Link>
-          ))}
+            );
+          })}
           <div className="relative">
             <button
               type="button"
@@ -83,7 +87,7 @@ export function NavbarShell({
               {t(locale, "more")} <ChevronDown className={cn("h-3.5 w-3.5 transition", moreOpen && "rotate-180")} />
             </button>
             {moreOpen && (
-              <div className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
+              <div className="absolute end-0 top-full z-50 mt-1 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
                 {moreNav.map((l) => {
                   if (l.authOnly && !showForYou) return null;
                   return (

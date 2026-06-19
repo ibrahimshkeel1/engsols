@@ -1,23 +1,23 @@
 import { Suspense } from "react";
-import { getApprovedMentors } from "@/lib/data/mentors";
 import { PageHero } from "@/components/shared/PageHero";
-import { MentorsDirectory } from "@/components/mentors/MentorsDirectory";
+import { MentorsPageContent } from "@/components/mentors/MentorsPageContent";
 import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { serverT } from "@/lib/i18n/server";
 
 export const revalidate = 60;
 
 export default async function MentorsPage() {
-  const mentors = await getApprovedMentors();
+  const [title, description] = await Promise.all([
+    serverT("mentorsOutcome"),
+    Promise.resolve("Browse vetted mentors — book a free intro and get matched to your goals."),
+  ]);
 
   return (
     <>
-      <PageHero
-        title="Find your engineering mentor"
-        description={mentors.length > 0 ? `Browse ${mentors.length}+ vetted mentors — book a free intro and get matched to your goals.` : "Browse vetted mentors — book a free intro and get matched to your goals."}
-      />
+      <PageHero title={title} description={description} />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <Suspense fallback={<BentoSkeletonGrid count={8} />}>
-          <MentorsDirectory mentors={mentors} />
+          <MentorsPageContent />
         </Suspense>
       </div>
     </>

@@ -9,6 +9,7 @@ import { isSupabaseConfigured, getSupabaseConfigError } from "@/lib/supabase/con
 import { ensureUserProfile } from "@/lib/supabase/profile";
 import { requireRole } from "@/lib/auth";
 import { getSafeNextPath } from "@/lib/safe-next";
+import { resolvePostAuthRedirectPath } from "@/lib/post-auth-redirect";
 
 function slugify(text: string) {
   return text
@@ -33,42 +34,16 @@ async function redirectAfterSignIn(
   user: User,
   nextPath?: string | null,
 ) {
-  let profile;
   try {
-    profile = await ensureUserProfile(supabase, user);
+    const path = await resolvePostAuthRedirectPath(supabase, user, nextPath);
+    revalidatePath("/", "layout");
+    redirect(path);
   } catch {
     redirect(
       "/login?error=" +
         encodeURIComponent("Could not load your profile. Run supabase/migrations/003_profile_trigger.sql, then try again."),
     );
   }
-
-  revalidatePath("/", "layout");
-
-  const safeNext = getSafeNextPath(nextPath ?? undefined);
-  if (safeNext) redirect(safeNext);
-
-  if (profile.role === "admin") redirect("/admin");
-
-  if (profile.role === "mentor") {
-    const { data: mentorProfile } = await supabase
-      .from("mentor_profiles")
-      .select("status")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (!mentorProfile) redirect("/onboarding/mentor");
-    if (mentorProfile.status === "approved") redirect("/mentor");
-    redirect("/apply");
-  }
-
-  const { data: portfolio } = await supabase
-    .from("portfolios")
-    .select("id")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (!portfolio) redirect("/onboarding/student");
-  redirect("/");
 }
 
 export async function signUp(formData: FormData) {
