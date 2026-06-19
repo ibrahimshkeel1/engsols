@@ -52,6 +52,75 @@ type HappeningNowProps = {
   initial: ActivityPayload;
 };
 
+function LiveColumn({ data }: { data: ActivityPayload }) {
+  if (data.liveSessions.length > 0) {
+    return (
+      <div className="space-y-3">
+        {data.liveSessions.map((session) => (
+          <Link
+            key={session.slug}
+            href={`/live/${session.slug}/room`}
+            className="card-interactive flex flex-col rounded-xl border border-red-500/20 bg-card p-5"
+          >
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
+              <span className="live-dot h-2 w-2 rounded-full bg-red-500" />
+              Live now
+            </div>
+            <p className="mt-2 font-semibold leading-snug">{session.title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">
+                {session.viewerCount} watching
+                {session.hostName ? ` · ${session.hostName}` : ""}
+              </span>
+              <span className="font-medium text-primary">Join →</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  if (data.upcomingLive.length > 0) {
+    return (
+      <div className="space-y-3">
+        {data.upcomingLive.map((session) => (
+          <Link
+            key={session.slug}
+            href={`/live/${session.slug}`}
+            className="card-interactive flex flex-col rounded-xl bg-card p-5"
+          >
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+              <Radio className="h-3.5 w-3.5" />
+              Upcoming
+            </div>
+            <p className="mt-2 font-semibold leading-snug">{session.title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              {new Date(session.scheduledAt).toLocaleString(undefined, {
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+              })}
+            </p>
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-full flex-col rounded-xl border border-dashed border-border bg-card/50 p-5">
+      <Radio className="h-5 w-5 text-muted-foreground" />
+      <p className="mt-2 font-medium">No live sessions right now</p>
+      <Link href="/live" className="mt-2 inline-block text-sm text-primary hover:underline">
+        Browse upcoming sessions →
+      </Link>
+    </div>
+  );
+}
+
 export function HappeningNowClient({ initial }: HappeningNowProps) {
   const [data, setData] = useState(initial);
 
@@ -97,89 +166,48 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
           </div>
         </AnimateIn>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {data.liveSessions.length > 0 ? (
-            data.liveSessions.map((session) => (
+        <div className="mt-8 grid gap-4 lg:grid-cols-3 lg:items-start">
+          <div className="min-w-0">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Live</p>
+            <LiveColumn data={data} />
+          </div>
+
+          <div className="min-w-0">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Hot discussion</p>
+            {data.hotPost ? (
               <Link
-                key={session.slug}
-                href={`/live/${session.slug}/room`}
-                className="card-interactive flex flex-col rounded-xl border-red-500/20 bg-card p-5"
+                href={`/forum/${data.hotPost.slug}`}
+                className="card-interactive block rounded-xl bg-card p-5"
               >
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
-                  <span className="live-dot h-2 w-2 rounded-full bg-red-500" />
-                  Live now
+                <div className="flex items-start gap-3">
+                  <Avatar name={data.hotPost.author} size="sm" src={data.hotPost.authorAvatarUrl} />
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-3 font-semibold leading-snug">{data.hotPost.title}</p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {data.hotPost.author} · {data.hotPost.replyCount} replies · {formatRelativeTime(data.hotPost.createdAt)}
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 font-semibold leading-snug">{session.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
-                <div className="mt-auto flex items-center justify-between pt-4 text-sm">
-                  <span className="text-muted-foreground">
-                    {session.viewerCount} watching
-                    {session.hostName ? ` · ${session.hostName}` : ""}
+                {data.hotPost.isSolved && (
+                  <span className="mt-3 inline-flex rounded-md bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                    Solved
                   </span>
-                  <span className="font-medium text-primary">Join →</span>
-                </div>
+                )}
               </Link>
-            ))
-          ) : data.upcomingLive.length > 0 ? (
-            data.upcomingLive.map((session) => (
-              <Link
-                key={session.slug}
-                href={`/live/${session.slug}`}
-                className="card-interactive flex flex-col rounded-xl bg-card p-5"
-              >
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-                  <Radio className="h-3.5 w-3.5" />
-                  Upcoming
-                </div>
-                <p className="mt-2 font-semibold leading-snug">{session.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
-                <p className="mt-auto pt-4 text-sm text-muted-foreground">
-                  {new Date(session.scheduledAt).toLocaleString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </p>
-              </Link>
-            ))
-          ) : (
-            <div className="rounded-xl border border-dashed border-border bg-card/50 p-5 lg:col-span-1">
-              <Radio className="h-5 w-5 text-muted-foreground" />
-              <p className="mt-2 font-medium">No live sessions right now</p>
-              <Link href="/live" className="mt-2 inline-block text-sm text-primary hover:underline">
-                Browse upcoming sessions →
-              </Link>
-            </div>
-          )}
+            ) : (
+              <p className="rounded-xl border border-dashed border-border bg-card/50 p-5 text-sm text-muted-foreground">
+                No discussions yet.{" "}
+                <Link href="/forum/new" className="text-primary hover:underline">
+                  Start one →
+                </Link>
+              </p>
+            )}
+          </div>
 
-          {data.hotPost && (
-            <Link
-              href={`/forum/${data.hotPost.slug}`}
-              className="card-interactive rounded-xl bg-card p-5 lg:col-span-1"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Hot discussion</p>
-              <div className="mt-3 flex items-start gap-3">
-                <Avatar name={data.hotPost.author} size="sm" src={data.hotPost.authorAvatarUrl} />
-                <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 font-semibold leading-snug">{data.hotPost.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {data.hotPost.author} · {data.hotPost.replyCount} replies · {formatRelativeTime(data.hotPost.createdAt)}
-                  </p>
-                </div>
-              </div>
-              {data.hotPost.isSolved && (
-                <span className="mt-3 inline-flex rounded-md bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
-                  Solved
-                </span>
-              )}
-            </Link>
-          )}
-
-          <div className={data.liveSessions.length > 0 && data.hotPost ? "lg:col-span-1" : "lg:col-span-2"}>
+          <div className="min-w-0">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recent threads</p>
             {data.recentPosts.length > 0 ? (
               <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recent threads</p>
                 {data.recentPosts.map((post) => (
                   <Link
                     key={post.slug}
@@ -188,8 +216,8 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
                   >
                     <Avatar name={post.author} size="sm" src={post.authorAvatarUrl} />
                     <div className="min-w-0 flex-1">
-                      <p className="line-clamp-1 font-medium">{post.title}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="line-clamp-2 font-medium leading-snug">{post.title}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {post.discipline} · {post.replyCount} replies · {formatRelativeTime(post.createdAt)}
                       </p>
                     </div>
@@ -197,11 +225,8 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                No discussions yet.{" "}
-                <Link href="/forum/new" className="text-primary hover:underline">
-                  Start the first thread →
-                </Link>
+              <p className="rounded-xl border border-dashed border-border bg-card/50 p-5 text-sm text-muted-foreground">
+                Forum activity will show up here.
               </p>
             )}
           </div>

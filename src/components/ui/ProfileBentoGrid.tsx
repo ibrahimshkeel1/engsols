@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 import {
   BENTO_GRID_CLASS,
@@ -28,32 +29,35 @@ export function ProfileBentoGrid<T>({
   className,
   animated = true,
 }: ProfileBentoGridProps<T>) {
-  const cells = items.map((item, index) => {
-    const featured = isFeatured?.(item) ?? false;
-    const variant = getBentoVariant(index, featured);
-    const span = getBentoSpanClass(index, featured);
-    const card = renderCard(item, variant, index);
-
-    return (
-      <div key={getKey(item)} className={cn("min-h-0 h-full", span)}>
-        {card}
-      </div>
-    );
-  });
+  const orderedItems = useMemo(() => {
+    if (!isFeatured) return items;
+    return [...items.filter(isFeatured), ...items.filter((item) => !isFeatured(item))];
+  }, [items, isFeatured]);
 
   if (!animated) {
-    return <div className={cn(BENTO_GRID_CLASS, className)}>{cells}</div>;
+    return (
+      <div className={cn(BENTO_GRID_CLASS, className)}>
+        {orderedItems.map((item, index) => {
+          const variant = getBentoVariant(index);
+          const span = getBentoSpanClass(index);
+          return (
+            <div key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
+              {renderCard(item, variant, index)}
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   return (
     <Stagger className={cn(BENTO_GRID_CLASS, className)} stagger={stagger}>
-      {items.map((item, index) => {
-        const featured = isFeatured?.(item) ?? false;
-        const variant = getBentoVariant(index, featured);
-        const span = getBentoSpanClass(index, featured);
+      {orderedItems.map((item, index) => {
+        const variant = getBentoVariant(index);
+        const span = getBentoSpanClass(index);
 
         return (
-          <StaggerItem key={getKey(item)} className={cn("min-h-0 h-full", span)}>
+          <StaggerItem key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
             {renderCard(item, variant, index)}
           </StaggerItem>
         );

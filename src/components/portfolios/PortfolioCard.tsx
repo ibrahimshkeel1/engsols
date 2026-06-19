@@ -12,10 +12,10 @@ type PortfolioCardProps = {
   variant?: BentoVariant;
 };
 
-function avatarSizeForVariant(variant: BentoVariant): "lg" | "xl" | "2xl" {
-  if (variant === "hero") return "2xl";
-  if (variant === "wide" || variant === "tall") return "xl";
-  return "lg";
+function avatarSizeForVariant(variant: BentoVariant): "md" | "lg" | "xl" {
+  if (variant === "hero") return "xl";
+  if (variant === "wide" || variant === "tall") return "lg";
+  return "md";
 }
 
 export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardProps) {
@@ -29,15 +29,15 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
     <Link
       href={`/portfolios/${portfolio.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full min-h-[10rem] overflow-hidden rounded-xl",
-        isHero && "min-h-[18rem]",
-        variant === "tall" && "min-h-[16rem]",
+        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl",
+        isHero && "min-h-[16rem]",
+        variant === "tall" && "min-h-[14rem]",
       )}
     >
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
 
-      <div className="relative flex flex-1 flex-col p-5 pl-6">
-        <div className="flex flex-1 items-start gap-4 sm:gap-5">
+      <div className="relative flex min-w-0 flex-1 flex-col p-4 pl-5 sm:p-5 sm:pl-6">
+        <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <Avatar
             name={portfolio.name}
             discipline={portfolio.discipline}
@@ -52,15 +52,15 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
                 Open to work
               </span>
             )}
-            <h3 className={cn("font-semibold leading-tight", isHero ? "text-xl" : "text-base")}>
+            <h3 className={cn("font-semibold leading-tight", isHero ? "text-lg sm:text-xl" : "text-base")}>
               {portfolio.name}
             </h3>
             <p className={cn("text-sm text-muted-foreground", !showBio && "line-clamp-2")}>
               {portfolio.headline}
             </p>
-            <p className="text-xs text-muted-foreground">{portfolio.university}</p>
+            <p className="truncate text-xs text-muted-foreground">{portfolio.university}</p>
             {showBio && portfolio.bio && (
-              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
+              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
                 {portfolio.bio}
               </p>
             )}
@@ -82,12 +82,12 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
 
         <div
           className={cn(
-            "mt-4 flex items-center justify-between border-t border-border/60 pt-4 text-sm text-muted-foreground",
-            isHero && "pt-5",
+            "mt-3 flex items-center justify-between border-t border-border/60 pt-3 text-sm text-muted-foreground sm:mt-4 sm:pt-4",
+            isHero && "sm:pt-5",
           )}
         >
           <span className="capitalize">{portfolio.seeking.replace("-", " ")}</span>
-          <ArrowRight className="h-4 w-4 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+          <ArrowRight className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
         </div>
       </div>
     </Link>

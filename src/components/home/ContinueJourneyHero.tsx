@@ -74,10 +74,10 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
         {actions.length > 0 ? (
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {actions.map((action, i) => (
-              <AnimateIn key={action.href + action.label} delay={i * 0.06}>
+              <AnimateIn key={action.href + action.label} delay={i * 0.06} className="h-full">
                 <Link
                   href={action.href}
-                  className="group flex items-start gap-4 rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/35"
+                  className="group flex h-full items-start gap-4 rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/35"
                 >
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <action.icon className="h-5 w-5" />

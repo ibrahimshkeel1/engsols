@@ -17,10 +17,10 @@ type MentorCardProps = {
   variant?: BentoVariant;
 };
 
-function avatarSizeForVariant(variant: BentoVariant): "lg" | "xl" | "2xl" {
-  if (variant === "hero") return "2xl";
-  if (variant === "wide" || variant === "tall") return "xl";
-  return "lg";
+function avatarSizeForVariant(variant: BentoVariant): "md" | "lg" | "xl" {
+  if (variant === "hero") return "xl";
+  if (variant === "wide" || variant === "tall") return "lg";
+  return "md";
 }
 
 export function MentorCard({ mentor, showPrice = true, variant = "default" }: MentorCardProps) {
@@ -34,9 +34,9 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
     <Link
       href={`/mentors/${mentor.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full min-h-[10rem] overflow-hidden rounded-xl",
-        isHero && "min-h-[18rem]",
-        variant === "tall" && "min-h-[16rem]",
+        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl",
+        isHero && "min-h-[16rem]",
+        variant === "tall" && "min-h-[14rem]",
       )}
     >
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
@@ -44,8 +44,8 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] to-transparent" />
       )}
 
-      <div className="relative flex flex-1 flex-col p-5 pl-6">
-        <div className="flex flex-1 items-start gap-4 sm:gap-5">
+      <div className="relative flex min-w-0 flex-1 flex-col p-4 pl-5 sm:p-5 sm:pl-6">
+        <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <div className="relative shrink-0">
             <Avatar
               name={mentor.name}
@@ -55,26 +55,26 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
               className={cn("rounded-2xl ring-2 ring-border", isHero && "ring-primary/20")}
             />
             {mentor.featured && (
-              <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                <BadgeCheck className="h-3.5 w-3.5" />
+              <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                <BadgeCheck className="h-3 w-3" />
               </span>
             )}
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} size="sm" />
-            <h3 className={cn("font-semibold leading-tight", isHero ? "text-xl" : "text-base")}>
+            <h3 className={cn("font-semibold leading-tight", isHero ? "text-lg sm:text-xl" : "text-base")}>
               {mentor.name}
             </h3>
             <p className={cn("text-sm text-muted-foreground", !showBio && "line-clamp-2")}>
               {mentor.headline}
             </p>
-            <div className="flex items-center gap-1.5">
+            <div className="flex min-w-0 items-center gap-1.5">
               <CompanyLogo company={mentor.company} size="sm" />
               <p className="truncate text-xs text-muted-foreground">{mentor.company}</p>
             </div>
             {showBio && mentor.bio && (
-              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
+              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
                 {mentor.bio}
               </p>
             )}
@@ -97,14 +97,14 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
         {showPrice && (
           <div
             className={cn(
-              "mt-4 flex items-center justify-between border-t border-border/60 pt-4",
-              isHero && "pt-5",
+              "mt-3 flex items-center justify-between border-t border-border/60 pt-3 sm:mt-4 sm:pt-4",
+              isHero && "sm:pt-5",
             )}
           >
             <p className="text-sm text-muted-foreground">
               From <span className={cn("font-semibold text-foreground", isHero && "text-lg")}>${mentor.monthlyRate}</span>/mo
             </p>
-            <ArrowRight className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
           </div>
         )}
       </div>

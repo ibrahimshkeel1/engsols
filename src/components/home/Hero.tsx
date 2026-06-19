@@ -11,7 +11,6 @@ import { usePrefersReducedMotion } from "@/lib/motion";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 const heroDisciplines = ["Oil & Gas", "Drilling Engineering", "Reservoir Engineering", "Mechanical", "Civil"];
 
@@ -119,14 +118,10 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
               <MotionWrap custom={3} reducedMotion={reducedMotion} className="section-label">
                 Featured mentors
               </MotionWrap>
-              <MotionWrap custom={4} reducedMotion={reducedMotion} className="mt-3">
-                <ProfileBentoGrid
-                  className="sm:grid-cols-2 lg:grid-cols-2"
-                  items={featuredMentors.slice(0, 3)}
-                  getKey={(m) => m.slug}
-                  isFeatured={(m) => m.featured}
-                  renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} showPrice={false} />}
-                />
+              <MotionWrap custom={4} reducedMotion={reducedMotion} className="mt-3 space-y-3">
+                {featuredMentors.slice(0, 3).map((m) => (
+                  <MentorCard key={m.slug} mentor={m} variant="default" showPrice={false} />
+                ))}
               </MotionWrap>
               <MotionWrap custom={7} reducedMotion={reducedMotion} className="pt-3 text-center text-sm text-muted-foreground">
                 {mentorCount > 0 ? `${mentorCount}+ vetted mentors` : "Vetted mentors"} across {disciplines.length} disciplines
