@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Briefcase } from "lucide-react";
 import type { Portfolio } from "@/types";
 import { disciplines } from "@/data/disciplines";
@@ -10,8 +11,9 @@ import { Input, Select } from "@/components/ui/input";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [discipline, setDiscipline] = useState("");
+  const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
 
   const filtered = useMemo(() => {
     let result = [...portfolios];

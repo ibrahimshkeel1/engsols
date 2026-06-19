@@ -169,18 +169,15 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
             </section>
           </div>
 
-          <div id="book-intro" className="scroll-mt-28 lg:sticky lg:top-24 lg:self-start">
+          <div id="book-intro" className="scroll-mt-28 space-y-6 lg:sticky lg:top-24 lg:self-start">
             <MentorBookingCard
               mentor={mentor}
               defaultName={user?.full_name ?? ""}
               defaultEmail={user?.email ?? ""}
               initialSession={session}
             />
+            <ContentCrossLinks discipline={mentor.discipline} />
           </div>
-        </div>
-
-        <div className="mt-12 lg:hidden">
-          <ContentCrossLinks discipline={mentor.discipline} />
         </div>
 
         <SimilarMentors mentors={similar} />

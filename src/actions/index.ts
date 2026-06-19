@@ -83,6 +83,7 @@ export async function signUp(formData: FormData) {
     const password = (formData.get("password") as string | null) ?? "";
     const fullName = ((formData.get("fullName") as string | null) ?? "").trim();
     const role = (formData.get("role") as string | null) ?? "student";
+    const next = getSafeNextPath(formData.get("next") as string | null);
 
     if (!email || !password || !fullName) {
       redirect("/signup?error=" + encodeURIComponent("Fill in all required fields"));
@@ -105,6 +106,7 @@ export async function signUp(formData: FormData) {
       await ensureUserProfile(supabase, data.user);
       revalidatePath("/", "layout");
 
+      if (next) redirect(next);
       if (role === "mentor") redirect("/onboarding/mentor");
       redirect("/onboarding/student");
     }
@@ -1024,6 +1026,14 @@ export async function completeMentorOnboarding() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/onboarding/mentor");
 
-  await supabase.from("profiles").update({ role: "mentor" }).eq("id", user.id);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role === "admin") redirect("/admin");
+  if (profile?.role !== "mentor") redirect("/onboarding/student");
+
   redirect("/apply");
 }

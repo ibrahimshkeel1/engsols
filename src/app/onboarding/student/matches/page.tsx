@@ -14,6 +14,10 @@ const STEPS = [{ label: "Your goal" }, { label: "Mentor matches" }, { label: "Po
 
 export default async function StudentOnboardingMatchesPage() {
   const user = await requireUser("/onboarding/student/matches");
+
+  if (user.role === "mentor") redirect("/onboarding/mentor");
+  if (user.role === "admin") redirect("/admin");
+
   const context = await getStudentOnboardingContext(user.id);
 
   if (!context.hasBasics) {

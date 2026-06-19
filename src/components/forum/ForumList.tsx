@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Award, MessageSquare } from "lucide-react";
 import type { ForumPost } from "@/types";
 import { disciplines } from "@/data/disciplines";
 import { getDisciplineColors } from "@/lib/discipline-colors";
-import { formatRelativeTime } from "@/lib/format-relative-time";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Avatar } from "@/components/ui/Avatar";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { RelativeTime } from "@/components/shared/RelativeTime";
 import { Input, Select } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -18,8 +19,9 @@ function activityTimestamp(post: ForumPost): string {
 }
 
 export function ForumList({ posts }: { posts: ForumPost[] }) {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
-  const [discipline, setDiscipline] = useState("");
+  const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [sort, setSort] = useState("recent");
 
   const filtered = useMemo(() => {
@@ -78,7 +80,6 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
         ) : (
           filtered.map((post) => {
             const stripe = getDisciplineColors(post.discipline).stripe;
-            const lastActive = formatRelativeTime(activityTimestamp(post));
 
             return (
               <Link
@@ -136,7 +137,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
                       <span>·</span>
                       <span>{post.viewCount} views</span>
                       <span>·</span>
-                      <span>Active {lastActive}</span>
+                      <span>Active <RelativeTime date={activityTimestamp(post)} /></span>
                     </div>
                   </div>
                 </div>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getForumPosts } from "@/lib/data/forum";
 import { PageHero } from "@/components/shared/PageHero";
@@ -22,7 +23,9 @@ export default async function ForumPage() {
       </PageHero>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <ForumListRealtime />
-        <ForumList posts={posts} />
+        <Suspense fallback={<p className="mt-8 text-muted-foreground">Loading discussions...</p>}>
+          <ForumList posts={posts} />
+        </Suspense>
       </div>
     </>
   );

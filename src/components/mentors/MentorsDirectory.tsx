@@ -29,10 +29,11 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
         discipline: discipline || undefined,
         goal: goal || undefined,
         company: company || undefined,
+        session: sessionFilter || undefined,
         skill: skill || undefined,
         sort: sort as "rating" | "price-asc" | "price-desc",
       }),
-    [mentors, search, discipline, goal, company, skill, sort],
+    [mentors, search, discipline, goal, company, sessionFilter, skill, sort],
   );
 
   const hasFilters = Boolean(search || discipline || goal || skill);
@@ -61,6 +62,7 @@ export function MentorsDirectory({ mentors }: { mentors: Mentor[] }) {
       )}
       <aside className="lg:sticky lg:top-24 lg:self-start">
         <MentorFilters
+          layout="sidebar"
           search={search}
           discipline={discipline}
           goal={goal}

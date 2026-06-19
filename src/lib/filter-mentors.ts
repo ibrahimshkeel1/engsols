@@ -7,6 +7,7 @@ export type MentorFilters = {
   goal?: string;
   skill?: string;
   company?: string;
+  session?: string;
   sort?: "rating" | "price-asc" | "price-desc";
 };
 
@@ -36,6 +37,16 @@ export function filterMentors(mentors: Mentor[], filters: MentorFilters): Mentor
 
   if (filters.goal) {
     result = result.filter((m) => m.goals.includes(filters.goal!));
+  }
+
+  if (filters.session === "study-plan") {
+    result = result.filter(
+      (m) => m.studyPlanCalendlyUrl || m.calendlyUrl || m.goals.includes("fe-pe"),
+    );
+  } else if (filters.session === "interview-prep") {
+    result = result.filter(
+      (m) => m.interviewCalendlyUrl || m.calendlyUrl || m.goals.includes("ace-interviews"),
+    );
   }
 
   if (filters.skill) {

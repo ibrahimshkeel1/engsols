@@ -35,6 +35,7 @@ export default async function SignupPage({ searchParams }: Props) {
         <Card className="card-elevated mt-8">
           <CardContent className="p-6">
             <form action={signUp} className="space-y-4">
+              {next && <input type="hidden" name="next" value={next} />}
               <FormField label="Full name" id="signup-name">
                 <Input name="fullName" required autoComplete="name" />
               </FormField>

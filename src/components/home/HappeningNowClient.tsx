@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MessageSquare, Radio, Users } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
-import { formatRelativeTime } from "@/lib/format-relative-time";
+import { RelativeTime } from "@/components/shared/RelativeTime";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 
 type ActivityPayload = {
@@ -97,11 +97,12 @@ function LiveColumn({ data }: { data: ActivityPayload }) {
             <p className="mt-2 font-semibold leading-snug">{session.title}</p>
             <p className="mt-1 text-sm text-muted-foreground">{session.discipline}</p>
             <p className="mt-4 text-sm text-muted-foreground">
-              {new Date(session.scheduledAt).toLocaleString(undefined, {
+              {new Date(session.scheduledAt).toLocaleString("en-US", {
                 month: "short",
                 day: "numeric",
                 hour: "numeric",
                 minute: "2-digit",
+                timeZone: "UTC",
               })}
             </p>
           </Link>
@@ -184,7 +185,7 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
                   <div className="min-w-0 flex-1">
                     <p className="line-clamp-3 font-semibold leading-snug">{data.hotPost.title}</p>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {data.hotPost.author} · {data.hotPost.replyCount} replies · {formatRelativeTime(data.hotPost.createdAt)}
+                      {data.hotPost.author} · {data.hotPost.replyCount} replies · <RelativeTime date={data.hotPost.createdAt} />
                     </p>
                   </div>
                 </div>
@@ -218,7 +219,7 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
                     <div className="min-w-0 flex-1">
                       <p className="line-clamp-2 font-medium leading-snug">{post.title}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {post.discipline} · {post.replyCount} replies · {formatRelativeTime(post.createdAt)}
+                        {post.discipline} · {post.replyCount} replies · <RelativeTime date={post.createdAt} />
                       </p>
                     </div>
                   </Link>

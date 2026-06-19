@@ -9,12 +9,14 @@ async function loadTestimonialsFromReviews(limit: number): Promise<FeaturedTesti
   const supabase = createPublicClient();
   if (!supabase) return [];
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("mentor_reviews")
     .select("rating, text, author_role, mentor_profiles(slug, discipline, profiles(avatar_url, full_name)), profiles(full_name)")
     .gte("rating", 4)
     .order("created_at", { ascending: false })
     .limit(limit * 2);
+
+  if (error) return [];
 
   const results: FeaturedTestimonial[] = [];
   for (const row of data ?? []) {

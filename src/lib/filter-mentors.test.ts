@@ -60,4 +60,14 @@ describe("filterMentors", () => {
     const result = filterMentors(sampleMentors, { sort: "price-asc" });
     expect(result[0].monthlyRate).toBeLessThanOrEqual(result[1].monthlyRate);
   });
+
+  it("filters by session type", () => {
+    const withCalendly: Mentor = {
+      ...sampleMentors[0],
+      slug: "carol",
+      studyPlanCalendlyUrl: "https://calendly.com/carol",
+    };
+    const result = filterMentors([...sampleMentors, withCalendly], { session: "study-plan" });
+    expect(result.every((m) => m.goals.includes("fe-pe") || m.studyPlanCalendlyUrl || m.calendlyUrl)).toBe(true);
+  });
 });

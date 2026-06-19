@@ -39,7 +39,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
       : mentor.interviewCalendlyUrl ?? mentor.calendlyUrl;
 
   return (
-    <div className="card-elevated sticky top-24 overflow-hidden rounded-2xl">
+    <div className="card-elevated overflow-hidden rounded-2xl">
       <div className="border-b border-border bg-muted/40 p-5">
         <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Free intro call</Badge>
         <p className="mt-3 text-sm text-muted-foreground">Monthly mentorship</p>

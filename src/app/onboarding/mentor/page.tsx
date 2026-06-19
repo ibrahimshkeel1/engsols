@@ -1,9 +1,16 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { completeMentorOnboarding } from "@/actions";
+import { requireUser } from "@/lib/require-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function MentorOnboardingPage() {
+export default async function MentorOnboardingPage() {
+  const user = await requireUser("/onboarding/mentor");
+
+  if (user.role === "admin") redirect("/admin");
+  if (user.role === "student") redirect("/onboarding/student");
+
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
       <p className="section-label">Mentor onboarding</p>

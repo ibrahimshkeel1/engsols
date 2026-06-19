@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getPublishedPortfolios } from "@/lib/data/portfolios";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
@@ -17,7 +18,9 @@ export default async function PortfoliosPage() {
         </Link>
       }
     >
-      <PortfolioGrid portfolios={portfolios} />
+      <Suspense fallback={<p className="text-muted-foreground">Loading portfolios...</p>}>
+        <PortfolioGrid portfolios={portfolios} />
+      </Suspense>
     </ListPageLayout>
   );
 }

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { saveStudentOnboardingStep1 } from "@/actions";
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
@@ -17,6 +18,9 @@ type Props = { searchParams: Promise<{ error?: string }> };
 export default async function StudentOnboardingPage({ searchParams }: Props) {
   const params = await searchParams;
   const user = await requireUser("/onboarding/student");
+
+  if (user.role === "mentor") redirect("/onboarding/mentor");
+  if (user.role === "admin") redirect("/admin");
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
