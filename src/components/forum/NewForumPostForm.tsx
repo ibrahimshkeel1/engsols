@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createForumPost } from "@/actions";
+import { recordEngagement } from "@/lib/engagement";
 import { disciplines } from "@/data/disciplines";
 import { FormField } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -13,6 +14,7 @@ export function NewForumPostForm() {
 
   async function handleSubmit(formData: FormData) {
     formData.set("imageUrls", JSON.stringify(imageUrls));
+    recordEngagement("forum-post");
     await createForumPost(formData);
   }
 

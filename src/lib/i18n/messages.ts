@@ -43,12 +43,18 @@ type Messages = {
   footerCommunity: string;
   becomeMentor: string;
   careerAssist: string;
+  /** Outcome-oriented micro-copy */
+  forumOutcome: string;
+  mentorsOutcome: string;
+  liveOutcome: string;
+  portfoliosOutcome: string;
+  communityLabel: string;
 };
 
 export const messages: Record<Locale, Messages> = {
   en: {
-    findMentors: "Find mentors",
-    forum: "Forum",
+    findMentors: "Get matched with a mentor",
+    forum: "Ask engineers",
     live: "Live",
     jobs: "Jobs",
     search: "Search",
@@ -82,10 +88,15 @@ export const messages: Record<Locale, Messages> = {
     footerCommunity: "Community",
     becomeMentor: "Become a mentor",
     careerAssist: "Career assist",
+    forumOutcome: "Ask engineers who've been there",
+    mentorsOutcome: "Find your engineering mentor",
+    liveOutcome: "Watch engineers live",
+    portfoliosOutcome: "Discover rising talent",
+    communityLabel: "Community",
   },
   ar: {
-    findMentors: "ابحث عن مرشد",
-    forum: "المنتدى",
+    findMentors: "تواصل مع مرشد يناسبك",
+    forum: "اسأل المهندسين",
     live: "بث مباشر",
     jobs: "وظائف",
     search: "بحث",
@@ -119,6 +130,11 @@ export const messages: Record<Locale, Messages> = {
     footerCommunity: "المجتمع",
     becomeMentor: "كن مرشداً",
     careerAssist: "مساعدة مهنية",
+    forumOutcome: "اسأل مهندسين مروا بنفس التجربة",
+    mentorsOutcome: "اعثر على مرشد هندسي",
+    liveOutcome: "شاهد المهندسين مباشرة",
+    portfoliosOutcome: "اكتشف المواهب الصاعدة",
+    communityLabel: "المجتمع",
   },
 };
 

@@ -50,6 +50,8 @@ export function dbToMentor(m: DbMentorProfile, reviews: Review[] = []): Mentor {
     interviewCalendlyUrl: (m as DbMentorProfile & { interview_calendly_url?: string | null }).interview_calendly_url ?? null,
     verified: (m as DbMentorProfile & { verified?: boolean }).verified ?? false,
     introVideoUrl: (m as DbMentorProfile & { intro_video_url?: string | null }).intro_video_url ?? null,
+    respondsWithinHours: (m as DbMentorProfile & { responds_within_hours?: number | null }).responds_within_hours ?? null,
+    introSlotsThisWeek: (m as DbMentorProfile & { intro_slots_this_week?: number | null }).intro_slots_this_week ?? null,
   };
 }
 

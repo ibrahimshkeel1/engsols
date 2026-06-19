@@ -30,6 +30,8 @@ export type DbMentorProfile = {
   rating: number;
   review_count: number;
   intro_video_url?: string | null;
+  responds_within_hours?: number | null;
+  intro_slots_this_week?: number | null;
   profiles?: DbProfile;
 };
 
@@ -238,6 +240,7 @@ export type DbVideo = {
   duration: string;
   views: number;
   video_url: string | null;
+  thumbnail_url?: string | null;
   tags: string[];
   published_at: string | null;
   published: boolean;

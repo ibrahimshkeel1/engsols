@@ -14,6 +14,7 @@ import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { getStudentBookings, getStudentJobApplications } from "@/lib/data/student-activity";
 import { PushNotificationPrompt } from "@/components/settings/PushNotificationPrompt";
 import { Card, CardContent } from "@/components/ui/card";
+import { CompareSavedMentorsButton } from "@/components/mentors/CompareSavedMentorsButton";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
@@ -106,7 +107,9 @@ export default async function SettingsPage() {
               Save mentors from their profile page. <Link href="/mentors" className="text-primary hover:underline">Browse mentors</Link>
             </p>
           ) : (
-            <ProfileBentoGrid
+            <>
+              <CompareSavedMentorsButton mentors={savedMentors} />
+              <ProfileBentoGrid
               className="mt-4"
               items={savedMentors}
               getKey={(m) => m.slug}
@@ -114,6 +117,7 @@ export default async function SettingsPage() {
               animated={false}
               renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} showPrice={false} />}
             />
+            </>
           )}
         </CardContent>
       </Card>

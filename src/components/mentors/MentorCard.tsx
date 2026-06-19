@@ -5,6 +5,7 @@ import { ArrowRight, BadgeCheck } from "lucide-react";
 import type { Mentor } from "@/types";
 import type { BentoVariant } from "@/lib/bento-layout";
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { MentorAvailabilityBadges } from "@/components/mentors/MentorAvailabilityBadges";
 import { Avatar } from "@/components/ui/Avatar";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
@@ -39,12 +40,12 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
         variant === "tall" && "min-h-[14rem]",
       )}
     >
-      <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
+      <div className={cn("absolute start-0 top-0 h-full w-1", stripe)} />
       {isHero && (
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] to-transparent" />
       )}
 
-      <div className="relative flex min-w-0 flex-1 flex-col p-4 pl-5 sm:p-5 sm:pl-6">
+      <div className="relative flex min-w-0 flex-1 flex-col p-4 ps-5 sm:p-5 sm:ps-6">
         <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
           <div className="relative shrink-0">
             <Avatar
@@ -55,7 +56,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
               className={cn("rounded-2xl ring-2 ring-border", isHero && "ring-primary/20")}
             />
             {mentor.featured && (
-              <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+              <span className="absolute -bottom-1 -end-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
                 <BadgeCheck className="h-3 w-3" />
               </span>
             )}
@@ -80,6 +81,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
             )}
             <div className="mt-2 flex flex-wrap gap-1.5">
               <DisciplineBadge discipline={mentor.discipline} />
+              <MentorAvailabilityBadges mentor={mentor} />
               {mentor.verified && (
                 <span className="inline-flex rounded-md bg-blue-500/12 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
                   Verified
@@ -104,7 +106,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
             <p className="text-sm text-muted-foreground">
               From <span className={cn("font-semibold text-foreground", isHero && "text-lg")}>${mentor.monthlyRate}</span>/mo
             </p>
-            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary rtl:group-hover:-translate-x-1" />
           </div>
         )}
       </div>

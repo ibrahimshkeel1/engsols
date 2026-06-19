@@ -17,7 +17,11 @@ import { MentorReviewForm } from "@/components/mentor/MentorReviewForm";
 import { MentorStudentQuestions } from "@/components/mentors/MentorStudentQuestions";
 import { SaveMentorButton } from "@/components/mentor/SaveMentorButton";
 import { SimilarMentors } from "@/components/mentors/SimilarMentors";
+import { MentorAvailabilityBadges } from "@/components/mentors/MentorAvailabilityBadges";
+import { MentorMobileBookBar } from "@/components/mentors/MentorMobileBookBar";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { ShareButton } from "@/components/shared/ShareButton";
+import { SectionReveal } from "@/components/motion/SectionReveal";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +36,12 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${mentor.name} — ${mentor.headline} | EngSols`,
     description: mentor.bio.slice(0, 160),
-    openGraph: { title: mentor.name, description: mentor.headline },
+    openGraph: {
+      title: mentor.name,
+      description: mentor.headline,
+      type: "profile",
+    },
+    twitter: { card: "summary_large_image", title: mentor.name, description: mentor.headline },
   };
 }
 
@@ -65,10 +74,12 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                   </Badge>
                 )}
                 {user && <SaveMentorButton mentorSlug={slug} initialSaved={saved} />}
+                <ShareButton title={`${mentor.name} on EngSols`} text={mentor.headline} />
               </div>
               <h1 className="font-display text-4xl sm:text-5xl">{mentor.name}</h1>
               <p className="mt-2 text-xl text-muted-foreground">{mentor.headline}</p>
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-muted-foreground">
+              <MentorAvailabilityBadges mentor={mentor} />
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-muted-foreground">
                 <CompanyLogo company={mentor.company} />
                 <span>{mentor.company}</span>
                 <span>·</span>
@@ -98,6 +109,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
           <div className="space-y-12 lg:col-span-2">
+            <SectionReveal>
             <section id="why-mentor">
               <h2 className="text-xl font-semibold">Why mentor with me</h2>
               <p className="mt-3 leading-relaxed text-muted-foreground">{mentor.bio}</p>
@@ -122,7 +134,9 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 )}
               </div>
             </section>
+            </SectionReveal>
 
+            <SectionReveal delay={0.08}>
             <section id="reviews">
               <h2 className="text-xl font-semibold">Reviews</h2>
               <div className="mt-4 space-y-4">
@@ -152,9 +166,13 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 </div>
               )}
             </section>
+            </SectionReveal>
 
+            <SectionReveal delay={0.12}>
             <MentorStudentQuestions mentor={mentor} />
+            </SectionReveal>
 
+            <SectionReveal delay={0.14}>
             <section className="scroll-mt-28 rounded-2xl border border-border bg-muted/20 p-6 lg:hidden">
               <h2 className="text-xl font-semibold">Book your intro</h2>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -167,6 +185,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 See booking options ↑
               </a>
             </section>
+            </SectionReveal>
           </div>
 
           <div id="book-intro" className="scroll-mt-28 space-y-6 lg:sticky lg:top-24 lg:self-start">
@@ -182,6 +201,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
 
         <SimilarMentors mentors={similar} />
       </div>
+      <MentorMobileBookBar />
     </div>
   );
 }

@@ -91,7 +91,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
                 className="card-interactive group relative flex overflow-hidden rounded-2xl"
               >
                 <div className={cn("w-1 shrink-0", stripe)} />
-                <div className="flex min-w-0 flex-1 gap-4 p-5 pl-4">
+                <div className="flex min-w-0 flex-1 gap-4 p-5 ps-4">
                   <Avatar
                     name={post.author}
                     discipline={post.discipline}

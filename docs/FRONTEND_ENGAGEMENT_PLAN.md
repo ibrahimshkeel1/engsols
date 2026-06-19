@@ -116,34 +116,34 @@
 
 *Feels finished, shareable, trustworthy.*
 
-- [ ] **4.1 Consistent scroll reveals**
+- [x] **4.1 Consistent scroll reveals**
   - Use `AnimateIn` / section entry on key pages beyond homepage
 
-- [ ] **4.2 Skeleton loaders**
+- [x] **4.2 Skeleton loaders**
   - Bento skeletons for mentors, forum, live while data loads
 
-- [ ] **4.3 Sticky mobile CTA on mentor profiles**
+- [x] **4.3 Sticky mobile CTA on mentor profiles**
   - Floating “Book free intro” after scroll
 
-- [ ] **4.4 Share cards + OG coverage**
+- [x] **4.4 Share cards + OG coverage**
   - Share mentor / portfolio / live; OG images where missing
 
-- [ ] **4.5 Arabic RTL audit**
+- [x] **4.5 Arabic RTL audit**
   - Nav, bento cards, forms, spacing for AR locale
 
-- [ ] **4.6 Micro-copy upgrade**
+- [x] **4.6 Micro-copy upgrade**
   - Outcome language site-wide (e.g. “Ask engineers who’ve been there” vs “Forum”)
 
-- [ ] **4.7 Video thumbnails on `/videos`**
+- [x] **4.7 Video thumbnails on `/videos`**
   - Rich thumbnails for directory click-through
 
-- [ ] **4.8 Mentor availability signals**
+- [x] **4.8 Mentor availability signals**
   - “Responds within 48h” / “Intro calls this week” (manual field OK at first)
 
-- [ ] **4.9 Mentor comparison mode**
+- [x] **4.9 Mentor comparison mode**
   - Save 2–3 mentors, side-by-side compare (rate, credentials, goals, company)
 
-- [ ] **4.10 Smarter PWA install prompt**
+- [x] **4.10 Smarter PWA install prompt**
   - Show after engagement (saved mentor, forum post), not on first visit
 
 ---
@@ -163,8 +163,8 @@
 | Wave 1 — Guided journey | 6 | 6 | 100% |
 | Wave 2 — Human & alive | 5 | 5 | 100% |
 | Wave 3 — Return visits | 10 | 10 | 100% |
-| Wave 4 — Premium polish | 10 | 0 | 0% |
-| **Total** | **31** | **21** | **68%** |
+| Wave 4 — Premium polish | 10 | 10 | 100% |
+| **Total** | **31** | **31** | **100%** |
 
 *Update the table counts when checking boxes above.*
 
@@ -177,6 +177,7 @@
 | 2026-06-16 | Wave 1 (1.1–1.6) | Start here, continue journey, homepage reorder, assist preview, happening now hub, company filter |
 | 2026-06-16 | Wave 2 (2.1–2.5) | Testimonials, alive forum cards, mentor story profile, cross-link rails, 3-step onboarding |
 | 2026-06-16 | Wave 3 (3.1–3.10) | Personalized home, /for-you digest, skill graph, discipline hubs, forum gamification, live countdown, portfolio feed, news magazine, search exploration, empty-state chips |
+| 2026-06-16 | Wave 4 (4.1–4.10) | Scroll reveals, skeletons, mobile book CTA, share/OG, RTL, micro-copy, video thumbnails, availability signals, mentor compare, engagement-gated PWA |
 
 ---
 

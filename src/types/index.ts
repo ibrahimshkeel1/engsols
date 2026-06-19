@@ -30,6 +30,8 @@ export type Mentor = {
   interviewCalendlyUrl?: string | null;
   verified?: boolean;
   introVideoUrl?: string | null;
+  respondsWithinHours?: number | null;
+  introSlotsThisWeek?: number | null;
 };
 
 export type FeaturedTestimonial = {
@@ -141,6 +143,7 @@ export type Video = {
   publishedAt: string;
   tags: string[];
   videoUrl?: string | null;
+  thumbnailUrl?: string | null;
 };
 
 export type ListingCategory = "equipment" | "materials" | "services";

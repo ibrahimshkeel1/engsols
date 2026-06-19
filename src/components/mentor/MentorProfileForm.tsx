@@ -18,6 +18,8 @@ type Profile = {
   years_experience: number;
   skills: string[];
   calendly_url?: string | null;
+  responds_within_hours?: number | null;
+  intro_slots_this_week?: number | null;
 };
 
 export function MentorProfileForm({ profile }: { profile: Profile }) {
@@ -73,6 +75,14 @@ export function MentorProfileForm({ profile }: { profile: Profile }) {
       <FormField label="Interview prep session link" id="edit-interview-calendly">
         <Input name="interviewCalendlyUrl" type="url" placeholder="https://calendly.com/interview-prep" defaultValue={(profile as { interview_calendly_url?: string }).interview_calendly_url ?? ""} />
       </FormField>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormField label="Response time (hours)" id="edit-responds" hint="Shown to students e.g. Responds within 48h">
+          <Input name="respondsWithinHours" type="number" min={1} max={168} placeholder="48" defaultValue={profile.responds_within_hours ?? ""} />
+        </FormField>
+        <FormField label="Intro slots this week" id="edit-slots" hint="Leave blank if none">
+          <Input name="introSlotsThisWeek" type="number" min={0} max={20} placeholder="3" defaultValue={profile.intro_slots_this_week ?? ""} />
+        </FormField>
+      </div>
       <Button type="submit" variant="accent" disabled={pending}>
         {pending ? "Saving..." : "Save profile"}
       </Button>

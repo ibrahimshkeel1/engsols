@@ -5,8 +5,21 @@ import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { PortfolioContactForm } from "@/components/portfolios/PortfolioContactForm";
+import { ShareButton } from "@/components/shared/ShareButton";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const portfolio = await getPortfolio(slug);
+  if (!portfolio) return { title: "Portfolio not found" };
+  return {
+    title: `${portfolio.name} — ${portfolio.headline} | EngSols`,
+    description: portfolio.bio.slice(0, 160),
+    openGraph: { title: portfolio.name, description: portfolio.headline },
+    twitter: { card: "summary_large_image", title: portfolio.name, description: portfolio.headline },
+  };
+}
 
 export default async function PortfolioPage({ params }: Props) {
   const { slug } = await params;
@@ -27,6 +40,9 @@ export default async function PortfolioPage({ params }: Props) {
               )}
               <h1 className="font-display text-3xl sm:text-4xl">{portfolio.name}</h1>
               <p className="text-lg text-muted-foreground">{portfolio.headline}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <ShareButton title={`${portfolio.name}'s portfolio`} text={portfolio.headline} />
+              </div>
               <p className="text-muted-foreground">{portfolio.university} · Class of {portfolio.graduationYear} · {portfolio.location}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <DisciplineBadge discipline={portfolio.discipline} />

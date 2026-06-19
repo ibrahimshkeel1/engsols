@@ -9,6 +9,7 @@ import { videoThumbnail } from "@/lib/placeholders";
 import { SessionCountdown } from "@/components/shared/SessionCountdown";
 import { AddToCalendarButton } from "@/components/shared/AddToCalendarButton";
 import { SessionReminderButton } from "@/components/shared/SessionReminderButton";
+import { ShareButton } from "@/components/shared/ShareButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { LiveSessionActions } from "@/components/live/LiveSessionActions";
@@ -18,6 +19,18 @@ import { LiveStatusWatcher } from "@/components/live/LiveStatusWatcher";
 import Image from "next/image";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const stream = await getLiveSession(slug);
+  if (!stream) return { title: "Session not found" };
+  return {
+    title: `${stream.title} | EngSols Live`,
+    description: stream.description?.slice(0, 160) ?? stream.discipline,
+    openGraph: { title: stream.title, description: stream.description ?? stream.discipline },
+    twitter: { card: "summary_large_image", title: stream.title },
+  };
+}
 
 export default async function LiveStreamPage({ params }: Props) {
   const { slug } = await params;
@@ -60,6 +73,9 @@ export default async function LiveStreamPage({ params }: Props) {
           )}
         </div>
         <h1 className="mt-4 font-display text-3xl tracking-tight">{stream.title}</h1>
+        <div className="mt-3">
+          <ShareButton title={stream.title} text={stream.description} />
+        </div>
         <p className="mt-4 text-muted-foreground">{stream.description}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           {stream.status === "upcoming" && <SessionCountdown scheduledAt={stream.scheduledAt} />}

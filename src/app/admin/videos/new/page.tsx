@@ -46,6 +46,9 @@ export default async function AdminNewVideoPage({ searchParams }: Props) {
                 <Input name="videoUrl" type="url" required placeholder="https://..." />
               </FormField>
             </div>
+            <FormField label="Thumbnail URL" id="video-thumb" hint="Optional — YouTube thumbnails auto-detected from video URL">
+              <Input name="thumbnailUrl" type="url" placeholder="https://..." />
+            </FormField>
             <FormField label="Tags" id="video-tags" hint="Comma-separated">
               <Input name="tags" placeholder="careers, reservoir, interview" />
             </FormField>

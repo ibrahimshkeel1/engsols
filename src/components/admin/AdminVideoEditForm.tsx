@@ -16,6 +16,7 @@ type Props = {
     discipline: string;
     duration: string;
     video_url: string | null;
+    thumbnail_url?: string | null;
     tags: string[];
     published: boolean;
   };
@@ -47,6 +48,7 @@ export function AdminVideoEditForm({ video }: Props) {
       </Select>
       <Input name="duration" required defaultValue={video.duration} />
       <Input name="videoUrl" type="url" required defaultValue={video.video_url ?? ""} />
+      <Input name="thumbnailUrl" type="url" placeholder="Thumbnail URL (optional)" defaultValue={video.thumbnail_url ?? ""} />
       <Input name="tags" defaultValue={(video.tags ?? []).join(", ")} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="published" value="true" defaultChecked={video.published} className="rounded" />

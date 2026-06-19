@@ -10,8 +10,8 @@ export default async function LivePage() {
     <>
       <PageHero
         variant="live"
-        title="Live Sessions"
-        description="Watch engineers and mentors live — Q&As, workshops, and industry deep dives."
+        title="Watch engineers live"
+        description="Join Q&As, workshops, and deep-dives with mentors — ask questions in real time."
       >
         <Link href="/live/new" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md hover:brightness-110">
           Start a session

@@ -47,7 +47,13 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
           ${mentor.monthlyRate}
           <span className="text-base font-normal text-muted-foreground">/mo</span>
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">Next slot: usually within 48 hours</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {mentor.respondsWithinHours
+            ? `Typically responds within ${mentor.respondsWithinHours} hours`
+            : mentor.introSlotsThisWeek
+              ? "Intro calls available this week"
+              : "Next slot: usually within 48 hours"}
+        </p>
       </div>
 
       <div className="flex border-b border-border">

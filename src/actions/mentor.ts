@@ -23,6 +23,18 @@ export async function updateMentorProfile(formData: FormData) {
     introCalendlyUrl: (formData.get("introCalendlyUrl") as string) || "",
     studyPlanCalendlyUrl: (formData.get("studyPlanCalendlyUrl") as string) || "",
     interviewCalendlyUrl: (formData.get("interviewCalendlyUrl") as string) || "",
+    respondsWithinHours: (() => {
+      const raw = formData.get("respondsWithinHours") as string;
+      if (!raw?.trim()) return null;
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) ? n : null;
+    })(),
+    introSlotsThisWeek: (() => {
+      const raw = formData.get("introSlotsThisWeek") as string;
+      if (!raw?.trim()) return null;
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) ? n : null;
+    })(),
   });
 
   if (!parsed.success) {
@@ -44,6 +56,8 @@ export async function updateMentorProfile(formData: FormData) {
       intro_calendly_url: d.introCalendlyUrl || null,
       study_plan_calendly_url: d.studyPlanCalendlyUrl || null,
       interview_calendly_url: d.interviewCalendlyUrl || null,
+      responds_within_hours: d.respondsWithinHours ?? null,
+      intro_slots_this_week: d.introSlotsThisWeek ?? null,
     })
     .eq("user_id", user.id);
 

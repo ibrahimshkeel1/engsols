@@ -209,6 +209,7 @@ export async function updateVideo(videoId: string, formData: FormData) {
     discipline: formData.get("discipline") as string,
     duration: formData.get("duration") as string,
     video_url: formData.get("videoUrl") as string,
+    thumbnail_url: (formData.get("thumbnailUrl") as string) || null,
     tags: (formData.get("tags") as string || "").split(",").map((s) => s.trim()).filter(Boolean),
     published: formData.get("published") === "true",
   }).eq("id", videoId);

@@ -4,23 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageSquare, Radio, Newspaper, Users, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { t } from "@/lib/i18n/messages";
 
 const tabs = [
-  { href: "/mentors", label: "Mentors", icon: Users },
-  { href: "/forum", label: "Forum", icon: MessageSquare },
-  { href: "/live", label: "Live", icon: Radio },
-  { href: "/portfolios", label: "Portfolios", icon: Briefcase },
-  { href: "/news", label: "News", icon: Newspaper },
+  { href: "/mentors", labelKey: "mentors" as const, icon: Users },
+  { href: "/forum", labelKey: "forum" as const, icon: MessageSquare },
+  { href: "/live", labelKey: "live" as const, icon: Radio },
+  { href: "/portfolios", labelKey: "portfolios" as const, icon: Briefcase },
+  { href: "/news", labelKey: "news" as const, icon: Newspaper },
 ];
 
 export function CommunityBottomNav() {
   const pathname = usePathname();
-  const show = tabs.some((t) => pathname === t.href || pathname.startsWith(`${t.href}/`));
+  const { locale } = useLocale();
+  const show = tabs.some((tab) => pathname === tab.href || pathname.startsWith(`${tab.href}/`));
 
   if (!show && pathname !== "/") return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-xl pb-safe lg:hidden" aria-label="Community">
+    <nav className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-card/95 backdrop-blur-xl pb-safe lg:hidden" aria-label="Community">
       <div className="mx-auto flex max-w-lg items-center justify-around px-1 py-1.5">
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
@@ -35,7 +38,7 @@ export function CommunityBottomNav() {
               )}
             >
               <tab.icon className={cn("h-5 w-5", active && "scale-110")} aria-hidden />
-              {tab.label}
+              {t(locale, tab.labelKey)}
             </Link>
           );
         })}

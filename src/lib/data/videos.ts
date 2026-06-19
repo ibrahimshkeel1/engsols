@@ -14,6 +14,7 @@ function toVideo(v: DbVideo): Video {
     publishedAt: v.published_at?.split("T")[0] ?? "",
     tags: v.tags,
     videoUrl: v.video_url,
+    thumbnailUrl: v.thumbnail_url ?? null,
   };
 }
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
 import { toggleSavedMentor } from "@/actions/mentor";
+import { recordEngagement } from "@/lib/engagement";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ export function SaveMentorButton({ mentorSlug, initialSaved }: { mentorSlug: str
     if (result?.error) toast.error(result.error);
     else {
       setSaved(result.saved ?? false);
+      if (result.saved) recordEngagement("saved-mentor");
       toast.success(result.saved ? "Mentor saved" : "Removed from saved");
       router.refresh();
     }
