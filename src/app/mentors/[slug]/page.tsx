@@ -50,9 +50,9 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
         <div className={cn("absolute inset-x-0 top-0 h-1", stripe)} />
         <div className="bg-grid absolute inset-0 opacity-40" />
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
-            <Avatar name={mentor.name} discipline={mentor.discipline} size="xl" className="ring-4 ring-border" src={mentor.avatarUrl} />
-            <div className="flex-1">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+            <Avatar name={mentor.name} discipline={mentor.discipline} size="2xl" className="shrink-0 rounded-2xl ring-4 ring-border" src={mentor.avatarUrl} />
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="flex flex-wrap items-center gap-3">
                 <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
                 {mentor.featured && <Badge className="bg-primary/10 text-primary">Featured mentor</Badge>}
@@ -63,7 +63,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 )}
                 {user && <SaveMentorButton mentorSlug={slug} initialSaved={saved} />}
               </div>
-              <h1 className="font-display mt-2 text-4xl sm:text-5xl">{mentor.name}</h1>
+              <h1 className="font-display text-4xl sm:text-5xl">{mentor.name}</h1>
               <p className="mt-2 text-xl text-muted-foreground">{mentor.headline}</p>
               <div className="mt-4 flex flex-wrap items-center gap-3 text-muted-foreground">
                 <CompanyLogo company={mentor.company} />

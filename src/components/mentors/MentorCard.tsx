@@ -17,100 +17,88 @@ type MentorCardProps = {
   variant?: BentoVariant;
 };
 
+function avatarSizeForVariant(variant: BentoVariant): "lg" | "xl" | "2xl" {
+  if (variant === "hero") return "2xl";
+  if (variant === "wide" || variant === "tall") return "xl";
+  return "lg";
+}
+
 export function MentorCard({ mentor, showPrice = true, variant = "default" }: MentorCardProps) {
   const stripe = getDisciplineColors(mentor.discipline).stripe;
   const isHero = variant === "hero";
   const isWide = variant === "wide";
-  const isTall = variant === "tall";
-  const avatarSize = isHero ? "lg" : isTall ? "lg" : "md";
+  const showBio = isHero || isWide || variant === "tall";
+  const credentialLimit = isHero ? 4 : variant === "tall" ? 3 : 2;
 
   return (
     <Link
       href={`/mentors/${mentor.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full overflow-hidden rounded-xl",
+        "card-interactive group relative flex h-full min-h-[10rem] overflow-hidden rounded-xl",
         isHero && "min-h-[18rem]",
-        isTall && "min-h-[16rem] flex-col",
-        isWide && "min-h-[11rem]",
+        variant === "tall" && "min-h-[16rem]",
       )}
     >
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
-      <div
-        className={cn(
-          "absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-          isHero && "bg-gradient-to-br from-primary/[0.06] to-transparent opacity-100",
-        )}
-      />
+      {isHero && (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] to-transparent" />
+      )}
 
-      <div
-        className={cn(
-          "relative flex flex-1 flex-col p-5 pl-6",
-          isWide && "sm:flex-row sm:items-stretch sm:gap-6",
-          isTall && "items-center text-center",
-          isHero && "justify-between",
-        )}
-      >
-        <div
-          className={cn(
-            "flex gap-4",
-            isWide && "sm:min-w-0 sm:flex-1 sm:items-start",
-            isTall && "flex-col items-center",
-            isHero && "items-start",
-          )}
-        >
-          <div className={cn("relative shrink-0", isTall && "mx-auto")}>
+      <div className="relative flex flex-1 flex-col p-5 pl-6">
+        <div className="flex flex-1 items-start gap-4 sm:gap-5">
+          <div className="relative shrink-0">
             <Avatar
               name={mentor.name}
               discipline={mentor.discipline}
-              size={avatarSize}
+              size={avatarSizeForVariant(variant)}
               src={mentor.avatarUrl}
-              className={isHero ? "ring-2 ring-primary/20" : undefined}
+              className={cn("rounded-2xl ring-2 ring-border", isHero && "ring-primary/20")}
             />
             {mentor.featured && (
-              <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                <BadgeCheck className="h-3 w-3" />
+              <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                <BadgeCheck className="h-3.5 w-3.5" />
               </span>
             )}
           </div>
 
-          <div className={cn("min-w-0 flex-1", isTall && "w-full")}>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
             <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} size="sm" />
-            <h3 className={cn("mt-0.5 font-semibold", isHero ? "text-xl" : "truncate")}>{mentor.name}</h3>
-            <p className={cn("text-sm text-muted-foreground", !isHero && !isWide && "truncate", isWide && "line-clamp-2")}>
+            <h3 className={cn("font-semibold leading-tight", isHero ? "text-xl" : "text-base")}>
+              {mentor.name}
+            </h3>
+            <p className={cn("text-sm text-muted-foreground", !showBio && "line-clamp-2")}>
               {mentor.headline}
             </p>
-            <div className={cn("mt-1 flex items-center gap-1.5", isTall && "justify-center")}>
+            <div className="flex items-center gap-1.5">
               <CompanyLogo company={mentor.company} size="sm" />
               <p className="truncate text-xs text-muted-foreground">{mentor.company}</p>
             </div>
-            {(isHero || isWide) && mentor.bio && (
-              <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
+            {showBio && mentor.bio && (
+              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
                 {mentor.bio}
               </p>
             )}
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <DisciplineBadge discipline={mentor.discipline} />
+              {mentor.verified && (
+                <span className="inline-flex rounded-md bg-blue-500/12 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
+                  Verified
+                </span>
+              )}
+              {mentor.credentials.slice(0, credentialLimit).map((c) => (
+                <span key={c} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                  {c}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-
-        <div className={cn("mt-4 flex flex-wrap gap-1.5", isTall && "justify-center", isWide && "sm:mt-0 sm:max-w-xs sm:content-end")}>
-          <DisciplineBadge discipline={mentor.discipline} />
-          {mentor.verified && (
-            <span className="inline-flex rounded-md bg-blue-500/12 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
-              Verified
-            </span>
-          )}
-          {mentor.credentials.slice(0, isHero ? 4 : isTall ? 3 : 2).map((c) => (
-            <span key={c} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-              {c}
-            </span>
-          ))}
         </div>
 
         {showPrice && (
           <div
             className={cn(
-              "mt-auto flex items-end justify-between pt-4",
-              isTall && "w-full",
-              isHero && "border-t border-border/60 pt-5",
+              "mt-4 flex items-center justify-between border-t border-border/60 pt-4",
+              isHero && "pt-5",
             )}
           >
             <p className="text-sm text-muted-foreground">

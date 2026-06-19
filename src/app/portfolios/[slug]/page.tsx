@@ -17,15 +17,15 @@ export default async function PortfolioPage({ params }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <div className="flex items-start gap-4">
-            <Avatar name={portfolio.name} discipline={portfolio.discipline} size="lg" className="ring-4 ring-border" src={portfolio.avatarUrl} />
-            <div>
+          <div className="flex items-start gap-6 sm:gap-8">
+            <Avatar name={portfolio.name} discipline={portfolio.discipline} size="2xl" className="shrink-0 rounded-2xl ring-4 ring-border" src={portfolio.avatarUrl} />
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
               {portfolio.openToWork && (
                 <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
                   Open to work
                 </span>
               )}
-              <h1 className="mt-2 font-display text-3xl tracking-tight">{portfolio.name}</h1>
+              <h1 className="font-display text-3xl sm:text-4xl">{portfolio.name}</h1>
               <p className="text-lg text-muted-foreground">{portfolio.headline}</p>
               <p className="text-muted-foreground">{portfolio.university} · Class of {portfolio.graduationYear} · {portfolio.location}</p>
               <div className="mt-2 flex flex-wrap gap-2">

@@ -12,85 +12,78 @@ type PortfolioCardProps = {
   variant?: BentoVariant;
 };
 
+function avatarSizeForVariant(variant: BentoVariant): "lg" | "xl" | "2xl" {
+  if (variant === "hero") return "2xl";
+  if (variant === "wide" || variant === "tall") return "xl";
+  return "lg";
+}
+
 export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardProps) {
   const stripe = getDisciplineColors(portfolio.discipline).stripe;
   const isHero = variant === "hero";
   const isWide = variant === "wide";
-  const isTall = variant === "tall";
-  const avatarSize = isHero || isTall ? "lg" : "md";
+  const showBio = isHero || isWide || variant === "tall";
+  const skillLimit = isHero ? 5 : variant === "tall" ? 4 : 3;
 
   return (
     <Link
       href={`/portfolios/${portfolio.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full overflow-hidden rounded-xl",
+        "card-interactive group relative flex h-full min-h-[10rem] overflow-hidden rounded-xl",
         isHero && "min-h-[18rem]",
-        isTall && "min-h-[16rem] flex-col",
-        isWide && "min-h-[11rem]",
+        variant === "tall" && "min-h-[16rem]",
       )}
     >
       <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
-      <div
-        className={cn(
-          "relative flex flex-1 flex-col p-5 pl-6",
-          isWide && "sm:flex-row sm:items-stretch sm:gap-6",
-          isTall && "items-center text-center",
-          isHero && "justify-between",
-        )}
-      >
-        <div
-          className={cn(
-            "flex gap-4",
-            isWide && "sm:min-w-0 sm:flex-1 sm:items-start",
-            isTall && "flex-col items-center",
-            isHero && "items-start",
-          )}
-        >
+
+      <div className="relative flex flex-1 flex-col p-5 pl-6">
+        <div className="flex flex-1 items-start gap-4 sm:gap-5">
           <Avatar
             name={portfolio.name}
             discipline={portfolio.discipline}
-            size={avatarSize}
+            size={avatarSizeForVariant(variant)}
             src={portfolio.avatarUrl}
-            className={cn("shrink-0", isTall && "mx-auto", isHero && "ring-2 ring-primary/20")}
+            className={cn("shrink-0 rounded-2xl ring-2 ring-border", isHero && "ring-primary/20")}
           />
-          <div className={cn("min-w-0 flex-1", isTall && "w-full")}>
+
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
             {portfolio.openToWork && (
-              <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+              <span className="inline-flex w-fit rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
                 Open to work
               </span>
             )}
-            <h3 className={cn("font-semibold", isHero ? "mt-2 text-xl" : "mt-1")}>{portfolio.name}</h3>
-            <p className={cn("text-sm text-muted-foreground", !isHero && !isWide && "truncate", isWide && "line-clamp-2")}>
+            <h3 className={cn("font-semibold leading-tight", isHero ? "text-xl" : "text-base")}>
+              {portfolio.name}
+            </h3>
+            <p className={cn("text-sm text-muted-foreground", !showBio && "line-clamp-2")}>
               {portfolio.headline}
             </p>
             <p className="text-xs text-muted-foreground">{portfolio.university}</p>
-            {(isHero || isWide) && portfolio.bio && (
-              <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
+            {showBio && portfolio.bio && (
+              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:line-clamp-3">
                 {portfolio.bio}
               </p>
             )}
             {isHero && portfolio.projects.length > 0 && (
-              <p className="mt-2 text-xs font-medium text-primary">
+              <p className="text-xs font-medium text-primary">
                 {portfolio.projects.length} project{portfolio.projects.length === 1 ? "" : "s"}
               </p>
             )}
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <DisciplineBadge discipline={portfolio.discipline} />
+              {portfolio.skills.slice(0, skillLimit).map((s) => (
+                <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                  {s}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-
-        <div className={cn("mt-4 flex flex-wrap gap-1.5", isTall && "justify-center", isWide && "sm:mt-0 sm:max-w-xs sm:content-end")}>
-          <DisciplineBadge discipline={portfolio.discipline} />
-          {portfolio.skills.slice(0, isHero ? 5 : isTall ? 4 : 3).map((s) => (
-            <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-              {s}
-            </span>
-          ))}
         </div>
 
         <div
           className={cn(
-            "mt-auto flex items-center justify-between pt-4 text-sm text-muted-foreground",
-            isTall && "w-full",
-            isHero && "border-t border-border/60 pt-5",
+            "mt-4 flex items-center justify-between border-t border-border/60 pt-4 text-sm text-muted-foreground",
+            isHero && "pt-5",
           )}
         >
           <span className="capitalize">{portfolio.seeking.replace("-", " ")}</span>

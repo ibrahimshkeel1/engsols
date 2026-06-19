@@ -4,7 +4,7 @@ import { getDisciplineColors } from "@/lib/discipline-colors";
 type AvatarProps = {
   name: string;
   discipline?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
   src?: string | null;
   className?: string;
 };
@@ -14,6 +14,7 @@ const sizes = {
   md: "h-12 w-12 text-sm",
   lg: "h-16 w-16 text-lg",
   xl: "h-24 w-24 text-2xl",
+  "2xl": "h-32 w-32 text-3xl",
 };
 
 function initials(name: string) {
