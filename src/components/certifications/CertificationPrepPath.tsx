@@ -32,7 +32,7 @@ export function CertificationPrepPath({ cert }: Props) {
       <ol className="mt-6 space-y-4">
         {steps.map((step, i) => (
           <li key={`${step.phase}-${i}`} className="relative flex gap-4 rounded-2xl border border-border bg-card p-5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zone-exams/15 text-sm font-bold text-zone-exams">
               {i + 1}
             </span>
             <div>

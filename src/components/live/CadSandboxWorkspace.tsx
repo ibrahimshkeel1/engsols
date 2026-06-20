@@ -406,7 +406,7 @@ export function CadSandboxWorkspace({ room }: Props) {
           <div
             className={cn(
               "absolute inset-3 flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-colors",
-              dragOver ? "border-primary bg-primary/10" : "border-border/60 bg-background/40 backdrop-blur-sm",
+              dragOver ? "border-zone-live bg-zone-live/10" : "border-border/60 bg-background/40 backdrop-blur-sm",
             )}
           >
             <Upload className="h-10 w-10 text-muted-foreground" aria-hidden />
@@ -437,7 +437,7 @@ export function CadSandboxWorkspace({ room }: Props) {
 
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm">
-            <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
+            <Loader2 className="h-10 w-10 animate-spin text-zone-live" aria-hidden />
             <p className="mt-3 text-sm font-medium">Parsing {fileName}…</p>
           </div>
         )}
@@ -461,7 +461,7 @@ export function CadSandboxWorkspace({ room }: Props) {
               className={cn(
                 "shrink-0 rounded-lg px-3 py-2 text-left text-xs font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-40 lg:w-full",
                 renderMode === mode.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
+                  ? "bg-zone-live text-white shadow-zone-live dark:text-slate-950"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >

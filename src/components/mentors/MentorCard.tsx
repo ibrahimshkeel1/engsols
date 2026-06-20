@@ -106,7 +106,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
             <p className="text-sm text-muted-foreground">
               From <span className={cn("font-semibold text-foreground", isHero && "text-lg")}>${mentor.monthlyRate}</span>/mo
             </p>
-            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary rtl:group-hover:-translate-x-1" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-zone-mentorship rtl:group-hover:-translate-x-1" />
           </div>
         )}
       </div>

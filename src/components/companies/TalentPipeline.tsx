@@ -23,7 +23,7 @@ function TalentCard({ portfolio }: { portfolio: Portfolio }) {
   const endorsed = getEndorsedProjects(portfolio);
 
   return (
-    <article className="card-elevated flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/30">
+    <article className="card-elevated flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-zone-recruiter/30">
       <div className="flex items-start gap-4">
         <Avatar
           name={portfolio.name}
@@ -35,7 +35,7 @@ function TalentCard({ portfolio }: { portfolio: Portfolio }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             {portfolio.hasMentorEndorsement && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+              <span className="inline-flex items-center gap-1 rounded-full bg-zone-recruiter/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zone-recruiter">
                 <ShieldCheck className="h-3 w-3" aria-hidden />
                 Vetted
               </span>
@@ -66,8 +66,8 @@ function TalentCard({ portfolio }: { portfolio: Portfolio }) {
       </div>
 
       {endorsed.length > 0 && (
-        <div className="mt-5 rounded-xl border border-green-500/20 bg-green-500/5 p-4">
-          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-green-800 dark:text-green-300">
+        <div className="mt-5 rounded-xl border border-zone-recruiter/20 bg-zone-recruiter/5 p-4">
+          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-zone-recruiter">
             <BadgeCheck className="h-3.5 w-3.5" aria-hidden />
             Mentor-endorsed work
           </p>
@@ -99,7 +99,7 @@ function TalentCard({ portfolio }: { portfolio: Portfolio }) {
         </span>
         <Link
           href={`/portfolios/${portfolio.slug}`}
-          className="text-sm font-medium text-primary hover:underline"
+          className="text-sm font-medium text-zone-recruiter hover:underline"
         >
           View portfolio →
         </Link>
@@ -183,7 +183,7 @@ export function TalentPipeline({ portfolios }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="section-label">B2B talent pipeline</p>
+          <p className="section-label text-zone-recruiter">B2B talent pipeline</p>
           <h1 className="font-display mt-1 text-3xl tracking-tight sm:text-4xl">Recruiter talent hub</h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
             Source engineering graduates with mentor-verified project work — filter by discipline, skills, and
@@ -200,7 +200,7 @@ export function TalentPipeline({ portfolios }: Props) {
 
       <div className="mt-10 rounded-2xl border border-border bg-card p-5 lg:p-6">
         <div className="flex items-center gap-2 text-sm font-semibold">
-          <Filter className="h-4 w-4 text-primary" aria-hidden />
+          <Filter className="h-4 w-4 text-zone-recruiter" aria-hidden />
           Premium filters
         </div>
 
@@ -211,7 +211,7 @@ export function TalentPipeline({ portfolios }: Props) {
             className={cn(
               "inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors",
               endorsedOnly
-                ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                ? "border-zone-recruiter bg-zone-recruiter text-white shadow-sm dark:text-slate-950"
                 : "border-border bg-muted/40 text-foreground hover:bg-muted",
             )}
           >
@@ -232,7 +232,7 @@ export function TalentPipeline({ portfolios }: Props) {
                   className={cn(
                     "rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
                     selectedDisciplines.includes(d)
-                      ? "border-primary bg-primary/10 text-primary"
+                      ? "border-zone-recruiter bg-zone-recruiter/10 text-zone-recruiter"
                       : "border-border text-muted-foreground hover:bg-muted",
                   )}
                 >
@@ -253,7 +253,7 @@ export function TalentPipeline({ portfolios }: Props) {
                   className={cn(
                     "rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
                     selectedYears.includes(y)
-                      ? "border-primary bg-primary/10 text-primary"
+                      ? "border-zone-recruiter bg-zone-recruiter/10 text-zone-recruiter"
                       : "border-border text-muted-foreground hover:bg-muted",
                   )}
                 >
@@ -281,7 +281,7 @@ export function TalentPipeline({ portfolios }: Props) {
                   className={cn(
                     "rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
                     selectedSkills.includes(s)
-                      ? "border-primary bg-primary/10 text-primary"
+                      ? "border-zone-recruiter bg-zone-recruiter/10 text-zone-recruiter"
                       : "border-border text-muted-foreground hover:bg-muted",
                   )}
                 >
@@ -301,7 +301,7 @@ export function TalentPipeline({ portfolios }: Props) {
               setSelectedSkills([]);
               setSelectedYears([]);
             }}
-            className="mt-4 text-xs font-medium text-primary hover:underline"
+            className="mt-4 text-xs font-medium text-zone-recruiter hover:underline"
           >
             Clear all filters
           </button>
@@ -309,7 +309,7 @@ export function TalentPipeline({ portfolios }: Props) {
       </div>
 
       <p className="mt-6 text-sm text-muted-foreground">
-        {filtered.length} candidate{filtered.length === 1 ? "" : "s"} match
+        <span className="font-semibold text-zone-recruiter">{filtered.length}</span> candidate{filtered.length === 1 ? "" : "s"} match
         {endorsedOnly ? " · mentor-endorsed only" : ""}
       </p>
 

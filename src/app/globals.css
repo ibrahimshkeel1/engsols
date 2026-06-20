@@ -2,21 +2,25 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Architect's Studio (light) / Midnight Telemetry (dark) ──
-   Tailwind v4 maps tokens in @theme inline below (no tailwind.config.js). */
+/* ── Clean Studio Alabaster (light) / Midnight Telemetry (dark) ──
+   Semantic product zones + Tailwind v4 @theme bindings (no tailwind.config.js). */
 
 :root {
-  /* HSL components — use as hsl(var(--token)) */
-  --background: 219 14% 95%;
+  /* Core foundations */
+  --background: 210 40% 96%;
   --surface: 0 0% 100%;
   --text-main: 222 47% 11%;
   --text-muted: 215 16% 47%;
-  --primary: 221 83% 53%;
-  --accent: 175 84% 32%;
-  --warning-premium: 28 91% 54%;
   --border: 214 32% 91%;
 
-  --card-shadow-color: rgba(37, 99, 235, 0.04);
+  /* Product module accent extensions */
+  --color-mentorship: 167 65% 36%;
+  --color-live-rooms: 262 83% 58%;
+  --color-exams: 35 92% 44%;
+  --color-recruiter: 224 76% 48%;
+  --color-news: 343 82% 49%;
+
+  --card-shadow-color: rgba(29, 78, 216, 0.06);
   --shadow-premium-card-value: 0 4px 20px -2px var(--card-shadow-color);
 
   /* Legacy aliases — keep existing utilities working */
@@ -25,17 +29,20 @@
   --card-foreground: var(--text-main);
   --muted: 214 32% 93%;
   --muted-foreground: var(--text-muted);
+  --primary: var(--color-recruiter);
   --primary-foreground: 0 0% 100%;
+  --accent: var(--color-mentorship);
   --accent-foreground: 0 0% 100%;
-  --ring: var(--accent);
-  --gold: var(--warning-premium);
+  --warning-premium: var(--color-exams);
+  --ring: var(--color-mentorship);
+  --gold: var(--color-exams);
   --gold-foreground: 0 0% 100%;
   --surface-elevated: var(--surface);
   --hero-from: 214 32% 97%;
   --hero-to: var(--background);
-  --nav-bg: hsl(219 14% 95% / 0.88);
+  --nav-bg: hsl(210 40% 96% / 0.88);
   --grid-color: hsl(222 47% 11% / 0.04);
-  --glow: rgba(37, 99, 235, 0.12);
+  --glow: hsl(var(--color-live-rooms) / 0.14);
   --video-shell-bg: 222 47% 11%;
 }
 
@@ -44,10 +51,13 @@
   --surface: 217 33% 17%;
   --text-main: 210 40% 98%;
   --text-muted: 215 20% 65%;
-  --primary: 217 91% 60%;
-  --accent: 187 92% 43%;
-  --warning-premium: 38 92% 50%;
   --border: 217 19% 27%;
+
+  --color-mentorship: 142 71% 45%;
+  --color-live-rooms: 270 91% 65%;
+  --color-exams: 38 92% 50%;
+  --color-recruiter: 217 91% 60%;
+  --color-news: 350 89% 60%;
 
   --card-shadow-color: rgba(0, 0, 0, 0.4);
   --shadow-premium-card-value: 0 4px 20px -2px var(--card-shadow-color);
@@ -57,21 +67,24 @@
   --card-foreground: var(--text-main);
   --muted: 217 28% 20%;
   --muted-foreground: var(--text-muted);
+  --primary: var(--color-recruiter);
   --primary-foreground: 222 47% 11%;
+  --accent: var(--color-mentorship);
   --accent-foreground: 222 47% 11%;
-  --ring: var(--accent);
-  --gold: var(--warning-premium);
+  --warning-premium: var(--color-exams);
+  --ring: var(--color-mentorship);
+  --gold: var(--color-exams);
   --gold-foreground: 222 47% 11%;
   --surface-elevated: 217 30% 19%;
   --hero-from: 222 47% 9%;
   --hero-to: var(--background);
   --nav-bg: hsl(222 47% 11% / 0.92);
   --grid-color: hsl(210 40% 98% / 0.03);
-  --glow: rgba(6, 182, 212, 0.18);
+  --glow: hsl(var(--color-live-rooms) / 0.22);
   --video-shell-bg: 222 52% 8%;
 }
 
-/* Tailwind v4 theme bindings (equivalent to tailwind.config.js extend) */
+/* Tailwind v4 theme bindings */
 @theme inline {
   --color-background: hsl(var(--background) / <alpha-value>);
   --color-surface: hsl(var(--surface) / <alpha-value>);
@@ -92,7 +105,17 @@
   --color-gold: hsl(var(--warning-premium) / <alpha-value>);
   --color-ring: hsl(var(--ring) / <alpha-value>);
   --color-surface-elevated: hsl(var(--surface-elevated) / <alpha-value>);
+
+  /* Semantic product zones */
+  --color-zone-mentorship: hsl(var(--color-mentorship) / <alpha-value>);
+  --color-zone-live: hsl(var(--color-live-rooms) / <alpha-value>);
+  --color-zone-exams: hsl(var(--color-exams) / <alpha-value>);
+  --color-zone-recruiter: hsl(var(--color-recruiter) / <alpha-value>);
+  --color-zone-news: hsl(var(--color-news) / <alpha-value>);
+
   --shadow-premium-card: var(--shadow-premium-card-value);
+  --shadow-zone-live: 0 0 24px -4px hsl(var(--color-live-rooms) / 0.45);
+  --shadow-zone-exams: 0 0 0 3px hsl(var(--color-exams) / 0.35);
   --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-fraunces);
@@ -124,9 +147,9 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 /* Accent bands — hero/footer editorial strips */
@@ -341,7 +364,7 @@ body {
   left: 50%;
   width: 0;
   height: 1.5px;
-  background: hsl(var(--accent));
+  background: hsl(var(--color-recruiter));
   border-radius: 1px;
   transition: width 0.25s ease, left 0.25s ease;
 }
@@ -357,7 +380,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: hsl(var(--primary));
+  color: hsl(var(--color-recruiter));
 }
 
 /* LiveKit — stable layout on desktop */

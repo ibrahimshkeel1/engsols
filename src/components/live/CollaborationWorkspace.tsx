@@ -113,7 +113,8 @@ function CollaborationWorkspaceInner({
     <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 sm:gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-red-600 sm:text-xs dark:text-red-400">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-zone-live sm:text-xs">
+            <span className="live-dot me-1.5 inline-block h-1.5 w-1.5 rounded-full bg-zone-live align-middle" />
             Live now
           </p>
           <h1 className="truncate font-display text-lg tracking-tight sm:text-2xl">{title}</h1>

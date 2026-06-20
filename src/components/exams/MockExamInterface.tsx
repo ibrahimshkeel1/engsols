@@ -140,11 +140,12 @@ export function MockExamInterface({ examSlug }: Props) {
     return (
       <div className="mx-auto max-w-lg rounded-2xl border border-border bg-card p-8 text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Exam complete</p>
-        <p className={cn("mt-4 font-display text-5xl font-bold", result.passed ? "text-green-600" : "text-red-600")}>
+        <p className={cn("mt-4 font-display text-5xl font-bold", result.passed ? "text-zone-mentorship" : "text-red-600")}>
           {result.score}%
         </p>
         <p className="mt-2 text-muted-foreground">
-          {result.correct} of {result.total} correct · Pass threshold {result.passingScore}%
+          {result.correct} of {result.total} correct ·{" "}
+          <span className="font-semibold text-zone-exams">Pass threshold {result.passingScore}%</span>
         </p>
         <p className="mt-4 font-medium">{result.passed ? "You passed this practice exam." : "Keep studying — you can retake anytime."}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -156,7 +157,7 @@ export function MockExamInterface({ examSlug }: Props) {
           </Link>
           <Link
             href={`/mentors?goal=fe-pe`}
-            className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            className="inline-flex h-10 items-center rounded-xl bg-zone-exams px-4 text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
           >
             Find a prep mentor
           </Link>
@@ -183,7 +184,9 @@ export function MockExamInterface({ examSlug }: Props) {
             <div
               className={cn(
                 "rounded-xl border px-4 py-2 text-center tabular-nums",
-                urgent ? "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-300" : "border-border bg-muted/50",
+                urgent
+                  ? "border-zone-exams/50 bg-zone-exams/10 text-zone-exams shadow-zone-exams"
+                  : "border-border bg-muted/50",
               )}
               aria-live="polite"
             >
@@ -211,8 +214,8 @@ export function MockExamInterface({ examSlug }: Props) {
                 onClick={() => setCurrentIndex(i)}
                 className={cn(
                   "h-8 w-8 rounded-lg text-xs font-semibold transition-colors",
-                  i === currentIndex && "ring-2 ring-primary ring-offset-2",
-                  answered ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground hover:bg-muted/80",
+                  i === currentIndex && "ring-2 ring-zone-exams ring-offset-2",
+                  answered ? "bg-zone-exams/15 text-zone-exams" : "bg-muted text-muted-foreground hover:bg-muted/80",
                 )}
                 aria-label={`Question ${i + 1}${answered ? ", answered" : ""}`}
                 aria-current={i === currentIndex ? "true" : undefined}
@@ -243,7 +246,7 @@ export function MockExamInterface({ examSlug }: Props) {
                       key={letter}
                       className={cn(
                         "flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors",
-                        selected ? "border-primary bg-primary/5" : "border-border hover:border-primary/30",
+                        selected ? "border-zone-exams bg-zone-exams/5" : "border-border hover:border-zone-exams/30",
                       )}
                     >
                       <input

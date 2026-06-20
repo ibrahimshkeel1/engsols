@@ -53,13 +53,13 @@ export default async function NewsArticlePage({ params }: Props) {
               </div>
             )}
             <div className="py-12 sm:py-16">
-              <Link href="/news" className="text-sm font-medium text-primary transition-colors hover:underline">
+              <Link href="/news" className="text-sm font-medium text-zone-news transition-colors hover:underline">
                 ← Back to insights
               </Link>
               <div className="mt-6 flex flex-wrap items-center gap-2">
-                <Badge className="bg-primary/10 text-primary">{article.discipline}</Badge>
+                <Badge className="bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
                 {article.tags.map((tag) => (
-                  <Badge key={tag} className="border border-border bg-card text-xs">
+                  <Badge key={tag} className="border border-zone-news/25 bg-zone-news/5 text-xs text-zone-news">
                     {tag}
                   </Badge>
                 ))}

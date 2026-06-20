@@ -59,7 +59,7 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
               </span>
             )}
             {portfolio.hasMentorEndorsement && (
-              <span className="inline-flex w-fit rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+              <span className="inline-flex w-fit rounded-md bg-zone-recruiter/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zone-recruiter">
                 Mentor vetted
               </span>
             )}
@@ -76,7 +76,7 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
               </p>
             )}
             {isHero && portfolio.projects.length > 0 && (
-              <p className="text-xs font-medium text-primary">
+              <p className="text-xs font-medium text-zone-recruiter">
                 {portfolio.projects.length} project{portfolio.projects.length === 1 ? "" : "s"}
               </p>
             )}
@@ -98,7 +98,7 @@ export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardP
           )}
         >
           <span className="capitalize">{portfolio.seeking.replace("-", " ")}</span>
-          <ArrowRight className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+          <ArrowRight className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-zone-recruiter" />
         </div>
       </div>
     </Link>

@@ -428,7 +428,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("pencil")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "pencil" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
+              tool === "pencil" ? "bg-zone-live text-white shadow-sm dark:text-slate-950" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "pencil"}
           >
@@ -440,7 +440,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("line")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "line" ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground",
+              tool === "line" ? "bg-zone-live text-white shadow-sm dark:text-slate-950" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "line"}
           >
@@ -460,7 +460,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
               onClick={() => setColor(opt.value)}
               className={cn(
                 "h-7 w-7 rounded-full border-2 transition-transform hover:scale-110",
-                color === opt.value ? "border-primary ring-2 ring-primary/30" : "border-border",
+                color === opt.value ? "border-zone-live ring-2 ring-zone-live/30" : "border-border",
               )}
               style={{ backgroundColor: opt.value }}
             />
@@ -476,7 +476,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
               onClick={() => setLineWidth(w)}
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-md border text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-                lineWidth === w ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground",
+                lineWidth === w ? "border-zone-live bg-zone-live/10 text-zone-live" : "border-border text-muted-foreground",
               )}
             >
               {w}

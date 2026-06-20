@@ -66,13 +66,13 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
   return (
     <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-10">
       {company && (
-        <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm lg:col-span-2">
+        <div className="mb-6 rounded-xl border border-zone-mentorship/30 bg-zone-mentorship/5 px-4 py-3 text-sm lg:col-span-2">
           Showing mentors at <strong>{company}</strong>.{" "}
-          <Link href="/mentors" className="text-primary hover:underline">Clear filter</Link>
+          <Link href="/mentors" className="text-zone-mentorship hover:underline">Clear filter</Link>
         </div>
       )}
       {sessionFilter && (
-        <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm lg:col-span-2">
+        <div className="mb-6 rounded-xl border border-zone-mentorship/30 bg-zone-mentorship/5 px-4 py-3 text-sm lg:col-span-2">
           Browsing mentors for <strong className="capitalize">{sessionFilter.replace(/-/g, " ")}</strong> sessions.
           Select a mentor and use the One-off tab to book.
         </div>
@@ -99,7 +99,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
         {savedSlugs.length >= 2 && (
           <Link
             href={`/mentors/compare?slugs=${encodeURIComponent(savedSlugs.slice(0, 3).join(","))}`}
-            className="mb-6 inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+            className="mb-6 inline-flex items-center gap-2 rounded-xl border border-zone-mentorship/30 bg-zone-mentorship/5 px-4 py-2 text-sm font-medium text-zone-mentorship hover:bg-zone-mentorship/10"
           >
             <GitCompareArrows className="h-4 w-4" />
             Compare {Math.min(savedSlugs.length, 3)} saved mentors

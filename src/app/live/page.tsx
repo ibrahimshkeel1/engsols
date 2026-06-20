@@ -16,7 +16,7 @@ export default async function LivePage() {
         title={title}
         description="Join Q&As, workshops, and deep-dives with mentors — ask questions in real time."
       >
-        <Link href="/live/new" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md hover:brightness-110">
+        <Link href="/live/new" className="inline-flex h-11 items-center rounded-xl bg-zone-live px-6 text-sm font-semibold text-white shadow-zone-live hover:brightness-110 dark:text-slate-950">
           Start a session
         </Link>
       </PageHero>

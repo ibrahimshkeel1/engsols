@@ -34,8 +34,8 @@ export function NewsDisciplineFilter({ active }: { active: string }) {
               className={cn(
                 "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.98]",
                 selected
-                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground",
+                  ? "border-zone-news bg-zone-news text-white shadow-sm dark:text-slate-950"
+                  : "border-border bg-card text-muted-foreground hover:border-zone-news/30 hover:text-foreground",
               )}
             >
               {discipline}

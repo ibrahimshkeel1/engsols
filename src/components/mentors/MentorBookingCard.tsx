@@ -35,7 +35,7 @@ function BookingLoginGate({ mentorSlug }: { mentorSlug: string }) {
       <p className="text-sm text-muted-foreground">Log in to request a booking with this mentor.</p>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 inline-flex h-10 items-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground hover:brightness-110"
+        className="mt-3 inline-flex h-10 items-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
       >
         Log in to book
       </Link>
@@ -61,7 +61,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
   return (
     <div className="card-elevated overflow-hidden rounded-2xl">
       <div className="border-b border-border bg-muted/40 p-5">
-        <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Free intro call</Badge>
+        <Badge className="bg-zone-mentorship/15 text-zone-mentorship">Free intro call</Badge>
         <p className="mt-3 text-sm text-muted-foreground">Monthly mentorship</p>
         <p className="text-3xl font-bold">
           ${mentor.monthlyRate}
@@ -84,7 +84,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
             onClick={() => setTab(t.id)}
             className={cn(
               "flex-1 py-3 text-sm font-medium transition-colors",
-              tab === t.id ? "border-b-2 border-accent text-accent" : "text-muted-foreground hover:text-foreground",
+              tab === t.id ? "border-b-2 border-zone-mentorship text-zone-mentorship" : "text-muted-foreground hover:text-foreground",
             )}
           >
             {t.label}
@@ -103,7 +103,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
                   onClick={() => setOneOffType(t)}
                   className={cn(
                     "flex-1 rounded-lg border px-2 py-2 text-xs font-medium",
-                    oneOffType === t ? "border-accent bg-accent/10 text-accent" : "border-border text-muted-foreground",
+                    oneOffType === t ? "border-zone-mentorship bg-zone-mentorship/10 text-zone-mentorship" : "border-border text-muted-foreground",
                   )}
                 >
                   {sessionTypes.find((s) => s.id === t)?.title ?? t}
@@ -118,7 +118,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
                 href={calendlyForOneOff}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent text-sm font-semibold text-accent-foreground hover:brightness-110"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
               >
                 Book & pay via Calendly <ExternalLink className="h-4 w-4" />
               </a>
@@ -154,7 +154,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
         <p className="text-sm font-semibold">What&apos;s included</p>
         {includes.map((item) => (
           <div key={item.text} className="flex items-center gap-2 text-sm text-muted-foreground">
-            <item.icon className="h-4 w-4 shrink-0 text-accent" />
+            <item.icon className="h-4 w-4 shrink-0 text-zone-mentorship" />
             {item.text}
           </div>
         ))}

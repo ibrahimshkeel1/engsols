@@ -43,14 +43,14 @@ export function SkillGraphFilter({ selectedSkill, onSkillChange, mentorSkills = 
               key={s.id}
               type="button"
               onClick={() => onSkillChange(s.id)}
-              className="rounded-lg bg-muted px-2.5 py-1 text-xs hover:bg-primary/10"
+              className="rounded-lg bg-muted px-2.5 py-1 text-xs hover:bg-zone-mentorship/10 hover:text-zone-mentorship"
             >
               {s.label}
             </button>
           ))}
         </div>
       )}
-      <Link href="/assist" className="inline-block text-xs text-primary hover:underline">
+      <Link href="/assist" className="inline-block text-xs text-zone-mentorship hover:underline">
         Get mentor suggestions →
       </Link>
     </div>

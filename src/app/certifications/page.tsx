@@ -15,6 +15,8 @@ export default async function CertificationsPage() {
       title="Certifications & Exams"
       description="FE, PE, IWCF, and industry credentials — resources and mentors to help you prepare."
       preview={false}
+      heroClassName="border-zone-exams/20 bg-zone-exams/5"
+      labelClassName="text-zone-exams"
     >
       {certifications.length === 0 ? (
         <EmptyState
@@ -39,7 +41,7 @@ export default async function CertificationsPage() {
                   {cert.passRate && ` · ${cert.passRate} pass rate`}
                 </p>
                 {mentorCount > 0 && (
-                  <p className="mt-1 text-xs text-primary">{mentorCount} mentors available</p>
+                  <p className="mt-1 text-xs text-zone-exams">{mentorCount} mentors available</p>
                 )}
               </Link>
             );

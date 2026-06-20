@@ -33,10 +33,12 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."
+      heroClassName="border-zone-recruiter/20 bg-zone-recruiter/5"
+      labelClassName="text-zone-recruiter"
       action={
         <Link
           href="/companies/talent"
-          className="btn-secondary h-11 border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+          className="btn-secondary h-11 border-zone-recruiter/30 bg-zone-recruiter/5 text-zone-recruiter hover:bg-zone-recruiter/10"
         >
           Recruiter talent hub
         </Link>
@@ -70,7 +72,7 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
                   <CompanyLogo company={company.name} />
                   <div>
                     {company.verified && (
-                      <span className="rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">Verified</span>
+                      <span className="rounded-md bg-zone-recruiter/12 px-2 py-0.5 text-xs font-medium text-zone-recruiter">Verified</span>
                     )}
                     <h3 className="font-semibold">{company.name}</h3>
                     <p className="text-xs capitalize text-muted-foreground">{company.type.replace("-", " ")}</p>

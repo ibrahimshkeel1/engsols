@@ -9,6 +9,8 @@ type ListPageLayoutProps = {
   action?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  heroClassName?: string;
+  labelClassName?: string;
 };
 
 export function ListPageLayout({
@@ -19,14 +21,16 @@ export function ListPageLayout({
   action,
   children,
   className,
+  heroClassName,
+  labelClassName,
 }: ListPageLayoutProps) {
   return (
     <>
-      <section className="gradient-hero border-b border-border">
+      <section className={cn("gradient-hero border-b border-border", heroClassName)}>
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 animate-fade-up">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              {label && <p className="section-label">{label}</p>}
+              {label && <p className={cn("section-label", labelClassName)}>{label}</p>}
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="font-display text-4xl tracking-tight sm:text-5xl">{title}</h1>
                 {preview && (

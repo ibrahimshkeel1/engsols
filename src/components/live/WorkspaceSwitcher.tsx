@@ -40,7 +40,7 @@ export function WorkspaceSwitcher({ activeTab, onTabChange, className }: Props) 
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.98]",
               selected
-                ? "bg-primary text-primary-foreground shadow-sm"
+                ? "bg-zone-live text-white shadow-zone-live dark:text-slate-950"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >

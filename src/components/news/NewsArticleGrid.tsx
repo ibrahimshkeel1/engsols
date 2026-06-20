@@ -25,10 +25,10 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
       )}
       <div className="p-6 sm:p-10">
         <div className="flex flex-wrap items-center gap-3">
-          <Badge className="bg-primary/10 text-primary">{article.discipline}</Badge>
-          {article.featured && <Badge className="border border-border bg-card">Featured</Badge>}
+          <Badge className="bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
+          {article.featured && <Badge className="border border-zone-news/30 bg-zone-news/10 text-zone-news">Featured</Badge>}
         </div>
-        <h2 className="font-display mt-4 text-3xl leading-tight tracking-tight group-hover:text-primary sm:text-4xl lg:text-5xl">
+        <h2 className="font-display mt-4 text-3xl leading-tight tracking-tight group-hover:text-zone-news sm:text-4xl lg:text-5xl">
           {article.title}
         </h2>
         <p className="mt-4 line-clamp-3 text-lg text-muted-foreground">{article.summary}</p>
@@ -68,22 +68,22 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={article.imageUrl} alt={article.title} className="aspect-video w-full object-cover" />
       ) : (
-        <div className="aspect-video w-full bg-gradient-to-br from-primary/10 via-muted to-muted/40" />
+        <div className="aspect-video w-full bg-gradient-to-br from-zone-news/10 via-muted to-muted/40" />
       )}
       <CardContent className="flex flex-1 flex-col p-5">
-        <Badge className="w-fit">{article.discipline}</Badge>
-        <h3 className="mt-3 font-semibold leading-snug group-hover:text-primary">{article.title}</h3>
+        <Badge className="w-fit bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
+        <h3 className="mt-3 font-semibold leading-snug group-hover:text-zone-news">{article.title}</h3>
         <p className="mt-2 line-clamp-3 flex-1 text-sm text-muted-foreground">{article.summary}</p>
         <div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted-foreground">
           <span>
             {article.publishedAt && format(new Date(article.publishedAt), "MMM d, yyyy")} · {readingTime} min
           </span>
-          <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1 group-hover:text-primary" aria-hidden />
+          <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1 group-hover:text-zone-news" aria-hidden />
         </div>
         {article.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {article.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              <span key={tag} className="rounded-full bg-zone-news/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zone-news">
                 {tag}
               </span>
             ))}

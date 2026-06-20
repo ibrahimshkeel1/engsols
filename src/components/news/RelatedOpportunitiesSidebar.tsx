@@ -19,8 +19,8 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
       <div className="space-y-5">
         <Card className="card-elevated overflow-hidden">
           <CardContent className="p-0">
-            <div className="border-b border-border bg-primary/5 px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-primary">Related opportunities</p>
+            <div className="border-b border-border bg-zone-news/5 px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-zone-news">Related opportunities</p>
               <h3 className="mt-1 font-semibold">Grow in {discipline}</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Mentors, exams, and certification paths matched to this article.
@@ -30,7 +30,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
             {mentors.length > 0 && (
               <div className="border-b border-border px-5 py-4">
                 <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Users className="h-4 w-4 text-primary" aria-hidden />
+                  <Users className="h-4 w-4 text-zone-news" aria-hidden />
                   Top mentors
                 </div>
                 <ul className="mt-3 space-y-2">
@@ -51,7 +51,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
                 </ul>
                 <Link
                   href={`/mentors?discipline=${encodeURIComponent(discipline)}`}
-                  className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+                  className="mt-3 inline-block text-sm font-medium text-zone-news hover:underline"
                 >
                   Browse all {discipline} mentors →
                 </Link>
@@ -61,7 +61,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
             {certification && (
               <div className="px-5 py-4">
                 <div className="flex items-center gap-2 text-sm font-semibold">
-                  <Award className="h-4 w-4 text-primary" aria-hidden />
+                  <Award className="h-4 w-4 text-zone-news" aria-hidden />
                   Certification track
                 </div>
                 <Link
@@ -70,7 +70,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
                 >
                   <p className="font-medium">{certification.name}</p>
                   <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{certification.description}</p>
-                  <p className="mt-3 text-xs font-medium text-primary">View certification path →</p>
+                  <p className="mt-3 text-xs font-medium text-zone-news">View certification path →</p>
                 </Link>
               </div>
             )}
@@ -78,7 +78,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
             {!certification && exam && (
               <div className="px-5 py-4">
                 <div className="flex items-center gap-2 text-sm font-semibold">
-                  <GraduationCap className="h-4 w-4 text-primary" aria-hidden />
+                  <GraduationCap className="h-4 w-4 text-zone-news" aria-hidden />
                   Practice exam
                 </div>
                 <Link
@@ -87,7 +87,7 @@ export async function RelatedOpportunitiesSidebar({ discipline, className }: Pro
                 >
                   <p className="font-medium">{exam.title}</p>
                   <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{exam.description}</p>
-                  <p className="mt-3 text-xs font-medium text-primary">
+                  <p className="mt-3 text-xs font-medium text-zone-news">
                     {exam.isPremium ? "Premium practice exam →" : "Start practice exam →"}
                   </p>
                 </Link>

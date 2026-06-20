@@ -89,7 +89,7 @@ export default async function CertificationPage({ params }: Props) {
       </div>
       <CertificationPrepPath cert={cert} />
       {relatedExams.length > 0 && (
-        <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+        <div className="mt-10 rounded-2xl border border-zone-exams/25 bg-zone-exams/5 p-6">
           <h2 className="font-semibold">Practice exams</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Timed mock exams with a technical scratchpad — no install required.
@@ -99,10 +99,10 @@ export default async function CertificationPage({ params }: Props) {
               <li key={exam.slug}>
                 <Link
                   href={`/certifications/exams/${exam.slug}`}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 hover:border-primary/40"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card px-4 py-3 hover:border-zone-exams/40"
                 >
                   <span className="font-medium">{exam.title}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs font-medium text-zone-exams">
                     {exam.durationMinutes} min · {exam.questionCount} questions · Pass {exam.passingScore}%
                   </span>
                 </Link>
@@ -126,7 +126,7 @@ export default async function CertificationPage({ params }: Props) {
       )}
       <Link
         href={`/mentors?goal=fe-pe`}
-        className="mt-8 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground hover:brightness-110"
+        className="mt-8 inline-flex h-11 items-center rounded-xl bg-zone-exams px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
       >
         Browse all exam mentors
       </Link>
