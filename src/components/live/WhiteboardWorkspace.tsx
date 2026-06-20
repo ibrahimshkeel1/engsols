@@ -428,7 +428,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("pencil")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "pencil" ? "bg-zone-live text-white shadow-sm dark:text-slate-950" : "text-muted-foreground hover:text-foreground",
+              tool === "pencil" ? "bg-zone-live text-white shadow-sm dark:text-bg-main" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "pencil"}
           >
@@ -440,7 +440,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("line")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "line" ? "bg-zone-live text-white shadow-sm dark:text-slate-950" : "text-muted-foreground hover:text-foreground",
+              tool === "line" ? "bg-zone-live text-white shadow-sm dark:text-bg-main" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "line"}
           >

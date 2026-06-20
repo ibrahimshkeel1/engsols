@@ -9,6 +9,7 @@ import type { BookingRequest } from "@/lib/data/bookings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { cn } from "@/lib/utils";
 
 export function MentorBookingsList({ bookings }: { bookings: BookingRequest[] }) {
   const router = useRouter();
@@ -35,23 +36,53 @@ export function MentorBookingsList({ bookings }: { bookings: BookingRequest[] })
   return (
     <div className="space-y-4">
       {bookings.map((b) => (
-        <Card key={b.id} className="card-elevated">
-          <CardContent className="p-5">
+        <Card key={b.id} className="card-elevated border-zone-mentorship/20">
+          <CardContent className="border-s-2 border-s-zone-mentorship/35 p-5">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium capitalize">{b.requestType.replace(/_/g, " ")}</span>
+                <span className="rounded-md bg-zone-mentorship/10 px-2 py-0.5 text-xs font-medium capitalize text-zone-mentorship">
+                  {b.requestType.replace(/_/g, " ")}
+                </span>
                 <p className="mt-2 font-semibold">{b.requesterName}</p>
-                <a href={`mailto:${b.requesterEmail}`} className="text-sm text-primary hover:underline">{b.requesterEmail}</a>
+                <a href={`mailto:${b.requesterEmail}`} className="text-sm text-zone-mentorship hover:underline">
+                  {b.requesterEmail}
+                </a>
               </div>
-              <p className="text-xs text-muted-foreground">{format(new Date(b.createdAt), "MMM d, yyyy h:mm a")}</p>
+              <p className="text-xs text-muted-foreground">
+                {format(new Date(b.createdAt), "MMM d, yyyy h:mm a")}
+              </p>
             </div>
             <p className="mt-3 text-sm">{b.message}</p>
             <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
-              <span className="w-full text-xs font-medium uppercase text-muted-foreground">Status: {b.status}</span>
-              <Button type="button" size="sm" variant="outline" disabled={pending || b.status === "contacted"} onClick={() => setStatus(b.id, "contacted")}>
+              <span className="w-full text-xs font-medium uppercase text-muted-foreground">
+                Status:{" "}
+                <span
+                  className={cn(
+                    b.status === "pending" && "text-zone-mentorship",
+                    b.status === "contacted" && "text-zone-exams",
+                    b.status === "closed" && "text-muted-foreground",
+                  )}
+                >
+                  {b.status}
+                </span>
+              </span>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={pending || b.status === "contacted"}
+                onClick={() => setStatus(b.id, "contacted")}
+                className="border-zone-mentorship/30 text-zone-mentorship hover:bg-zone-mentorship/10"
+              >
                 Mark contacted
               </Button>
-              <Button type="button" size="sm" variant="outline" disabled={pending || b.status === "closed"} onClick={() => setStatus(b.id, "closed")}>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={pending || b.status === "closed"}
+                onClick={() => setStatus(b.id, "closed")}
+              >
                 Close
               </Button>
             </div>

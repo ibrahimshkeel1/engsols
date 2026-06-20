@@ -83,7 +83,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
               <DisciplineBadge discipline={mentor.discipline} />
               <MentorAvailabilityBadges mentor={mentor} />
               {mentor.verified && (
-                <span className="inline-flex rounded-md bg-blue-500/12 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
+                <span className="inline-flex rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship">
                   Verified
                 </span>
               )}

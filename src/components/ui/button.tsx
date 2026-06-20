@@ -12,6 +12,12 @@ const buttonVariants = cva(
         outline: "border border-border bg-surface hover:bg-muted/60",
         ghost: "hover:bg-muted",
         accent: "bg-primary text-primary-foreground hover:bg-primary/90",
+        zoneMentorship:
+          "bg-zone-mentorship text-white hover:brightness-110 dark:text-bg-main",
+        zoneExams: "bg-zone-exams text-white hover:brightness-110 dark:text-bg-main",
+        zoneNews: "bg-zone-news text-white hover:brightness-110 dark:text-bg-main",
+        zoneRecruiter:
+          "bg-zone-recruiter text-white shadow-sm hover:brightness-110 dark:text-bg-main",
         destructive: "bg-red-600 text-white hover:bg-red-700",
       },
       size: {

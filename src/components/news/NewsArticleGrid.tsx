@@ -13,7 +13,7 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
   return (
     <Link
       href={`/news/${article.slug}`}
-      className="card-interactive group block overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+      className="card-interactive group block overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card"
     >
       {article.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -28,11 +28,11 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
           <Badge className="bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
           {article.featured && <Badge className="border border-zone-news/30 bg-zone-news/10 text-zone-news">Featured</Badge>}
         </div>
-        <h2 className="font-display mt-4 text-3xl leading-tight tracking-tight group-hover:text-zone-news sm:text-4xl lg:text-5xl">
+        <h2 className="font-display mt-4 text-3xl leading-tight tracking-tight text-text-main group-hover:text-zone-news sm:text-4xl lg:text-5xl">
           {article.title}
         </h2>
-        <p className="mt-4 line-clamp-3 text-lg text-muted-foreground">{article.summary}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <p className="mt-4 line-clamp-3 text-lg text-text-muted">{article.summary}</p>
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
           {article.publishedAt && (
             <span>{format(new Date(article.publishedAt), "MMMM d, yyyy")}</span>
           )}
@@ -63,7 +63,7 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
   const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
-    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border-custom bg-bg-surface">
       {article.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={article.imageUrl} alt={article.title} className="aspect-video w-full object-cover" />
@@ -72,9 +72,9 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
       )}
       <CardContent className="flex flex-1 flex-col p-5">
         <Badge className="w-fit bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
-        <h3 className="mt-3 font-semibold leading-snug group-hover:text-zone-news">{article.title}</h3>
-        <p className="mt-2 line-clamp-3 flex-1 text-sm text-muted-foreground">{article.summary}</p>
-        <div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted-foreground">
+        <h3 className="mt-3 font-semibold leading-snug text-text-main group-hover:text-zone-news">{article.title}</h3>
+        <p className="mt-2 line-clamp-3 flex-1 text-sm text-text-muted">{article.summary}</p>
+        <div className="mt-4 flex items-center justify-between gap-3 text-xs text-text-muted">
           <span>
             {article.publishedAt && format(new Date(article.publishedAt), "MMM d, yyyy")} · {readingTime} min
           </span>

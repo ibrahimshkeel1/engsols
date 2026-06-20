@@ -110,7 +110,7 @@ export default async function ForYouPage() {
                     <p className="text-sm text-muted-foreground">{s.discipline}</p>
                   </div>
                   {s.status === "upcoming" && <SessionCountdown scheduledAt={s.scheduledAt} />}
-                  {s.status === "live" && <span className="text-xs font-semibold text-red-600">Live now</span>}
+                  {s.status === "live" && <span className="text-xs font-semibold text-zone-live">Live now</span>}
                 </Link>
               ))}
             </div>

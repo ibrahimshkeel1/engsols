@@ -84,19 +84,31 @@
   --video-shell-bg: 222 52% 8%;
 }
 
-/* Tailwind v4 theme bindings */
+/* Tailwind v4 theme — `inline` binds tokens to :root/.dark CSS variables at runtime */
 @theme inline {
+  /* Canonical semantic surfaces */
+  --color-bg-main: hsl(var(--background) / <alpha-value>);
+  --color-bg-surface: hsl(var(--surface) / <alpha-value>);
+  --color-text-main: hsl(var(--text-main) / <alpha-value>);
+  --color-text-muted: hsl(var(--text-muted) / <alpha-value>);
+  --color-border-custom: hsl(var(--border) / <alpha-value>);
+
+  /* Explicit semantic zone mappings */
+  --color-zone-mentorship: hsl(var(--color-mentorship) / <alpha-value>);
+  --color-zone-live: hsl(var(--color-live-rooms) / <alpha-value>);
+  --color-zone-exams: hsl(var(--color-exams) / <alpha-value>);
+  --color-zone-recruiter: hsl(var(--color-recruiter) / <alpha-value>);
+  --color-zone-news: hsl(var(--color-news) / <alpha-value>);
+
+  /* Legacy aliases — gradual migration */
   --color-background: hsl(var(--background) / <alpha-value>);
   --color-surface: hsl(var(--surface) / <alpha-value>);
   --color-foreground: hsl(var(--text-main) / <alpha-value>);
-  --color-text-main: hsl(var(--text-main) / <alpha-value>);
-  --color-text-muted: hsl(var(--text-muted) / <alpha-value>);
   --color-card: hsl(var(--surface) / <alpha-value>);
   --color-card-foreground: hsl(var(--text-main) / <alpha-value>);
   --color-muted: hsl(var(--muted) / <alpha-value>);
   --color-muted-foreground: hsl(var(--text-muted) / <alpha-value>);
   --color-border: hsl(var(--border) / <alpha-value>);
-  --color-border-custom: hsl(var(--border) / <alpha-value>);
   --color-primary: hsl(var(--primary) / <alpha-value>);
   --color-primary-foreground: hsl(var(--primary-foreground) / <alpha-value>);
   --color-accent: hsl(var(--accent) / <alpha-value>);
@@ -105,13 +117,6 @@
   --color-gold: hsl(var(--warning-premium) / <alpha-value>);
   --color-ring: hsl(var(--ring) / <alpha-value>);
   --color-surface-elevated: hsl(var(--surface-elevated) / <alpha-value>);
-
-  /* Semantic product zones */
-  --color-zone-mentorship: hsl(var(--color-mentorship) / <alpha-value>);
-  --color-zone-live: hsl(var(--color-live-rooms) / <alpha-value>);
-  --color-zone-exams: hsl(var(--color-exams) / <alpha-value>);
-  --color-zone-recruiter: hsl(var(--color-recruiter) / <alpha-value>);
-  --color-zone-news: hsl(var(--color-news) / <alpha-value>);
 
   --shadow-premium-card: var(--shadow-premium-card-value);
   --shadow-zone-live: 0 0 24px -4px hsl(var(--color-live-rooms) / 0.45);

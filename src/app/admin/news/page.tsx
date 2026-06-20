@@ -16,15 +16,16 @@ export default async function AdminNewsPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold">News articles</h1>
+        <p className="section-label text-zone-news">Insights CMS</p>
+        <h1 className="mt-1 text-2xl font-bold">News articles</h1>
         <p className="mt-1 text-muted-foreground">
           Publish technical articles, project breakdowns, and industry updates for the insights hub.
         </p>
       </div>
 
-      <Card className="card-elevated" id="create">
+      <Card className="card-elevated border-zone-news/25" id="create">
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold">Create article</h2>
+          <h2 className="text-lg font-semibold text-zone-news">Create article</h2>
           <p className="mt-1 text-sm text-muted-foreground">Draft or publish directly to `/news`.</p>
           <div className="mt-6">
             <AdminNewsEditorForm />
@@ -33,7 +34,7 @@ export default async function AdminNewsPage() {
       </Card>
 
       <section>
-        <h2 className="text-lg font-semibold">All articles ({articles.length})</h2>
+        <h2 className="text-lg font-semibold text-zone-news">All articles ({articles.length})</h2>
         <div className="mt-6 space-y-4">
           {articles.length === 0 ? (
             <EmptyState
@@ -43,13 +44,13 @@ export default async function AdminNewsPage() {
             />
           ) : (
             articles.map((article) => (
-              <Card key={article.id} className="card-elevated">
+              <Card key={article.id} className="card-elevated border-zone-news/15">
                 <CardContent className="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <div className="flex flex-wrap gap-2">
-                      <Badge>{article.discipline}</Badge>
+                      <Badge className="bg-zone-news/10 text-zone-news">{article.discipline}</Badge>
                       {!article.published && <Badge className="bg-muted text-muted-foreground">Draft</Badge>}
-                      {article.featured && <Badge className="bg-primary/15 text-primary">Featured</Badge>}
+                      {article.featured && <Badge className="bg-zone-news/15 text-zone-news">Featured</Badge>}
                     </div>
                     <h3 className="mt-2 font-semibold">{article.title}</h3>
                     <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{article.summary}</p>
@@ -61,11 +62,11 @@ export default async function AdminNewsPage() {
                     </p>
                   </div>
                   <div className="flex shrink-0 flex-wrap items-center gap-3">
-                    <Link href={`/admin/news/${article.id}/edit`} className="text-sm font-medium text-primary hover:underline">
+                    <Link href={`/admin/news/${article.id}/edit`} className="text-sm font-medium text-zone-news hover:underline">
                       Edit
                     </Link>
                     {article.published && (
-                      <Link href={`/news/${article.slug}`} className="text-sm font-medium text-primary hover:underline">
+                      <Link href={`/news/${article.slug}`} className="text-sm font-medium text-zone-news hover:underline">
                         View →
                       </Link>
                     )}

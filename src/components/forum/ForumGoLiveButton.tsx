@@ -27,7 +27,7 @@ export function ForumGoLiveButton({
     return (
       <a
         href={`/live/${activeLiveSlug}/room`}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:brightness-110"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-zone-live px-4 py-2.5 text-sm font-semibold text-white shadow-zone-live hover:brightness-110 dark:text-bg-main"
       >
         <Radio className="h-4 w-4" />
         Join live discussion

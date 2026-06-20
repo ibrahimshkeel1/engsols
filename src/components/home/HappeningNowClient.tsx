@@ -61,10 +61,10 @@ function LiveColumn({ data }: { data: ActivityPayload }) {
           <Link
             key={session.slug}
             href={`/live/${session.slug}/room`}
-            className="card-interactive flex flex-col rounded-xl border border-red-500/20 bg-card p-5"
+            className="card-interactive flex flex-col rounded-xl border border-zone-live/25 bg-bg-surface p-5"
           >
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
-              <span className="live-dot h-2 w-2 rounded-full bg-red-500" />
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-zone-live">
+              <span className="live-dot h-2 w-2 rounded-full bg-zone-live" />
               Live now
             </div>
             <p className="mt-2 font-semibold leading-snug">{session.title}</p>
@@ -160,8 +160,8 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
                 <span className="text-muted-foreground">discussions</span>
               </span>
               {data.liveCount > 0 && (
-                <span className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-4 py-2 text-red-600 dark:text-red-400">
-                  <span className="live-dot inline-block h-2 w-2 rounded-full bg-red-500" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-zone-live/10 px-4 py-2 text-zone-live">
+                  <span className="live-dot inline-block h-2 w-2 rounded-full bg-zone-live" />
                   <strong>{data.liveCount}</strong> live now
                 </span>
               )}

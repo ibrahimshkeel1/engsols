@@ -42,7 +42,7 @@ export function CreateRoadmapForm({ students }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300">
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-zone-mentorship/20 bg-surface p-5 shadow-premium-card transition-colors duration-300">
       <h2 className="font-semibold">Create mentorship roadmap</h2>
       <p className="mt-1 text-sm text-muted-foreground">
         Initialize milestone tracking for a student you&apos;re mentoring.
@@ -92,7 +92,7 @@ export function CreateRoadmapForm({ students }: Props) {
         </FormField>
       </div>
 
-      <Button type="submit" variant="accent" className="mt-5" disabled={pending}>
+      <Button type="submit" variant="zoneMentorship" className="mt-5" disabled={pending}>
         {pending ? "Creating..." : "Create roadmap"}
       </Button>
     </form>

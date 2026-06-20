@@ -157,7 +157,7 @@ export function MockExamInterface({ examSlug }: Props) {
           </Link>
           <Link
             href={`/mentors?goal=fe-pe`}
-            className="inline-flex h-10 items-center rounded-xl bg-zone-exams px-4 text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
+            className="inline-flex h-10 items-center rounded-xl bg-zone-exams px-4 text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
           >
             Find a prep mentor
           </Link>
@@ -172,13 +172,13 @@ export function MockExamInterface({ examSlug }: Props) {
 
   return (
     <div className="flex min-h-[calc(100vh-6rem)] flex-col">
-      <header className="sticky top-0 z-20 border-b border-border bg-card/95 px-4 py-3 backdrop-blur-md sm:px-6">
+      <header className="sticky top-0 z-20 border-b border-border-custom bg-bg-surface/95 px-4 py-3 backdrop-blur-md sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-wide text-zone-exams">
               {session.examType} practice exam
             </p>
-            <h1 className="font-display text-lg font-semibold tracking-tight">{session.title}</h1>
+            <h1 className="font-display text-lg font-semibold tracking-tight text-text-main">{session.title}</h1>
           </div>
           <div className="flex items-center gap-4">
             <div
@@ -186,7 +186,7 @@ export function MockExamInterface({ examSlug }: Props) {
                 "rounded-xl border px-4 py-2 text-center tabular-nums",
                 urgent
                   ? "border-zone-exams/50 bg-zone-exams/10 text-zone-exams shadow-zone-exams"
-                  : "border-border bg-muted/50",
+                  : "border-border-custom bg-bg-main text-text-muted",
               )}
               aria-live="polite"
             >

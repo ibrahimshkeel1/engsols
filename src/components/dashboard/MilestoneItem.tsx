@@ -36,7 +36,8 @@ export function MilestoneItem({ milestone }: Props) {
     <li
       className={cn(
         "rounded-xl border border-border bg-surface p-4 shadow-premium-card transition-colors duration-300",
-        milestone.status === "completed" && "border-green-500/30 bg-green-500/5",
+        milestone.status === "completed" && "border-zone-mentorship/30 bg-zone-mentorship/5",
+        milestone.status === "in_progress" && "border-zone-exams/30 bg-zone-exams/5",
         overdue && "border-red-500/40",
       )}
     >
@@ -50,7 +51,7 @@ export function MilestoneItem({ milestone }: Props) {
               onChange={(e) =>
                 handleStatusChange(e.target.checked ? "completed" : "pending")
               }
-              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+              className="h-4 w-4 rounded border-border text-zone-mentorship focus:ring-zone-mentorship"
               aria-label={`Mark ${milestone.title} complete`}
             />
             <h4
@@ -109,7 +110,7 @@ export function MilestoneItem({ milestone }: Props) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-primary hover:border-primary/40"
+                className="inline-flex rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-zone-recruiter hover:border-zone-recruiter/40"
               >
                 {link.title} ↗
               </a>

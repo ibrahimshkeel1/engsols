@@ -27,7 +27,7 @@ export default async function NewsPage({ searchParams }: Props) {
         title="Engineering Insights"
         description="Technical articles, project breakdowns, and industry updates from the EngSols editorial desk."
       />
-      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-bg-main px-4 pb-16 sm:px-6">
         <Suspense fallback={<div className="h-12 animate-pulse rounded-xl bg-muted" aria-hidden />}>
           <NewsDisciplineFilter active={activeDiscipline} />
         </Suspense>
@@ -55,8 +55,8 @@ export default async function NewsPage({ searchParams }: Props) {
                 <section>
                   <div className="mb-6 flex items-end justify-between gap-4">
                     <div>
-                      <h2 className="text-xl font-bold">Latest stories</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">
+                      <h2 className="text-xl font-bold text-text-main">Latest stories</h2>
+                      <p className="mt-1 text-sm text-text-muted">
                         {activeDiscipline === "All"
                           ? "Across all engineering disciplines"
                           : `Filtered to ${activeDiscipline}`}

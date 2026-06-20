@@ -20,9 +20,9 @@ export default async function MentorLayout({ children }: { children: React.React
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col lg:flex-row">
-      <PanelSidebar title="Mentor" subtitle="EngSols" items={mentorNav} />
+      <PanelSidebar title="Mentor" subtitle="EngSols" items={mentorNav} zone="mentorship" />
       <div className="flex-1">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border-custom bg-bg-surface px-6 py-4">
           <p className="text-sm text-muted-foreground">
             Signed in as <span className="font-medium text-foreground">{user.full_name}</span>
           </p>
@@ -31,13 +31,13 @@ export default async function MentorLayout({ children }: { children: React.React
               Public profile
             </Link>
             <form action={signOut}>
-              <button type="submit" className="text-sm font-medium text-primary hover:underline">
+              <button type="submit" className="text-sm font-medium text-zone-mentorship hover:underline">
                 Sign out
               </button>
             </form>
           </div>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="bg-bg-main p-6">{children}</div>
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ export default async function LiveStreamPage({ params }: Props) {
           unoptimized
         />
         {stream.status === "live" && (
-          <span className="absolute left-4 top-4 rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white">
+          <span className="absolute left-4 top-4 rounded-lg bg-zone-live px-3 py-1 text-xs font-bold text-white shadow-zone-live dark:text-bg-main">
             LIVE
           </span>
         )}
@@ -67,7 +67,7 @@ export default async function LiveStreamPage({ params }: Props) {
             <span className="rounded-md bg-muted px-2 py-0.5 text-xs font-medium">From forum</span>
           )}
           {stream.status === "live" && (
-            <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-600 dark:text-red-400">
+            <span className="rounded-md bg-zone-live/15 px-2 py-0.5 text-xs font-medium text-zone-live">
               Live now · {stream.viewerCount} viewers
             </span>
           )}

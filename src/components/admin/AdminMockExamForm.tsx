@@ -132,10 +132,10 @@ export function AdminMockExamForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      <Card className="card-elevated">
+      <Card className="card-elevated border-zone-exams/25">
         <CardContent className="space-y-5 p-6">
           <div>
-            <h2 className="text-lg font-semibold">Exam details</h2>
+            <h2 className="text-lg font-semibold text-zone-exams">Exam details</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               General metadata for the practice exam listing and session timer.
             </p>
@@ -144,6 +144,7 @@ export function AdminMockExamForm() {
           <FormField label="Title" id="exam-title">
             <Input
               id="exam-title"
+              zone="exams"
               value={title}
               onChange={(e) => updateTitle(e.target.value)}
               required
@@ -154,6 +155,7 @@ export function AdminMockExamForm() {
           <FormField label="Description" id="exam-description">
             <Textarea
               id="exam-description"
+              zone="exams"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -165,6 +167,7 @@ export function AdminMockExamForm() {
             <FormField label="Slug" id="exam-slug" hint="Lowercase URL segment, e.g. fe-mechanical-practice">
               <Input
                 id="exam-slug"
+                zone="exams"
                 value={slug}
                 onChange={(e) => {
                   setSlugTouched(true);
@@ -179,6 +182,7 @@ export function AdminMockExamForm() {
             <FormField label="Discipline" id="exam-discipline">
               <Select
                 id="exam-discipline"
+                zone="exams"
                 value={discipline}
                 onChange={(e) => setDiscipline(e.target.value)}
                 className="w-full"
@@ -197,6 +201,7 @@ export function AdminMockExamForm() {
             <FormField label="Exam type" id="exam-type">
               <Select
                 id="exam-type"
+                zone="exams"
                 value={examType}
                 onChange={(e) => setExamType(e.target.value as "FE" | "PE")}
                 className="w-full"
@@ -210,6 +215,7 @@ export function AdminMockExamForm() {
             <FormField label="Duration (minutes)" id="exam-duration">
               <Input
                 id="exam-duration"
+                zone="exams"
                 type="number"
                 min={1}
                 max={480}
@@ -222,6 +228,7 @@ export function AdminMockExamForm() {
             <FormField label="Passing score (%)" id="exam-passing">
               <Input
                 id="exam-passing"
+                zone="exams"
                 type="number"
                 min={0}
                 max={100}
@@ -242,10 +249,10 @@ export function AdminMockExamForm() {
             Publish immediately (visible to students)
           </label>
 
-          <div className="rounded-xl border border-border bg-muted/20 p-4">
+          <div className="rounded-xl border border-zone-exams/25 bg-zone-exams/5 p-4">
             <label className="flex items-center justify-between gap-3 text-sm">
               <span>
-                <span className="font-medium">Premium exam</span>
+                <span className="font-medium text-zone-exams">Premium exam</span>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
                   Require a one-time Stripe payment before students can take this exam.
                 </span>
@@ -257,7 +264,7 @@ export function AdminMockExamForm() {
                 onClick={() => setIsPremium((value) => !value)}
                 className={cn(
                   "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors",
-                  isPremium ? "bg-primary" : "bg-muted-foreground/30",
+                  isPremium ? "bg-zone-exams" : "bg-muted-foreground/30",
                 )}
               >
                 <span
@@ -273,6 +280,7 @@ export function AdminMockExamForm() {
               <FormField label="Price (USD)" id="exam-price" hint="Stored as cents in the database (e.g. 15.00 → $15.00)">
                 <Input
                   id="exam-price"
+                  zone="exams"
                   type="number"
                   min={0.01}
                   step={0.01}
@@ -287,16 +295,22 @@ export function AdminMockExamForm() {
         </CardContent>
       </Card>
 
-      <Card className="card-elevated">
+      <Card className="card-elevated border-zone-exams/25">
         <CardContent className="space-y-5 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold">Questions</h2>
+              <h2 className="text-lg font-semibold text-zone-exams">Questions</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Build multiple-choice items with NCEES handbook references.
               </p>
             </div>
-            <Button type="button" variant="outline" size="sm" onClick={addQuestion}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addQuestion}
+              className="border-zone-exams/30 text-zone-exams hover:bg-zone-exams/10"
+            >
               <Plus className="mr-1.5 h-4 w-4" aria-hidden />
               Add question
             </Button>
@@ -306,10 +320,10 @@ export function AdminMockExamForm() {
             {questions.map((question, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-border bg-muted/20 p-4 sm:p-5"
+                className="rounded-xl border border-zone-exams/20 bg-zone-exams/5 p-4 sm:p-5"
               >
                 <div className="mb-4 flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold">Question {index + 1}</p>
+                  <p className="text-sm font-semibold text-zone-exams">Question {index + 1}</p>
                   <Button
                     type="button"
                     variant="ghost"
@@ -326,6 +340,7 @@ export function AdminMockExamForm() {
                 <FormField label="Prompt" id={`question-prompt-${index}`}>
                   <Textarea
                     id={`question-prompt-${index}`}
+                    zone="exams"
                     value={question.prompt}
                     onChange={(e) => updateQuestion(index, { prompt: e.target.value })}
                     rows={3}
@@ -339,6 +354,7 @@ export function AdminMockExamForm() {
                     <FormField key={label} label={`Option ${label}`} id={`question-${index}-opt-${label}`}>
                       <Input
                         id={`question-${index}-opt-${label}`}
+                        zone="exams"
                         value={question.options[optionIndex]}
                         onChange={(e) => updateQuestionOption(index, optionIndex, e.target.value)}
                         required
@@ -352,6 +368,7 @@ export function AdminMockExamForm() {
                   <FormField label="Correct option" id={`question-correct-${index}`}>
                     <Select
                       id={`question-correct-${index}`}
+                      zone="exams"
                       value={String(question.correctIndex)}
                       onChange={(e) => updateQuestion(index, { correctIndex: Number(e.target.value) })}
                       className="w-full"
@@ -368,6 +385,7 @@ export function AdminMockExamForm() {
                   <FormField label="NCEES handbook reference" id={`question-code-${index}`}>
                     <Input
                       id={`question-code-${index}`}
+                      zone="exams"
                       value={question.codeReference}
                       onChange={(e) => updateQuestion(index, { codeReference: e.target.value })}
                       placeholder="NCEES FE Reference Handbook — Statics: ..."
@@ -381,7 +399,7 @@ export function AdminMockExamForm() {
       </Card>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" variant="accent" disabled={pending} className={cn(pending && "opacity-80")}>
+        <Button type="submit" variant="zoneExams" disabled={pending} className={cn(pending && "opacity-80")}>
           {pending ? "Saving exam..." : "Create mock exam"}
         </Button>
         <p className="text-xs text-muted-foreground">{questions.length} question(s) ready to submit</p>

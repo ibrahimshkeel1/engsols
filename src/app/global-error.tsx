@@ -8,7 +8,7 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen items-center justify-center bg-background p-6 font-sans text-foreground">
+      <body className="flex min-h-screen items-center justify-center bg-bg-main p-6 font-sans text-text-main">
         <div className="text-center">
           <h1 className="text-2xl font-bold">EngSols encountered an error</h1>
           <p className="mt-2 text-muted-foreground">Please refresh the page or try again later.</p>

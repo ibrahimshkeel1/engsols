@@ -211,7 +211,7 @@ export function TalentPipeline({ portfolios }: Props) {
             className={cn(
               "inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors",
               endorsedOnly
-                ? "border-zone-recruiter bg-zone-recruiter text-white shadow-sm dark:text-slate-950"
+                ? "border-zone-recruiter bg-zone-recruiter text-white shadow-sm dark:text-bg-main"
                 : "border-border bg-muted/40 text-foreground hover:bg-muted",
             )}
           >

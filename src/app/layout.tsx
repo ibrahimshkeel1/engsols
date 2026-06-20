@@ -50,7 +50,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
-      <body className="flex min-h-full flex-col bg-background text-text-main antialiased transition-colors duration-[250ms]">
+      <body className="flex min-h-full flex-col bg-bg-main text-text-main antialiased transition-colors duration-[250ms]">
         <Analytics />
         <SentryInit />
         <ThemeProvider>

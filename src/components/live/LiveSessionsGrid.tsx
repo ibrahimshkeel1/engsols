@@ -49,7 +49,7 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
             onClick={() => setTab(t)}
             className={cn(
               "rounded-xl px-4 py-2.5 text-sm font-medium capitalize transition min-h-[44px]",
-              tab === t ? "bg-zone-live text-white shadow-zone-live dark:text-slate-950" : "bg-muted text-muted-foreground hover:text-foreground",
+              tab === t ? "bg-zone-live text-white shadow-zone-live dark:text-bg-main" : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
             {t}
@@ -92,8 +92,8 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
                   <Image src={videoThumbnail(stream.title.slice(0, 20))} alt="" fill className="object-cover opacity-90 transition group-hover:opacity-100 dark:opacity-75" unoptimized />
                   <div className={cn("absolute left-0 top-0 h-1 w-full", stripe)} />
                   {stream.status === "live" && (
-                    <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-lg bg-zone-live px-2.5 py-1 text-xs font-bold text-white shadow-zone-live dark:text-slate-950">
-                      <span className="live-dot h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-950" />
+                    <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-lg bg-zone-live px-2.5 py-1 text-xs font-bold text-white shadow-zone-live dark:text-bg-main">
+                      <span className="live-dot h-1.5 w-1.5 rounded-full bg-bg-surface dark:bg-bg-main" />
                       LIVE
                     </span>
                   )}

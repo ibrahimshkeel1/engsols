@@ -8,7 +8,8 @@ export default async function MentorBookingsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Booking inbox</h1>
+      <p className="section-label text-zone-mentorship">Mentor inbox</p>
+      <h1 className="mt-1 text-2xl font-bold">Booking inbox</h1>
       <p className="mt-1 text-muted-foreground">Intro calls and mentorship requests from students.</p>
       <div className="mt-8">
         <MentorBookingsList bookings={bookings} />

@@ -16,23 +16,26 @@ export default async function MentorDashboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Mentor dashboard</h1>
+      <p className="section-label text-zone-mentorship">Mentor workspace</p>
+      <h1 className="mt-1 text-2xl font-bold">Mentor dashboard</h1>
       <p className="mt-1 text-muted-foreground">Manage your profile, bookings, and live sessions.</p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="card-elevated">
+        <Card className="card-elevated border-zone-mentorship/15">
           <CardContent className="p-6">
             <p className="text-sm text-muted-foreground">Profile status</p>
             <div className="mt-2 flex items-center gap-2">
               <p className="text-2xl font-bold capitalize">{profile?.status ?? "none"}</p>
-              {profile?.status === "pending" && <Badge className="bg-primary/15 text-primary">Under review</Badge>}
+              {profile?.status === "pending" && (
+                <Badge className="bg-zone-mentorship/15 text-zone-mentorship">Under review</Badge>
+              )}
             </div>
           </CardContent>
         </Card>
-        <Card className="card-elevated">
+        <Card className="card-elevated border-zone-mentorship/15">
           <CardContent className="p-6">
             <p className="text-sm text-muted-foreground">Open bookings</p>
-            <p className="mt-2 text-2xl font-bold">{stats?.pending ?? 0}</p>
+            <p className="mt-2 text-2xl font-bold text-zone-mentorship">{stats?.pending ?? 0}</p>
             <p className="text-xs text-muted-foreground">{stats?.total ?? 0} total requests</p>
           </CardContent>
         </Card>
@@ -56,11 +59,12 @@ export default async function MentorDashboardPage() {
           <CardContent className="p-6">
             <h2 className="font-semibold">Quick actions</h2>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="/mentor/bookings" className="text-primary hover:underline">View booking inbox ({stats?.pending ?? 0} pending)</Link></li>
-              <li><Link href="/mentor/profile" className="text-primary hover:underline">Edit public profile & Calendly links</Link></li>
-              <li><Link href="/mentor/roadmaps" className="text-primary hover:underline">Manage student roadmaps</Link></li>
-              <li><Link href="/mentor/live/new" className="text-primary hover:underline">Schedule a live session</Link></li>
-              <li><Link href="/forum/new" className="text-primary hover:underline">Answer a forum question</Link></li>
+              <li><Link href="/mentor/bookings" className="text-zone-mentorship hover:underline">View booking inbox ({stats?.pending ?? 0} pending)</Link></li>
+              <li><Link href="/mentor/profile" className="text-zone-mentorship hover:underline">Edit public profile & Calendly links</Link></li>
+              <li><Link href="/mentor/roadmaps" className="text-zone-mentorship hover:underline">Manage student roadmaps</Link></li>
+              <li><Link href="/mentor/earnings" className="text-zone-mentorship hover:underline">View earnings & revenue</Link></li>
+              <li><Link href="/mentor/live/new" className="text-zone-mentorship hover:underline">Schedule a live session</Link></li>
+              <li><Link href="/forum/new" className="text-zone-mentorship hover:underline">Answer a forum question</Link></li>
             </ul>
           </CardContent>
         </Card>

@@ -31,65 +31,65 @@ export function PremiumExamLockScreen({ exam, canceled }: Props) {
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-2xl items-center px-4 py-10 sm:px-6">
-      <Card className="card-elevated w-full overflow-hidden border-border/80">
-        <div className="bg-gradient-to-br from-primary/10 via-background to-amber-500/10 px-6 py-8 sm:px-8">
+      <Card className="card-elevated w-full overflow-hidden border-zone-exams/30">
+        <div className="bg-gradient-to-br from-zone-exams/15 via-bg-main to-zone-exams/10 px-6 py-8 sm:px-8">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-zone-exams/15 text-zone-exams">
               <Lock className="h-6 w-6" aria-hidden />
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-primary">Premium practice exam</p>
-              <h1 className="font-display mt-1 text-2xl tracking-tight sm:text-3xl">{exam.title}</h1>
+              <p className="text-xs font-semibold uppercase tracking-widest text-zone-exams">Premium practice exam</p>
+              <h1 className="font-display mt-1 text-2xl tracking-tight text-text-main sm:text-3xl">{exam.title}</h1>
             </div>
           </div>
         </div>
 
-        <CardContent className="space-y-6 p-6 sm:p-8">
+        <CardContent className="space-y-6 bg-bg-surface p-6 sm:p-8">
           {canceled && (
-            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
+            <p className="rounded-xl border border-zone-exams/30 bg-zone-exams/10 px-4 py-3 text-sm text-zone-exams">
               Checkout was canceled. You can try again whenever you are ready.
             </p>
           )}
 
-          <p className="text-sm leading-relaxed text-muted-foreground">{exam.description}</p>
+          <p className="text-sm leading-relaxed text-text-muted">{exam.description}</p>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
-              <p className="text-xs text-muted-foreground">Exam type</p>
-              <p className="mt-1 text-sm font-semibold">{exam.examType}</p>
+            <div className="rounded-xl border border-border-custom bg-bg-main px-4 py-3">
+              <p className="text-xs text-text-muted">Exam type</p>
+              <p className="mt-1 text-sm font-semibold text-text-main">{exam.examType}</p>
             </div>
-            <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
-              <p className="text-xs text-muted-foreground">Duration</p>
-              <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold">
-                <Clock className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+            <div className="rounded-xl border border-border-custom bg-bg-main px-4 py-3">
+              <p className="text-xs text-text-muted">Duration</p>
+              <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-zone-exams">
+                <Clock className="h-3.5 w-3.5" aria-hidden />
                 {exam.durationMinutes} min
               </p>
             </div>
-            <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
-              <p className="text-xs text-muted-foreground">Questions</p>
-              <p className="mt-1 text-sm font-semibold">{exam.questionCount}</p>
+            <div className="rounded-xl border border-border-custom bg-bg-main px-4 py-3">
+              <p className="text-xs text-text-muted">Questions</p>
+              <p className="mt-1 text-sm font-semibold text-text-main">{exam.questionCount}</p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-primary/20 bg-primary/5 px-5 py-5">
+          <div className="rounded-2xl border border-zone-exams/25 bg-zone-exams/5 px-5 py-5">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">One-time unlock</p>
-                <p className="font-display mt-1 text-4xl tracking-tight text-foreground">
+                <p className="text-sm text-text-muted">One-time unlock</p>
+                <p className="font-display mt-1 text-4xl tracking-tight text-zone-exams">
                   {formatPriceCents(exam.priceCents)}
                 </p>
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-text-muted">
+                  <ShieldCheck className="h-3.5 w-3.5 text-zone-exams" aria-hidden />
                   Secure checkout powered by Stripe
                 </p>
               </div>
               <Button
                 type="button"
-                variant="accent"
+                variant="zoneExams"
                 size="lg"
                 disabled={pending}
                 onClick={handleCheckout}
-                className={cn("min-w-[200px]", pending && "opacity-90")}
+                className={cn("min-w-[200px] shadow-zone-exams", pending && "opacity-90")}
               >
                 {pending ? (
                   <>
@@ -103,7 +103,7 @@ export function PremiumExamLockScreen({ exam, canceled }: Props) {
             </div>
           </div>
 
-          <p className="text-center text-xs text-muted-foreground">
+          <p className="text-center text-xs text-text-muted">
             Lifetime access to this exam for your account. Passing score: {exam.passingScore}%.
           </p>
         </CardContent>

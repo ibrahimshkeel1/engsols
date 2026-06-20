@@ -51,11 +51,11 @@ export function AdminNewsEditForm({ article }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       <FormField label="Title" id="edit-title">
-        <Input name="title" required defaultValue={article.title} />
+        <Input name="title" zone="news" required defaultValue={article.title} />
       </FormField>
 
       <FormField label="Discipline" id="edit-discipline">
-        <Select name="discipline" required defaultValue={article.discipline} className="w-full">
+        <Select name="discipline" zone="news" required defaultValue={article.discipline} className="w-full">
           {disciplines.map((d) => (
             <option key={d} value={d}>
               {d}
@@ -64,35 +64,71 @@ export function AdminNewsEditForm({ article }: Props) {
         </Select>
       </FormField>
 
-      <ImageUpload folder="news" value={coverUrl} onChange={setCoverUrl} label="Cover image" />
-      <FormField label="Image URL" id="edit-image">
-        <Input name="imageUrl" type="url" defaultValue={article.imageUrl ?? ""} placeholder="https://..." />
-      </FormField>
+      <div className="rounded-xl border border-zone-news/25 bg-zone-news/5 p-4">
+        <ImageUpload folder="news" value={coverUrl} onChange={setCoverUrl} label="Cover image" />
+        <FormField label="Image URL" id="edit-image">
+          <Input
+            name="imageUrl"
+            zone="news"
+            type="url"
+            defaultValue={article.imageUrl ?? ""}
+            placeholder="https://..."
+          />
+        </FormField>
+      </div>
 
       <FormField label="Summary" id="edit-summary">
-        <Textarea name="summary" required rows={2} defaultValue={article.summary} />
+        <Textarea name="summary" zone="news" required rows={2} defaultValue={article.summary} />
       </FormField>
 
-      <FormField label="Content" id="edit-content">
-        <Textarea name="content" required rows={12} defaultValue={article.content} />
-      </FormField>
+      <div className="rounded-xl border border-zone-news/25 bg-surface p-4">
+        <FormField label="Content" id="edit-content">
+          <Textarea
+            name="content"
+            zone="news"
+            required
+            rows={12}
+            defaultValue={article.content}
+            className="min-h-[16rem] font-mono text-[13px]"
+          />
+        </FormField>
+      </div>
 
-      <FormField label="Tags" id="edit-tags" hint="Comma-separated">
-        <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="FE exam, structural" />
-      </FormField>
+      <div className="rounded-xl border border-zone-news/25 bg-zone-news/5 p-4">
+        <FormField label="Tags" id="edit-tags" hint="Comma-separated">
+          <Input
+            zone="news"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="FE exam, structural"
+          />
+        </FormField>
+      </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 rounded-xl border border-zone-news/15 bg-zone-news/[0.03] px-4 py-3">
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="publish" value="true" defaultChecked={article.published} className="rounded" />
+          <input
+            type="checkbox"
+            name="publish"
+            value="true"
+            defaultChecked={article.published}
+            className="rounded accent-[hsl(var(--color-news))]"
+          />
           Published
         </label>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="featured" value="true" defaultChecked={article.featured} className="rounded" />
+          <input
+            type="checkbox"
+            name="featured"
+            value="true"
+            defaultChecked={article.featured}
+            className="rounded accent-[hsl(var(--color-news))]"
+          />
           Featured in hero
         </label>
       </div>
 
-      <Button type="submit" variant="accent" disabled={pending}>
+      <Button type="submit" variant="zoneNews" disabled={pending}>
         {pending ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />

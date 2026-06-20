@@ -461,7 +461,7 @@ export function CadSandboxWorkspace({ room }: Props) {
               className={cn(
                 "shrink-0 rounded-lg px-3 py-2 text-left text-xs font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-40 lg:w-full",
                 renderMode === mode.id
-                  ? "bg-zone-live text-white shadow-zone-live dark:text-slate-950"
+                  ? "bg-zone-live text-white shadow-zone-live dark:text-bg-main"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >

@@ -38,10 +38,10 @@ export default async function NewsArticlePage({ params }: Props) {
   const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-0 sm:px-6">
+    <div className="mx-auto max-w-7xl bg-bg-main px-4 py-0 sm:px-6">
       <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
         <article className="lg:col-span-2">
-          <header className="border-b border-border">
+          <header className="border-b border-border-custom">
             {article.imageUrl && (
               <div className="pt-8">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -64,9 +64,9 @@ export default async function NewsArticlePage({ params }: Props) {
                   </Badge>
                 ))}
               </div>
-              <h1 className="font-display mt-4 text-4xl leading-tight tracking-tight sm:text-5xl">{article.title}</h1>
-              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{article.summary}</p>
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <h1 className="font-display mt-4 text-4xl leading-tight tracking-tight text-text-main sm:text-5xl">{article.title}</h1>
+              <p className="mt-5 text-lg leading-relaxed text-text-muted">{article.summary}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
                 {article.publishedAt && (
                   <span>{format(new Date(article.publishedAt), "MMMM d, yyyy")}</span>
                 )}
@@ -82,7 +82,7 @@ export default async function NewsArticlePage({ params }: Props) {
           <div className="py-12">
             <MarkdownBody
               content={article.content}
-              className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-foreground/90"
+              className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-text-main/90"
             />
           </div>
         </article>

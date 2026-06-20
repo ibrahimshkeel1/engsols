@@ -112,9 +112,9 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
         {isFallback && filtered.length > 0 && (
           <div
             role="status"
-            className="mb-6 flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-sm text-amber-950 dark:text-amber-100 sm:flex-row sm:items-start sm:gap-3"
+            className="mb-6 flex flex-col gap-2 rounded-xl border border-zone-exams/30 bg-zone-exams/5 px-4 py-3 text-sm text-text-main sm:flex-row sm:items-start sm:gap-3"
           >
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-zone-exams" aria-hidden />
             <p>
               {fallbackReason ?? "We couldn't find an exact match for your active filters, so we are showing top recommendations in related fields."}{" "}
               Can&apos;t find what you need?{" "}

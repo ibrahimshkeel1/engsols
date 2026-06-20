@@ -50,7 +50,7 @@ export default async function SettingsPage() {
       <h1 className="font-display text-3xl tracking-tight">Account settings</h1>
       <p className="mt-2 text-muted-foreground">Manage your profile, goals, and saved mentors.</p>
 
-      <Card className="card-elevated mt-8">
+      <Card className="card-elevated mt-8 border-zone-recruiter/15">
         <CardContent className="space-y-8 p-6">
           <section>
             <h2 className="font-semibold">Profile photo</h2>
@@ -83,12 +83,23 @@ export default async function SettingsPage() {
               )}
             </dl>
             <div className="mt-4 space-y-3">
-              <Link href="/settings/password" className="inline-block text-sm text-primary hover:underline">
+              <Link href="/settings/password" className="inline-block text-sm text-zone-recruiter hover:underline">
                 Change password →
               </Link>
-              <div>
-                <p className="mb-2 text-sm text-muted-foreground">Billing & subscriptions</p>
-                <ManageBillingButton />
+              <div className="rounded-xl border border-zone-recruiter/25 bg-zone-recruiter/5 p-4">
+                <p className="text-sm font-semibold text-zone-recruiter">Billing & subscriptions</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Manage mentorship plans, premium exams, and payment methods in Stripe.
+                </p>
+                <div className="mt-4">
+                  <ManageBillingButton />
+                </div>
+              </div>
+              <div className="rounded-xl border border-zone-exams/20 bg-zone-exams/5 p-4">
+                <p className="text-sm font-semibold text-zone-exams">Premium access</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Exam prep bundles and mentorship upgrades appear in your billing portal.
+                </p>
               </div>
               <div>
                 <p className="mb-2 text-sm text-muted-foreground">Browser notifications</p>
@@ -109,9 +120,9 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="card-elevated mt-8">
+      <Card className="card-elevated mt-8 border-zone-mentorship/15">
         <CardContent className="p-6">
-          <h2 className="font-semibold">Mentorship roadmaps</h2>
+          <h2 className="font-semibold text-zone-mentorship">Mentorship roadmaps</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Milestones your mentor sets — track deadlines and study resources.
           </p>

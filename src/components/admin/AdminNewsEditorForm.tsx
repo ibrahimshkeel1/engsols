@@ -37,24 +37,35 @@ export function AdminNewsEditorForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       <FormField label="Title" id="news-title">
-        <Input name="title" required placeholder="Article headline" />
+        <Input name="title" zone="news" required placeholder="Article headline" />
       </FormField>
 
       <FormField label="Summary" id="news-summary" hint="Shown on cards and the hero banner.">
-        <Textarea name="summary" required rows={2} placeholder="Short summary for listings" />
+        <Textarea name="summary" zone="news" required rows={2} placeholder="Short summary for listings" />
       </FormField>
 
-      <FormField label="Image URL" id="news-image" hint="Optional cover image URL for the article hero.">
-        <Input name="imageUrl" type="url" placeholder="https://..." />
-      </FormField>
+      <div className="rounded-xl border border-zone-news/25 bg-zone-news/5 p-4">
+        <FormField label="Image URL" id="news-image" hint="Optional cover image URL for the article hero.">
+          <Input name="imageUrl" zone="news" type="url" placeholder="https://..." />
+        </FormField>
+      </div>
 
-      <FormField label="Content" id="news-content" hint="Markdown supported: **bold**, ## headings, [links](url).">
-        <Textarea name="content" required rows={12} placeholder="Full article body..." />
-      </FormField>
+      <div className="rounded-xl border border-zone-news/25 bg-surface p-4">
+        <FormField label="Content" id="news-content" hint="Markdown supported: **bold**, ## headings, [links](url).">
+          <Textarea
+            name="content"
+            zone="news"
+            required
+            rows={12}
+            placeholder="Full article body..."
+            className="min-h-[16rem] font-mono text-[13px]"
+          />
+        </FormField>
+      </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <FormField label="Discipline" id="news-discipline">
-          <Select name="discipline" required defaultValue="Mechanical" className="w-full">
+          <Select name="discipline" zone="news" required defaultValue="Mechanical" className="w-full">
             {disciplines.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -63,28 +74,31 @@ export function AdminNewsEditorForm() {
           </Select>
         </FormField>
 
-        <FormField label="Tags" id="news-tags" hint="Comma-separated skills or sub-fields.">
-          <Input
-            id="news-tags-input"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="FE exam, structural, BIM"
-          />
-        </FormField>
+        <div className="rounded-xl border border-zone-news/25 bg-zone-news/5 p-4">
+          <FormField label="Tags" id="news-tags" hint="Comma-separated skills or sub-fields.">
+            <Input
+              id="news-tags-input"
+              zone="news"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="FE exam, structural, BIM"
+            />
+          </FormField>
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 rounded-xl border border-zone-news/15 bg-zone-news/[0.03] px-4 py-3">
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="publish" value="true" defaultChecked className="rounded" />
+          <input type="checkbox" name="publish" value="true" defaultChecked className="rounded accent-[hsl(var(--color-news))]" />
           Publish immediately
         </label>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="featured" value="true" className="rounded" />
+          <input type="checkbox" name="featured" value="true" className="rounded accent-[hsl(var(--color-news))]" />
           Feature in hero banner
         </label>
       </div>
 
-      <Button type="submit" variant="accent" disabled={pending}>
+      <Button type="submit" variant="zoneNews" disabled={pending}>
         {pending ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />

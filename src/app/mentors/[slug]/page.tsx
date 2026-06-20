@@ -69,7 +69,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
                 {mentor.featured && <Badge className="bg-primary/10 text-primary">Featured mentor</Badge>}
                 {mentor.verified && (
-                  <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-300">
+                  <Badge className="bg-zone-mentorship/10 text-zone-mentorship">
                     <BadgeCheck className="mr-1 h-3 w-3" /> Verified
                   </Badge>
                 )}

@@ -32,7 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="flex min-h-[calc(100vh-4rem)] flex-col lg:flex-row">
       <PanelSidebar title="Admin" subtitle="EngSols" items={adminNav} />
       <div className="flex-1">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border-custom bg-bg-surface px-6 py-4">
           <p className="text-sm text-muted-foreground">
             Signed in as <span className="font-medium text-foreground">{user.full_name}</span>
           </p>
@@ -47,7 +47,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </form>
           </div>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="bg-bg-main p-6">{children}</div>
       </div>
     </div>
   );

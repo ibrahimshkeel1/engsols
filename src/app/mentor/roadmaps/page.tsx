@@ -17,7 +17,8 @@ export default async function MentorRoadmapsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Mentorship roadmaps</h1>
+      <p className="section-label text-zone-mentorship">Student progress</p>
+      <h1 className="mt-1 text-2xl font-bold">Mentorship roadmaps</h1>
       <p className="mt-1 text-muted-foreground">
         Track milestone progress with students across your active mentorships.
       </p>

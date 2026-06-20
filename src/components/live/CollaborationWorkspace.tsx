@@ -110,14 +110,14 @@ function CollaborationWorkspaceInner({
   }, [room, isHost]);
 
   return (
-    <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 sm:gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+    <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 bg-bg-main sm:gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zone-live/25 bg-zone-live/5 px-3 py-2 sm:gap-3 sm:px-4">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-zone-live sm:text-xs">
             <span className="live-dot me-1.5 inline-block h-1.5 w-1.5 rounded-full bg-zone-live align-middle" />
             Live now
           </p>
-          <h1 className="truncate font-display text-lg tracking-tight sm:text-2xl">{title}</h1>
+          <h1 className="truncate font-display text-lg tracking-tight text-text-main sm:text-2xl">{title}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <SyncStatusIndicator room={room} className="hidden sm:inline-flex" />
@@ -146,7 +146,7 @@ function CollaborationWorkspaceInner({
             aria-labelledby={`workspace-tab-${activeTab}`}
             className="order-1 flex min-h-0 flex-1 flex-col lg:order-2 lg:col-span-7 lg:h-full"
           >
-            <div className="mb-2 hidden items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/40 px-3 py-2 text-xs text-muted-foreground backdrop-blur-sm sm:flex">
+            <div className="mb-2 hidden items-center justify-between gap-2 rounded-lg border border-zone-live/20 bg-bg-surface px-3 py-2 text-xs text-text-muted backdrop-blur-sm sm:flex">
               <span>
                 {activeTab === "whiteboard"
                   ? "Collaborative whiteboard — synced live with all participants"
@@ -163,7 +163,7 @@ function CollaborationWorkspaceInner({
 
         <div
           className={cn(
-            "live-video-shell live-kit-room min-h-0 overflow-hidden rounded-2xl border border-border transition-all duration-200",
+            "live-video-shell live-kit-room min-h-0 overflow-hidden rounded-2xl border border-zone-live/20 transition-all duration-200",
             isSplit
               ? "order-2 h-[100px] max-h-[24dvh] shrink-0 lg:order-1 lg:col-span-5 lg:h-full lg:max-h-none"
               : "h-full max-h-none flex-1",

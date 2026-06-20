@@ -35,7 +35,7 @@ function BookingLoginGate({ mentorSlug }: { mentorSlug: string }) {
       <p className="text-sm text-muted-foreground">Log in to request a booking with this mentor.</p>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 inline-flex h-10 items-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
+        className="mt-3 inline-flex h-10 items-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
       >
         Log in to book
       </Link>
@@ -118,7 +118,7 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
                 href={calendlyForOneOff}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-slate-950"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
               >
                 Book & pay via Calendly <ExternalLink className="h-4 w-4" />
               </a>

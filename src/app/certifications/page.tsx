@@ -34,7 +34,7 @@ export default async function CertificationsPage() {
               <Link key={cert.slug} href={`/certifications/${cert.slug}`} className="card-interactive rounded-2xl p-5">
                 <DisciplineBadge discipline={cert.discipline} />
                 <h3 className="mt-3 text-lg font-semibold">{cert.shortName}</h3>
-                <p className="text-sm font-medium text-foreground/90">{cert.name}</p>
+                <p className="text-sm font-medium text-text-main">{cert.name}</p>
                 <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{cert.description}</p>
                 <p className="mt-3 text-xs text-muted-foreground">
                   ~{cert.avgPrepMonths} months prep

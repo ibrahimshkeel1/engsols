@@ -19,10 +19,10 @@ function RoadmapCard({ roadmap, viewerRole }: { roadmap: MentorshipRoadmap; view
       : roadmap.mentorName ?? "Mentor";
 
   return (
-    <article className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300">
+    <article className="rounded-2xl border border-zone-mentorship/20 bg-surface p-5 shadow-premium-card transition-colors duration-300">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <p className="text-xs font-semibold uppercase tracking-wide text-zone-mentorship">
             With {partnerLabel}
           </p>
           <h3 className="mt-1 font-display text-lg font-semibold tracking-tight">{roadmap.title}</h3>
@@ -38,7 +38,7 @@ function RoadmapCard({ roadmap, viewerRole }: { roadmap: MentorshipRoadmap; view
           )}
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold tabular-nums">{progress}%</p>
+          <p className="text-2xl font-bold tabular-nums text-zone-exams">{progress}%</p>
           <p className="text-xs text-muted-foreground">complete</p>
         </div>
       </div>
@@ -46,7 +46,7 @@ function RoadmapCard({ roadmap, viewerRole }: { roadmap: MentorshipRoadmap; view
       <div className="mt-4">
         <div className="h-2.5 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-zone-recruiter to-zone-exams transition-all duration-500"
             style={{ width: `${progress}%` }}
             role="progressbar"
             aria-valuenow={progress}
