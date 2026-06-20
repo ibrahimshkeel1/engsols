@@ -1,33 +1,72 @@
 import { notFound } from "next/navigation";
-import { Award, BadgeCheck, Calendar } from "lucide-react";
-import { getSimilarMentors } from "@/lib/filter-mentors";
-import { getApprovedMentors, getMentorBySlug } from "@/lib/data/mentors";
+import { Award } from "lucide-react";
+import { getMentorBySlug } from "@/lib/data/mentors";
 import { getCurrentUser } from "@/lib/auth";
-import { isMentorSaved } from "@/lib/data/saved-mentors";
-import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
-import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
-import { MentorIntroVideo } from "@/components/mentors/MentorIntroVideo";
 import { MentorRating } from "@/components/mentors/MentorRating";
-import { MentorReviewForm } from "@/components/mentor/MentorReviewForm";
-import { MentorStudentQuestions } from "@/components/mentors/MentorStudentQuestions";
-import { SaveMentorButton } from "@/components/mentor/SaveMentorButton";
-import { SimilarMentors } from "@/components/mentors/SimilarMentors";
-import { MentorAvailabilityBadges } from "@/components/mentors/MentorAvailabilityBadges";
 import { MentorMobileBookBar } from "@/components/mentors/MentorMobileBookBar";
-import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
-import { ShareButton } from "@/components/shared/ShareButton";
-import { SectionReveal } from "@/components/motion/SectionReveal";
-import { Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ButtonLink } from "@/components/ui/button";
+import type { Mentor } from "@/types";
 
 type PageProps = { params: Promise<{ slug: string }>; searchParams: Promise<{ session?: string }> };
 
 export const revalidate = 60;
+
+const OUTCOMES = [
+  "Career roadmap clarity",
+  "Exam preparation guidance",
+  "Portfolio and CV feedback",
+  "Weekly direction with monthly mentorship",
+];
+
+function mentorValueBullets(mentor: Mentor): string[] {
+  const bullets: string[] = [];
+  const goalText = mentor.goals.join(" ").toLowerCase();
+  const skillText = mentor.skills.join(" ").toLowerCase();
+
+  if (/fe|pe|exam|certif|study/.test(goalText) || /fe|pe|exam/.test(skillText)) {
+    bullets.push("Helped engineers pass FE/PE exams and professional certifications");
+  }
+
+  if (mentor.discipline) {
+    const fields = mentor.subFields.slice(0, 2).join(" and ");
+    bullets.push(
+      fields
+        ? `${mentor.discipline} — ${fields} expertise`
+        : `${mentor.discipline} and applied engineering expertise`,
+    );
+  }
+
+  if (/portfolio|career|roadmap|hire/.test(goalText)) {
+    bullets.push("Portfolio and career roadmap guidance");
+  }
+
+  for (const goal of mentor.goals) {
+    if (bullets.length >= 4) break;
+    const label = goal.replace(/-/g, " ");
+    if (!bullets.some((b) => b.toLowerCase().includes(label))) {
+      bullets.push(`Practical mentorship for ${label}`);
+    }
+  }
+
+  if (bullets.length < 3 && mentor.skills.length > 0) {
+    bullets.push(`Hands-on guidance in ${mentor.skills.slice(0, 2).join(" and ")}`);
+  }
+
+  return bullets.slice(0, 4);
+}
+
+function availabilityUrgency(mentor: Mentor): string {
+  if (mentor.introSlotsThisWeek && mentor.introSlotsThisWeek > 0) {
+    return `Next available slots: ${mentor.introSlotsThisWeek} intro opening${mentor.introSlotsThisWeek === 1 ? "" : "s"} this week`;
+  }
+  if (mentor.respondsWithinHours && mentor.respondsWithinHours <= 24) {
+    return "Next available slots: Today / Tomorrow";
+  }
+  return "Limited weekly mentorship slots available";
+}
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
@@ -51,157 +90,143 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
   const mentor = await getMentorBySlug(slug);
   if (!mentor) notFound();
 
-  const [allMentors, user] = await Promise.all([getApprovedMentors(), getCurrentUser()]);
-  const saved = user ? await isMentorSaved(user.id, slug) : false;
-  const similar = getSimilarMentors(allMentors, mentor);
-  const stripe = getDisciplineColors(mentor.discipline).stripe;
+  const user = await getCurrentUser();
+  const valueBullets = mentorValueBullets(mentor);
+  const testimonials = mentor.reviews.slice(0, 3);
 
   return (
-    <div>
-      <section className="hero-dark relative overflow-hidden">
-        <div className={cn("absolute inset-x-0 top-0 h-1", stripe)} />
-        <div className="bg-grid absolute inset-0 opacity-40" />
-        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
-            <Avatar name={mentor.name} discipline={mentor.discipline} size="2xl" className="shrink-0 rounded-2xl ring-4 ring-border" src={mentor.avatarUrl} />
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <div className="flex flex-wrap items-center gap-3">
+    <div className="pb-24 lg:pb-12">
+      {/* 1. Hero decision strip */}
+      <section className="border-b border-border/60 bg-background">
+        <div className="page-container-wide py-8 sm:py-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-display-lg">{mentor.name}</h1>
+              <p className="text-body-lg mt-1 text-muted-foreground">{mentor.headline}</p>
+              <div className="mt-4">
                 <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
-                {mentor.featured && <Badge className="bg-primary/10 text-primary">Featured mentor</Badge>}
-                {mentor.verified && (
-                  <Badge className="bg-zone-mentorship/10 text-zone-mentorship">
-                    <BadgeCheck className="mr-1 h-3 w-3" /> Verified
-                  </Badge>
-                )}
-                {user && <SaveMentorButton mentorSlug={slug} initialSaved={saved} />}
-                <ShareButton title={`${mentor.name} on EngSols`} text={mentor.headline} />
               </div>
-              <h1 className="font-display text-4xl sm:text-5xl">{mentor.name}</h1>
-              <p className="mt-2 text-xl text-muted-foreground">{mentor.headline}</p>
-              <MentorAvailabilityBadges mentor={mentor} />
-              <div className="mt-2 flex flex-wrap items-center gap-3 text-muted-foreground">
-                <CompanyLogo company={mentor.company} />
-                <span>{mentor.company}</span>
-                <span>·</span>
-                <span>{mentor.yearsExperience} years experience</span>
+              <p className="text-body mt-3 text-muted-foreground">
+                {mentor.yearsExperience}+ years · {mentor.discipline}
+                {mentor.reviewCount > 0 ? ` · ${mentor.reviewCount} reviews` : ""}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 lg:shrink-0 lg:items-end">
+              <Avatar
+                name={mentor.name}
+                discipline={mentor.discipline}
+                size="2xl"
+                className="rounded-2xl ring-2 ring-border"
+                src={mentor.avatarUrl}
+              />
+              <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-56 lg:flex-col">
+                <ButtonLink href="#booking-options" size="lg" className="w-full">
+                  Book Session
+                </ButtonLink>
+                <ButtonLink href="#booking-monthly" variant="secondary" size="lg" className="w-full">
+                  Start Monthly Mentorship
+                </ButtonLink>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <DisciplineBadge discipline={mentor.discipline} />
-                {mentor.credentials.map((c) => (
-                  <span key={c} className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                    <Award className="h-3 w-3" />
-                    {c}
-                  </span>
-                ))}
-              </div>
-              <a
-                href="#book-intro"
-                className="mt-4 inline-flex w-fit items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground hover:brightness-110"
-              >
-                <Calendar className="h-4 w-4" />
-                Book free intro call
-              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
-          <div className="space-y-12 lg:col-span-2">
-            <SectionReveal>
-            <section id="why-mentor">
-              <h2 className="text-xl font-semibold">Why mentor with me</h2>
-              <p className="mt-3 leading-relaxed text-muted-foreground">{mentor.bio}</p>
-              {mentor.introVideoUrl && (
-                <div className="mt-6">
-                  <MentorIntroVideo url={mentor.introVideoUrl} name={mentor.name} />
-                </div>
-              )}
-              <div className="mt-6">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Skills & expertise</h3>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {mentor.skills.map((skill) => (
-                    <Badge key={skill}>{skill}</Badge>
-                  ))}
-                </div>
-                {mentor.subFields.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {mentor.subFields.map((f) => (
-                      <span key={f} className="rounded-lg bg-muted px-3 py-1 text-sm">{f}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </section>
-            </SectionReveal>
+      <div className="page-container-wide mx-auto max-w-3xl space-y-16 py-12 sm:space-y-20 sm:py-16">
+        {/* 2. Value summary */}
+        <section>
+          <h2 className="section-heading">What you get</h2>
+          <ul className="mt-4 list-disc space-y-2 ps-5 text-body text-muted-foreground">
+            {valueBullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        </section>
 
-            <SectionReveal delay={0.08}>
-            <section id="reviews">
-              <h2 className="text-xl font-semibold">Reviews</h2>
-              <div className="mt-4 space-y-4">
-                {mentor.reviews.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No reviews yet. Be the first after a session.</p>
-                )}
-                {mentor.reviews.map((review) => (
-                  <Card key={review.author + review.text.slice(0, 20)} className="card-elevated">
-                    <CardContent className="p-5">
-                      <div className="flex items-center gap-1 text-accent">
-                        {Array.from({ length: review.rating }).map((_, i) => (
-                          <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                        ))}
-                      </div>
-                      <p className="mt-3 leading-relaxed">&ldquo;{review.text}&rdquo;</p>
-                      <p className="mt-3 text-sm text-muted-foreground">— {review.author}, {review.role}</p>
-                    </CardContent>
-                  </Card>
+        {/* 3. Booking options */}
+        <section>
+          <MentorBookingCard
+            mentor={mentor}
+            defaultName={user?.full_name ?? ""}
+            defaultEmail={user?.email ?? ""}
+            initialSession={session}
+            isLoggedIn={!!user}
+          />
+        </section>
+
+        {/* 4. Outcomes */}
+        <section>
+          <h2 className="section-heading">Outcomes</h2>
+          <ul className="mt-4 list-disc space-y-2 ps-5 text-body text-muted-foreground">
+            {OUTCOMES.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 5. Credibility */}
+        <section>
+          <h2 className="section-heading">Background</h2>
+          <ul className="mt-4 space-y-3 text-body text-muted-foreground">
+            <li className="flex items-center gap-2">
+              <CompanyLogo company={mentor.company} size="sm" />
+              <span>
+                {mentor.company} · {mentor.yearsExperience} years in {mentor.discipline}
+              </span>
+            </li>
+            <li>{mentor.headline}</li>
+            {mentor.credentials.length > 0 && (
+              <li className="flex flex-wrap gap-2 pt-1">
+                {mentor.credentials.slice(0, 4).map((c) => (
+                  <span
+                    key={c}
+                    className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium"
+                  >
+                    <Award className="h-3 w-3" aria-hidden />
+                    {c}
+                  </span>
                 ))}
-              </div>
-              {user && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-semibold">Leave a review</h3>
-                  <div className="mt-3">
-                    <MentorReviewForm mentorSlug={slug} />
-                  </div>
-                </div>
-              )}
-            </section>
-            </SectionReveal>
+              </li>
+            )}
+          </ul>
+        </section>
 
-            <SectionReveal delay={0.12}>
-            <MentorStudentQuestions mentor={mentor} />
-            </SectionReveal>
+        {/* 6. Testimonials */}
+        {testimonials.length > 0 && (
+          <section>
+            <h2 className="section-heading">What engineers say</h2>
+            <ul className="mt-6 flex flex-col gap-6">
+              {testimonials.map((review) => (
+                <li key={review.author + review.text.slice(0, 24)}>
+                  <blockquote className="text-body border-s-2 border-border-custom ps-4 text-muted-foreground">
+                    &ldquo;{review.text}&rdquo;
+                  </blockquote>
+                  <p className="text-caption mt-2 text-muted-foreground">
+                    — {review.author}, {review.role}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-            <SectionReveal delay={0.14}>
-            <section className="scroll-mt-28 rounded-2xl border border-border bg-muted/20 p-6 lg:hidden">
-              <h2 className="text-xl font-semibold">Book your intro</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Start with a free 30-minute call — no commitment required.
-              </p>
-              <a
-                href="#book-intro"
-                className="mt-4 inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground hover:brightness-110"
-              >
-                See booking options ↑
-              </a>
-            </section>
-            </SectionReveal>
-          </div>
+        {/* 7. Availability / urgency */}
+        <section className="rounded-lg border border-border/75 bg-muted/20 px-4 py-3 text-center">
+          <p className="text-sm text-muted-foreground">{availabilityUrgency(mentor)}</p>
+        </section>
 
-          <div id="book-intro" className="scroll-mt-28 space-y-6 lg:sticky lg:top-24 lg:self-start">
-            <MentorBookingCard
-              mentor={mentor}
-              defaultName={user?.full_name ?? ""}
-              defaultEmail={user?.email ?? ""}
-              initialSession={session}
-              isLoggedIn={!!user}
-            />
-            <ContentCrossLinks discipline={mentor.discipline} />
-          </div>
-        </div>
-
-        <SimilarMentors mentors={similar} />
+        {/* 8. Final CTA */}
+        <section className="border-t border-border/60 pt-12 text-center">
+          <p className="text-display-lg text-balance">
+            Move your career forward with {mentor.name.split(" ")[0]}.
+          </p>
+          <ButtonLink href="#booking-monthly" size="lg" className="mt-6">
+            Book Mentorship
+          </ButtonLink>
+        </section>
       </div>
+
       <MentorMobileBookBar />
     </div>
   );

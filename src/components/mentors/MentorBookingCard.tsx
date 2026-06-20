@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Calendar, Check, ExternalLink, MessageSquare, Video } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { Mentor } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { BookingRequestForm } from "@/components/mentors/BookingRequestForm";
@@ -10,15 +10,7 @@ import { sessionTypes } from "@/data/sessionTypes";
 import { formatMentorAvailabilitySummary } from "@/lib/mentor-availability";
 import { cn } from "@/lib/utils";
 
-const includes = [
-  { icon: Video, text: "30-min free intro call" },
-  { icon: MessageSquare, text: "Async Q&A between sessions" },
-  { icon: Calendar, text: "Flexible weekly or bi-weekly calls" },
-  { icon: Check, text: "Career roadmap tailored to you" },
-];
-
-type Tab = "intro" | "monthly" | "one-off";
-type OneOffType = "study-plan" | "interview-prep";
+type BookingOption = "intro" | "deep" | "monthly";
 
 type Props = {
   mentor: Mentor;
@@ -29,7 +21,7 @@ type Props = {
 };
 
 function BookingLoginGate({ mentorSlug }: { mentorSlug: string }) {
-  const next = encodeURIComponent(`/mentors/${mentorSlug}#book-intro`);
+  const next = encodeURIComponent(`/mentors/${mentorSlug}#booking-options`);
   return (
     <div className="rounded-xl border border-border bg-muted/40 p-4 text-center">
       <p className="text-sm text-muted-foreground">Log in to request a booking with this mentor.</p>
@@ -43,104 +35,124 @@ function BookingLoginGate({ mentorSlug }: { mentorSlug: string }) {
   );
 }
 
+const deepSession = sessionTypes.find((s) => s.id === "study-plan")!;
+
 export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSession, isLoggedIn = false }: Props) {
-  const initialTab: Tab =
-    initialSession === "study-plan" || initialSession === "interview-prep" ? "one-off" : "intro";
-  const [tab, setTab] = useState<Tab>(initialTab);
-  const [oneOffType, setOneOffType] = useState<OneOffType>(
-    initialSession === "interview-prep" ? "interview-prep" : "study-plan",
-  );
+  const initialOption: BookingOption =
+    initialSession === "monthly"
+      ? "monthly"
+      : initialSession === "study-plan" || initialSession === "interview-prep"
+        ? "deep"
+        : "intro";
+  const [selected, setSelected] = useState<BookingOption>(initialOption);
 
-  const calendlyForOneOff =
-    oneOffType === "study-plan"
-      ? mentor.studyPlanCalendlyUrl ?? mentor.calendlyUrl
-      : mentor.interviewCalendlyUrl ?? mentor.calendlyUrl;
-
+  const introPrice = mentor.introCallRate > 0 ? `$${mentor.introCallRate}` : "Free";
   const availabilitySummary = formatMentorAvailabilitySummary(mentor);
 
-  return (
-    <div className="card-elevated overflow-hidden rounded-2xl">
-      <div className="border-b border-border bg-muted/40 p-5">
-        <Badge className="bg-zone-mentorship/15 text-zone-mentorship">Free intro call</Badge>
-        <p className="mt-3 text-sm text-muted-foreground">Monthly mentorship</p>
-        <p className="text-3xl font-bold">
-          ${mentor.monthlyRate}
-          <span className="text-base font-normal text-muted-foreground">/mo</span>
-        </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {availabilitySummary ?? "Book a free intro to check availability"}
-        </p>
-      </div>
+  const formType = selected === "deep" ? "study-plan" : selected;
 
-      <div className="flex border-b border-border">
-        {([
-          { id: "intro" as const, label: "Intro" },
-          { id: "monthly" as const, label: "Monthly" },
-          { id: "one-off" as const, label: "One-off" },
-        ]).map((t) => (
+  const calendlyUrl =
+    selected === "intro"
+      ? mentor.introCalendlyUrl ?? mentor.calendlyUrl
+      : selected === "deep"
+        ? mentor.studyPlanCalendlyUrl ?? mentor.calendlyUrl
+        : null;
+
+  const options: {
+    id: BookingOption;
+    title: string;
+    duration: string;
+    price: string;
+    detail: string;
+    highlighted?: boolean;
+  }[] = [
+    {
+      id: "intro",
+      title: "Intro Call",
+      duration: "30 min",
+      price: introPrice,
+      detail: "Meet the mentor, no commitment",
+    },
+    {
+      id: "deep",
+      title: "Deep Session",
+      duration: "60 min",
+      price: `$${deepSession.price}`,
+      detail: deepSession.title,
+    },
+    {
+      id: "monthly",
+      title: "Monthly Mentorship",
+      duration: "Ongoing",
+      price: `$${mentor.monthlyRate}/mo`,
+      detail: "Best for sustained career progress",
+      highlighted: true,
+    },
+  ];
+
+  return (
+    <div id="booking-options" className="scroll-mt-24">
+      <h2 className="section-heading">Book a session</h2>
+      <p className="text-body mt-2 text-muted-foreground">
+        {availabilitySummary ?? "Choose an option — pricing is upfront, no surprises."}
+      </p>
+
+      <div className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+        {options.map((option) => (
           <button
-            key={t.id}
+            key={option.id}
             type="button"
-            onClick={() => setTab(t.id)}
+            id={option.id === "monthly" ? "booking-monthly" : undefined}
+            onClick={() => setSelected(option.id)}
             className={cn(
-              "flex-1 py-3 text-sm font-medium transition-colors",
-              tab === t.id ? "border-b-2 border-zone-mentorship text-zone-mentorship" : "text-muted-foreground hover:text-foreground",
+              "flex w-[min(100%,16rem)] shrink-0 snap-start flex-col rounded-xl border bg-card p-5 text-start transition-all duration-200 ease-out sm:w-auto",
+              option.highlighted && "shadow-premium-card",
+              selected === option.id
+                ? option.highlighted
+                  ? "border-primary ring-2 ring-primary/25"
+                  : "border-border-custom shadow-premium-card"
+                : "border-border/75 hover:border-border",
             )}
           >
-            {t.label}
+            {option.highlighted && (
+              <Badge className="mb-3 w-fit bg-primary/10 text-primary">Best value</Badge>
+            )}
+            <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
+              {option.duration}
+            </p>
+            <p className="mt-1 text-base font-semibold text-foreground">{option.title}</p>
+            <p className="mt-2 text-2xl font-bold tabular-nums">{option.price}</p>
+            <p className="text-caption mt-2 text-muted-foreground">{option.detail}</p>
+            <span
+              className={cn(
+                "mt-4 inline-flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium",
+                selected === option.id
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border bg-surface text-foreground",
+              )}
+            >
+              {selected === option.id ? "Selected" : "Book"}
+            </span>
           </button>
         ))}
       </div>
 
-      <div className="p-5">
-        {tab === "one-off" ? (
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              {(["study-plan", "interview-prep"] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setOneOffType(t)}
-                  className={cn(
-                    "flex-1 rounded-lg border px-2 py-2 text-xs font-medium",
-                    oneOffType === t ? "border-zone-mentorship bg-zone-mentorship/10 text-zone-mentorship" : "border-border text-muted-foreground",
-                  )}
-                >
-                  {sessionTypes.find((s) => s.id === t)?.title ?? t}
-                </button>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {sessionTypes.find((s) => s.id === oneOffType)?.description}
-            </p>
-            {calendlyForOneOff ? (
-              <a
-                href={calendlyForOneOff}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
-              >
-                Book & pay via Calendly <ExternalLink className="h-4 w-4" />
-              </a>
-            ) : null}
-            {isLoggedIn ? (
-              <BookingRequestForm
-                mentorSlug={mentor.slug}
-                mentorName={mentor.name}
-                type={oneOffType}
-                monthlyRate={mentor.monthlyRate}
-                defaultName={defaultName}
-                defaultEmail={defaultEmail}
-              />
-            ) : (
-              <BookingLoginGate mentorSlug={mentor.slug} />
-            )}
-          </div>
-        ) : isLoggedIn ? (
+      <div className="mt-8 rounded-xl border border-border/75 bg-muted/20 p-5 sm:p-6">
+        {calendlyUrl && (
+          <a
+            href={calendlyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
+          >
+            Book via Calendly <ExternalLink className="h-4 w-4" />
+          </a>
+        )}
+        {isLoggedIn ? (
           <BookingRequestForm
             mentorSlug={mentor.slug}
             mentorName={mentor.name}
-            type={tab}
+            type={formType}
             monthlyRate={mentor.monthlyRate}
             defaultName={defaultName}
             defaultEmail={defaultEmail}
@@ -148,26 +160,6 @@ export function MentorBookingCard({ mentor, defaultName, defaultEmail, initialSe
         ) : (
           <BookingLoginGate mentorSlug={mentor.slug} />
         )}
-      </div>
-
-      <div className="space-y-2.5 border-t border-border p-5">
-        <p className="text-sm font-semibold">What&apos;s included</p>
-        {includes.map((item) => (
-          <div key={item.text} className="flex items-center gap-2 text-sm text-muted-foreground">
-            <item.icon className="h-4 w-4 shrink-0 text-zone-mentorship" />
-            {item.text}
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-2 border-t border-border p-5">
-        <p className="text-sm font-semibold">One-off sessions</p>
-        {sessionTypes.filter((s) => s.id !== "intro").map((s) => (
-          <div key={s.id} className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{s.title}</span>
-            <span className="font-medium">${s.price}</span>
-          </div>
-        ))}
       </div>
     </div>
   );
