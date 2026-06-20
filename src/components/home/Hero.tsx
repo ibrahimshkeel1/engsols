@@ -54,13 +54,14 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
   }
 
   return (
-    <section className="hero-dark relative overflow-hidden">
-      <div className="bg-grid absolute inset-0 opacity-60" />
+    <section className="hero-zone-mentorship relative overflow-hidden">
+      <div className="zone-spectrum absolute inset-x-0 top-0 h-1 opacity-90" aria-hidden />
+      <div className="bg-grid absolute inset-0 opacity-50" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <MotionWrap custom={0} reducedMotion={reducedMotion} className="section-label">
+            <MotionWrap custom={0} reducedMotion={reducedMotion} className="section-label text-zone-mentorship">
               Engineering mentorship
             </MotionWrap>
             <MotionWrap custom={1} reducedMotion={reducedMotion} className="font-display mt-4 text-4xl leading-[1.1] sm:text-5xl lg:text-[3.25rem]">
@@ -81,7 +82,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
                     className="h-11 border-border bg-card pl-10 shadow-sm"
                   />
                 </div>
-                <Button type="submit" variant="accent" size="lg" className="shrink-0">
+                <Button type="submit" variant="zoneMentorship" size="lg" className="shrink-0">
                   Search
                 </Button>
               </form>
@@ -92,7 +93,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
                 <Link
                   key={d}
                   href={`/mentors?discipline=${encodeURIComponent(d)}`}
-                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+                  className="rounded-full border border-zone-mentorship/25 bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-zone-mentorship/50 hover:text-zone-mentorship"
                 >
                   {d}
                 </Link>
@@ -102,7 +103,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
             <MotionWrap custom={5} reducedMotion={reducedMotion} className="mt-10 flex flex-wrap items-center gap-6">
               <Link
                 href="/mentors"
-                className="group inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                className="group inline-flex items-center gap-2 rounded-lg bg-zone-mentorship px-5 py-2.5 text-sm font-medium text-white transition-colors hover:brightness-110 dark:text-bg-main"
               >
                 Find a mentor
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -115,7 +116,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
 
           {featuredMentors.length > 0 ? (
             <div>
-              <MotionWrap custom={3} reducedMotion={reducedMotion} className="section-label">
+              <MotionWrap custom={3} reducedMotion={reducedMotion} className="section-label text-zone-mentorship">
                 Featured mentors
               </MotionWrap>
               <MotionWrap custom={4} reducedMotion={reducedMotion} className="mt-3 space-y-3">
@@ -137,7 +138,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link
                   href="/mentors"
-                  className="inline-flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground"
+                  className="inline-flex h-11 items-center rounded-lg bg-zone-mentorship px-5 text-sm font-medium text-white dark:text-bg-main"
                 >
                   Browse mentors
                 </Link>

@@ -6,8 +6,8 @@
    Semantic product zones + Tailwind v4 @theme bindings (no tailwind.config.js). */
 
 :root {
-  /* Core foundations */
-  --background: 210 40% 96%;
+  /* Core foundations — cool studio slate (distinct from legacy warm stone) */
+  --background: 214 32% 94%;
   --surface: 0 0% 100%;
   --text-main: 222 47% 11%;
   --text-muted: 215 16% 47%;
@@ -40,7 +40,7 @@
   --surface-elevated: var(--surface);
   --hero-from: 214 32% 97%;
   --hero-to: var(--background);
-  --nav-bg: hsl(210 40% 96% / 0.88);
+  --nav-bg: hsl(214 32% 94% / 0.88);
   --grid-color: hsl(222 47% 11% / 0.04);
   --glow: hsl(var(--color-live-rooms) / 0.14);
   --video-shell-bg: 222 47% 11%;
@@ -182,6 +182,53 @@ body {
   background: linear-gradient(165deg, hsl(var(--hero-from)) 0%, hsl(var(--hero-to)) 100%);
   color: hsl(var(--text-main));
   border-bottom: 1px solid hsl(var(--border));
+}
+
+/* Product-zone hero bands — visible semantic color on first paint */
+.hero-zone-mentorship {
+  background:
+    linear-gradient(180deg, hsl(var(--color-mentorship) / 0.14) 0%, hsl(var(--background)) 72%),
+    hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--color-mentorship) / 0.22);
+}
+
+.hero-zone-live {
+  background:
+    linear-gradient(180deg, hsl(var(--color-live-rooms) / 0.14) 0%, hsl(var(--background)) 72%),
+    hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--color-live-rooms) / 0.22);
+}
+
+.hero-zone-exams {
+  background:
+    linear-gradient(180deg, hsl(var(--color-exams) / 0.14) 0%, hsl(var(--background)) 72%),
+    hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--color-exams) / 0.22);
+}
+
+.hero-zone-recruiter {
+  background:
+    linear-gradient(180deg, hsl(var(--color-recruiter) / 0.14) 0%, hsl(var(--background)) 72%),
+    hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--color-recruiter) / 0.22);
+}
+
+.hero-zone-news {
+  background:
+    linear-gradient(180deg, hsl(var(--color-news) / 0.14) 0%, hsl(var(--background)) 72%),
+    hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--color-news) / 0.22);
+}
+
+.zone-spectrum {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--color-mentorship)) 0%,
+    hsl(var(--color-live-rooms)) 25%,
+    hsl(var(--color-exams)) 50%,
+    hsl(var(--color-recruiter)) 75%,
+    hsl(var(--color-news)) 100%
+  );
 }
 
 .hero-dark .text-muted-hero {
@@ -379,6 +426,12 @@ body {
   width: 50%;
   left: 25%;
 }
+
+.nav-link[data-zone="mentorship"]::after { background: hsl(var(--color-mentorship)); }
+.nav-link[data-zone="live"]::after { background: hsl(var(--color-live-rooms)); }
+.nav-link[data-zone="exams"]::after { background: hsl(var(--color-exams)); }
+.nav-link[data-zone="recruiter"]::after { background: hsl(var(--color-recruiter)); }
+.nav-link[data-zone="news"]::after { background: hsl(var(--color-news)); }
 
 .section-label {
   font-size: 0.6875rem;

@@ -19,7 +19,7 @@ export default async function MentorsPage() {
         description={description}
         label="Mentorship"
         labelClassName="text-zone-mentorship"
-        className="border-zone-mentorship/20 bg-zone-mentorship/5"
+        className="border-zone-mentorship/25 bg-zone-mentorship/10"
       />
       <div className="mx-auto max-w-7xl bg-bg-main px-4 py-12 sm:px-6">
         <Suspense fallback={<BentoSkeletonGrid count={8} />}>

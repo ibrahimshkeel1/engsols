@@ -7,6 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { t } from "@/lib/i18n/messages";
+import { zoneAccentBar, zoneFromPath, zoneNavActive, zoneNavHover } from "@/lib/zone-routes";
 
 const primaryNav = [
   { href: "/mentors", key: "mentors" as const, outcome: "mentorsOutcome" as const },
@@ -45,6 +46,15 @@ export function NavbarShell({
   const [moreOpen, setMoreOpen] = useState(false);
   const pathname = usePathname();
   const { locale } = useLocale();
+  const routeZone = zoneFromPath(pathname);
+
+  function navZoneKey(href: string) {
+    if (href === "/mentors") return "mentorship";
+    if (href === "/live") return "live";
+    if (href === "/news") return "news";
+    if (href === "/portfolios" || href === "/forum") return "recruiter";
+    return undefined;
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -55,9 +65,10 @@ export function NavbarShell({
 
   return (
     <header className={cn("glass sticky top-0 z-50", scrolled && "glass-scrolled")}>
+      <div className={cn("h-1 w-full", zoneAccentBar[routeZone])} aria-hidden />
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="group shrink-0 font-display text-xl tracking-tight transition-opacity hover:opacity-80">
-          Eng<span className="text-primary">Sols</span>
+          Eng<span className="text-zone-recruiter">Sols</span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
@@ -68,9 +79,12 @@ export function NavbarShell({
               key={l.href}
               href={l.href}
               title={outcomeTitle}
+              data-zone={navZoneKey(l.href)}
               className={cn(
                 "nav-link rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted/80",
-                pathname.startsWith(l.href) ? "text-accent" : "text-muted-foreground hover:text-foreground",
+                pathname.startsWith(l.href)
+                  ? cn(zoneNavActive[l.href] ?? "text-foreground", "font-semibold")
+                  : cn("text-muted-foreground", zoneNavHover[l.href] ?? "hover:text-foreground"),
               )}
             >
               {t(locale, l.key)}

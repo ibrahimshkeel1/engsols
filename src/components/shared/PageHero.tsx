@@ -26,7 +26,7 @@ export function PageHero({
 }: PageHeroProps) {
   if (variant === "live") {
     return (
-      <section className={cn("border-b border-zone-live/20 bg-zone-live/5", className)}>
+      <section className={cn("border-b border-zone-live/25 bg-zone-live/10", className)}>
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-4 py-14 sm:px-6 sm:flex-row sm:items-end">
           <div className="animate-fade-up">
             {backHref && (
@@ -62,7 +62,7 @@ export function PageHero({
 
   if (variant === "editorial") {
     return (
-      <section className={cn("border-b border-zone-news/20 bg-zone-news/5", className)}>
+      <section className={cn("border-b border-zone-news/25 bg-zone-news/10", className)}>
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 animate-fade-up">
           {backHref && (
             <Link href={backHref} className="text-sm font-medium text-zone-news hover:underline">
