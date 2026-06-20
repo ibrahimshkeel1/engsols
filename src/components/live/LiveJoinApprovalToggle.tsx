@@ -8,6 +8,7 @@ type Props = {
   slug: string;
   initialValue: boolean;
   disabled?: boolean;
+  compact?: boolean;
   className?: string;
 };
 
@@ -15,6 +16,7 @@ export function LiveJoinApprovalToggle({
   slug,
   initialValue,
   disabled = false,
+  compact = false,
   className,
 }: Props) {
   const [enabled, setEnabled] = useState(initialValue);
@@ -26,6 +28,27 @@ export function LiveJoinApprovalToggle({
       const result = await setLiveJoinApproval(slug, next);
       if (!result.ok) setEnabled(!next);
     });
+  }
+
+  if (compact) {
+    return (
+      <label
+        className={cn(
+          "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground",
+          (disabled || pending) && "opacity-70",
+          className,
+        )}
+      >
+        <input
+          type="checkbox"
+          className="h-3.5 w-3.5 rounded border-border accent-zone-live"
+          checked={enabled}
+          disabled={disabled || pending}
+          onChange={(event) => handleChange(event.target.checked)}
+        />
+        Approval to join
+      </label>
+    );
   }
 
   return (

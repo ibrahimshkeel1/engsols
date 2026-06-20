@@ -11,7 +11,7 @@ import { LiveChatFloatingMessages } from "@/components/live/LiveChatFloatingMess
 import { WorkspaceSwitcher } from "@/components/live/WorkspaceSwitcher";
 import { WhiteboardWorkspace } from "@/components/live/WhiteboardWorkspace";
 import { CadSandboxWorkspace } from "@/components/live/CadSandboxWorkspace";
-import { LiveJoinRequestsPanel } from "@/components/live/LiveJoinRequestsPanel";
+import { LiveHostRoomControls } from "@/components/live/LiveHostRoomControls";
 import { SyncStatusIndicator } from "@/components/live/SyncStatusIndicator";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +38,7 @@ type Props = {
   serverUrl: string;
   token: string;
   isHost: boolean;
+  requireJoinApproval?: boolean;
   onEndCall?: () => void;
   ending?: boolean;
 };
@@ -46,6 +47,7 @@ function CollaborationWorkspaceInner({
   slug,
   title,
   isHost,
+  requireJoinApproval = false,
   onEndCall,
   ending,
 }: Omit<Props, "serverUrl" | "token">) {
@@ -144,7 +146,11 @@ function CollaborationWorkspaceInner({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <SyncStatusIndicator room={room} className="hidden sm:inline-flex" />
-          {isHost && <LiveJoinRequestsPanel slug={slug} isHost={isHost} />}
+          <LiveHostRoomControls
+            slug={slug}
+            isHost={isHost}
+            requireJoinApproval={requireJoinApproval}
+          />
           <WorkspaceSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
           <Link href={`/live/${slug}`} className="btn-secondary hidden h-10 text-text-main sm:inline-flex">
             Session info

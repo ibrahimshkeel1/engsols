@@ -22,7 +22,12 @@ export default async function LiveRoomPage({ params }: Props) {
   return (
     <div className="live-room-container mx-auto max-w-[min(100%,1600px)] px-4 py-4 sm:px-6">
       <LiveViewerTracker slug={slug} />
-      <LiveRoomClient slug={slug} title={stream.title} canEndCall={canEndCall} />
+      <LiveRoomClient
+        slug={slug}
+        title={stream.title}
+        canEndCall={canEndCall}
+        requireJoinApproval={stream.requireJoinApproval ?? false}
+      />
     </div>
   );
 }

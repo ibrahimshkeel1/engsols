@@ -9,6 +9,7 @@ type LiveVideoRoomProps = {
   slug: string;
   title: string;
   isHost: boolean;
+  requireJoinApproval?: boolean;
   onEndCall?: () => void;
   ending?: boolean;
 };
@@ -23,7 +24,14 @@ async function requestRoomToken(slug: string) {
   return { res, data };
 }
 
-export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVideoRoomProps) {
+export function LiveVideoRoom({
+  slug,
+  title,
+  isHost,
+  requireJoinApproval = false,
+  onEndCall,
+  ending,
+}: LiveVideoRoomProps) {
   const [token, setToken] = useState<string | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -117,6 +125,7 @@ export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVi
       serverUrl={serverUrl}
       token={token}
       isHost={isHost}
+      requireJoinApproval={requireJoinApproval}
       onEndCall={onEndCall}
       ending={ending}
     />

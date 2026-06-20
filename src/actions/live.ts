@@ -48,12 +48,16 @@ export async function getPendingJoinRequests(slug: string): Promise<LiveJoinRequ
   const ctx = await getSessionForHostAction(slug);
   if ("error" in ctx) return null;
 
-  const { data } = await ctx.supabase
+  const { data, error } = await ctx.supabase
     .from("live_join_requests")
-    .select("id, user_id, display_name, requested_at, profiles(email)")
+    .select("id, user_id, display_name, requested_at")
     .eq("session_id", ctx.session.id)
     .eq("status", "pending")
     .order("requested_at", { ascending: true });
+
+  if (error) {
+    return { sessionId: ctx.session.id, requests: [] };
+  }
 
   return {
     sessionId: ctx.session.id,
@@ -62,9 +66,36 @@ export async function getPendingJoinRequests(slug: string): Promise<LiveJoinRequ
       userId: row.user_id,
       displayName: row.display_name,
       requestedAt: row.requested_at,
-      email: (row.profiles as { email?: string } | null)?.email,
     })),
   };
+}
+
+export async function getLiveJoinApproval(slug: string): Promise<boolean | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: session } = await supabase
+    .from("live_sessions")
+    .select("require_join_approval, host_id")
+    .eq("slug", slug)
+    .single();
+
+  if (!session) return null;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isHost = session.host_id === user.id;
+  const isAdmin = profile?.role === "admin";
+  if (!isHost && !isAdmin) return null;
+
+  return session.require_join_approval ?? false;
 }
 
 export async function resolveJoinRequest(
