@@ -41,6 +41,7 @@ export function ForumPostActions({ postId, title, body, canDelete }: Props) {
       if (result?.error) toast.error(result.error);
       else {
         toast.success("Post deleted");
+        router.refresh();
         router.push("/forum");
       }
     });

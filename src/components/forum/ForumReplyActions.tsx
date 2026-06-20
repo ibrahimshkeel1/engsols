@@ -11,9 +11,11 @@ type Props = {
   replyId: string;
   body: string;
   canEdit: boolean;
+  onDeleted?: (replyId: string) => void;
+  onUpdated?: (replyId: string, body: string) => void;
 };
 
-export function ForumReplyActions({ replyId, body, canEdit }: Props) {
+export function ForumReplyActions({ replyId, body, canEdit, onDeleted, onUpdated }: Props) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -33,6 +35,7 @@ export function ForumReplyActions({ replyId, body, canEdit }: Props) {
             else {
               toast.success("Reply updated");
               setEditing(false);
+              onUpdated?.(replyId, text.trim());
               router.refresh();
             }
           });
@@ -62,6 +65,7 @@ export function ForumReplyActions({ replyId, body, canEdit }: Props) {
             if (result?.error) toast.error(result.error);
             else {
               toast.success("Reply deleted");
+              onDeleted?.(replyId);
               router.refresh();
             }
           });

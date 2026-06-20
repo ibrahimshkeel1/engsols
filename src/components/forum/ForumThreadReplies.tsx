@@ -29,24 +29,48 @@ export function ForumThreadReplies({
 }: ForumThreadRepliesProps) {
   const router = useRouter();
   const [localReplies, setLocalReplies] = useState<ForumReply[]>([]);
+  const [removedReplyIds, setRemovedReplyIds] = useState<Set<string>>(new Set());
+  const [editedBodies, setEditedBodies] = useState<Record<string, string>>({});
 
   const replies = useMemo(() => {
     const seen = new Set<string>();
     const merged: ForumReply[] = [];
     for (const reply of [...initialReplies, ...localReplies]) {
-      if (seen.has(reply.id)) continue;
+      if (seen.has(reply.id) || removedReplyIds.has(reply.id)) continue;
       seen.add(reply.id);
-      merged.push(reply);
+      const body = editedBodies[reply.id] ?? reply.body;
+      merged.push(body === reply.body ? reply : { ...reply, body });
     }
     return merged;
-  }, [initialReplies, localReplies]);
+  }, [initialReplies, localReplies, removedReplyIds, editedBodies]);
 
   function handleReplyPosted(reply: ForumReply) {
+    setRemovedReplyIds((current) => {
+      if (!current.has(reply.id)) return current;
+      const next = new Set(current);
+      next.delete(reply.id);
+      return next;
+    });
     setLocalReplies((current) => {
       if (current.some((item) => item.id === reply.id)) return current;
       return [...current, reply];
     });
     router.refresh();
+  }
+
+  function handleReplyDeleted(replyId: string) {
+    setRemovedReplyIds((current) => new Set(current).add(replyId));
+    setLocalReplies((current) => current.filter((reply) => reply.id !== replyId));
+    setEditedBodies((current) => {
+      if (!(replyId in current)) return current;
+      const next = { ...current };
+      delete next[replyId];
+      return next;
+    });
+  }
+
+  function handleReplyUpdated(replyId: string, body: string) {
+    setEditedBodies((current) => ({ ...current, [replyId]: body }));
   }
 
   return (
@@ -82,6 +106,8 @@ export function ForumThreadReplies({
               replyId={reply.id}
               body={reply.body}
               canEdit={currentUserId === reply.authorId || isAdmin}
+              onDeleted={handleReplyDeleted}
+              onUpdated={handleReplyUpdated}
             />
           </div>
         ))}

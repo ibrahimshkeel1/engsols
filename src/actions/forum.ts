@@ -4,6 +4,14 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 
+async function revalidateForumThread(supabase: Awaited<ReturnType<typeof createClient>>, postId: string) {
+  const { data: post } = await supabase.from("forum_posts").select("slug").eq("id", postId).single();
+  revalidatePath("/forum");
+  if (post?.slug) {
+    revalidatePath(`/forum/${post.slug}`);
+  }
+}
+
 export async function incrementForumView(postId: string) {
   const supabase = await createClient();
   const { data } = await supabase.from("forum_posts").select("view_count").eq("id", postId).single();
@@ -77,17 +85,27 @@ export async function deleteForumPost(postId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Unauthorized" };
 
-  const { data: post } = await supabase.from("forum_posts").select("author_id").eq("id", postId).single();
+  const { data: post } = await supabase.from("forum_posts").select("author_id, slug").eq("id", postId).single();
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   const isAuthor = post?.author_id === user.id;
   const isAdmin = profile?.role === "admin";
   if (!isAuthor && !isAdmin) return { error: "Unauthorized" };
 
-  const { error } = await supabase.from("forum_posts").delete().eq("id", postId);
+  const { data: deleted, error } = await supabase
+    .from("forum_posts")
+    .delete()
+    .eq("id", postId)
+    .select("id")
+    .maybeSingle();
+
   if (error) return { error: error.message };
+  if (!deleted) return { error: "Post could not be deleted. You may not have permission." };
 
   revalidatePath("/forum");
   revalidatePath("/admin/forum");
+  if (post?.slug) {
+    revalidatePath(`/forum/${post.slug}`);
+  }
   return { success: true };
 }
 
@@ -127,7 +145,11 @@ export async function updateForumReply(replyId: string, body: string) {
   const { error } = await supabase.from("forum_replies").update({ body: trimmed }).eq("id", replyId);
   if (error) return { error: error.message };
 
-  revalidatePath("/forum");
+  if (reply?.post_id) {
+    await revalidateForumThread(supabase, reply.post_id);
+  } else {
+    revalidatePath("/forum");
+  }
   return { success: true };
 }
 
@@ -136,14 +158,29 @@ export async function deleteForumReply(replyId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Unauthorized" };
 
-  const { data: reply } = await supabase.from("forum_replies").select("author_id").eq("id", replyId).single();
+  const { data: reply } = await supabase
+    .from("forum_replies")
+    .select("author_id, post_id")
+    .eq("id", replyId)
+    .single();
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (reply?.author_id !== user.id && profile?.role !== "admin") return { error: "Unauthorized" };
 
-  const { error } = await supabase.from("forum_replies").delete().eq("id", replyId);
-  if (error) return { error: error.message };
+  const { data: deleted, error } = await supabase
+    .from("forum_replies")
+    .delete()
+    .eq("id", replyId)
+    .select("id")
+    .maybeSingle();
 
-  revalidatePath("/forum");
+  if (error) return { error: error.message };
+  if (!deleted) return { error: "Reply could not be deleted. You may not have permission." };
+
+  if (reply?.post_id) {
+    await revalidateForumThread(supabase, reply.post_id);
+  } else {
+    revalidatePath("/forum");
+  }
   return { success: true };
 }
 

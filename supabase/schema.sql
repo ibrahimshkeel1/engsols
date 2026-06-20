@@ -209,10 +209,14 @@ create policy "Experience via portfolio" on portfolio_experience for all using (
 create policy "Forum posts public read" on forum_posts for select using (true);
 create policy "Auth users create posts" on forum_posts for insert with check (auth.uid() = author_id);
 create policy "Authors update posts" on forum_posts for update using (auth.uid() = author_id);
+create policy "Authors delete posts" on forum_posts for delete using (auth.uid() = author_id);
 create policy "Admins delete posts" on forum_posts for delete using (exists (select 1 from profiles where id = auth.uid() and role = 'admin'));
 
 create policy "Replies public read" on forum_replies for select using (true);
 create policy "Auth users create replies" on forum_replies for insert with check (auth.uid() = author_id);
+create policy "Authors update replies" on forum_replies for update using (auth.uid() = author_id);
+create policy "Authors delete replies" on forum_replies for delete using (auth.uid() = author_id);
+create policy "Admins manage replies" on forum_replies for all using (exists (select 1 from profiles where id = auth.uid() and role = 'admin'));
 
 -- Live sessions
 create policy "Live sessions public read" on live_sessions for select using (true);
