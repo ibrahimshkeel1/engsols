@@ -258,6 +258,9 @@ export async function createForumReply(postId: string, body: string, imageUrls: 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You must be logged in" };
 
+  const trimmed = body.trim();
+  if (!trimmed) return { error: "Reply cannot be empty" };
+
   const { data: post } = await supabase
     .from("forum_posts")
     .select("author_id, title, slug")
@@ -267,44 +270,51 @@ export async function createForumReply(postId: string, body: string, imageUrls: 
   const { error } = await supabase.from("forum_replies").insert({
     post_id: postId,
     author_id: user.id,
-    body,
+    body: trimmed,
     image_urls: imageUrls,
   });
 
   if (error) return { error: error.message };
 
-  if (post?.author_id && post.author_id !== user.id) {
-    const { data: replier } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
-    const { data: author } = await supabase.from("profiles").select("email").eq("id", post.author_id).single();
+  try {
+    if (post?.author_id && post.author_id !== user.id) {
+      const { data: replier } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
+      const { data: author } = await supabase.from("profiles").select("email").eq("id", post.author_id).single();
 
-    if (author?.email) {
-      const { forumReplyEmail, sendEmail } = await import("@/lib/email");
-      const mail = forumReplyEmail({
-        postTitle: post.title,
-        replierName: replier?.full_name ?? "Someone",
-        postSlug: post.slug,
+      if (author?.email) {
+        const { forumReplyEmail, sendEmail } = await import("@/lib/email");
+        const mail = forumReplyEmail({
+          postTitle: post.title,
+          replierName: replier?.full_name ?? "Someone",
+          postSlug: post.slug,
+        });
+        await sendEmail({ to: author.email, ...mail });
+      }
+
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: post.author_id,
+        title: "New forum reply",
+        body: `${replier?.full_name ?? "Someone"} replied to "${post.title}".`,
+        url: `/forum/${post.slug}`,
       });
-      await sendEmail({ to: author.email, ...mail });
+
+      const { sendPushToUser } = await import("@/lib/push");
+      await sendPushToUser({
+        userId: post.author_id,
+        title: "New forum reply",
+        body: `Someone replied to your thread.`,
+        url: `/forum/${post.slug}`,
+      });
     }
-
-    const { createNotification } = await import("@/lib/notifications");
-    await createNotification({
-      userId: post.author_id,
-      title: "New forum reply",
-      body: `${replier?.full_name ?? "Someone"} replied to "${post.title}".`,
-      url: `/forum/${post.slug}`,
-    });
-
-    const { sendPushToUser } = await import("@/lib/push");
-    await sendPushToUser({
-      userId: post.author_id,
-      title: "New forum reply",
-      body: `Someone replied to your thread.`,
-      url: `/forum/${post.slug}`,
-    });
+  } catch (notifyError) {
+    console.error("forum reply notification failed:", notifyError);
   }
 
   revalidatePath("/forum");
+  if (post?.slug) {
+    revalidatePath(`/forum/${post.slug}`);
+  }
   return { success: true };
 }
 

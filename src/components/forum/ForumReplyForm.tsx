@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { createForumReply } from "@/actions";
 import { FormField } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -21,20 +22,34 @@ export function ForumReplyForm({ postId }: Props) {
       setError("Sign in and connect Supabase to post replies.");
       return;
     }
-    const body = formData.get("body") as string;
-    const result = await createForumReply(postId, body, imageUrls);
-    if (result?.error) {
-      setError(result.error);
+
+    const body = (formData.get("body") as string)?.trim() ?? "";
+    if (!body) {
+      setError("Write a reply before posting.");
       return;
     }
-    setError(null);
-    setImageUrls([]);
-    formRef.current?.reset();
-    router.refresh();
+
+    try {
+      const result = await createForumReply(postId, body, imageUrls);
+      if (result?.error) {
+        setError(result.error);
+        toast.error(result.error);
+        return;
+      }
+
+      setError(null);
+      setImageUrls([]);
+      formRef.current?.reset();
+      toast.success("Reply posted");
+      router.refresh();
+    } catch {
+      setError("Could not post your reply. Try again.");
+      toast.error("Could not post your reply. Try again.");
+    }
   }
 
   return (
-    <form ref={formRef} className="mt-10" action={handleSubmit}>
+    <form ref={formRef} id="reply-form" className="mt-10" action={handleSubmit}>
       <FormField label="Your reply" id="forum-reply-body">
         <Textarea name="body" required rows={4} placeholder="Write your reply..." />
       </FormField>
@@ -54,7 +69,7 @@ export function ForumReplyForm({ postId }: Props) {
           Replies are saved when Supabase is configured. You can still read all discussions.
         </p>
       )}
-      <SubmitButton variant="accent" className="mt-3" pendingLabel="Posting...">
+      <SubmitButton variant="accent" className="mt-3" pendingLabel="Posting reply..." disabled={!postId}>
         Post reply
       </SubmitButton>
     </form>

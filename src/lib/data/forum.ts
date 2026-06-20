@@ -130,22 +130,25 @@ export async function getForumPostsByDiscipline(discipline: string, limit = 4): 
 export async function getForumPost(slug: string) {
   if (!isSupabaseConfigured()) return null;
 
-  const supabase = createPublicClient();
-  if (!supabase) return null;
+  const supabase = await createClient();
 
-  const { data: post } = await supabase
+  const { data: post, error: postError } = await supabase
     .from("forum_posts")
     .select("*, profiles(*)")
     .eq("slug", slug)
     .single();
 
-  if (!post) return null;
+  if (postError || !post) return null;
 
-  const { data: replies } = await supabase
+  const { data: replies, error: repliesError } = await supabase
     .from("forum_replies")
     .select("*, profiles(*)")
     .eq("post_id", post.id)
     .order("created_at", { ascending: true });
+
+  if (repliesError) {
+    console.error("forum replies fetch failed:", repliesError.message);
+  }
 
   const mappedReplies: ForumReply[] = (replies ?? []).map((r: DbForumReply) => ({
     id: r.id,
