@@ -1,77 +1,95 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
-import { getNewsArticle, getPublishedNews } from "@/lib/data/news";
-import { categoryToDiscipline } from "@/lib/data/content-crosslinks";
+import { Eye } from "lucide-react";
+import { getArticleBySlug, getPublishedArticles } from "@/lib/data/news";
+import { estimateReadingTimeMinutes } from "@/lib/news-utils";
 import { buildDetailMetadata } from "@/lib/page-metadata";
 import { MarkdownBody } from "@/components/shared/MarkdownBody";
-import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
+import { RelatedOpportunitiesSidebar } from "@/components/news/RelatedOpportunitiesSidebar";
 import { ShareButton } from "@/components/shared/ShareButton";
+import { Badge } from "@/components/ui/badge";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-  const articles = await getPublishedNews();
+  const articles = await getPublishedArticles();
   return articles.map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const article = await getNewsArticle(slug);
+  const article = await getArticleBySlug(slug, { incrementViews: false });
   if (!article) return { title: "Article not found" };
   return buildDetailMetadata({
     title: `${article.title} | EngSols News`,
-    description: article.excerpt.slice(0, 160),
+    description: article.summary.slice(0, 160),
     path: `/news/${slug}`,
   });
 }
 
 export default async function NewsArticlePage({ params }: Props) {
   const { slug } = await params;
-  const article = await getNewsArticle(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  const discipline = categoryToDiscipline(article.category);
+  const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-0 sm:px-6">
       <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
         <article className="lg:col-span-2">
           <header className="border-b border-border">
-            {article.cover_image_url && (
+            {article.imageUrl && (
               <div className="pt-8">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={article.cover_image_url}
+                  src={article.imageUrl}
                   alt={article.title}
                   className="aspect-[21/9] w-full rounded-2xl object-cover"
                 />
               </div>
             )}
-            <div className="py-16">
-              <Link href="/news" className="text-sm font-medium text-primary hover:underline">← Back to news</Link>
-              <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-primary">{article.category}</p>
-              <h1 className="font-display mt-3 text-4xl leading-tight tracking-tight sm:text-5xl">{article.title}</h1>
-              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{article.excerpt}</p>
-              <div className="mt-6 flex flex-wrap items-center gap-4">
-                <p className="text-sm text-muted-foreground">
-                  {article.published_at && format(new Date(article.published_at), "MMMM d, yyyy")}
-                </p>
-                <ShareButton title={article.title} text={article.excerpt} />
+            <div className="py-12 sm:py-16">
+              <Link href="/news" className="text-sm font-medium text-primary transition-colors hover:underline">
+                ← Back to insights
+              </Link>
+              <div className="mt-6 flex flex-wrap items-center gap-2">
+                <Badge className="bg-primary/10 text-primary">{article.discipline}</Badge>
+                {article.tags.map((tag) => (
+                  <Badge key={tag} className="border border-border bg-card text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <h1 className="font-display mt-4 text-4xl leading-tight tracking-tight sm:text-5xl">{article.title}</h1>
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{article.summary}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                {article.publishedAt && (
+                  <span>{format(new Date(article.publishedAt), "MMMM d, yyyy")}</span>
+                )}
+                <span>{readingTime} min read</span>
+                <span className="inline-flex items-center gap-1">
+                  <Eye className="h-4 w-4" aria-hidden />
+                  {article.viewCount.toLocaleString()} views
+                </span>
+                <ShareButton title={article.title} text={article.summary} />
               </div>
             </div>
           </header>
           <div className="py-12">
-            <MarkdownBody content={article.body} className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-foreground/90" />
+            <MarkdownBody
+              content={article.content}
+              className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-foreground/90"
+            />
           </div>
         </article>
-        {discipline && (
-          <div className="py-12 lg:sticky lg:top-24 lg:self-start">
-            <ContentCrossLinks discipline={discipline} />
-          </div>
-        )}
+
+        <div className="py-8 lg:sticky lg:top-24 lg:self-start lg:py-12">
+          <RelatedOpportunitiesSidebar discipline={article.discipline} />
+        </div>
       </div>
     </div>
   );

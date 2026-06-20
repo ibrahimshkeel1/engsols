@@ -24,7 +24,17 @@ function extractSubscriptionId(
 }
 
 function subscriptionShouldClose(status: Stripe.Subscription.Status): boolean {
-  return status === "canceled" || status === "unpaid" || status === "incomplete_expired";
+  return (
+    status === "canceled" ||
+    status === "unpaid" ||
+    status === "incomplete_expired" ||
+    status === "past_due" ||
+    status === "incomplete"
+  );
+}
+
+function isBillingFailureStatus(status: Stripe.Subscription.Status): boolean {
+  return status === "past_due" || status === "unpaid" || status === "incomplete";
 }
 
 export async function POST(request: Request) {
@@ -80,7 +90,9 @@ export async function POST(request: Request) {
   if (event.type === "customer.subscription.deleted") {
     const subscription = event.data.object as Stripe.Subscription;
     const customerId = extractCustomerId(subscription.customer);
-    const result = await closeMentorshipSubscription(subscription.id, customerId);
+    const result = await closeMentorshipSubscription(subscription.id, customerId, {
+      reason: isBillingFailureStatus(subscription.status) ? "billing_failed" : "canceled",
+    });
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
@@ -96,7 +108,9 @@ export async function POST(request: Request) {
       extractCustomerId(subscription.customer) ??
       (await resolveStripeCustomerIdFromSubscription(subscription.id));
 
-    const result = await closeMentorshipSubscription(subscription.id, customerId);
+    const result = await closeMentorshipSubscription(subscription.id, customerId, {
+      reason: isBillingFailureStatus(subscription.status) ? "billing_failed" : "canceled",
+    });
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }

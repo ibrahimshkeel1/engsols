@@ -29,7 +29,7 @@ async function searchFallback(query: string): Promise<SearchResult[]> {
     supabase.from("forum_posts").select("slug, title, discipline, reply_count").or(`title.ilike.${pattern},body.ilike.${pattern}`).limit(6),
     supabase.from("portfolios").select("slug, headline, discipline, profiles(full_name)").eq("published", true).or(`headline.ilike.${pattern},bio.ilike.${pattern}`).limit(6),
     supabase.from("jobs").select("slug, title, discipline, company").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
-    supabase.from("news_articles").select("slug, title, category, excerpt").eq("published", true).or(`title.ilike.${pattern},excerpt.ilike.${pattern},body.ilike.${pattern}`).limit(6),
+    supabase.from("news_articles").select("slug, title, discipline, category, summary, excerpt").eq("published", true).or(`title.ilike.${pattern},summary.ilike.${pattern},excerpt.ilike.${pattern},content.ilike.${pattern},body.ilike.${pattern},discipline.ilike.${pattern},category.ilike.${pattern}`).limit(6),
     supabase.from("videos").select("slug, title, discipline, duration").eq("published", true).or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
     supabase.from("live_sessions").select("slug, title, discipline, status").or(`title.ilike.${pattern},description.ilike.${pattern}`).limit(6),
     supabase.from("certifications").select("slug, name, discipline").or(`name.ilike.${pattern},description.ilike.${pattern}`).limit(6),
@@ -50,7 +50,13 @@ async function searchFallback(query: string): Promise<SearchResult[]> {
     results.push({ type: "job", title: j.title, subtitle: j.company ?? j.discipline, href: `/jobs/${j.slug}`, meta: j.discipline });
   }
   for (const n of news.data ?? []) {
-    results.push({ type: "news", title: n.title, subtitle: n.category, href: `/news/${n.slug}`, meta: n.excerpt?.slice(0, 60) });
+    results.push({
+      type: "news",
+      title: n.title,
+      subtitle: n.discipline ?? n.category,
+      href: `/news/${n.slug}`,
+      meta: (n.summary ?? n.excerpt)?.slice(0, 60),
+    });
   }
   for (const v of videos.data ?? []) {
     results.push({ type: "video", title: v.title, subtitle: v.discipline, href: `/videos/${v.slug}`, meta: v.duration });

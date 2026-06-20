@@ -7,6 +7,7 @@ import {
   type RoomStateCad,
   type RoomStateSnapshot,
 } from "@/lib/livekit-sync";
+import { applyPresenterLockFromRemote, getActivePresenterId } from "@/lib/presenter-lock";
 
 type WhiteboardContributor = {
   getSegments: () => DrawStrokePacket[];
@@ -228,6 +229,7 @@ export function respondToRoomStateRequest(room: Room, isHost: boolean): void {
   const state = buildRoomStateSnapshot({
     whiteboardSegments: getWhiteboardSegmentsSnapshot(),
     cad: getCadStateSnapshot(),
+    activePresenterId: getActivePresenterId(),
   });
 
   void publishLiveSyncPacket(room, { type: "RECEIVE_ROOM_STATE", state }, true);
@@ -239,6 +241,9 @@ export function applyRoomStateSnapshot(snapshot: RoomStateSnapshot): void {
   cachedCadState = snapshot.cad;
   whiteboardContributor?.applySegments(snapshot.whiteboardSegments);
   cadContributor?.applyCadState(snapshot.cad);
+  if (snapshot.activePresenterId !== undefined) {
+    applyPresenterLockFromRemote(snapshot.activePresenterId);
+  }
   completeHydrationSuccess();
 }
 
@@ -248,6 +253,9 @@ export function bufferRoomStateSnapshot(snapshot: RoomStateSnapshot): void {
   cachedCadState = snapshot.cad;
   whiteboardContributor?.applySegments(snapshot.whiteboardSegments);
   cadContributor?.applyCadState(snapshot.cad);
+  if (snapshot.activePresenterId !== undefined) {
+    applyPresenterLockFromRemote(snapshot.activePresenterId);
+  }
   completeHydrationSuccess();
 }
 

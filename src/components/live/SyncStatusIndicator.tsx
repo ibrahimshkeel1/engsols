@@ -69,9 +69,9 @@ export function SyncStatusIndicator({ room, className }: Props) {
     <span
       className={cn(
         "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium",
-        visualState === "catching-up" && "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300",
-        visualState === "synced" && "border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300",
-        visualState === "solo" && "border-border/60 bg-muted/50 text-muted-foreground",
+        visualState === "catching-up" && "border-premium/30 bg-premium/10 text-premium",
+        visualState === "synced" && "border-accent/30 bg-accent/10 text-accent",
+        visualState === "solo" && "border-border/60 bg-muted/50 text-text-muted",
         className,
       )}
       role="status"
@@ -79,15 +79,15 @@ export function SyncStatusIndicator({ room, className }: Props) {
     >
       {visualState === "catching-up" && (
         <>
-          <Loader2 className="h-3 w-3 shrink-0 animate-spin text-amber-500" aria-hidden />
+          <Loader2 className="h-3 w-3 shrink-0 animate-spin text-premium" aria-hidden />
           Catching up...
         </>
       )}
       {visualState === "synced" && (
         <>
           <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/50 opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
           </span>
           Synced
         </>

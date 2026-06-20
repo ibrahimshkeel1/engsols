@@ -18,7 +18,7 @@ const adminNav = [
   { href: "/admin/certifications", label: "Certifications" },
   { href: "/admin/exams", label: "Mock exams" },
   { href: "/admin/videos", label: "Videos" },
-  { href: "/admin/news", label: "News" },
+  { href: "/admin/news", label: "News articles" },
   { href: "/admin/forum", label: "Forum" },
   { href: "/admin/live", label: "Live sessions" },
   { href: "/admin/reports", label: "Reports" },

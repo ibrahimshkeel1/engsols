@@ -63,7 +63,14 @@ describe("livekit-sync packets", () => {
         whiteboardSegments: receive.state.whiteboardSegments,
         cad: receive.state.cad,
       }),
-    ).toEqual(receive.state);
+    ).toEqual({ ...receive.state, activePresenterId: null });
+  });
+
+  it("round-trips LOCK_CLAIM and LOCK_RELEASE", () => {
+    const claim = { type: "LOCK_CLAIM" as const, identity: "user-abc" };
+    const release = { type: "LOCK_RELEASE" as const, identity: "user-abc" };
+    expect(decodeLiveSyncPacket(encodeLiveSyncPacket(claim))).toEqual(claim);
+    expect(decodeLiveSyncPacket(encodeLiveSyncPacket(release))).toEqual(release);
   });
 
   it("rejects malformed payloads", () => {

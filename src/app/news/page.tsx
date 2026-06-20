@@ -1,111 +1,74 @@
-import Link from "next/link";
-import { format } from "date-fns";
-import { getPublishedNews } from "@/lib/data/news";
-import { categoryToDiscipline } from "@/lib/data/content-crosslinks";
-import { PageHero } from "@/components/shared/PageHero";
-import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
-import { EmptyState } from "@/components/shared/EmptyState";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Suspense } from "react";
 import { Newspaper } from "lucide-react";
+import { getPublishedArticles } from "@/lib/data/news";
+import { PageHero } from "@/components/shared/PageHero";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { NewsDisciplineFilter } from "@/components/news/NewsDisciplineFilter";
+import { NewsArticleGrid, NewsHeroBanner } from "@/components/news/NewsArticleGrid";
 
 export const revalidate = 120;
 
-export default async function NewsPage() {
-  const articles = await getPublishedNews();
+type Props = {
+  searchParams: Promise<{ discipline?: string }>;
+};
+
+export default async function NewsPage({ searchParams }: Props) {
+  const { discipline: disciplineParam } = await searchParams;
+  const activeDiscipline = disciplineParam?.trim() || "All";
+  const articles = await getPublishedArticles(activeDiscipline === "All" ? undefined : activeDiscipline);
+
   const hero = articles.find((a) => a.featured) ?? articles[0];
-  const rest = articles.filter((a) => a.slug !== hero?.slug);
-  const sidebarDiscipline = hero ? categoryToDiscipline(hero.category) : null;
+  const gridArticles = hero ? articles.filter((a) => a.id !== hero.id) : articles;
 
   return (
     <>
       <PageHero
         variant="editorial"
-        title="Engineering News"
-        description="Industry updates, career insights, and certification news for applied engineers."
+        title="Engineering Insights"
+        description="Technical articles, project breakdowns, and industry updates from the EngSols editorial desk."
       />
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        {articles.length === 0 ? (
-          <EmptyState
-            icon={Newspaper}
-            title="No articles yet"
-            description="Industry news and career insights will appear here."
-            action={{ href: "/forum", label: "Join the forum" }}
-            promptChips={[
-              { label: "Find mentors", href: "/mentors" },
-              { label: "Certifications", href: "/certifications" },
-            ]}
-          />
-        ) : (
-          <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
-            <div className="space-y-10 lg:col-span-2">
-              {hero && (
-                <Link href={`/news/${hero.slug}`} className="group block overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition hover:border-primary/30">
-                  {hero.cover_image_url && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={hero.cover_image_url} alt={hero.title} className="aspect-[21/9] w-full object-cover transition group-hover:opacity-95" />
-                  )}
-                  <div className="p-8">
-                    <Badge>{hero.category}</Badge>
-                    <h2 className="font-display mt-4 text-3xl leading-tight group-hover:text-primary sm:text-4xl">{hero.title}</h2>
-                    <p className="mt-4 line-clamp-3 text-lg text-muted-foreground">{hero.excerpt}</p>
-                    <p className="mt-4 text-sm text-muted-foreground">
-                      {hero.published_at && format(new Date(hero.published_at), "MMMM d, yyyy")}
-                    </p>
-                  </div>
-                </Link>
-              )}
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+        <Suspense fallback={<div className="h-12 animate-pulse rounded-xl bg-muted" aria-hidden />}>
+          <NewsDisciplineFilter active={activeDiscipline} />
+        </Suspense>
 
-              <section>
-                <h2 className="text-xl font-bold">Latest</h2>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {rest.slice(0, 4).map((a) => (
-                    <Link key={a.id} href={`/news/${a.slug}`} className="card-interactive overflow-hidden rounded-xl border border-border bg-card">
-                      {a.cover_image_url && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={a.cover_image_url} alt={a.title} className="aspect-video w-full object-cover" />
-                      )}
-                      <CardContent className="p-5">
-                        <Badge>{a.category}</Badge>
-                        <h3 className="mt-2 font-semibold leading-snug">{a.title}</h3>
-                        <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{a.excerpt}</p>
-                      </CardContent>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-
-              {rest.length > 4 && (
+        <div className="mt-8">
+          {articles.length === 0 ? (
+            <EmptyState
+              icon={Newspaper}
+              title="No articles in this discipline"
+              description={
+                activeDiscipline === "All"
+                  ? "Industry news and engineering insights will appear here as admins publish."
+                  : `No published stories for ${activeDiscipline} yet. Try another discipline filter.`
+              }
+              action={{ href: "/mentors", label: "Find mentors" }}
+              promptChips={[
+                { label: "Certifications", href: "/certifications" },
+                { label: "Forum", href: "/forum" },
+              ]}
+            />
+          ) : (
+            <div className="space-y-10">
+              {hero && <NewsHeroBanner article={hero} />}
+              {gridArticles.length > 0 && (
                 <section>
-                  <h2 className="text-lg font-semibold">More stories</h2>
-                  <div className="mt-4 space-y-3">
-                    {rest.slice(4).map((a) => (
-                      <Link key={a.id} href={`/news/${a.slug}`}>
-                        <Card className="card-interactive">
-                          <CardContent className="flex items-center justify-between gap-4 p-4">
-                            <div>
-                              <p className="font-medium">{a.title}</p>
-                              <p className="text-xs text-muted-foreground">{a.category}</p>
-                            </div>
-                            <p className="shrink-0 text-xs text-muted-foreground">
-                              {a.published_at && format(new Date(a.published_at), "MMM d")}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    ))}
+                  <div className="mb-6 flex items-end justify-between gap-4">
+                    <div>
+                      <h2 className="text-xl font-bold">Latest stories</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {activeDiscipline === "All"
+                          ? "Across all engineering disciplines"
+                          : `Filtered to ${activeDiscipline}`}
+                      </p>
+                    </div>
                   </div>
+                  <NewsArticleGrid articles={gridArticles} />
                 </section>
               )}
             </div>
-
-            {sidebarDiscipline && (
-              <div className="lg:sticky lg:top-24 lg:self-start">
-                <ContentCrossLinks discipline={sidebarDiscipline} />
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );

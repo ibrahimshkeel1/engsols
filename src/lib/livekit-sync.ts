@@ -36,6 +36,7 @@ export type RoomStateCad = {
 export type RoomStateSnapshot = {
   whiteboardSegments: DrawStrokePacket[];
   cad: RoomStateCad;
+  activePresenterId?: string | null;
 };
 
 export type ReceiveRoomStatePacket = {
@@ -43,12 +44,24 @@ export type ReceiveRoomStatePacket = {
   state: RoomStateSnapshot;
 };
 
+export type LockClaimPacket = {
+  type: "LOCK_CLAIM";
+  identity: string;
+};
+
+export type LockReleasePacket = {
+  type: "LOCK_RELEASE";
+  identity: string;
+};
+
 export type LiveSyncPacket =
   | DrawStrokePacket
   | ClearCanvasPacket
   | CadTransformPacket
   | RequestRoomStatePacket
-  | ReceiveRoomStatePacket;
+  | ReceiveRoomStatePacket
+  | LockClaimPacket
+  | LockReleasePacket;
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -130,23 +143,39 @@ function isReceiveRoomStatePacket(value: unknown): value is ReceiveRoomStatePack
   return v.type === "RECEIVE_ROOM_STATE" && isRoomStateSnapshot(v.state);
 }
 
+function isLockClaimPacket(value: unknown): value is LockClaimPacket {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  return v.type === "LOCK_CLAIM" && typeof v.identity === "string";
+}
+
+function isLockReleasePacket(value: unknown): value is LockReleasePacket {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  return v.type === "LOCK_RELEASE" && typeof v.identity === "string";
+}
+
 export function isLiveSyncPacket(value: unknown): value is LiveSyncPacket {
   return (
     isDrawStrokePacket(value) ||
     isClearCanvasPacket(value) ||
     isCadTransformPacket(value) ||
     isRequestRoomStatePacket(value) ||
-    isReceiveRoomStatePacket(value)
+    isReceiveRoomStatePacket(value) ||
+    isLockClaimPacket(value) ||
+    isLockReleasePacket(value)
   );
 }
 
 export function buildRoomStateSnapshot(parts: {
   whiteboardSegments: DrawStrokePacket[];
   cad: RoomStateCad;
+  activePresenterId?: string | null;
 }): RoomStateSnapshot {
   return {
     whiteboardSegments: parts.whiteboardSegments.filter(isDrawStrokePacket),
     cad: isRoomStateCad(parts.cad) ? parts.cad : DEFAULT_CAD_STATE,
+    activePresenterId: parts.activePresenterId ?? null,
   };
 }
 

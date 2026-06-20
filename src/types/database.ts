@@ -131,14 +131,25 @@ export type DbNewsArticle = {
   id: string;
   slug: string;
   title: string;
-  excerpt: string;
-  body: string;
-  category: string;
-  featured: boolean;
-  published: boolean;
-  cover_image_url: string | null;
+  summary: string;
+  content: string;
+  discipline: string;
+  tags: string[];
+  image_url: string | null;
+  view_count: number;
   published_at: string | null;
+  published: boolean;
+  featured: boolean;
   created_at: string;
+  author_id?: string | null;
+  /** @deprecated legacy column */
+  excerpt?: string;
+  /** @deprecated legacy column */
+  body?: string;
+  /** @deprecated legacy column */
+  category?: string;
+  /** @deprecated legacy column */
+  cover_image_url?: string | null;
   profiles?: DbProfile;
 };
 
@@ -448,6 +459,62 @@ export type AppDatabase = {
         }>;
         Relationships: [];
       };
+      news_articles: {
+        Row: DbNewsArticle;
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          summary: string;
+          content: string;
+          discipline: string;
+          tags?: string[];
+          image_url?: string | null;
+          view_count?: number;
+          published?: boolean;
+          published_at?: string | null;
+          featured?: boolean;
+          author_id?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<{
+          title: string;
+          summary: string;
+          content: string;
+          discipline: string;
+          tags: string[];
+          image_url: string | null;
+          published: boolean;
+          published_at: string | null;
+          featured: boolean;
+        }>;
+        Relationships: [];
+      };
+      premium_assets: {
+        Row: {
+          id: string;
+          storage_path: string;
+          title: string;
+          exam_id: string | null;
+          mime_type: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          storage_path: string;
+          title: string;
+          exam_id?: string | null;
+          mime_type?: string;
+          created_at?: string;
+        };
+        Update: Partial<{
+          storage_path: string;
+          title: string;
+          exam_id: string | null;
+          mime_type: string;
+        }>;
+        Relationships: [];
+      };
       mentorship_roadmaps: {
         Row: {
           id: string;
@@ -473,7 +540,12 @@ export type AppDatabase = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      increment_news_article_views: {
+        Args: { article_slug: string };
+        Returns: undefined;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

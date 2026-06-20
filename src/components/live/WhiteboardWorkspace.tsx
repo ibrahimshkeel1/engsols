@@ -19,6 +19,13 @@ import {
   requestRoomStateOnce,
   respondToRoomStateRequest,
 } from "@/lib/live-room-state";
+import {
+  canLocalEdit,
+  handleLockClaimPacket,
+  handleLockReleasePacket,
+  subscribePresenterLock,
+} from "@/lib/presenter-lock";
+import { PresenterLockControl } from "@/components/live/PresenterLockControl";
 import { cn } from "@/lib/utils";
 
 type Point = { x: number; y: number };
@@ -145,6 +152,11 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   const [color, setColor] = useState<WhiteboardColor>(WHITEBOARD_COLORS.engineeringBlue);
   const [lineWidth, setLineWidth] = useState<(typeof LINE_WIDTHS)[number]>(4);
   const [, bump] = useState(0);
+  const [, lockTick] = useState(0);
+
+  const readOnly = !canLocalEdit(room);
+
+  useEffect(() => subscribePresenterLock(() => lockTick((n) => n + 1)), []);
 
   const toolRef = useRef(tool);
   const colorRef = useRef(color);
@@ -278,6 +290,16 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
 
       if (packet.type === "RECEIVE_ROOM_STATE" && isRoomStateSnapshot(packet.state)) {
         hydrateFromSnapshot(packet.state.whiteboardSegments);
+        return;
+      }
+
+      if (packet.type === "LOCK_CLAIM") {
+        handleLockClaimPacket(packet.identity);
+        return;
+      }
+
+      if (packet.type === "LOCK_RELEASE") {
+        handleLockReleasePacket(packet.identity);
       }
     };
 
@@ -299,6 +321,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function handlePointerDown(clientX: number, clientY: number) {
+    if (readOnly) return;
     const point = getPoint(clientX, clientY);
     if (!point) return;
     drawingRef.current = true;
@@ -325,6 +348,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function handlePointerMove(clientX: number, clientY: number) {
+    if (readOnly) return;
     if (!drawingRef.current) return;
     const draft = draftRef.current;
     if (!draft) return;
@@ -385,6 +409,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function clearCanvas() {
+    if (readOnly) return;
     strokesRef.current = [];
     remoteSegmentsRef.current = [];
     draftRef.current = null;
@@ -396,7 +421,8 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card">
       <div className="flex items-center gap-2 overflow-x-auto border-b border-border px-3 py-2 scrollbar-none sm:gap-3">
-        <div className="flex items-center gap-1 rounded-lg bg-muted/60 p-1">
+        <PresenterLockControl room={room} />
+        <div className={cn("flex items-center gap-1 rounded-lg bg-muted/60 p-1", readOnly && "pointer-events-none opacity-50")}>
           <button
             type="button"
             onClick={() => setTool("pencil")}
@@ -423,7 +449,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5" role="group" aria-label="Stroke color">
+        <div className={cn("flex items-center gap-1.5", readOnly && "pointer-events-none opacity-50")} role="group" aria-label="Stroke color">
           {COLOR_OPTIONS.map((opt) => (
             <button
               key={opt.id}
@@ -441,7 +467,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
           ))}
         </div>
 
-        <div className="flex items-center gap-1" role="group" aria-label="Line thickness">
+        <div className={cn("flex items-center gap-1", readOnly && "pointer-events-none opacity-50")} role="group" aria-label="Line thickness">
           {LINE_WIDTHS.map((w) => (
             <button
               key={w}
@@ -461,7 +487,8 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
         <button
           type="button"
           onClick={clearCanvas}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+          disabled={readOnly}
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground disabled:opacity-40"
         >
           <Eraser className="h-3.5 w-3.5" aria-hidden />
           Clear canvas
@@ -475,7 +502,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
       >
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 cursor-crosshair touch-none"
+          className={cn("absolute inset-0 touch-none", readOnly ? "cursor-default" : "cursor-crosshair")}
           onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
           onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
           onMouseUp={handlePointerUp}
@@ -499,6 +526,13 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             handlePointerUp();
           }}
         />
+        {readOnly && (
+          <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-background/10 pb-4 backdrop-blur-[1px]">
+            <span className="rounded-full border border-border/80 bg-background/90 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              Read-only viewer — another participant has control
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

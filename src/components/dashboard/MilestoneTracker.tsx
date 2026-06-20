@@ -19,7 +19,7 @@ function RoadmapCard({ roadmap, viewerRole }: { roadmap: MentorshipRoadmap; view
       : roadmap.mentorName ?? "Mentor";
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <article className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

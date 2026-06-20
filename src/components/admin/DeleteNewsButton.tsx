@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { deleteNewsArticle } from "@/actions/content";
+import { deleteNewsArticle } from "@/actions/news";
 import { Button } from "@/components/ui/button";
 
 export function DeleteNewsButton({ articleId, title }: { articleId: string; title: string }) {

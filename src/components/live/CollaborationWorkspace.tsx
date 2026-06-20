@@ -18,6 +18,11 @@ import {
   resetRoomStateHydration,
   respondToRoomStateRequest,
 } from "@/lib/live-room-state";
+import {
+  handleLockClaimPacket,
+  handleLockReleasePacket,
+  releasePresenterIfDisconnected,
+} from "@/lib/presenter-lock";
 import { decodeLiveSyncPacket } from "@/lib/livekit-sync";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +68,21 @@ function CollaborationWorkspaceInner({
 
       if (packet.type === "RECEIVE_ROOM_STATE") {
         bufferRoomStateSnapshot(packet.state);
+        return;
       }
+
+      if (packet.type === "LOCK_CLAIM") {
+        handleLockClaimPacket(packet.identity);
+        return;
+      }
+
+      if (packet.type === "LOCK_RELEASE") {
+        handleLockReleasePacket(packet.identity);
+      }
+    };
+
+    const onParticipantDisconnected = (participant: { identity: string }) => {
+      releasePresenterIfDisconnected(participant.identity);
     };
 
     const onConnected = () => requestRoomStateOnce(room);
@@ -79,11 +98,13 @@ function CollaborationWorkspaceInner({
     room.on(RoomEvent.Connected, onConnected);
     room.on(RoomEvent.Reconnected, onReconnected);
     room.on(RoomEvent.Disconnected, onDisconnected);
+    room.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected);
     return () => {
       room.off(RoomEvent.DataReceived, onData);
       room.off(RoomEvent.Connected, onConnected);
       room.off(RoomEvent.Reconnected, onReconnected);
       room.off(RoomEvent.Disconnected, onDisconnected);
+      room.off(RoomEvent.ParticipantDisconnected, onParticipantDisconnected);
       disposeRoomStateHydrationRetry(room);
     };
   }, [room, isHost]);

@@ -10,6 +10,13 @@ import {
   publishLiveSyncPacket,
 } from "@/lib/livekit-sync";
 import { registerCadRoomState } from "@/lib/live-room-state";
+import {
+  canLocalEdit,
+  handleLockClaimPacket,
+  handleLockReleasePacket,
+  subscribePresenterLock,
+} from "@/lib/presenter-lock";
+import { PresenterLockControl } from "@/components/live/PresenterLockControl";
 import { cn } from "@/lib/utils";
 
 type Vec3 = { x: number; y: number; z: number };
@@ -128,6 +135,11 @@ export function CadSandboxWorkspace({ room }: Props) {
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [, lockTick] = useState(0);
+
+  const readOnly = !canLocalEdit(room);
+
+  useEffect(() => subscribePresenterLock(() => lockTick((n) => n + 1)), []);
 
   useEffect(() => {
     roomRef.current = room;
@@ -289,6 +301,16 @@ export function CadSandboxWorkspace({ room }: Props) {
 
       if (packet.type === "RECEIVE_ROOM_STATE" && isRoomStateSnapshot(packet.state)) {
         applyCadState(packet.state.cad);
+        return;
+      }
+
+      if (packet.type === "LOCK_CLAIM") {
+        handleLockClaimPacket(packet.identity);
+        return;
+      }
+
+      if (packet.type === "LOCK_RELEASE") {
+        handleLockReleasePacket(packet.identity);
       }
     };
 
@@ -310,6 +332,7 @@ export function CadSandboxWorkspace({ room }: Props) {
   }
 
   function onDrop(e: React.DragEvent) {
+    if (readOnly) return;
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files[0];
@@ -317,12 +340,12 @@ export function CadSandboxWorkspace({ room }: Props) {
   }
 
   function onCanvasMouseDown(e: React.MouseEvent) {
-    if (!unlocked) return;
+    if (!unlocked || readOnly) return;
     dragRef.current = { active: true, lastX: e.clientX, lastY: e.clientY };
   }
 
   function onCanvasMouseMove(e: React.MouseEvent) {
-    if (!dragRef.current.active) return;
+    if (readOnly || !dragRef.current.active) return;
     const dx = e.clientX - dragRef.current.lastX;
     const dy = e.clientY - dragRef.current.lastY;
     dragRef.current.lastX = e.clientX;
@@ -341,6 +364,7 @@ export function CadSandboxWorkspace({ room }: Props) {
   }
 
   function handleRenderModeChange(mode: CadRenderMode) {
+    if (readOnly) return;
     setRenderMode(mode);
     if (applyingRemoteRef.current) return;
     lastSyncRef.current = 0;
@@ -362,6 +386,7 @@ export function CadSandboxWorkspace({ room }: Props) {
         ref={containerRef}
         className="relative min-h-0 min-w-0 flex-1 touch-none"
         onDragOver={(e) => {
+          if (readOnly) return;
           e.preventDefault();
           setDragOver(true);
         }}
@@ -370,7 +395,7 @@ export function CadSandboxWorkspace({ room }: Props) {
       >
         <canvas
           ref={canvasRef}
-          className={cn("absolute inset-0", unlocked ? "cursor-grab active:cursor-grabbing" : "cursor-default")}
+          className={cn("absolute inset-0", readOnly ? "cursor-default" : unlocked ? "cursor-grab active:cursor-grabbing" : "cursor-default")}
           onMouseDown={onCanvasMouseDown}
           onMouseMove={onCanvasMouseMove}
           onMouseUp={onCanvasMouseUp}
@@ -402,6 +427,14 @@ export function CadSandboxWorkspace({ room }: Props) {
           </div>
         )}
 
+        {readOnly && unlocked && (
+          <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-background/10 pb-4 backdrop-blur-[1px]">
+            <span className="rounded-full border border-border/80 bg-background/90 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              Read-only viewer — orbit controls locked
+            </span>
+          </div>
+        )}
+
         {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm">
             <Loader2 className="h-10 w-10 animate-spin text-primary" aria-hidden />
@@ -411,6 +444,7 @@ export function CadSandboxWorkspace({ room }: Props) {
       </div>
 
       <aside className="flex shrink-0 flex-row gap-2 overflow-x-auto border-t border-border bg-muted/30 p-2 lg:w-52 lg:flex-col lg:overflow-visible lg:border-l lg:border-t-0 lg:p-3">
+        <PresenterLockControl room={room} className="w-full lg:mb-2" />
         <div className="hidden items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:flex">
           <Box className="h-3.5 w-3.5" aria-hidden />
           Render mode
@@ -422,7 +456,7 @@ export function CadSandboxWorkspace({ room }: Props) {
               type="button"
               role="radio"
               aria-checked={renderMode === mode.id}
-              disabled={!unlocked}
+              disabled={!unlocked || readOnly}
               onClick={() => handleRenderModeChange(mode.id)}
               className={cn(
                 "shrink-0 rounded-lg px-3 py-2 text-left text-xs font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-40 lg:w-full",

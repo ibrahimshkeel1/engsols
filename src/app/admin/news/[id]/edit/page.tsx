@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getNewsArticleForAdmin } from "@/lib/data/admin-content";
+import { mapNewsArticle } from "@/lib/news-utils";
 import { AdminNewsEditForm } from "@/components/admin/AdminNewsEditForm";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -7,8 +8,9 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function AdminNewsEditPage({ params }: Props) {
   const { id } = await params;
-  const article = await getNewsArticleForAdmin(id);
-  if (!article) notFound();
+  const row = await getNewsArticleForAdmin(id);
+  if (!row) notFound();
+  const article = mapNewsArticle(row);
 
   return (
     <div className="max-w-2xl">

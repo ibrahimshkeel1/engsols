@@ -13,7 +13,7 @@ export default async function Image({ params }: Props) {
 
   return buildOgImage({
     title: article?.title ?? "Engineering News",
-    subtitle: article?.category ?? "EngSols News",
+    subtitle: article?.discipline ?? "EngSols News",
     label: "EngSols News",
   });
 }

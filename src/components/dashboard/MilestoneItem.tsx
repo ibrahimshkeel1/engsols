@@ -35,7 +35,7 @@ export function MilestoneItem({ milestone }: Props) {
   return (
     <li
       className={cn(
-        "rounded-xl border border-border bg-card p-4 transition-colors",
+        "rounded-xl border border-border bg-surface p-4 shadow-premium-card transition-colors duration-300",
         milestone.status === "completed" && "border-green-500/30 bg-green-500/5",
         overdue && "border-red-500/40",
       )}

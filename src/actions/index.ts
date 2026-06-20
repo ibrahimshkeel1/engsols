@@ -625,37 +625,6 @@ export async function endLiveSession(slug: string) {
   revalidatePath("/admin/live");
 }
 
-export async function createNewsArticle(formData: FormData) {
-  const admin = await requireRole(["admin"]);
-  if (!admin) redirect("/login?next=/admin/news/new");
-
-  const supabase = await createClient();
-  const title = formData.get("title") as string;
-  const excerpt = formData.get("excerpt") as string;
-  const body = formData.get("body") as string;
-  const category = formData.get("category") as string;
-  const publish = formData.get("publish") === "true";
-  const coverImageUrl = (formData.get("coverImageUrl") as string | null)?.trim() || null;
-  const slug = slugify(title);
-
-  const { error } = await supabase.from("news_articles").insert({
-    slug,
-    title,
-    excerpt,
-    body,
-    category,
-    author_id: admin.id,
-    published: publish,
-    published_at: publish ? new Date().toISOString() : null,
-    featured: false,
-    cover_image_url: coverImageUrl,
-  });
-
-  if (error) redirect(`/admin/news/new?error=${encodeURIComponent(error.message)}`);
-  revalidatePath("/news");
-  revalidatePath("/admin");
-  redirect("/admin/news");
-}
 
 async function insertContactRequest(fields: {
   refSlug: string;

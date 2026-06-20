@@ -216,37 +216,3 @@ export async function verifyJobEmployer(jobId: string, verified: boolean) {
   return { success: true };
 }
 
-export async function updateNewsArticle(articleId: string, formData: FormData) {
-  const admin = await requireRole(["admin"]);
-  if (!admin) redirect("/login");
-
-  const supabase = await createClient();
-  const publish = formData.get("publish") === "true";
-
-  const { error } = await supabase.from("news_articles").update({
-    title: formData.get("title") as string,
-    excerpt: formData.get("excerpt") as string,
-    body: formData.get("body") as string,
-    category: formData.get("category") as string,
-    published: publish,
-    published_at: publish ? new Date().toISOString() : null,
-    cover_image_url: (formData.get("coverImageUrl") as string) || null,
-  }).eq("id", articleId);
-
-  if (error) redirect(`/admin/news/${articleId}/edit?error=${encodeURIComponent(error.message)}`);
-  revalidatePath("/news");
-  revalidatePath("/admin/news");
-  redirect("/admin/news");
-}
-
-export async function deleteNewsArticle(articleId: string) {
-  const admin = await requireRole(["admin"]);
-  if (!admin) return { error: "Unauthorized" };
-
-  const supabase = await createClient();
-  const { error } = await supabase.from("news_articles").delete().eq("id", articleId);
-  if (error) return { error: error.message };
-  revalidatePath("/admin/news");
-  revalidatePath("/news");
-  return { success: true };
-}

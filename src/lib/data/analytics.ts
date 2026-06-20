@@ -155,7 +155,7 @@ export async function getPlatformRevenueData(): Promise<PlatformRevenueData> {
     supabase.from("mentor_profiles").select("slug, user_id, monthly_rate"),
   ]);
 
-  const purchaseRows = (purchases ?? []) as ExamPurchaseRow[];
+  const purchaseRows = (purchases ?? []) as unknown as ExamPurchaseRow[];
   const mentorshipRows = (activeMentorships ?? []) as ActiveMentorshipRow[];
   const mentorRateRows = (mentorProfiles ?? []) as MentorProfileRateRow[];
 

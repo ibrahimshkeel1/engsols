@@ -6,12 +6,12 @@ export function DirectoryCardSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative flex min-h-[9rem] overflow-hidden rounded-xl border border-border bg-card p-4 ps-5 sm:p-5 sm:ps-6",
+        "relative flex min-h-[9rem] overflow-hidden rounded-xl border border-border bg-surface p-4 ps-5 shadow-premium-card transition-colors duration-300 sm:p-5 sm:ps-6",
         className,
       )}
       aria-hidden
     >
-      <Skeleton className="absolute start-0 top-0 h-full w-1 rounded-none" />
+      <Skeleton className="absolute start-0 top-0 h-full w-1 rounded-none bg-accent/20" />
       <div className="flex min-w-0 flex-1 flex-col gap-4">
         <div className="flex items-start gap-3">
           <Skeleton className="h-12 w-12 shrink-0 rounded-full" />
@@ -46,7 +46,7 @@ export function BentoDirectorySkeletonGrid({ count = 8 }: { count?: number }) {
 
 export function CompanyCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5" aria-hidden>
+    <div className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300" aria-hidden>
       <div className="flex items-center gap-3">
         <Skeleton className="h-12 w-12 shrink-0 rounded-xl" />
         <div className="space-y-2">
@@ -75,7 +75,7 @@ export function CompanyGridSkeleton({ count = 6 }: { count?: number }) {
 export function RoadmapDashboardSkeleton() {
   return (
     <div className="grid gap-8 xl:grid-cols-[minmax(0,340px)_1fr]" aria-hidden>
-      <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300">
         <Skeleton className="h-5 w-36" />
         <div className="mt-5 space-y-4">
           <Skeleton className="h-10 w-full" />
@@ -87,7 +87,7 @@ export function RoadmapDashboardSkeleton() {
       <div className="space-y-4">
         <Skeleton className="h-5 w-32" />
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="rounded-2xl border border-border bg-card p-5">
+          <div key={i} className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card transition-colors duration-300">
             <div className="flex items-center justify-between gap-3">
               <Skeleton className="h-4 w-40" />
               <Skeleton className="h-3 w-16" />

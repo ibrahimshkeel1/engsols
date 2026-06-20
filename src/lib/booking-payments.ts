@@ -94,6 +94,7 @@ export async function markMentorshipBookingPaid(
 export async function closeMentorshipSubscription(
   stripeSubscriptionId: string | null,
   stripeCustomerId: string | null,
+  options?: { reason?: "canceled" | "billing_failed" },
 ): Promise<{ error?: string }> {
   if (!isServiceSupabaseConfigured()) {
     return { error: "Booking payment recording is not configured" };
@@ -175,6 +176,48 @@ export async function closeMentorshipSubscription(
       body: `${booking.requester_name}'s subscription was canceled.`,
       url: "/mentor/roadmaps",
     });
+  }
+
+  if (booking.user_id) {
+    const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const billingFailed = options?.reason === "billing_failed";
+    const studentTitle = billingFailed ? "Payment failed — mentorship paused" : "Mentorship subscription ended";
+    const studentBody = billingFailed
+      ? "Your monthly mentorship payment failed. Update your payment method in Settings to restore access."
+      : "Your monthly mentorship subscription has ended. Active roadmaps were archived.";
+
+    const { createNotification } = await import("@/lib/notifications");
+    await createNotification({
+      userId: booking.user_id,
+      title: studentTitle,
+      body: studentBody,
+      url: "/settings",
+    });
+
+    const { sendPushToUser } = await import("@/lib/push");
+    await sendPushToUser({
+      userId: booking.user_id,
+      title: studentTitle,
+      body: studentBody,
+      url: "/settings",
+    });
+
+    const { data: studentProfile } = await supabase
+      .from("profiles")
+      .select("email")
+      .eq("id", booking.user_id)
+      .maybeSingle();
+
+    if (studentProfile?.email) {
+      const { sendEmail } = await import("@/lib/email");
+      await sendEmail({
+        to: studentProfile.email,
+        subject: billingFailed ? "Action required: update your payment method" : "Your mentorship subscription ended",
+        html: billingFailed
+          ? `<p>Hi ${booking.requester_name},</p><p>We could not process your monthly mentorship payment. Premium mentorship access has been paused and your roadmap was archived until billing is resolved.</p><p><a href="${site}/settings">Update payment method</a></p>`
+          : `<p>Hi ${booking.requester_name},</p><p>Your monthly mentorship subscription has ended. You can review billing or start a new mentorship from your <a href="${site}/settings">account settings</a>.</p>`,
+      });
+    }
   }
 
   return {};
