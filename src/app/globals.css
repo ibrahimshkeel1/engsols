@@ -708,6 +708,10 @@ html.live-room-active main {
   transform: scaleX(-1);
 }
 
+.live-video-shell .lk-participant-media-video[data-lk-local-participant="false"][data-lk-source="camera"] {
+  transform: none;
+}
+
 .live-kit-room {
   display: flex;
   flex-direction: column;

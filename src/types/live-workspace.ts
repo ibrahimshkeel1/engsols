@@ -1,6 +1,6 @@
 export type WorkspaceTab = "video_only" | "whiteboard" | "3D_review";
 
-export type WhiteboardTool = "pencil" | "line";
+export type WhiteboardTool = "pencil" | "line" | "text" | "hand";
 
 export const WHITEBOARD_COLORS = {
   signalRed: "#FF3B30",

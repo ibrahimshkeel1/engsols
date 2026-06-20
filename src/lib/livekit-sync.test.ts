@@ -8,6 +8,18 @@ import {
 } from "@/lib/livekit-sync";
 
 describe("livekit-sync packets", () => {
+  it("round-trips DRAW_TEXT", () => {
+    const packet = {
+      type: "DRAW_TEXT" as const,
+      x: 0.25,
+      y: 0.5,
+      text: "Hello",
+      color: "#007AFF",
+      fontSize: 0.02,
+    };
+    expect(decodeLiveSyncPacket(encodeLiveSyncPacket(packet))).toEqual(packet);
+  });
+
   it("round-trips DRAW_STROKE", () => {
     const packet = {
       type: "DRAW_STROKE" as const,

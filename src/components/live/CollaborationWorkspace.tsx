@@ -12,7 +12,7 @@ import { CadSandboxWorkspace } from "@/components/live/CadSandboxWorkspace";
 import { SyncStatusIndicator } from "@/components/live/SyncStatusIndicator";
 import { Button } from "@/components/ui/button";
 import {
-  appendWhiteboardSegment,
+  appendWhiteboardElement,
   bufferRoomStateSnapshot,
   clearWhiteboardSegments,
   disposeRoomStateHydrationRetry,
@@ -68,8 +68,8 @@ function CollaborationWorkspaceInner({
       const packet = decodeLiveSyncPacket(payload);
       if (!packet) return;
 
-      if (packet.type === "DRAW_STROKE") {
-        appendWhiteboardSegment(packet);
+      if (packet.type === "DRAW_STROKE" || packet.type === "DRAW_TEXT") {
+        appendWhiteboardElement(packet);
         return;
       }
 

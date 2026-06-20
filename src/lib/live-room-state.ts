@@ -4,15 +4,17 @@ import {
   isRoomStateAuthority,
   publishLiveSyncPacket,
   type DrawStrokePacket,
+  type DrawTextPacket,
   type RoomStateCad,
   type RoomStateSnapshot,
+  type WhiteboardElement,
 } from "@/lib/livekit-sync";
 import { applyPresenterLockFromRemote, getActivePresenterId } from "@/lib/presenter-lock";
 
 type WhiteboardContributor = {
-  getSegments: () => DrawStrokePacket[];
-  applySegments: (segments: DrawStrokePacket[]) => void;
-  appendSegment: (segment: DrawStrokePacket) => void;
+  getSegments: () => WhiteboardElement[];
+  applySegments: (segments: WhiteboardElement[]) => void;
+  appendElement: (element: WhiteboardElement) => void;
   clearSegments: () => void;
 };
 
@@ -38,7 +40,7 @@ export const HYDRATION_RETRY_MS = 2500;
 
 let whiteboardContributor: WhiteboardContributor | null = null;
 let cadContributor: CadContributor | null = null;
-let cachedWhiteboardSegments: DrawStrokePacket[] = [];
+let cachedWhiteboardSegments: WhiteboardElement[] = [];
 let cachedCadState: RoomStateCad = DEFAULT_CAD_STATE;
 
 let pendingSnapshot: RoomStateSnapshot | null = null;
@@ -150,9 +152,14 @@ export function registerWhiteboardRoomState(contributor: WhiteboardContributor):
   };
 }
 
+export function appendWhiteboardElement(element: WhiteboardElement): void {
+  cachedWhiteboardSegments = [...cachedWhiteboardSegments, element];
+  whiteboardContributor?.appendElement(element);
+}
+
+/** @deprecated Use appendWhiteboardElement */
 export function appendWhiteboardSegment(segment: DrawStrokePacket): void {
-  cachedWhiteboardSegments = [...cachedWhiteboardSegments, segment];
-  whiteboardContributor?.appendSegment(segment);
+  appendWhiteboardElement(segment);
 }
 
 export function clearWhiteboardSegments(): void {
@@ -175,7 +182,7 @@ export function registerCadRoomState(contributor: CadContributor): () => void {
   };
 }
 
-export function getWhiteboardSegmentsSnapshot(): DrawStrokePacket[] {
+export function getWhiteboardSegmentsSnapshot(): WhiteboardElement[] {
   return whiteboardContributor?.getSegments() ?? cachedWhiteboardSegments;
 }
 

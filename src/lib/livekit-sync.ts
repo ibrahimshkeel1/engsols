@@ -1,4 +1,4 @@
-import type { CadRenderMode, WhiteboardTool } from "@/types/live-workspace";
+import type { CadRenderMode } from "@/types/live-workspace";
 import type { Room } from "livekit-client";
 
 export type DrawStrokePacket = {
@@ -9,8 +9,19 @@ export type DrawStrokePacket = {
   y1: number;
   color: string;
   thickness: number;
-  tool: WhiteboardTool;
+  tool: "pencil" | "line";
 };
+
+export type DrawTextPacket = {
+  type: "DRAW_TEXT";
+  x: number;
+  y: number;
+  text: string;
+  color: string;
+  fontSize: number;
+};
+
+export type WhiteboardElement = DrawStrokePacket | DrawTextPacket;
 
 export type ClearCanvasPacket = {
   type: "CLEAR_CANVAS";
@@ -34,7 +45,7 @@ export type RoomStateCad = {
 };
 
 export type RoomStateSnapshot = {
-  whiteboardSegments: DrawStrokePacket[];
+  whiteboardSegments: WhiteboardElement[];
   cad: RoomStateCad;
   activePresenterId?: string | null;
 };
@@ -56,6 +67,7 @@ export type LockReleasePacket = {
 
 export type LiveSyncPacket =
   | DrawStrokePacket
+  | DrawTextPacket
   | ClearCanvasPacket
   | CadTransformPacket
   | RequestRoomStatePacket
@@ -100,6 +112,23 @@ export function isDrawStrokePacket(value: unknown): value is DrawStrokePacket {
   );
 }
 
+export function isDrawTextPacket(value: unknown): value is DrawTextPacket {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  return (
+    v.type === "DRAW_TEXT" &&
+    typeof v.x === "number" &&
+    typeof v.y === "number" &&
+    typeof v.text === "string" &&
+    typeof v.color === "string" &&
+    typeof v.fontSize === "number"
+  );
+}
+
+export function isWhiteboardElement(value: unknown): value is WhiteboardElement {
+  return isDrawStrokePacket(value) || isDrawTextPacket(value);
+}
+
 function isClearCanvasPacket(value: unknown): value is ClearCanvasPacket {
   return !!value && typeof value === "object" && (value as ClearCanvasPacket).type === "CLEAR_CANVAS";
 }
@@ -133,7 +162,7 @@ export function isRoomStateSnapshot(value: unknown): value is RoomStateSnapshot 
   if (!value || typeof value !== "object") return false;
   const v = value as Record<string, unknown>;
   if (!Array.isArray(v.whiteboardSegments)) return false;
-  if (!v.whiteboardSegments.every(isDrawStrokePacket)) return false;
+  if (!v.whiteboardSegments.every(isWhiteboardElement)) return false;
   return isRoomStateCad(v.cad);
 }
 
@@ -158,6 +187,7 @@ function isLockReleasePacket(value: unknown): value is LockReleasePacket {
 export function isLiveSyncPacket(value: unknown): value is LiveSyncPacket {
   return (
     isDrawStrokePacket(value) ||
+    isDrawTextPacket(value) ||
     isClearCanvasPacket(value) ||
     isCadTransformPacket(value) ||
     isRequestRoomStatePacket(value) ||
@@ -168,12 +198,12 @@ export function isLiveSyncPacket(value: unknown): value is LiveSyncPacket {
 }
 
 export function buildRoomStateSnapshot(parts: {
-  whiteboardSegments: DrawStrokePacket[];
+  whiteboardSegments: WhiteboardElement[];
   cad: RoomStateCad;
   activePresenterId?: string | null;
 }): RoomStateSnapshot {
   return {
-    whiteboardSegments: parts.whiteboardSegments.filter(isDrawStrokePacket),
+    whiteboardSegments: parts.whiteboardSegments.filter(isWhiteboardElement),
     cad: isRoomStateCad(parts.cad) ? parts.cad : DEFAULT_CAD_STATE,
     activePresenterId: parts.activePresenterId ?? null,
   };
