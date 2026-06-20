@@ -12,6 +12,8 @@ import { applyPresenterLockFromRemote, getActivePresenterId } from "@/lib/presen
 type WhiteboardContributor = {
   getSegments: () => DrawStrokePacket[];
   applySegments: (segments: DrawStrokePacket[]) => void;
+  appendSegment: (segment: DrawStrokePacket) => void;
+  clearSegments: () => void;
 };
 
 type CadContributor = {
@@ -133,9 +135,12 @@ function startHydrationRetryLoop(room: Room): void {
 export function registerWhiteboardRoomState(contributor: WhiteboardContributor): () => void {
   whiteboardContributor = contributor;
   const segments = contributor.getSegments();
-  if (segments.length > 0) cachedWhiteboardSegments = segments;
-  if (pendingSnapshot) {
+  if (segments.length > 0) {
+    cachedWhiteboardSegments = segments;
+  } else if (pendingSnapshot) {
     contributor.applySegments(pendingSnapshot.whiteboardSegments);
+  } else if (cachedWhiteboardSegments.length > 0) {
+    contributor.applySegments(cachedWhiteboardSegments);
   }
   return () => {
     if (whiteboardContributor === contributor) {
@@ -143,6 +148,16 @@ export function registerWhiteboardRoomState(contributor: WhiteboardContributor):
       whiteboardContributor = null;
     }
   };
+}
+
+export function appendWhiteboardSegment(segment: DrawStrokePacket): void {
+  cachedWhiteboardSegments = [...cachedWhiteboardSegments, segment];
+  whiteboardContributor?.appendSegment(segment);
+}
+
+export function clearWhiteboardSegments(): void {
+  cachedWhiteboardSegments = [];
+  whiteboardContributor?.clearSegments();
 }
 
 export function registerCadRoomState(contributor: CadContributor): () => void {
@@ -266,4 +281,6 @@ export function __resetLiveRoomStateForTests(): void {
   pendingSnapshot = null;
   activeHydrationRoom = null;
   lastRespondAt = 0;
+  cachedWhiteboardSegments = [];
+  whiteboardContributor = null;
 }

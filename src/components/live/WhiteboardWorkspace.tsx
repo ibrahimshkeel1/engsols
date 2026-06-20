@@ -15,6 +15,8 @@ import {
   type DrawStrokePacket,
 } from "@/lib/livekit-sync";
 import {
+  appendWhiteboardSegment,
+  clearWhiteboardSegments,
   registerWhiteboardRoomState,
   requestRoomStateOnce,
   respondToRoomStateRequest,
@@ -26,26 +28,15 @@ import {
   subscribePresenterLock,
 } from "@/lib/presenter-lock";
 import { PresenterLockControl } from "@/components/live/PresenterLockControl";
+import {
+  computeCanvasLayout,
+  toNormalizedSegment,
+  toPixelSegmentCompat,
+  type CanvasLayout,
+} from "@/lib/whiteboard-coords";
 import { cn } from "@/lib/utils";
 
 type Point = { x: number; y: number };
-
-type PencilStroke = {
-  type: "pencil";
-  points: Point[];
-  color: string;
-  width: number;
-};
-
-type LineStroke = {
-  type: "line";
-  from: Point;
-  to: Point;
-  color: string;
-  width: number;
-};
-
-type Stroke = PencilStroke | LineStroke;
 
 const COLOR_OPTIONS: { id: string; value: WhiteboardColor; label: string }[] = [
   { id: "red", value: WHITEBOARD_COLORS.signalRed, label: "Signal red" },
@@ -70,67 +61,25 @@ function drawSegment(
   ctx.stroke();
 }
 
-function drawStroke(ctx: CanvasRenderingContext2D, stroke: Stroke) {
-  ctx.strokeStyle = stroke.color;
-  ctx.lineWidth = stroke.width;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+function drawGrid(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  ctx.fillStyle = "#fafaf9";
+  ctx.fillRect(0, 0, width, height);
 
-  if (stroke.type === "pencil") {
-    if (stroke.points.length < 2) return;
-    for (let i = 1; i < stroke.points.length; i++) {
-      drawSegment(ctx, {
-        x0: stroke.points[i - 1].x,
-        y0: stroke.points[i - 1].y,
-        x1: stroke.points[i].x,
-        y1: stroke.points[i].y,
-        color: stroke.color,
-        thickness: stroke.width,
-      });
-    }
-    return;
+  ctx.strokeStyle = "rgba(0,0,0,0.06)";
+  ctx.lineWidth = 1;
+  const grid = 24;
+  for (let x = 0; x < width; x += grid) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
   }
-
-  drawSegment(ctx, {
-    x0: stroke.from.x,
-    y0: stroke.from.y,
-    x1: stroke.to.x,
-    y1: stroke.to.y,
-    color: stroke.color,
-    thickness: stroke.width,
-  });
-}
-
-function strokesToSegments(strokes: Stroke[]): DrawStrokePacket[] {
-  const segments: DrawStrokePacket[] = [];
-  for (const stroke of strokes) {
-    if (stroke.type === "pencil") {
-      for (let i = 1; i < stroke.points.length; i++) {
-        segments.push({
-          type: "DRAW_STROKE",
-          x0: stroke.points[i - 1].x,
-          y0: stroke.points[i - 1].y,
-          x1: stroke.points[i].x,
-          y1: stroke.points[i].y,
-          color: stroke.color,
-          thickness: stroke.width,
-          tool: "pencil",
-        });
-      }
-      continue;
-    }
-    segments.push({
-      type: "DRAW_STROKE",
-      x0: stroke.from.x,
-      y0: stroke.from.y,
-      x1: stroke.to.x,
-      y1: stroke.to.y,
-      color: stroke.color,
-      thickness: stroke.width,
-      tool: "line",
-    });
+  for (let y = 0; y < height; y += grid) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
   }
-  return segments;
 }
 
 type Props = {
@@ -141,9 +90,9 @@ type Props = {
 export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const strokesRef = useRef<Stroke[]>([]);
-  const remoteSegmentsRef = useRef<DrawStrokePacket[]>([]);
-  const draftRef = useRef<Stroke | null>(null);
+  const segmentsRef = useRef<DrawStrokePacket[]>([]);
+  const layoutRef = useRef<CanvasLayout>({ width: 0, height: 0, offsetX: 0, offsetY: 0 });
+  const draftLineRef = useRef<{ from: Point; to: Point } | null>(null);
   const drawingRef = useRef(false);
   const lastPointRef = useRef<Point | null>(null);
   const lineStartRef = useRef<Point | null>(null);
@@ -151,6 +100,12 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   const [tool, setTool] = useState<WhiteboardTool>("pencil");
   const [color, setColor] = useState<WhiteboardColor>(WHITEBOARD_COLORS.engineeringBlue);
   const [lineWidth, setLineWidth] = useState<(typeof LINE_WIDTHS)[number]>(4);
+  const [canvasLayout, setCanvasLayout] = useState<CanvasLayout>({
+    width: 0,
+    height: 0,
+    offsetX: 0,
+    offsetY: 0,
+  });
   const [, bump] = useState(0);
   const [, lockTick] = useState(0);
 
@@ -170,82 +125,99 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     roomRef.current = room;
   }, [tool, color, lineWidth, room]);
 
-  const redraw = useCallback(() => {
+  const syncCanvasSize = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!canvas || !container) return layoutRef.current;
 
     const rect = container.getBoundingClientRect();
+    const layout = computeCanvasLayout(rect.width, rect.height);
+    layoutRef.current = layout;
+    setCanvasLayout(layout);
+
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
+    canvas.width = Math.floor(layout.width * dpr);
+    canvas.height = Math.floor(layout.height * dpr);
+    canvas.style.width = `${layout.width}px`;
+    canvas.style.height = `${layout.height}px`;
+    canvas.style.left = `${layout.offsetX}px`;
+    canvas.style.top = `${layout.offsetY}px`;
+
+    return layout;
+  }, []);
+
+  const redraw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const layout = syncCanvasSize();
+    if (layout.width <= 0 || layout.height <= 0) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const dpr = window.devicePixelRatio || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#fafaf9";
-    ctx.fillRect(0, 0, rect.width, rect.height);
+    drawGrid(ctx, layout.width, layout.height);
 
-    ctx.strokeStyle = "rgba(0,0,0,0.06)";
-    ctx.lineWidth = 1;
-    const grid = 24;
-    for (let x = 0; x < rect.width; x += grid) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, rect.height);
-      ctx.stroke();
-    }
-    for (let y = 0; y < rect.height; y += grid) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(rect.width, y);
-      ctx.stroke();
+    for (const segment of segmentsRef.current) {
+      drawSegment(ctx, toPixelSegmentCompat(segment, layout));
     }
 
-    for (const stroke of strokesRef.current) {
-      drawStroke(ctx, stroke);
+    if (draftLineRef.current) {
+      drawSegment(ctx, {
+        x0: draftLineRef.current.from.x,
+        y0: draftLineRef.current.from.y,
+        x1: draftLineRef.current.to.x,
+        y1: draftLineRef.current.to.y,
+        color: colorRef.current,
+        thickness: lineWidthRef.current,
+      });
     }
-    for (const segment of remoteSegmentsRef.current) {
-      drawSegment(ctx, segment);
-    }
-    if (draftRef.current) {
-      drawStroke(ctx, draftRef.current);
-    }
-  }, []);
+  }, [syncCanvasSize]);
 
   const drawRemoteSegment = useCallback((segment: DrawStrokePacket) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const layout = layoutRef.current;
     const dpr = window.devicePixelRatio || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawSegment(ctx, segment);
-  }, []);
-
-  const collectSegments = useCallback((): DrawStrokePacket[] => {
-    return [...strokesToSegments(strokesRef.current), ...remoteSegmentsRef.current];
+    drawSegment(ctx, toPixelSegmentCompat(segment, layout));
   }, []);
 
   const hydrateFromSnapshot = useCallback(
     (segments: DrawStrokePacket[]) => {
-      strokesRef.current = [];
-      remoteSegmentsRef.current = [...segments];
-      draftRef.current = null;
+      segmentsRef.current = [...segments];
+      draftLineRef.current = null;
       redraw();
     },
     [redraw],
   );
 
+  const appendSegment = useCallback(
+    (segment: DrawStrokePacket) => {
+      segmentsRef.current = [...segmentsRef.current, segment];
+      drawRemoteSegment(segment);
+    },
+    [drawRemoteSegment],
+  );
+
+  const clearSegments = useCallback(() => {
+    segmentsRef.current = [];
+    draftLineRef.current = null;
+    redraw();
+  }, [redraw]);
+
   useEffect(() => {
     return registerWhiteboardRoomState({
-      getSegments: () => collectSegments(),
+      getSegments: () => segmentsRef.current,
       applySegments: (segments) => hydrateFromSnapshot(segments),
+      appendSegment,
+      clearSegments,
     });
-  }, [collectSegments, hydrateFromSnapshot]);
+  }, [appendSegment, clearSegments, hydrateFromSnapshot]);
 
   useEffect(() => {
     requestRoomStateOnce(room);
@@ -268,20 +240,6 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
       if (participant?.identity === room.localParticipant.identity) return;
       const packet = decodeLiveSyncPacket(payload);
       if (!packet) return;
-
-      if (packet.type === "DRAW_STROKE") {
-        remoteSegmentsRef.current.push(packet);
-        drawRemoteSegment(packet);
-        return;
-      }
-
-      if (packet.type === "CLEAR_CANVAS") {
-        strokesRef.current = [];
-        remoteSegmentsRef.current = [];
-        draftRef.current = null;
-        redraw();
-        return;
-      }
 
       if (packet.type === "REQUEST_ROOM_STATE") {
         respondToRoomStateRequest(room, isHost);
@@ -307,16 +265,23 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     return () => {
       room.off(RoomEvent.DataReceived, onData);
     };
-  }, [room, isHost, drawRemoteSegment, redraw, hydrateFromSnapshot]);
+  }, [room, isHost, hydrateFromSnapshot]);
 
   function getPoint(clientX: number, clientY: number): Point | null {
     const canvas = canvasRef.current;
     if (!canvas) return null;
     const rect = canvas.getBoundingClientRect();
-    return { x: clientX - rect.left, y: clientY - rect.top };
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return null;
+    return { x, y };
   }
 
-  function publishStroke(segment: DrawStrokePacket) {
+  function publishStroke(pixelSegment: Omit<DrawStrokePacket, "type">) {
+    const layout = layoutRef.current;
+    if (layout.width <= 0 || layout.height <= 0) return;
+    const segment = toNormalizedSegment(pixelSegment, layout);
+    appendWhiteboardSegment(segment);
     void publishLiveSyncPacket(roomRef.current, segment, true);
   }
 
@@ -327,39 +292,20 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     drawingRef.current = true;
     lastPointRef.current = point;
     lineStartRef.current = point;
-
-    if (toolRef.current === "pencil") {
-      draftRef.current = {
-        type: "pencil",
-        points: [point],
-        color: colorRef.current,
-        width: lineWidthRef.current,
-      };
-    } else {
-      draftRef.current = {
-        type: "line",
-        from: point,
-        to: point,
-        color: colorRef.current,
-        width: lineWidthRef.current,
-      };
-    }
+    draftLineRef.current = toolRef.current === "line" ? { from: point, to: point } : null;
     redraw();
   }
 
   function handlePointerMove(clientX: number, clientY: number) {
     if (readOnly) return;
     if (!drawingRef.current) return;
-    const draft = draftRef.current;
-    if (!draft) return;
     const point = getPoint(clientX, clientY);
     if (!point) return;
 
-    if (draft.type === "pencil") {
+    if (toolRef.current === "pencil") {
       const last = lastPointRef.current;
       if (last) {
-        const segment: DrawStrokePacket = {
-          type: "DRAW_STROKE",
+        publishStroke({
           x0: last.x,
           y0: last.y,
           x1: point.x,
@@ -367,41 +313,35 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
           color: colorRef.current,
           thickness: lineWidthRef.current,
           tool: "pencil",
-        };
-        publishStroke(segment);
-        drawRemoteSegment(segment);
+        });
       }
-      draft.points.push(point);
       lastPointRef.current = point;
-    } else {
-      draft.to = point;
+      return;
     }
-    redraw();
+
+    if (draftLineRef.current) {
+      draftLineRef.current = { from: draftLineRef.current.from, to: point };
+      redraw();
+    }
   }
 
   function handlePointerUp() {
     if (!drawingRef.current) return;
     drawingRef.current = false;
 
-    if (draftRef.current?.type === "line" && lineStartRef.current) {
-      const to = draftRef.current.to;
-      const segment: DrawStrokePacket = {
-        type: "DRAW_STROKE",
+    if (toolRef.current === "line" && lineStartRef.current && draftLineRef.current) {
+      publishStroke({
         x0: lineStartRef.current.x,
         y0: lineStartRef.current.y,
-        x1: to.x,
-        y1: to.y,
+        x1: draftLineRef.current.to.x,
+        y1: draftLineRef.current.to.y,
         color: colorRef.current,
         thickness: lineWidthRef.current,
         tool: "line",
-      };
-      publishStroke(segment);
+      });
     }
 
-    if (draftRef.current) {
-      strokesRef.current = [...strokesRef.current, draftRef.current];
-    }
-    draftRef.current = null;
+    draftLineRef.current = null;
     lastPointRef.current = null;
     lineStartRef.current = null;
     redraw();
@@ -410,10 +350,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
 
   function clearCanvas() {
     if (readOnly) return;
-    strokesRef.current = [];
-    remoteSegmentsRef.current = [];
-    draftRef.current = null;
-    redraw();
+    clearWhiteboardSegments();
     void publishLiveSyncPacket(roomRef.current, { type: "CLEAR_CANVAS" }, true);
     bump((n) => n + 1);
   }
@@ -428,7 +365,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("pencil")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "pencil" ? "bg-zone-live text-white shadow-sm dark:text-bg-main" : "text-muted-foreground hover:text-foreground",
+              tool === "pencil" ? "bg-zone-live text-white shadow-sm" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "pencil"}
           >
@@ -440,7 +377,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
             onClick={() => setTool("line")}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 active:scale-[0.98]",
-              tool === "line" ? "bg-zone-live text-white shadow-sm dark:text-bg-main" : "text-muted-foreground hover:text-foreground",
+              tool === "line" ? "bg-zone-live text-white shadow-sm" : "text-muted-foreground hover:text-foreground",
             )}
             aria-pressed={tool === "line"}
           >
@@ -497,12 +434,18 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
 
       <div
         ref={containerRef}
-        className="relative min-h-0 flex-1 overscroll-none"
+        className="relative min-h-0 flex-1 overscroll-none bg-stone-100/80"
         style={{ touchAction: "none" }}
       >
         <canvas
           ref={canvasRef}
-          className={cn("absolute inset-0 touch-none", readOnly ? "cursor-default" : "cursor-crosshair")}
+          className={cn("absolute touch-none shadow-sm", readOnly ? "cursor-default" : "cursor-crosshair")}
+          style={{
+            left: canvasLayout.offsetX,
+            top: canvasLayout.offsetY,
+            width: canvasLayout.width,
+            height: canvasLayout.height,
+          }}
           onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
           onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
           onMouseUp={handlePointerUp}

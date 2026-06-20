@@ -704,6 +704,10 @@ html.live-room-active main {
   background-color: var(--lk-control-hover-bg);
 }
 
+.live-video-shell .lk-participant-media-video[data-lk-local-participant="true"][data-lk-source="camera"] {
+  transform: scaleX(-1);
+}
+
 .live-kit-room {
   display: flex;
   flex-direction: column;

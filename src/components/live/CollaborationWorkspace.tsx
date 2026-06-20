@@ -12,7 +12,9 @@ import { CadSandboxWorkspace } from "@/components/live/CadSandboxWorkspace";
 import { SyncStatusIndicator } from "@/components/live/SyncStatusIndicator";
 import { Button } from "@/components/ui/button";
 import {
+  appendWhiteboardSegment,
   bufferRoomStateSnapshot,
+  clearWhiteboardSegments,
   disposeRoomStateHydrationRetry,
   requestRoomStateOnce,
   resetRoomStateHydration,
@@ -23,7 +25,7 @@ import {
   handleLockReleasePacket,
   releasePresenterIfDisconnected,
 } from "@/lib/presenter-lock";
-import { decodeLiveSyncPacket } from "@/lib/livekit-sync";
+import { decodeLiveSyncPacket, publishLiveSyncPacket } from "@/lib/livekit-sync";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -54,12 +56,27 @@ function CollaborationWorkspaceInner({
   }, [room, remoteCount]);
 
   useEffect(() => {
+    if (activeTab !== "whiteboard" || !room || room.state !== "connected") return;
+    void publishLiveSyncPacket(room, { type: "REQUEST_ROOM_STATE" }, true);
+  }, [activeTab, room]);
+
+  useEffect(() => {
     if (!room) return;
 
     const onData = (payload: Uint8Array, participant?: { identity: string }) => {
       if (participant?.identity === room.localParticipant.identity) return;
       const packet = decodeLiveSyncPacket(payload);
       if (!packet) return;
+
+      if (packet.type === "DRAW_STROKE") {
+        appendWhiteboardSegment(packet);
+        return;
+      }
+
+      if (packet.type === "CLEAR_CANVAS") {
+        clearWhiteboardSegments();
+        return;
+      }
 
       if (packet.type === "REQUEST_ROOM_STATE") {
         respondToRoomStateRequest(room, isHost);
