@@ -129,6 +129,7 @@ export type LiveStream = {
   endedAt?: string;
   maxParticipants?: number;
   accessMode?: string;
+  requireJoinApproval?: boolean;
   recordingUrl?: string | null;
 };
 

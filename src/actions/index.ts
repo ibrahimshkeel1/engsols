@@ -475,6 +475,7 @@ export async function createLiveSession(formData: FormData) {
   const callType = (formData.get("callType") as string) || "scheduled";
   const forumPostId = formData.get("forumPostId") as string | null;
   const maxParticipants = parseInt(formData.get("maxParticipants") as string, 10) || 50;
+  const requireJoinApproval = formData.get("requireJoinApproval") === "true";
   const slug = `${slugify(title)}-${Date.now().toString(36)}`;
   const roomName = slug;
 
@@ -511,6 +512,7 @@ export async function createLiveSession(formData: FormData) {
     forum_post_id: forumPostId || null,
     max_participants: maxParticipants,
     access_mode: callType === "mentorship_1on1" ? "invite_only" : "authenticated",
+    require_join_approval: requireJoinApproval,
   });
 
   if (error) redirect(`${nextPath}?error=${encodeURIComponent(error.message)}`);

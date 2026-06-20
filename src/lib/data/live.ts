@@ -22,6 +22,7 @@ function toLiveStream(s: DbLiveSession): LiveStream & { hostName?: string } {
     endedAt: s.ended_at ?? undefined,
     maxParticipants: s.max_participants,
     accessMode: s.access_mode,
+    requireJoinApproval: s.require_join_approval ?? false,
     recordingUrl: s.recording_url ?? null,
     hostName: s.profiles?.full_name,
   };

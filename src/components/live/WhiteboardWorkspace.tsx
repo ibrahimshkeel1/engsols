@@ -18,11 +18,19 @@ import {
 } from "@/lib/livekit-sync";
 import {
   appendWhiteboardElement,
+  broadcastWhiteboardState,
   clearWhiteboardSegments,
+  getWhiteboardSegmentsSnapshot,
+  mergeWhiteboardElements,
   registerWhiteboardRoomState,
-  requestRoomStateOnce,
+  requestWhiteboardStateRefresh,
   respondToRoomStateRequest,
 } from "@/lib/live-room-state";
+import {
+  canLocalEdit,
+  subscribePresenterLock,
+} from "@/lib/presenter-lock";
+import { HostWhiteboardLockControl } from "@/components/live/HostWhiteboardLockControl";
 import {
   DEFAULT_VIEWPORT,
   WHITEBOARD_VIRTUAL_HEIGHT,
@@ -118,6 +126,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     displayHeight: 0,
   });
   const draftLineRef = useRef<{ from: Point; to: Point } | null>(null);
+  const snapshotBroadcastRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const drawingRef = useRef(false);
   const panningRef = useRef(false);
   const lastPointRef = useRef<Point | null>(null);
@@ -141,6 +150,10 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     null,
   );
   const [, bump] = useState(0);
+
+  const readOnly = !canLocalEdit(room);
+
+  useEffect(() => subscribePresenterLock(() => bump((n) => n + 1)), []);
 
   const toolRef = useRef(tool);
   const colorRef = useRef(color);
@@ -216,12 +229,21 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
 
   const hydrateFromSnapshot = useCallback(
     (segments: WhiteboardElement[]) => {
-      elementsRef.current = [...segments];
+      elementsRef.current = mergeWhiteboardElements(elementsRef.current, segments);
       draftLineRef.current = null;
       redraw();
     },
     [redraw],
   );
+
+  const scheduleAuthoritativeSnapshot = useCallback(() => {
+    if (!isHost || !roomRef.current) return;
+    if (snapshotBroadcastRef.current) clearTimeout(snapshotBroadcastRef.current);
+    snapshotBroadcastRef.current = setTimeout(() => {
+      snapshotBroadcastRef.current = null;
+      broadcastWhiteboardState(roomRef.current!, true);
+    }, 400);
+  }, [isHost]);
 
   const appendElement = useCallback(
     (element: WhiteboardElement) => {
@@ -247,8 +269,12 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }, [appendElement, clearElements, hydrateFromSnapshot]);
 
   useEffect(() => {
-    requestRoomStateOnce(room);
-  }, [room, room?.remoteParticipants.size]);
+    hydrateFromSnapshot(getWhiteboardSegmentsSnapshot());
+    requestWhiteboardStateRefresh(room);
+    return () => {
+      if (snapshotBroadcastRef.current) clearTimeout(snapshotBroadcastRef.current);
+    };
+  }, [room, room?.remoteParticipants.size, hydrateFromSnapshot]);
 
   useEffect(() => {
     redraw();
@@ -326,12 +352,14 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
     const segment = toNormalizedStroke(virtualSegment);
     appendWhiteboardElement(segment);
     void publishLiveSyncPacket(roomRef.current, segment, true);
+    scheduleAuthoritativeSnapshot();
   }
 
   function publishText(virtual: Omit<DrawTextPacket, "type">) {
     const item = toNormalizedText(virtual);
     appendWhiteboardElement(item);
     void publishLiveSyncPacket(roomRef.current, item, true);
+    scheduleAuthoritativeSnapshot();
   }
 
   function beginDraw(clientX: number, clientY: number) {
@@ -369,6 +397,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function handlePointerDown(clientX: number, clientY: number) {
+    if (readOnly && toolRef.current !== "hand") return;
     if (toolRef.current === "hand") {
       beginPan(clientX, clientY);
       return;
@@ -381,6 +410,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function handlePointerMove(clientX: number, clientY: number) {
+    if (readOnly && !panningRef.current) return;
     if (panningRef.current && panStartRef.current) {
       const dx = clientX - panStartRef.current.x;
       const dy = clientY - panStartRef.current.y;
@@ -449,7 +479,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function commitText(value: string) {
-    if (!textDraft) return;
+    if (readOnly || !textDraft) return;
     const trimmed = value.trim();
     if (trimmed) {
       publishText({
@@ -465,8 +495,12 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
   }
 
   function clearCanvas() {
+    if (readOnly) return;
     clearWhiteboardSegments();
     void publishLiveSyncPacket(roomRef.current, { type: "CLEAR_CANVAS" }, true);
+    if (isHost && roomRef.current) {
+      broadcastWhiteboardState(roomRef.current, true);
+    }
     bump((n) => n + 1);
   }
 
@@ -570,11 +604,14 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
         <button
           type="button"
           onClick={clearCanvas}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground"
+          disabled={readOnly}
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Eraser className="h-3.5 w-3.5" aria-hidden />
           Clear
         </button>
+
+        <HostWhiteboardLockControl room={room} isHost={isHost} />
       </div>
 
       <div
@@ -582,6 +619,13 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
         className="relative min-h-0 flex-1 overflow-hidden overscroll-none bg-stone-200/60"
         style={{ touchAction: "none" }}
       >
+        {readOnly && (
+          <div className="pointer-events-none absolute inset-x-0 top-2 z-10 flex justify-center px-3">
+            <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur-sm">
+              View only — host has locked the whiteboard
+            </span>
+          </div>
+        )}
         <div className="absolute left-0 top-0 origin-top-left will-change-transform" style={{ transform: stageTransform }}>
           <canvas
             ref={canvasRef}

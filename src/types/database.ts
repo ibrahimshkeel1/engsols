@@ -119,6 +119,7 @@ export type DbLiveSession = {
   booking_request_id: string | null;
   max_participants: number;
   access_mode: string;
+  require_join_approval?: boolean;
   ended_at: string | null;
   viewer_count: number;
   recording_url?: string | null;

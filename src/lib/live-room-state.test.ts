@@ -4,12 +4,16 @@ import { publishLiveSyncPacket } from "@/lib/livekit-sync";
 import {
   HYDRATION_RETRY_MS,
   __resetLiveRoomStateForTests,
+  appendWhiteboardElement,
   bufferRoomStateSnapshot,
   disposeRoomStateHydrationRetry,
+  getWhiteboardSegmentsSnapshot,
   isHydrationFailedOrAlone,
   isRoomStateHydrated,
   isRoomStateHydrationResolved,
+  mergeWhiteboardElements,
   requestRoomStateOnce,
+  requestWhiteboardStateRefresh,
   resetRoomStateHydration,
 } from "@/lib/live-room-state";
 
@@ -106,5 +110,52 @@ describe("live-room-state hydration retry", () => {
 
     expect(isHydrationFailedOrAlone()).toBe(false);
     expect(publishLiveSyncPacket).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe("whiteboard snapshot merge", () => {
+  beforeEach(() => {
+    __resetLiveRoomStateForTests();
+  });
+
+  it("merges incoming strokes without dropping existing cache", () => {
+    const strokeA = {
+      type: "DRAW_STROKE" as const,
+      x0: 0.1,
+      y0: 0.2,
+      x1: 0.3,
+      y1: 0.4,
+      color: "#ff0000",
+      thickness: 4,
+      tool: "pencil" as const,
+    };
+    const strokeB = {
+      ...strokeA,
+      x1: 0.5,
+    };
+
+    appendWhiteboardElement(strokeA);
+    bufferRoomStateSnapshot({
+      whiteboardSegments: [strokeB],
+      cad: { rotationX: 0.5, rotationY: 0.8, renderMode: "wireframe" },
+    });
+
+    expect(getWhiteboardSegmentsSnapshot()).toHaveLength(2);
+    expect(mergeWhiteboardElements([strokeA], [strokeA])).toHaveLength(1);
+  });
+
+  it("always refreshes whiteboard state even after hydration", () => {
+    const room = createMockRoom();
+    requestRoomStateOnce(room);
+    bufferRoomStateSnapshot({
+      whiteboardSegments: [],
+      cad: { rotationX: 0.5, rotationY: 0.8, renderMode: "wireframe" },
+    });
+
+    vi.mocked(publishLiveSyncPacket).mockClear();
+    requestWhiteboardStateRefresh(room);
+
+    expect(publishLiveSyncPacket).toHaveBeenCalledTimes(1);
+    expect(publishLiveSyncPacket).toHaveBeenCalledWith(room, { type: "REQUEST_ROOM_STATE" }, true);
   });
 });

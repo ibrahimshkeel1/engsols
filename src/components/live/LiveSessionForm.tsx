@@ -48,6 +48,20 @@ export function LiveSessionForm({
             <FormField label="Description" id="live-description">
               <Textarea name="description" required rows={5} placeholder="What will you cover?" />
             </FormField>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3">
+              <input
+                type="checkbox"
+                name="requireJoinApproval"
+                value="true"
+                className="mt-1 h-4 w-4 rounded border-border accent-zone-live"
+              />
+              <span>
+                <span className="block text-sm font-medium">Require approval to join</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  Guests request access and you approve them from the join requests panel in the call.
+                </span>
+              </span>
+            </label>
             <div className="flex flex-wrap gap-3">
               <SubmitButton variant="accent" pendingLabel="Scheduling...">Schedule session</SubmitButton>
               <SubmitButton name="startNow" value="true" variant="outline" pendingLabel="Starting...">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { CollaborationWorkspace } from "@/components/live/CollaborationWorkspace";
 import { LiveRoomSkeleton } from "@/components/ui/DirectorySkeletons";
@@ -13,43 +13,87 @@ type LiveVideoRoomProps = {
   ending?: boolean;
 };
 
+async function requestRoomToken(slug: string) {
+  const res = await fetch("/api/video/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ slug }),
+  });
+  const data = await res.json();
+  return { res, data };
+}
+
 export function LiveVideoRoom({ slug, title, isHost, onEndCall, ending }: LiveVideoRoomProps) {
   const [token, setToken] = useState<string | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pendingApproval, setPendingApproval] = useState(false);
+
+  const connect = useCallback(async () => {
+    try {
+      const { res, data } = await requestRoomToken(slug);
+      if (res.status === 202 && data.status === "pending") {
+        setPendingApproval(true);
+        setError(null);
+        return false;
+      }
+      if (!res.ok) throw new Error(data.error || "Could not join room");
+      setToken(data.token);
+      setServerUrl(data.serverUrl);
+      setPendingApproval(false);
+      setError(null);
+      return true;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not join room");
+      setPendingApproval(false);
+      return false;
+    }
+  }, [slug]);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchToken() {
-      try {
-        const res = await fetch("/api/video/token", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slug }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Could not join room");
-        if (!cancelled) {
-          setToken(data.token);
-          setServerUrl(data.serverUrl);
-        }
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Could not join room");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    async function initialConnect() {
+      await connect();
+      if (!cancelled) setLoading(false);
     }
 
-    fetchToken();
+    void initialConnect();
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [connect]);
+
+  useEffect(() => {
+    if (!pendingApproval) return;
+
+    const interval = window.setInterval(() => {
+      void connect().then((joined) => {
+        if (joined) setLoading(false);
+      });
+    }, 3000);
+
+    return () => window.clearInterval(interval);
+  }, [pendingApproval, connect]);
 
   if (loading) {
     return <LiveRoomSkeleton />;
+  }
+
+  if (pendingApproval) {
+    return (
+      <div className="rounded-2xl border border-zone-live/25 bg-zone-live/5 p-8 text-center">
+        <p className="font-display text-xl text-text-main">Waiting for host approval</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          The host will see your join request and can let you into the call.
+        </p>
+        <p className="mt-4 text-xs text-muted-foreground">Checking again automatically…</p>
+        <Link href={`/live/${slug}`} className="mt-6 inline-block text-sm text-primary hover:underline">
+          Back to session
+        </Link>
+      </div>
+    );
   }
 
   if (error || !token || !serverUrl) {

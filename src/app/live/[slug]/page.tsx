@@ -12,6 +12,7 @@ import { SessionReminderButton } from "@/components/shared/SessionReminderButton
 import { ShareButton } from "@/components/shared/ShareButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
+import { LiveJoinApprovalToggle } from "@/components/live/LiveJoinApprovalToggle";
 import { LiveSessionActions } from "@/components/live/LiveSessionActions";
 import { LiveRecordingForm } from "@/components/live/LiveRecordingForm";
 import { LiveRecordingPlayer } from "@/components/live/LiveRecordingPlayer";
@@ -71,6 +72,11 @@ export default async function LiveStreamPage({ params }: Props) {
               Live now · {stream.viewerCount} viewers
             </span>
           )}
+          {stream.requireJoinApproval && (
+            <span className="rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+              Approval required
+            </span>
+          )}
         </div>
         <h1 className="mt-4 font-display text-3xl tracking-tight">{stream.title}</h1>
         <div className="mt-3">
@@ -109,7 +115,13 @@ export default async function LiveStreamPage({ params }: Props) {
             </div>
           </div>
         )}
-        <div className="mt-6">
+        <div className="mt-6 space-y-4">
+          {(isHost || isAdmin) && stream.status !== "ended" && (
+            <LiveJoinApprovalToggle
+              slug={slug}
+              initialValue={stream.requireJoinApproval ?? false}
+            />
+          )}
           <LiveSessionActions
             slug={slug}
             status={stream.status}

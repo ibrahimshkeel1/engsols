@@ -120,6 +120,7 @@ create table if not exists live_sessions (
   forum_post_id uuid references forum_posts(id) on delete set null,
   max_participants integer not null default 50,
   access_mode text not null default 'authenticated',
+  require_join_approval boolean not null default false,
   ended_at timestamptz,
   viewer_count integer not null default 0,
   created_at timestamptz not null default now()

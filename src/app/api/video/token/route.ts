@@ -4,6 +4,64 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createParticipantToken } from "@/lib/livekit/server";
 import { getLiveKitUrl, isLiveKitConfigured } from "@/lib/livekit/config";
 
+async function ensureJoinApproval(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  session: {
+    id: string;
+    host_id: string;
+    require_join_approval?: boolean;
+  },
+  user: { id: string },
+  profile: { full_name?: string | null; email?: string | null } | null,
+  isAdmin: boolean,
+): Promise<NextResponse | null> {
+  if (!session.require_join_approval || session.host_id === user.id || isAdmin) {
+    return null;
+  }
+
+  const displayName =
+    profile?.full_name || profile?.email?.split("@")[0] || "Participant";
+
+  const { data: existing } = await supabase
+    .from("live_join_requests")
+    .select("id, status")
+    .eq("session_id", session.id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing?.status === "approved") return null;
+
+  if (existing?.status === "denied") {
+    return NextResponse.json(
+      { error: "The host declined your request to join" },
+      { status: 403 },
+    );
+  }
+
+  if (existing?.status === "pending") {
+    return NextResponse.json(
+      { status: "pending", message: "Waiting for host approval" },
+      { status: 202 },
+    );
+  }
+
+  const { error } = await supabase.from("live_join_requests").insert({
+    session_id: session.id,
+    user_id: user.id,
+    display_name: displayName,
+    status: "pending",
+  });
+
+  if (error && error.code !== "23505") {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(
+    { status: "pending", message: "Waiting for host approval" },
+    { status: 202 },
+  );
+}
+
 export async function POST(request: Request) {
   if (!isLiveKitConfigured()) {
     return NextResponse.json(
@@ -72,6 +130,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "This is a private call" }, { status: 403 });
     }
   }
+
+  const approvalResponse = await ensureJoinApproval(
+    supabase,
+    session,
+    user,
+    profile,
+    isAdmin,
+  );
+  if (approvalResponse) return approvalResponse;
 
   const roomName = session.room_name || session.slug;
   const isHost = session.host_id === user.id;

@@ -35,8 +35,37 @@ const DEFAULT_CAD_STATE: RoomStateCad = {
   renderMode: "wireframe",
 };
 
-const RESPONSE_COOLDOWN_MS = 250;
 export const HYDRATION_RETRY_MS = 2500;
+
+function whiteboardElementKey(element: WhiteboardElement): string {
+  if (element.type === "DRAW_STROKE") {
+    return `s:${element.x0}:${element.y0}:${element.x1}:${element.y1}:${element.color}:${element.thickness}:${element.tool}`;
+  }
+  return `t:${element.x}:${element.y}:${element.text}:${element.color}:${element.fontSize}`;
+}
+
+export function mergeWhiteboardElements(
+  existing: WhiteboardElement[],
+  incoming: WhiteboardElement[],
+): WhiteboardElement[] {
+  if (incoming.length === 0) return existing;
+  if (existing.length === 0) return [...incoming];
+
+  const merged = [...existing];
+  const seen = new Set(existing.map(whiteboardElementKey));
+  for (const element of incoming) {
+    const key = whiteboardElementKey(element);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(element);
+  }
+  return merged;
+}
+
+function applyWhiteboardSnapshot(snapshot: WhiteboardElement[]): void {
+  cachedWhiteboardSegments = mergeWhiteboardElements(cachedWhiteboardSegments, snapshot);
+  whiteboardContributor?.applySegments(cachedWhiteboardSegments);
+}
 
 let whiteboardContributor: WhiteboardContributor | null = null;
 let cadContributor: CadContributor | null = null;
@@ -46,7 +75,6 @@ let cachedCadState: RoomStateCad = DEFAULT_CAD_STATE;
 let pendingSnapshot: RoomStateSnapshot | null = null;
 let hydrated = false;
 let hydrationFailedOrAlone = false;
-let lastRespondAt = 0;
 let activeHydrationRoom: Room | null = null;
 
 const hydrationTrackers = new WeakMap<Room, HydrationTracker>();
@@ -136,24 +164,28 @@ function startHydrationRetryLoop(room: Room): void {
 
 export function registerWhiteboardRoomState(contributor: WhiteboardContributor): () => void {
   whiteboardContributor = contributor;
-  const segments = contributor.getSegments();
-  if (segments.length > 0) {
-    cachedWhiteboardSegments = segments;
-  } else if (pendingSnapshot) {
-    contributor.applySegments(pendingSnapshot.whiteboardSegments);
-  } else if (cachedWhiteboardSegments.length > 0) {
-    contributor.applySegments(cachedWhiteboardSegments);
+  const local = contributor.getSegments();
+  let merged = mergeWhiteboardElements(cachedWhiteboardSegments, local);
+  if (pendingSnapshot) {
+    merged = mergeWhiteboardElements(merged, pendingSnapshot.whiteboardSegments);
   }
+  cachedWhiteboardSegments = merged;
+  contributor.applySegments(merged);
   return () => {
     if (whiteboardContributor === contributor) {
-      cachedWhiteboardSegments = contributor.getSegments();
+      cachedWhiteboardSegments = mergeWhiteboardElements(
+        cachedWhiteboardSegments,
+        contributor.getSegments(),
+      );
       whiteboardContributor = null;
     }
   };
 }
 
 export function appendWhiteboardElement(element: WhiteboardElement): void {
-  cachedWhiteboardSegments = [...cachedWhiteboardSegments, element];
+  const merged = mergeWhiteboardElements(cachedWhiteboardSegments, [element]);
+  if (merged.length === cachedWhiteboardSegments.length) return;
+  cachedWhiteboardSegments = merged;
   whiteboardContributor?.appendElement(element);
 }
 
@@ -242,11 +274,15 @@ export function requestRoomStateOnce(room: Room | undefined): void {
   startHydrationRetryLoop(room);
 }
 
-export function respondToRoomStateRequest(room: Room, isHost: boolean): void {
-  if (!isRoomStateAuthority(room, isHost)) return;
-  const now = Date.now();
-  if (now - lastRespondAt < RESPONSE_COOLDOWN_MS) return;
-  lastRespondAt = now;
+/** Always request the latest whiteboard snapshot (e.g. when opening the tab). */
+export function requestWhiteboardStateRefresh(room: Room | undefined): void {
+  if (!room || room.state !== "connected") return;
+  if (room.remoteParticipants.size === 0) return;
+  void publishLiveSyncPacket(room, { type: "REQUEST_ROOM_STATE" }, true);
+}
+
+export function broadcastWhiteboardState(room: Room, isHost: boolean): void {
+  if (!isHost || room.state !== "connected") return;
 
   const state = buildRoomStateSnapshot({
     whiteboardSegments: getWhiteboardSegmentsSnapshot(),
@@ -257,11 +293,25 @@ export function respondToRoomStateRequest(room: Room, isHost: boolean): void {
   void publishLiveSyncPacket(room, { type: "RECEIVE_ROOM_STATE", state }, true);
 }
 
+export function respondToRoomStateRequest(room: Room, isHost: boolean): void {
+  if (!isRoomStateAuthority(room, isHost)) return;
+
+  const snapshot = getWhiteboardSegmentsSnapshot();
+  if (!isHost && snapshot.length === 0) return;
+
+  const state = buildRoomStateSnapshot({
+    whiteboardSegments: snapshot,
+    cad: getCadStateSnapshot(),
+    activePresenterId: getActivePresenterId(),
+  });
+
+  void publishLiveSyncPacket(room, { type: "RECEIVE_ROOM_STATE", state }, true);
+}
+
 export function applyRoomStateSnapshot(snapshot: RoomStateSnapshot): void {
   pendingSnapshot = null;
-  cachedWhiteboardSegments = snapshot.whiteboardSegments;
+  applyWhiteboardSnapshot(snapshot.whiteboardSegments);
   cachedCadState = snapshot.cad;
-  whiteboardContributor?.applySegments(snapshot.whiteboardSegments);
   cadContributor?.applyCadState(snapshot.cad);
   if (snapshot.activePresenterId !== undefined) {
     applyPresenterLockFromRemote(snapshot.activePresenterId);
@@ -271,9 +321,8 @@ export function applyRoomStateSnapshot(snapshot: RoomStateSnapshot): void {
 
 export function bufferRoomStateSnapshot(snapshot: RoomStateSnapshot): void {
   pendingSnapshot = snapshot;
-  cachedWhiteboardSegments = snapshot.whiteboardSegments;
+  applyWhiteboardSnapshot(snapshot.whiteboardSegments);
   cachedCadState = snapshot.cad;
-  whiteboardContributor?.applySegments(snapshot.whiteboardSegments);
   cadContributor?.applyCadState(snapshot.cad);
   if (snapshot.activePresenterId !== undefined) {
     applyPresenterLockFromRemote(snapshot.activePresenterId);
@@ -287,7 +336,6 @@ export function __resetLiveRoomStateForTests(): void {
   hydrationFailedOrAlone = false;
   pendingSnapshot = null;
   activeHydrationRoom = null;
-  lastRespondAt = 0;
   cachedWhiteboardSegments = [];
   whiteboardContributor = null;
 }

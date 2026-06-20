@@ -11,6 +11,7 @@ import { LiveChatFloatingMessages } from "@/components/live/LiveChatFloatingMess
 import { WorkspaceSwitcher } from "@/components/live/WorkspaceSwitcher";
 import { WhiteboardWorkspace } from "@/components/live/WhiteboardWorkspace";
 import { CadSandboxWorkspace } from "@/components/live/CadSandboxWorkspace";
+import { LiveJoinRequestsPanel } from "@/components/live/LiveJoinRequestsPanel";
 import { SyncStatusIndicator } from "@/components/live/SyncStatusIndicator";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import {
   clearWhiteboardSegments,
   disposeRoomStateHydrationRetry,
   requestRoomStateOnce,
+  requestWhiteboardStateRefresh,
   resetRoomStateHydration,
   respondToRoomStateRequest,
 } from "@/lib/live-room-state";
@@ -27,7 +29,7 @@ import {
   handleLockReleasePacket,
   releasePresenterIfDisconnected,
 } from "@/lib/presenter-lock";
-import { decodeLiveSyncPacket, publishLiveSyncPacket } from "@/lib/livekit-sync";
+import { decodeLiveSyncPacket } from "@/lib/livekit-sync";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -59,7 +61,7 @@ function CollaborationWorkspaceInner({
 
   useEffect(() => {
     if (activeTab !== "whiteboard" || !room || room.state !== "connected") return;
-    void publishLiveSyncPacket(room, { type: "REQUEST_ROOM_STATE" }, true);
+    requestWhiteboardStateRefresh(room);
   }, [activeTab, room]);
 
   useEffect(() => {
@@ -142,6 +144,7 @@ function CollaborationWorkspaceInner({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <SyncStatusIndicator room={room} className="hidden sm:inline-flex" />
+          {isHost && <LiveJoinRequestsPanel slug={slug} isHost={isHost} />}
           <WorkspaceSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
           <Link href={`/live/${slug}`} className="btn-secondary hidden h-10 text-text-main sm:inline-flex">
             Session info
