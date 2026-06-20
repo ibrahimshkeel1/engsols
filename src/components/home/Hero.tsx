@@ -56,8 +56,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
 
   return (
     <section className="hero-zone-mentorship relative overflow-hidden">
-      <div className="zone-spectrum absolute inset-x-0 top-0 h-1 opacity-90" aria-hidden />
-      <div className="bg-grid absolute inset-0 opacity-50" />
+      <div className="bg-grid absolute inset-0 opacity-40" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">

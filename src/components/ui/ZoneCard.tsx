@@ -9,15 +9,15 @@ type ZoneCardProps = {
   as?: "div" | "article";
 };
 
-export function ZoneCard({ zone, className, children, stripe = true, as: Tag = "div" }: ZoneCardProps) {
+export function ZoneCard({ zone, className, children, stripe = false, as: Tag = "div" }: ZoneCardProps) {
   const t = zoneTokens[zone];
   return (
     <Tag
       className={cn(
-        "rounded-xl border bg-card shadow-sm transition-colors",
-        t.border,
+        "rounded-xl border border-border bg-card shadow-sm transition-all duration-200",
         stripe && t.stripe,
         t.cardHover,
+        "hover:shadow-premium-card",
         className,
       )}
     >

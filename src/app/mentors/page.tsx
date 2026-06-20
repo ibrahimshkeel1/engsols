@@ -20,7 +20,7 @@ export default async function MentorsPage() {
         description={description}
         label="Mentorship"
       />
-      <div className="mx-auto max-w-7xl bg-zone-mentorship-surface px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
         <Suspense fallback={<BentoSkeletonGrid count={8} />}>
           <MentorsPageContent />
         </Suspense>

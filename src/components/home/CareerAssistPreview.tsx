@@ -29,7 +29,7 @@ export function CareerAssistPreview({ mentors }: { mentors: Mentor[] }) {
   const t = zoneTokens.recruiter;
 
   return (
-    <ZoneSection zone="recruiter" className="py-14">
+    <ZoneSection zone="recruiter" alt accent className="py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn>
           <p className={t.sectionLabel}>Career assist</p>

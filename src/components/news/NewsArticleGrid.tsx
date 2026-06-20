@@ -13,7 +13,7 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
   return (
     <Link
       href={`/news/${article.slug}`}
-      className="card-interactive group block overflow-hidden rounded-2xl border border-zone-news-border bg-zone-news-surface shadow-premium-card"
+      className="card-interactive group block overflow-hidden rounded-2xl border border-border bg-card shadow-premium-card"
     >
       {article.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -63,7 +63,7 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
   const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
-    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-zone-news-border bg-card">
+    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
       {article.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={article.imageUrl} alt={article.title} className="aspect-video w-full object-cover" />

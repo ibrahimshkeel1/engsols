@@ -34,7 +34,7 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."
-      className="bg-zone-recruiter-surface"
+      className="bg-background"
       action={
         <Link
           href="/companies/talent"

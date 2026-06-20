@@ -65,7 +65,7 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
         )}
 
         <AnimateIn delay={0.15}>
-          <div className="section-band-gradient mt-12 overflow-hidden rounded-2xl">
+          <div className="mt-12 overflow-hidden rounded-2xl border border-border bg-card shadow-premium-card">
             <div className="flex flex-col items-start justify-center gap-6 p-10 sm:p-14 lg:max-w-2xl">
               <div>
                 <h3 className="font-display text-2xl text-text-main sm:text-3xl">Ready to start?</h3>

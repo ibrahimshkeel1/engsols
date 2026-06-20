@@ -59,7 +59,7 @@ const paths: {
 
 export function StartHereJourney() {
   return (
-    <ZoneSection zone="mentorship" className="py-12">
+    <ZoneSection zone="mentorship" accent className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn>
           <p className={zoneTokens.mentorship.sectionLabel}>Start here</p>

@@ -54,7 +54,7 @@ const links: {
 
 export function CommunityStrip() {
   return (
-    <ZoneSection zone="live" className="py-24">
+    <ZoneSection zone="live" alt accent className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn className="mx-auto max-w-2xl text-center">
           <p className={zoneTokens.live.sectionLabel}>Beyond mentorship</p>

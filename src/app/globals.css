@@ -6,36 +6,36 @@
    Semantic product zones + Tailwind v4 @theme bindings (no tailwind.config.js). */
 
 :root {
-  /* Core foundations — warm studio linen */
-  --background: 40 20% 96%;
-  --surface: 40 15% 99%;
+  /* Core foundations — calm editorial stone */
+  --background: 40 18% 97%;
+  --surface: 40 14% 99%;
   --text-main: 222 47% 11%;
-  --text-muted: 215 16% 42%;
-  --border: 40 12% 88%;
+  --text-muted: 215 14% 44%;
+  --border: 40 10% 90%;
 
-  /* Product module accents */
-  --color-mentorship: 167 65% 36%;
-  --color-live-rooms: 262 83% 58%;
-  --color-exams: 35 92% 44%;
-  --color-recruiter: 224 76% 48%;
-  --color-news: 343 82% 49%;
+  /* Product accents — slightly softened for premium feel */
+  --color-mentorship: 168 55% 38%;
+  --color-live-rooms: 258 70% 58%;
+  --color-exams: 32 85% 46%;
+  --color-recruiter: 221 70% 50%;
+  --color-news: 346 75% 50%;
 
-  /* Zone surfaces, on-surface labels, borders (light) */
-  --color-mentorship-surface: 158 35% 94%;
-  --color-mentorship-on: 167 50% 22%;
-  --color-mentorship-border: 158 28% 86%;
-  --color-live-surface: 265 40% 96%;
-  --color-live-on: 262 45% 28%;
-  --color-live-border: 265 32% 88%;
-  --color-exams-surface: 38 50% 95%;
-  --color-exams-on: 32 70% 22%;
-  --color-exams-border: 38 40% 86%;
-  --color-recruiter-surface: 220 38% 95%;
-  --color-recruiter-on: 224 55% 22%;
-  --color-recruiter-border: 220 30% 86%;
-  --color-news-surface: 345 40% 96%;
-  --color-news-on: 343 60% 24%;
-  --color-news-border: 345 32% 88%;
+  /* Zone surfaces — near-neutral (accent lives in stripes & labels, not floods) */
+  --color-mentorship-surface: 40 18% 97%;
+  --color-mentorship-on: 168 45% 32%;
+  --color-mentorship-border: 40 10% 90%;
+  --color-live-surface: 40 18% 97%;
+  --color-live-on: 258 45% 36%;
+  --color-live-border: 40 10% 90%;
+  --color-exams-surface: 40 18% 97%;
+  --color-exams-on: 32 55% 30%;
+  --color-exams-border: 40 10% 90%;
+  --color-recruiter-surface: 40 18% 97%;
+  --color-recruiter-on: 221 50% 32%;
+  --color-recruiter-border: 40 10% 90%;
+  --color-news-surface: 40 18% 97%;
+  --color-news-on: 346 55% 34%;
+  --color-news-border: 40 10% 90%;
 
   --card-shadow-color: rgba(28, 25, 23, 0.06);
   --shadow-premium-card-value: 0 4px 20px -2px var(--card-shadow-color);
@@ -234,70 +234,53 @@ body {
   border-bottom: 1px solid hsl(var(--border));
 }
 
-/* Product-zone hero bands */
-.hero-zone-mentorship {
-  background:
-    linear-gradient(180deg, hsl(var(--color-mentorship) / 0.1) 0%, hsl(var(--color-mentorship-surface)) 100%);
-  border-bottom: 1px solid hsl(var(--color-mentorship-border));
-}
-
-.hero-zone-live {
-  background:
-    linear-gradient(180deg, hsl(var(--color-live-rooms) / 0.1) 0%, hsl(var(--color-live-surface)) 100%);
-  border-bottom: 1px solid hsl(var(--color-live-border));
-}
-
-.hero-zone-exams {
-  background:
-    linear-gradient(180deg, hsl(var(--color-exams) / 0.1) 0%, hsl(var(--color-exams-surface)) 100%);
-  border-bottom: 1px solid hsl(var(--color-exams-border));
-}
-
-.hero-zone-recruiter {
-  background:
-    linear-gradient(180deg, hsl(var(--color-recruiter) / 0.1) 0%, hsl(var(--color-recruiter-surface)) 100%);
-  border-bottom: 1px solid hsl(var(--color-recruiter-border));
-}
-
+/* Product-zone heroes — neutral canvas + hairline accent */
+.hero-zone-mentorship,
+.hero-zone-live,
+.hero-zone-exams,
+.hero-zone-recruiter,
 .hero-zone-news {
-  background:
-    linear-gradient(180deg, hsl(var(--color-news) / 0.1) 0%, hsl(var(--color-news-surface)) 100%);
-  border-bottom: 1px solid hsl(var(--color-news-border));
+  background: linear-gradient(180deg, hsl(var(--surface)) 0%, hsl(var(--background)) 100%);
+  border-bottom: 1px solid hsl(var(--border));
 }
 
-/* Full-width section bands */
-.section-band-mentorship {
-  background-color: hsl(var(--color-mentorship-surface));
-  border-block: 1px solid hsl(var(--color-mentorship-border));
+.hero-zone-mentorship { box-shadow: inset 0 3px 0 0 hsl(var(--color-mentorship) / 0.7); }
+.hero-zone-live { box-shadow: inset 0 3px 0 0 hsl(var(--color-live-rooms) / 0.7); }
+.hero-zone-exams { box-shadow: inset 0 3px 0 0 hsl(var(--color-exams) / 0.7); }
+.hero-zone-recruiter { box-shadow: inset 0 3px 0 0 hsl(var(--color-recruiter) / 0.7); }
+.hero-zone-news { box-shadow: inset 0 3px 0 0 hsl(var(--color-news) / 0.7); }
+
+/* Section shells — neutral rhythm; zone = top hairline only */
+.section-shell {
+  background-color: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
 }
 
-.section-band-live {
-  background-color: hsl(var(--color-live-surface));
-  border-block: 1px solid hsl(var(--color-live-border));
+.section-shell-alt {
+  background-color: hsl(var(--muted) / 0.45);
+  border-bottom: 1px solid hsl(var(--border));
 }
 
-.section-band-exams {
-  background-color: hsl(var(--color-exams-surface));
-  border-block: 1px solid hsl(var(--color-exams-border));
-}
+.section-accent-mentorship { box-shadow: inset 0 3px 0 0 hsl(var(--color-mentorship) / 0.55); }
+.section-accent-live { box-shadow: inset 0 3px 0 0 hsl(var(--color-live-rooms) / 0.55); }
+.section-accent-exams { box-shadow: inset 0 3px 0 0 hsl(var(--color-exams) / 0.55); }
+.section-accent-recruiter { box-shadow: inset 0 3px 0 0 hsl(var(--color-recruiter) / 0.55); }
+.section-accent-news { box-shadow: inset 0 3px 0 0 hsl(var(--color-news) / 0.55); }
 
-.section-band-recruiter {
-  background-color: hsl(var(--color-recruiter-surface));
-  border-block: 1px solid hsl(var(--color-recruiter-border));
-}
-
+/* Legacy band classes → neutral shells */
+.section-band-mentorship,
+.section-band-live,
+.section-band-exams,
+.section-band-recruiter,
 .section-band-news {
-  background-color: hsl(var(--color-news-surface));
-  border-block: 1px solid hsl(var(--color-news-border));
+  background-color: hsl(var(--background));
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .section-band-gradient {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--color-mentorship-surface)) 0%,
-    hsl(var(--color-recruiter-surface)) 100%
-  );
+  background: linear-gradient(180deg, hsl(var(--surface)) 0%, hsl(var(--background)) 100%);
   border-block: 1px solid hsl(var(--border));
+  box-shadow: inset 0 3px 0 0 hsl(var(--color-mentorship) / 0.4);
 }
 
 .zone-spectrum {
@@ -513,18 +496,12 @@ body {
 .nav-link[data-zone="recruiter"]::after { background: hsl(var(--color-recruiter)); }
 .nav-link[data-zone="news"]::after { background: hsl(var(--color-news)); }
 
-/* Route-tinted nav glass */
-.nav-zone-mentorship { --nav-bg: hsl(var(--color-mentorship-surface) / 0.94); }
-.nav-zone-live { --nav-bg: hsl(var(--color-live-surface) / 0.94); }
-.nav-zone-exams { --nav-bg: hsl(var(--color-exams-surface) / 0.94); }
-.nav-zone-recruiter { --nav-bg: hsl(var(--color-recruiter-surface) / 0.94); }
-.nav-zone-news { --nav-bg: hsl(var(--color-news-surface) / 0.94); }
-
-.section-label-zone-mentorship { color: hsl(var(--color-mentorship-on)); }
-.section-label-zone-live { color: hsl(var(--color-live-on)); }
-.section-label-zone-exams { color: hsl(var(--color-exams-on)); }
-.section-label-zone-recruiter { color: hsl(var(--color-recruiter-on)); }
-.section-label-zone-news { color: hsl(var(--color-news-on)); }
+/* Route nav — accent hairline only (no tinted glass) */
+.section-label-zone-mentorship { color: hsl(var(--color-mentorship)); }
+.section-label-zone-live { color: hsl(var(--color-live-rooms)); }
+.section-label-zone-exams { color: hsl(var(--color-exams)); }
+.section-label-zone-recruiter { color: hsl(var(--color-recruiter)); }
+.section-label-zone-news { color: hsl(var(--color-news)); }
 
 .section-label {
   font-size: 0.6875rem;

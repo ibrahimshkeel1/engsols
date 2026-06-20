@@ -22,7 +22,7 @@ export default async function ForumPage() {
           Ask a question
         </Link>
       </PageHero>
-      <div className="mx-auto max-w-7xl bg-zone-recruiter-surface px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
         <SectionReveal>
           <Suspense fallback={<ForumSkeletonList />}>
             <ForumPageContent />

@@ -20,7 +20,7 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
   const t = zoneTokens.mentorship;
 
   return (
-    <ZoneSection zone="mentorship" className="py-24">
+    <ZoneSection zone="mentorship" alt accent className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <AnimateIn>

@@ -11,6 +11,7 @@ export const zoneTokens: Record<
     stripe: string;
     iconWell: string;
     sectionBand: string;
+    sectionAccent: string;
     sectionLabel: string;
     hero: string;
     cardHover: string;
@@ -24,8 +25,9 @@ export const zoneTokens: Record<
     accent: "text-zone-mentorship",
     accentBg: "bg-zone-mentorship",
     stripe: "border-l-4 border-zone-mentorship",
-    iconWell: "bg-zone-mentorship/20 text-zone-mentorship-on",
-    sectionBand: "section-band-mentorship",
+    iconWell: "bg-zone-mentorship/10 text-zone-mentorship",
+    sectionBand: "section-shell",
+    sectionAccent: "section-accent-mentorship",
     sectionLabel: "section-label-zone-mentorship",
     hero: "hero-zone-mentorship",
     cardHover: "hover:border-zone-mentorship",
@@ -38,8 +40,9 @@ export const zoneTokens: Record<
     accent: "text-zone-live",
     accentBg: "bg-zone-live",
     stripe: "border-l-4 border-zone-live",
-    iconWell: "bg-zone-live/20 text-zone-live-on",
-    sectionBand: "section-band-live",
+    iconWell: "bg-zone-live/10 text-zone-live",
+    sectionBand: "section-shell",
+    sectionAccent: "section-accent-live",
     sectionLabel: "section-label-zone-live",
     hero: "hero-zone-live",
     cardHover: "hover:border-zone-live",
@@ -52,8 +55,9 @@ export const zoneTokens: Record<
     accent: "text-zone-exams",
     accentBg: "bg-zone-exams",
     stripe: "border-l-4 border-zone-exams",
-    iconWell: "bg-zone-exams/20 text-zone-exams-on",
-    sectionBand: "section-band-exams",
+    iconWell: "bg-zone-exams/10 text-zone-exams",
+    sectionBand: "section-shell",
+    sectionAccent: "section-accent-exams",
     sectionLabel: "section-label-zone-exams",
     hero: "hero-zone-exams",
     cardHover: "hover:border-zone-exams",
@@ -66,8 +70,9 @@ export const zoneTokens: Record<
     accent: "text-zone-recruiter",
     accentBg: "bg-zone-recruiter",
     stripe: "border-l-4 border-zone-recruiter",
-    iconWell: "bg-zone-recruiter/20 text-zone-recruiter-on",
-    sectionBand: "section-band-recruiter",
+    iconWell: "bg-zone-recruiter/10 text-zone-recruiter",
+    sectionBand: "section-shell",
+    sectionAccent: "section-accent-recruiter",
     sectionLabel: "section-label-zone-recruiter",
     hero: "hero-zone-recruiter",
     cardHover: "hover:border-zone-recruiter",
@@ -80,8 +85,9 @@ export const zoneTokens: Record<
     accent: "text-zone-news",
     accentBg: "bg-zone-news",
     stripe: "border-l-4 border-zone-news",
-    iconWell: "bg-zone-news/20 text-zone-news-on",
-    sectionBand: "section-band-news",
+    iconWell: "bg-zone-news/10 text-zone-news",
+    sectionBand: "section-shell",
+    sectionAccent: "section-accent-news",
     sectionLabel: "section-label-zone-news",
     hero: "hero-zone-news",
     cardHover: "hover:border-zone-news",

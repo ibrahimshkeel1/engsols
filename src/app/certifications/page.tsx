@@ -16,7 +16,7 @@ export default async function CertificationsPage() {
       title="Certifications & Exams"
       description="FE, PE, IWCF, and industry credentials — resources and mentors to help you prepare."
       preview={false}
-      className="bg-zone-exams-surface"
+      className="bg-background"
     >
       {certifications.length === 0 ? (
         <EmptyState

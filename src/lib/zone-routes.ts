@@ -24,7 +24,7 @@ export const zoneAccentBar: Record<ProductZone, string> = {
   exams: "bg-zone-exams",
   recruiter: "bg-zone-recruiter",
   news: "bg-zone-news",
-  default: "zone-spectrum",
+  default: "",
 };
 
 export const zoneNavActive: Record<string, string> = {

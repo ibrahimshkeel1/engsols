@@ -27,7 +27,7 @@ export default async function NewsPage({ searchParams }: Props) {
         title="Engineering Insights"
         description="Technical articles, project breakdowns, and industry updates from the EngSols editorial desk."
       />
-      <div className="mx-auto max-w-7xl bg-zone-news-surface px-4 pb-16 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-background px-4 pb-16 sm:px-6">
         <Suspense fallback={<div className="h-12 animate-pulse rounded-xl bg-muted" aria-hidden />}>
           <NewsDisciplineFilter active={activeDiscipline} />
         </Suspense>

@@ -142,7 +142,7 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
   }, []);
 
   return (
-    <ZoneSection zone="recruiter" className="py-12">
+    <ZoneSection zone="recruiter" accent className="py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn>
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">

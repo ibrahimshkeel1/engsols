@@ -2,14 +2,10 @@ import Link from "next/link";
 import { sessionTypes } from "@/data/sessionTypes";
 import { ZoneSection } from "@/components/ui/ZoneSection";
 import { ZoneCard } from "@/components/ui/ZoneCard";
-import { zoneTokens } from "@/lib/zone-tokens";
-import { cn } from "@/lib/utils";
 
 export function OneOffSessions() {
-  const t = zoneTokens.exams;
-
   return (
-    <ZoneSection zone="exams" className="py-16">
+    <ZoneSection zone="exams" alt accent className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <h2 className="text-center font-display text-3xl text-text-main">
           Not sure if mentorship is right for you? Try a one-off session
@@ -27,16 +23,14 @@ export function OneOffSessions() {
               </p>
               <Link
                 href={`/mentors?session=${session.id}`}
-                className={cn(
-                  "mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-zone-exams-border bg-card text-sm font-semibold text-text-main transition-colors hover:border-zone-exams",
-                )}
+                className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-card text-sm font-semibold text-text-main transition-colors hover:border-zone-exams/50"
               >
                 Find a mentor
               </Link>
             </ZoneCard>
           ))}
         </div>
-        <p className={cn("mt-8 text-center text-sm", t.on)}>
+        <p className="mt-8 text-center text-sm text-text-muted">
           One-off sessions are a low-commitment way to test the fit before ongoing mentorship.
         </p>
       </div>
