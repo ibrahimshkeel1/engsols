@@ -2,9 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Portfolio } from "@/types";
 import type { BentoVariant } from "@/lib/bento-layout";
-import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
-import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { cn } from "@/lib/utils";
 
 type PortfolioCardProps = {
@@ -15,91 +13,97 @@ type PortfolioCardProps = {
 function avatarSizeForVariant(variant: BentoVariant): "md" | "lg" | "xl" {
   if (variant === "hero") return "xl";
   if (variant === "wide" || variant === "tall") return "lg";
-  return "md";
+  return "lg";
+}
+
+function formatSeeking(seeking: Portfolio["seeking"]) {
+  return seeking.replace("-", " ");
+}
+
+function isRemoteLocation(location: string) {
+  return /remote/i.test(location);
 }
 
 export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardProps) {
-  const stripe = getDisciplineColors(portfolio.discipline).stripe;
   const isHero = variant === "hero";
-  const isWide = variant === "wide";
-  const showBio = isHero || isWide || variant === "tall";
-  const skillLimit = isHero ? 5 : variant === "tall" ? 4 : 3;
+  const isTall = variant === "tall";
+  const skillLimit = isHero ? 6 : isTall ? 5 : 4;
 
   return (
     <Link
       href={`/portfolios/${portfolio.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl",
-        isHero && "min-h-[16rem]",
-        variant === "tall" && "min-h-[14rem]",
+        "group flex h-full flex-col justify-between rounded-2xl border border-border-custom bg-bg-surface p-6 shadow-premium-card transition-all duration-300 hover:-translate-y-1",
+        isHero && "min-h-[18rem]",
+        isTall && "min-h-[16rem]",
       )}
     >
-      <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />
-
-      {portfolio.projects[0] && (variant === "hero" || variant === "wide") && (
-        <div className="absolute right-4 top-4 hidden h-16 w-16 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary sm:flex">
-          {portfolio.projects[0].title.slice(0, 2).toUpperCase()}
-        </div>
-      )}
-
-      <div className="relative flex min-w-0 flex-1 flex-col p-4 pl-5 sm:p-5 sm:pl-6">
-        <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
+      <div>
+        <div className="flex items-start gap-4">
           <Avatar
             name={portfolio.name}
             discipline={portfolio.discipline}
             size={avatarSizeForVariant(variant)}
             src={portfolio.avatarUrl}
-            className={cn("shrink-0 rounded-2xl ring-2 ring-border", isHero && "ring-primary/20")}
+            className="h-16 w-16 shrink-0 rounded-xl border-2 border-zone-recruiter/20 object-cover shadow-md transition-colors duration-300 group-hover:border-zone-recruiter/50"
           />
 
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            {portfolio.openToWork && (
-              <span className="inline-flex w-fit rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">
-                Open to work
-              </span>
-            )}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className={cn("font-bold text-text-main", isHero ? "text-xl" : "text-lg")}>
+                {portfolio.name}
+              </h3>
+              {portfolio.openToWork && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-zone-mentorship/20 bg-zone-mentorship/10 px-2.5 py-0.5 text-xs font-semibold text-zone-mentorship">
+                  Open to work
+                </span>
+              )}
+            </div>
             {portfolio.hasMentorEndorsement && (
-              <span className="inline-flex w-fit rounded-md bg-zone-recruiter/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zone-recruiter">
+              <span className="mt-1.5 inline-flex rounded-full border border-zone-recruiter/20 bg-zone-recruiter/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zone-recruiter">
                 Mentor vetted
               </span>
             )}
-            <h3 className={cn("font-semibold leading-tight", isHero ? "text-lg sm:text-xl" : "text-base")}>
-              {portfolio.name}
-            </h3>
-            <p className={cn("text-sm text-muted-foreground", !showBio && "line-clamp-2")}>
-              {portfolio.headline}
-            </p>
-            <p className="truncate text-xs text-muted-foreground">{portfolio.university}</p>
-            {showBio && portfolio.bio && (
-              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-                {portfolio.bio}
-              </p>
-            )}
-            {isHero && portfolio.projects.length > 0 && (
-              <p className="text-xs font-medium text-zone-recruiter">
-                {portfolio.projects.length} project{portfolio.projects.length === 1 ? "" : "s"}
-              </p>
-            )}
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <DisciplineBadge discipline={portfolio.discipline} />
-              {portfolio.skills.slice(0, skillLimit).map((s) => (
-                <span key={s} className="inline-flex rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                  {s}
-                </span>
-              ))}
-            </div>
+            <p className="mt-0.5 text-sm font-medium text-text-muted">{portfolio.headline}</p>
+            <p className="text-caption mt-0.5 truncate">{portfolio.university}</p>
           </div>
         </div>
 
-        <div
-          className={cn(
-            "mt-3 flex items-center justify-between border-t border-border/60 pt-3 text-sm text-muted-foreground sm:mt-4 sm:pt-4",
-            isHero && "sm:pt-5",
-          )}
-        >
-          <span className="capitalize">{portfolio.seeking.replace("-", " ")}</span>
-          <ArrowRight className="h-4 w-4 shrink-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-zone-recruiter" />
+        {portfolio.bio ? (
+          <p className="mt-3 flex h-10 items-center rounded-r-lg border-l-2 border-border-custom bg-bg-main/30 pl-3 text-sm italic leading-snug text-text-muted line-clamp-2">
+            {portfolio.bio}
+          </p>
+        ) : null}
+
+        <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-border-custom/50 bg-bg-main/50 p-2.5 text-xs font-medium text-text-muted">
+          <div>
+            Remote work:{" "}
+            <span className="font-semibold text-text-main">
+              {isRemoteLocation(portfolio.location) ? "Yes" : "No"}
+            </span>
+          </div>
+          <div>
+            Work status:{" "}
+            <span className="font-semibold capitalize text-text-main">{formatSeeking(portfolio.seeking)}</span>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-5 flex items-end justify-between gap-3 border-t border-border-custom/60 pt-4">
+        <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
+          {portfolio.skills.slice(0, skillLimit).map((skill) => (
+            <span
+              key={skill}
+              className="inline-flex items-center rounded-lg border border-zone-recruiter/20 bg-zone-recruiter/10 px-2.5 py-1 text-xs font-medium text-zone-recruiter transition-all duration-200 hover:bg-zone-recruiter/20"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+        <ArrowRight
+          className="h-5 w-5 shrink-0 text-zone-recruiter transition-transform duration-200 group-hover:translate-x-1"
+          aria-hidden
+        />
       </div>
     </Link>
   );

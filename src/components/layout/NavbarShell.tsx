@@ -111,7 +111,7 @@ export function NavbarShell({
             {moreOpen && (
               <div
                 role="menu"
-                className="absolute end-0 top-full z-[60] mt-2 min-w-[220px] overflow-hidden rounded-xl border border-border bg-surface p-1.5 shadow-[0_10px_40px_-8px_rgba(15,23,42,0.18)] dark:shadow-[0_10px_40px_-8px_rgba(0,0,0,0.55)]"
+                className="absolute end-0 top-full z-50 mt-2 w-56 rounded-xl border border-border-custom bg-bg-surface/95 py-2 shadow-premium-card backdrop-blur-md transition-all duration-200"
               >
                 {moreNav.map((l) => {
                   if (l.authOnly && !showForYou) return null;
@@ -120,11 +120,11 @@ export function NavbarShell({
                     key={l.href}
                     href={l.href}
                     role="menuitem"
-                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-muted"
+                    className="mx-1.5 flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-text-main transition-colors duration-150 hover:bg-bg-main/80"
                   >
                     {t(locale, l.key)}
                     {l.preview && (
-                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">Preview</span>
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">Preview</span>
                     )}
                   </Link>
                   );
