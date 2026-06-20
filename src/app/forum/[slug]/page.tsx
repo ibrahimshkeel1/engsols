@@ -2,27 +2,22 @@ import { notFound } from "next/navigation";
 import { getForumPost } from "@/lib/data/forum";
 import { getLiveSessionForForumPost } from "@/lib/data/live";
 import { getCurrentUser } from "@/lib/auth";
-import { cn } from "@/lib/utils";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ForumReplyForm } from "@/components/forum/ForumReplyForm";
+import { ForumThreadReplies } from "@/components/forum/ForumThreadReplies";
 import { ForumGoLiveButton } from "@/components/forum/ForumGoLiveButton";
 import { MarkSolvedButton } from "@/components/forum/MarkSolvedButton";
-import { ReplyLikeButton } from "@/components/forum/ReplyLikeButton";
 import { ForumViewTracker } from "@/components/forum/ForumViewTracker";
 import { ForumRealtimeWatcher } from "@/components/forum/ForumRealtimeWatcher";
 import { ForumPostActions } from "@/components/forum/ForumPostActions";
-import { ForumReplyActions } from "@/components/forum/ForumReplyActions";
 import { ForumGamificationBadges, isActiveThisWeek } from "@/components/forum/ForumGamificationBadges";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
-import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
-import { forumPromptChips } from "@/data/empty-state-prompts";
-import { ReportContentButton } from "@/components/shared/ReportContentButton";
-import { AttachedImages } from "@/components/shared/AttachedImages";
 import { Avatar } from "@/components/ui/Avatar";
 import { buildDetailMetadata } from "@/lib/page-metadata";
 import { ShareButton } from "@/components/shared/ShareButton";
+import { AttachedImages } from "@/components/shared/AttachedImages";
+import { ReportContentButton } from "@/components/shared/ReportContentButton";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -86,50 +81,12 @@ export default async function ForumThreadPage({ params }: Props) {
           {(isAuthor || isAdmin) && dbPost?.id && (
             <ForumPostActions postId={dbPost.id} title={post.title} body={post.body} canDelete />
           )}
-          <h2 className="mt-12 text-xl font-bold">{replies.length} Replies</h2>
-          <div className="mt-4 space-y-4">
-            {replies.map((r) => (
-              <div
-                key={r.id}
-                className={cn(
-                  "rounded-2xl border border-border bg-card p-5",
-                  r.isMentor && "border-l-4 border-l-primary",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <Avatar name={r.author} size="sm" src={r.authorAvatarUrl} />
-                  <span className="font-medium">{r.author}</span>
-                  <ForumGamificationBadges
-                    reputation={r.forumReputation}
-                    likes={r.likes}
-                    isMentor={r.isMentor}
-                    activeThisWeek={isActiveThisWeek(r.createdAt)}
-                  />
-                  <span className="text-xs text-muted-foreground">{r.createdAt}</span>
-                </div>
-                <p className="mt-2 text-foreground/90">{r.body}</p>
-                <AttachedImages urls={r.imageUrls ?? []} />
-                <div className="mt-2 flex items-center gap-2">
-                  <ReplyLikeButton replyId={r.id} likes={r.likes} />
-                  <ReportContentButton contentType="forum_reply" contentId={r.id} />
-                </div>
-                <ForumReplyActions
-                  replyId={r.id}
-                  body={r.body}
-                  canEdit={user?.id === r.authorId || isAdmin}
-                />
-              </div>
-            ))}
-            {replies.length === 0 && (
-              <EmptyStateClient
-                title="No replies yet"
-                description="Be the first to share your experience or ask a follow-up."
-                action={{ href: "#reply-form", label: "Write a reply" }}
-                promptChips={forumPromptChips}
-              />
-            )}
-          </div>
-          <ForumReplyForm postId={dbPost?.id} />
+          <ForumThreadReplies
+            postId={dbPost?.id}
+            initialReplies={replies}
+            currentUserId={user?.id}
+            isAdmin={isAdmin}
+          />
         </div>
         <div className="space-y-6">
           <Card className="card-elevated">

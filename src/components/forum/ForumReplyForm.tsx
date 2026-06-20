@@ -4,14 +4,18 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createForumReply } from "@/actions";
+import type { ForumReply } from "@/types";
 import { FormField } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { Textarea } from "@/components/ui/input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 
-type Props = { postId?: string };
+type Props = {
+  postId?: string;
+  onReplyPosted?: (reply: ForumReply) => void;
+};
 
-export function ForumReplyForm({ postId }: Props) {
+export function ForumReplyForm({ postId, onReplyPosted }: Props) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -37,9 +41,17 @@ export function ForumReplyForm({ postId }: Props) {
         return;
       }
 
+      if (!result?.reply) {
+        setError("Reply was saved but could not be loaded. Refresh the page.");
+        toast.error("Reply was saved but could not be loaded. Refresh the page.");
+        router.refresh();
+        return;
+      }
+
       setError(null);
       setImageUrls([]);
       formRef.current?.reset();
+      onReplyPosted?.(result.reply);
       toast.success("Reply posted");
       router.refresh();
     } catch {

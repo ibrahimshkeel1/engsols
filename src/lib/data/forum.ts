@@ -1,16 +1,23 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { DbForumPost, DbForumReply } from "@/types/database";
 import type { AdminForumPost, ForumPost, ForumReply } from "@/types";
 
-type ReplyRow = DbForumReply & {
-  profiles?: {
-    full_name?: string;
-    role?: string;
-    forum_reputation?: number;
-    avatar_url?: string | null;
-  } | null;
+type ReplyProfile = {
+  full_name?: string;
+  role?: string;
+  forum_reputation?: number;
+  avatar_url?: string | null;
+};
+
+type ReplyRow = Pick<
+  DbForumReply,
+  "id" | "post_id" | "author_id" | "body" | "likes" | "image_urls" | "created_at"
+> & {
+  profiles?: ReplyProfile | null;
 };
 
 type PostExtras = {
@@ -18,6 +25,68 @@ type PostExtras = {
   lastReplyAt: string | null;
   topReplyPreview: ForumPost["topReplyPreview"];
 };
+
+const REPLY_COLUMNS = "id, post_id, author_id, body, likes, image_urls, created_at" as const;
+
+export function mapForumReplyRow(row: ReplyRow, profile?: ReplyProfile | null): ForumReply {
+  const resolved = profile ?? row.profiles;
+  return {
+    id: row.id,
+    author: resolved?.full_name || "Anonymous",
+    body: row.body,
+    createdAt: row.created_at.split("T")[0],
+    isMentor: resolved?.role === "mentor",
+    likes: row.likes,
+    forumReputation: resolved?.forum_reputation ?? 0,
+    imageUrls: row.image_urls ?? [],
+    authorAvatarUrl: resolved?.avatar_url ?? null,
+    authorId: row.author_id,
+  };
+}
+
+async function loadProfilesForAuthors(
+  supabase: SupabaseClient,
+  authorIds: string[],
+): Promise<Map<string, ReplyProfile>> {
+  if (!authorIds.length) return new Map();
+
+  const { data: profiles, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, role, forum_reputation, avatar_url")
+    .in("id", authorIds);
+
+  if (error) {
+    console.error("forum reply profiles fetch failed:", error.message);
+    return new Map();
+  }
+
+  return new Map((profiles ?? []).map((profile) => [profile.id, profile]));
+}
+
+export async function fetchForumRepliesForPost(
+  supabase: SupabaseClient,
+  postId: string,
+): Promise<ForumReply[]> {
+  const { data: replies, error } = await supabase
+    .from("forum_replies")
+    .select(REPLY_COLUMNS)
+    .eq("post_id", postId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("forum replies fetch failed:", error.message);
+    return [];
+  }
+
+  if (!replies?.length) return [];
+
+  const profileMap = await loadProfilesForAuthors(
+    supabase,
+    [...new Set(replies.map((reply) => reply.author_id))],
+  );
+
+  return replies.map((reply) => mapForumReplyRow(reply, profileMap.get(reply.author_id)));
+}
 
 function pickTopReply(replies: ReplyRow[]): ReplyRow | null {
   if (!replies.length) return null;
@@ -27,21 +96,26 @@ function pickTopReply(replies: ReplyRow[]): ReplyRow | null {
   })[0];
 }
 
-function buildPostExtras(postId: string, repliesByPost: Map<string, ReplyRow[]>): PostExtras {
+function buildPostExtras(
+  postId: string,
+  repliesByPost: Map<string, ReplyRow[]>,
+  profileMap: Map<string, ReplyProfile>,
+): PostExtras {
   const replies = repliesByPost.get(postId) ?? [];
   const top = pickTopReply(replies);
   const latest = replies[0] ?? null;
+  const topProfile = top ? profileMap.get(top.author_id) : null;
 
   return {
     replyCount: replies.length,
     lastReplyAt: latest?.created_at ?? null,
     topReplyPreview: top
       ? {
-          author: top.profiles?.full_name || "Anonymous",
+          author: topProfile?.full_name || "Anonymous",
           body: top.body,
-          isMentor: top.profiles?.role === "mentor",
-          reputation: top.profiles?.forum_reputation ?? 0,
-          avatarUrl: top.profiles?.avatar_url ?? null,
+          isMentor: topProfile?.role === "mentor",
+          reputation: topProfile?.forum_reputation ?? 0,
+          avatarUrl: topProfile?.avatar_url ?? null,
         }
       : undefined,
   };
@@ -68,19 +142,30 @@ function toForumPost(p: DbForumPost, extras?: PostExtras): ForumPost {
   };
 }
 
-async function loadReplyMap(supabase: NonNullable<ReturnType<typeof createPublicClient>>) {
-  const { data: replies } = await supabase
+async function loadReplyMap(supabase: SupabaseClient) {
+  const { data: replies, error } = await supabase
     .from("forum_replies")
-    .select("*, profiles(full_name, role, forum_reputation, avatar_url)")
+    .select(REPLY_COLUMNS)
     .order("created_at", { ascending: false });
 
-  const map = new Map<string, ReplyRow[]>();
-  for (const row of (replies ?? []) as ReplyRow[]) {
-    const list = map.get(row.post_id) ?? [];
-    list.push(row);
-    map.set(row.post_id, list);
+  if (error) {
+    console.error("forum reply map fetch failed:", error.message);
+    return { repliesByPost: new Map<string, ReplyRow[]>(), profileMap: new Map<string, ReplyProfile>() };
   }
-  return map;
+
+  const repliesByPost = new Map<string, ReplyRow[]>();
+  for (const row of replies ?? []) {
+    const list = repliesByPost.get(row.post_id) ?? [];
+    list.push(row);
+    repliesByPost.set(row.post_id, list);
+  }
+
+  const profileMap = await loadProfilesForAuthors(
+    supabase,
+    [...new Set((replies ?? []).map((reply) => reply.author_id))],
+  );
+
+  return { repliesByPost, profileMap };
 }
 
 export async function getForumPosts(): Promise<ForumPost[]> {
@@ -89,7 +174,7 @@ export async function getForumPosts(): Promise<ForumPost[]> {
   const supabase = createPublicClient();
   if (!supabase) return [];
 
-  const [{ data: posts }, repliesByPost] = await Promise.all([
+  const [{ data: posts }, { repliesByPost, profileMap }] = await Promise.all([
     supabase.from("forum_posts").select("*, profiles(*)").order("created_at", { ascending: false }),
     loadReplyMap(supabase),
   ]);
@@ -97,7 +182,7 @@ export async function getForumPosts(): Promise<ForumPost[]> {
   if (!posts?.length) return [];
 
   return posts.map((post) => {
-    const extras = buildPostExtras(post.id, repliesByPost);
+    const extras = buildPostExtras(post.id, repliesByPost, profileMap);
     return toForumPost({ ...post, reply_count: extras.replyCount } as DbForumPost, extras);
   });
 }
@@ -114,10 +199,12 @@ export async function getForumPostsForAdmin(): Promise<AdminForumPost[]> {
   if (!posts?.length) return [];
 
   const publicClient = createPublicClient();
-  const repliesByPost = publicClient ? await loadReplyMap(publicClient) : new Map();
+  const { repliesByPost, profileMap } = publicClient
+    ? await loadReplyMap(publicClient)
+    : { repliesByPost: new Map<string, ReplyRow[]>(), profileMap: new Map<string, ReplyProfile>() };
 
   return posts.map((post) => {
-    const extras = buildPostExtras(post.id, repliesByPost);
+    const extras = buildPostExtras(post.id, repliesByPost, profileMap);
     return { ...toForumPost({ ...post, reply_count: extras.replyCount } as DbForumPost, extras), id: post.id };
   });
 }
@@ -128,6 +215,8 @@ export async function getForumPostsByDiscipline(discipline: string, limit = 4): 
 }
 
 export async function getForumPost(slug: string) {
+  noStore();
+
   if (!isSupabaseConfigured()) return null;
 
   const supabase = await createClient();
@@ -140,9 +229,9 @@ export async function getForumPost(slug: string) {
 
   if (postError || !post) return null;
 
-  const { data: replies, error: repliesError } = await supabase
+  const { data: replyRows, error: repliesError } = await supabase
     .from("forum_replies")
-    .select("*, profiles(*)")
+    .select(REPLY_COLUMNS)
     .eq("post_id", post.id)
     .order("created_at", { ascending: true });
 
@@ -150,23 +239,16 @@ export async function getForumPost(slug: string) {
     console.error("forum replies fetch failed:", repliesError.message);
   }
 
-  const mappedReplies: ForumReply[] = (replies ?? []).map((r: DbForumReply) => ({
-    id: r.id,
-    author: r.profiles?.full_name || "Anonymous",
-    body: r.body,
-    createdAt: r.created_at.split("T")[0],
-    isMentor: r.profiles?.role === "mentor",
-    likes: r.likes,
-    forumReputation: (r.profiles as { forum_reputation?: number } | null)?.forum_reputation ?? 0,
-    imageUrls: r.image_urls ?? [],
-    authorAvatarUrl: r.profiles?.avatar_url ?? null,
-    authorId: r.author_id,
-  }));
-
-  const replyRows = (replies ?? []) as ReplyRow[];
+  const rows = replyRows ?? [];
+  const profileMap = await loadProfilesForAuthors(
+    supabase,
+    [...new Set(rows.map((reply) => reply.author_id))],
+  );
+  const mappedReplies = rows.map((reply) => mapForumReplyRow(reply, profileMap.get(reply.author_id)));
   const extras = buildPostExtras(
     post.id,
-    new Map([[post.id, [...replyRows].sort((a, b) => b.created_at.localeCompare(a.created_at))]]),
+    new Map([[post.id, [...rows].reverse()]]),
+    profileMap,
   );
 
   return {
