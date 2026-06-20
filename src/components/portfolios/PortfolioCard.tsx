@@ -10,14 +10,10 @@ type PortfolioCardProps = {
   variant?: BentoVariant;
 };
 
-function avatarSizeForVariant(variant: BentoVariant): "md" | "lg" | "xl" {
-  if (variant === "hero") return "xl";
-  if (variant === "wide" || variant === "tall") return "lg";
-  return "lg";
-}
-
-function formatSeeking(seeking: Portfolio["seeking"]) {
-  return seeking.replace("-", " ");
+function formatWorkStatus(seeking: Portfolio["seeking"]) {
+  if (seeking === "full-time") return "Full-Time";
+  if (seeking === "grad-school") return "Grad School";
+  return seeking.charAt(0).toUpperCase() + seeking.slice(1);
 }
 
 function isRemoteLocation(location: string) {
@@ -27,83 +23,105 @@ function isRemoteLocation(location: string) {
 export function PortfolioCard({ portfolio, variant = "default" }: PortfolioCardProps) {
   const isHero = variant === "hero";
   const isTall = variant === "tall";
-  const skillLimit = isHero ? 6 : isTall ? 5 : 4;
+  const tagLimit = isHero ? 6 : isTall ? 5 : 4;
+  const workStatus = formatWorkStatus(portfolio.seeking);
+  const isRemote = isRemoteLocation(portfolio.location);
 
   return (
     <Link
       href={`/portfolios/${portfolio.slug}`}
       className={cn(
-        "group flex h-full flex-col justify-between rounded-2xl border border-border-custom bg-bg-surface p-6 shadow-premium-card transition-all duration-300 hover:-translate-y-1",
-        isHero && "min-h-[18rem]",
+        "group flex h-full flex-col justify-between rounded-2xl border border-border-custom bg-bg-surface p-6 shadow-premium-card transition-all duration-300 hover:-translate-y-1 hover:shadow-zone-recruiter/5",
+        isHero && "min-h-[18rem] p-7",
         isTall && "min-h-[16rem]",
       )}
     >
-      <div>
-        <div className="flex items-start gap-4">
+      <div className="flex items-start gap-5">
+        <div className="shrink-0">
           <Avatar
             name={portfolio.name}
             discipline={portfolio.discipline}
-            size={avatarSizeForVariant(variant)}
+            size="lg"
             src={portfolio.avatarUrl}
-            className="h-16 w-16 shrink-0 rounded-xl border-2 border-zone-recruiter/20 object-cover shadow-md transition-colors duration-300 group-hover:border-zone-recruiter/50"
+            className="h-16 w-16 rounded-xl border border-border-custom object-cover shadow-sm"
           />
+        </div>
 
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className={cn("font-bold text-text-main", isHero ? "text-xl" : "text-lg")}>
-                {portfolio.name}
-              </h3>
-              {portfolio.openToWork && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-zone-mentorship/20 bg-zone-mentorship/10 px-2.5 py-0.5 text-xs font-semibold text-zone-mentorship">
-                  Open to work
-                </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3
+              className={cn(
+                "capitalize font-bold text-text-main transition-colors duration-200 group-hover:text-zone-recruiter",
+                isHero ? "text-2xl" : "text-xl",
               )}
-            </div>
+            >
+              {portfolio.name}
+            </h3>
+            {portfolio.openToWork && (
+              <span className="inline-flex items-center rounded-full border border-border-custom bg-bg-main px-2.5 py-0.5 text-xs font-semibold text-text-main">
+                Open to work
+              </span>
+            )}
             {portfolio.hasMentorEndorsement && (
-              <span className="mt-1.5 inline-flex rounded-full border border-zone-recruiter/20 bg-zone-recruiter/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zone-recruiter">
+              <span className="inline-flex items-center rounded-full border border-zone-recruiter/20 bg-zone-recruiter/10 px-2.5 py-0.5 text-xs font-semibold text-zone-recruiter">
                 Mentor vetted
               </span>
             )}
-            <p className="mt-0.5 text-sm font-medium text-text-muted">{portfolio.headline}</p>
-            <p className="text-caption mt-0.5 truncate">{portfolio.university}</p>
           </div>
-        </div>
 
-        {portfolio.bio ? (
-          <p className="mt-3 flex h-10 items-center rounded-r-lg border-l-2 border-border-custom bg-bg-main/30 pl-3 text-sm italic leading-snug text-text-muted line-clamp-2">
-            {portfolio.bio}
+          <p
+            className={cn(
+              "mt-0.5 font-medium tracking-wide text-text-muted",
+              isHero ? "text-base" : "text-sm",
+            )}
+          >
+            {portfolio.headline || "Engineering Professional"}
           </p>
-        ) : null}
 
-        <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-border-custom/50 bg-bg-main/50 p-2.5 text-xs font-medium text-text-muted">
-          <div>
-            Remote work:{" "}
-            <span className="font-semibold text-text-main">
-              {isRemoteLocation(portfolio.location) ? "Yes" : "No"}
-            </span>
+          <div
+            className={cn(
+              "my-4 flex min-h-[48px] items-center rounded-r-xl border-l-2 border-border-custom/80 bg-bg-main/40 py-2 pl-3 text-sm text-text-muted/90 line-clamp-2",
+              isHero && "min-h-[56px] text-base",
+            )}
+          >
+            {portfolio.bio?.trim() || "No description provided."}
           </div>
-          <div>
-            Work status:{" "}
-            <span className="font-semibold capitalize text-text-main">{formatSeeking(portfolio.seeking)}</span>
+
+          <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl border border-border-custom/50 bg-bg-main/50 p-2.5 text-xs font-medium text-text-muted">
+            <div>
+              Remote work:{" "}
+              <span className="font-semibold text-text-main">{isRemote ? "Yes" : "No"}</span>
+            </div>
+            <div>
+              Work status:{" "}
+              <span className="font-semibold text-text-main">{workStatus}</span>
+            </div>
+          </div>
+
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {portfolio.skills.slice(0, tagLimit).map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center rounded-lg border border-border-custom bg-bg-main px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-text-main"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="mt-5 flex items-end justify-between gap-3 border-t border-border-custom/60 pt-4">
-        <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
-          {portfolio.skills.slice(0, skillLimit).map((skill) => (
-            <span
-              key={skill}
-              className="inline-flex items-center rounded-lg border border-zone-recruiter/20 bg-zone-recruiter/10 px-2.5 py-1 text-xs font-medium text-zone-recruiter transition-all duration-200 hover:bg-zone-recruiter/20"
-            >
-              {skill}
-            </span>
-          ))}
+      <div className="mt-6">
+        <div className="my-4 w-full border-t border-border-custom/60" />
+        <div className="flex items-center justify-between text-sm font-semibold text-text-muted">
+          <span className="capitalize">{workStatus}</span>
+          <span
+            className="rounded-xl border border-border-custom bg-bg-main p-2 text-text-main transition-all duration-300 group-hover:bg-text-main group-hover:text-bg-main"
+            aria-hidden
+          >
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+          </span>
         </div>
-        <ArrowRight
-          className="h-5 w-5 shrink-0 text-zone-recruiter transition-transform duration-200 group-hover:translate-x-1"
-          aria-hidden
-        />
       </div>
     </Link>
   );
