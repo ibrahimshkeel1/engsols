@@ -97,21 +97,30 @@ export function NavbarShell({
           <div className="relative">
             <button
               type="button"
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
               onClick={() => setMoreOpen(!moreOpen)}
               onBlur={() => setTimeout(() => setMoreOpen(false), 150)}
-              className="nav-link flex items-center gap-1 rounded-lg px-3.5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                "nav-link flex items-center gap-1 rounded-lg px-3.5 py-2.5 text-sm transition-colors",
+                moreOpen ? "bg-muted/60 text-foreground" : "text-muted-foreground hover:text-foreground",
+              )}
             >
               {t(locale, "more")} <ChevronDown className={cn("h-3.5 w-3.5 transition", moreOpen && "rotate-180")} />
             </button>
             {moreOpen && (
-              <div className="absolute end-0 top-full z-50 mt-2 min-w-[200px] rounded-xl border border-border bg-card p-1.5 shadow-premium-card">
+              <div
+                role="menu"
+                className="absolute end-0 top-full z-[60] mt-2 min-w-[220px] overflow-hidden rounded-xl border border-border bg-surface p-1.5 shadow-[0_10px_40px_-8px_rgba(15,23,42,0.18)] dark:shadow-[0_10px_40px_-8px_rgba(0,0,0,0.55)]"
+              >
                 {moreNav.map((l) => {
                   if (l.authOnly && !showForYou) return null;
                   return (
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    role="menuitem"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-muted"
                   >
                     {t(locale, l.key)}
                     {l.preview && (

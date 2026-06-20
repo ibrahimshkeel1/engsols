@@ -77,7 +77,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
           Select a mentor and use the One-off tab to book.
         </div>
       )}
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <MentorFilters
           layout="sidebar"
           search={search}

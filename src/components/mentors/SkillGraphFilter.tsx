@@ -29,28 +29,29 @@ export function SkillGraphFilter({ selectedSkill, onSkillChange, mentorSkills = 
     : [];
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="mt-6 overflow-hidden rounded-xl border border-border/75 bg-card p-4">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Skill graph</p>
       <SkillGraphBubbleChart
+        className="mt-3"
         nodes={skillOptions}
         selectedSkill={selectedSkill}
         onSkillChange={onSkillChange}
       />
       {related.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2 border-t border-border/60 pt-3">
           {related.map((s) => (
             <button
               key={s.id}
               type="button"
               onClick={() => onSkillChange(s.id)}
-              className="rounded-lg bg-muted px-2.5 py-1 text-xs hover:bg-zone-mentorship/10 hover:text-zone-mentorship"
+              className="max-w-full rounded-lg border border-border/75 bg-muted/40 px-2.5 py-1 text-xs leading-snug break-words hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
             >
               {s.label}
             </button>
           ))}
         </div>
       )}
-      <Link href="/assist" className="inline-block text-xs text-zone-mentorship hover:underline">
+      <Link href="/assist" className="mt-3 inline-block text-xs text-primary hover:underline">
         Get mentor suggestions →
       </Link>
     </div>
