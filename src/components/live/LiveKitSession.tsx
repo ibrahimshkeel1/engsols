@@ -2,7 +2,7 @@
 
 import { memo, useState } from "react";
 import type { RoomOptions } from "livekit-client";
-import { LiveKitRoom, VideoConference } from "@livekit/components-react";
+import { LiveKitRoom } from "@livekit/components-react";
 import "@livekit/components-styles";
 
 /** Stable options — must be module-level so LiveKit does not recreate the room. */
@@ -49,12 +49,9 @@ export const LiveKitRoomProvider = memo(function LiveKitRoomProvider({
   );
 });
 
+/** @deprecated Use LiveRoomMediaChrome + LiveKitVideoStage */
 export function LiveKitVideoPane() {
-  return (
-    <div className="live-video-conference-wrap h-full min-h-0">
-      <VideoConference />
-    </div>
-  );
+  return null;
 }
 
 /** @deprecated Use LiveKitRoomProvider + LiveKitVideoPane */

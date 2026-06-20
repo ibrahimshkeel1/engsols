@@ -74,7 +74,7 @@ export function LiveChatFloatingMessages({ className }: Props) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute bottom-4 left-4 right-4 z-30 flex flex-col items-start gap-2 sm:left-auto sm:right-4 sm:max-w-sm",
+        "pointer-events-none absolute bottom-[calc(var(--live-control-dock-height)+1rem)] left-4 right-4 z-30 flex flex-col items-start gap-2 sm:left-auto sm:right-4 sm:max-w-sm",
         className,
       )}
       aria-live="polite"
