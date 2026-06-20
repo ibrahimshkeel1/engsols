@@ -41,7 +41,7 @@ export function PageHero({
     const t = zoneTokens.live;
     return (
       <section className={cn(t.hero, className)}>
-        <div className="page-container-wide flex flex-col justify-between gap-6 py-16 sm:flex-row sm:items-end">
+        <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end">
           <div className="animate-fade-up">
             {backHref && (
               <Link href={backHref} className={cn("text-sm font-medium hover:underline", t.accent)}>
@@ -67,7 +67,7 @@ export function PageHero({
     const t = zoneTokens.recruiter;
     return (
       <section className={cn(t.hero, className)}>
-        <div className="page-container-wide py-16 animate-fade-up">
+        <div className="page-container-wide py-20 animate-fade-up">
           <p className={cn("section-label", t.sectionLabel)}>Community</p>
           <h1 className="text-display-xl mt-2">{title}</h1>
           {description && <p className="mt-4 max-w-2xl text-body-lg">{description}</p>}
@@ -81,7 +81,7 @@ export function PageHero({
     const t = zoneTokens.news;
     return (
       <section className={cn(t.hero, className)}>
-        <div className="page-container-wide py-16 animate-fade-up">
+        <div className="page-container-wide py-20 animate-fade-up">
           {backHref && (
             <Link href={backHref} className={cn("text-sm font-medium hover:underline", t.accent)}>
               {backLabel ?? "← Back"}
@@ -102,7 +102,7 @@ export function PageHero({
     const t = zoneTokens[resolved];
     return (
       <section className={cn(t.hero, className)}>
-        <div className="page-container-wide flex flex-col justify-between gap-6 py-16 sm:flex-row sm:items-end animate-fade-up">
+        <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end animate-fade-up">
           <div>
             {label && <p className={cn("section-label", t.sectionLabel, labelClassName)}>{label}</p>}
             <h1 className={cn("text-display-xl", label && "mt-2")}>{title}</h1>
@@ -118,7 +118,7 @@ export function PageHero({
 
   return (
     <section className={cn("gradient-hero border-b border-border", className)}>
-      <div className="page-container-wide flex flex-col justify-between gap-6 py-16 sm:flex-row sm:items-end animate-fade-up">
+      <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end animate-fade-up">
         <div>
           {label && <p className={cn("section-label", labelClassName)}>{label}</p>}
           <h1 className={cn("text-display-xl", label && "mt-2")}>{title}</h1>

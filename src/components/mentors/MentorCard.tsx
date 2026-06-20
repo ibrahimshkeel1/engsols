@@ -35,7 +35,7 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
     <Link
       href={`/mentors/${mentor.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl border border-border hover:border-zone-mentorship/40",
+        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl border border-border/75 hover:border-border",
         isHero && "min-h-[16rem]",
         variant === "tall" && "min-h-[14rem]",
       )}

@@ -30,11 +30,11 @@ export function CareerAssistPreview({ mentors }: { mentors: Mentor[] }) {
   const t = zoneTokens.recruiter;
 
   return (
-    <ZoneSection zone="recruiter" alt accent>
+    <ZoneSection zone="recruiter" alt accent={false}>
       <div className="page-container-wide">
         <AnimateIn>
-          <p className={t.sectionLabel}>Career assist</p>
-          <h2 className="text-display-lg mt-2">Find mentors for your goal</h2>
+          <p className={cn(t.sectionLabel, "opacity-70")}>Career assist</p>
+          <h2 className="section-heading mt-3">Find mentors for your goal</h2>
           <p className="text-caption mt-2 max-w-xl">
             No account needed — pick a goal and see who can help in seconds.
           </p>

@@ -59,12 +59,12 @@ const paths: {
 
 export function StartHereJourney() {
   return (
-    <ZoneSection zone="mentorship" accent>
+    <ZoneSection zone="mentorship" accent={false}>
       <div className="page-container-wide">
         <AnimateIn>
-          <p className={zoneTokens.mentorship.sectionLabel}>Start here</p>
-          <h2 className="text-display-lg mt-2">What do you want to do today?</h2>
-          <p className="text-caption mt-2 max-w-xl">
+          <p className="section-label opacity-70">Start here</p>
+          <h2 className="section-heading mt-3">What do you want to do today?</h2>
+          <p className="text-caption mt-2 max-w-lg">
             Pick a path — each one takes you straight to the right place on EngSols.
           </p>
         </AnimateIn>
@@ -78,7 +78,7 @@ export function StartHereJourney() {
                     <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", t.iconWell)}>
                       <path.icon className="h-5 w-5" aria-hidden />
                     </div>
-                    <p className="mt-4 font-semibold leading-tight text-text-main">{path.label}</p>
+                    <p className="mt-4 font-medium leading-tight text-text-main">{path.label}</p>
                     <p className="mt-1 flex-1 text-xs leading-relaxed text-text-muted">{path.description}</p>
                     <ArrowRight className={cn("mt-3 h-4 w-4 text-text-muted transition-transform group-hover:translate-x-0.5", t.arrowHover)} />
                   </ZoneCard>

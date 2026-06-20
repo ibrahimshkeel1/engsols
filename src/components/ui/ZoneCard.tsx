@@ -22,8 +22,8 @@ export function ZoneCard({
   return (
     <Tag
       className={cn(
-        "rounded-xl border border-border bg-card p-6 shadow-sm transition-all duration-200",
-        interactive && "hover:-translate-y-px hover:shadow-card-hover",
+        "rounded-xl border border-border/75 bg-card p-6 shadow-sm transition-[border-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        interactive && "hover:-translate-y-0.5 hover:shadow-card-hover active:scale-[0.99] active:translate-y-0",
         stripe && t.stripe,
         interactive && t.cardHover,
         className,

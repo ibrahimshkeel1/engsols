@@ -38,11 +38,11 @@ export default async function HomePage() {
         <>
           <Hero mentorCount={mentors.length} featuredMentors={featuredMentors} />
           <StartHereJourney />
-          <CareerAssistPreview mentors={mentors} />
         </>
       )}
 
       <HappeningNow />
+      {!user && <CareerAssistPreview mentors={mentors} />}
       <FeaturedMentors mentors={mentors} />
       <HowItWorks />
       <OneOffSessions />

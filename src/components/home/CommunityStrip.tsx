@@ -53,11 +53,11 @@ const links: {
 
 export function CommunityStrip() {
   return (
-    <ZoneSection zone="live" alt accent>
+    <ZoneSection zone="live" alt accent={false}>
       <div className="page-container-wide">
         <AnimateIn className="mx-auto max-w-2xl text-center">
           <p className={zoneTokens.live.sectionLabel}>Beyond mentorship</p>
-          <h2 className="text-display-lg mt-3">Community built for engineers</h2>
+          <h2 className="section-heading mt-3">Community built for engineers</h2>
         </AnimateIn>
         <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
           {links.map((item) => {

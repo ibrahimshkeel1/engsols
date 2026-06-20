@@ -36,7 +36,7 @@ export function HowItWorks() {
       <div className="page-container-wide">
         <AnimateIn className="mx-auto max-w-2xl text-center">
           <p className="section-label">How it works</p>
-          <h2 className="text-display-lg mt-3">Mentorship that actually moves your career</h2>
+          <h2 className="section-heading mt-3">Mentorship that actually moves your career</h2>
         </AnimateIn>
         <Stagger className="mt-12 grid gap-6 md:grid-cols-3" stagger={0.12}>
           {steps.map((step, i) => {

@@ -12,6 +12,7 @@ import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 import { ZoneSection } from "@/components/ui/ZoneSection";
 import { zoneTokens } from "@/lib/zone-tokens";
+import { cn } from "@/lib/utils";
 
 export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
   const [search, setSearch] = useState("");
@@ -19,12 +20,12 @@ export function FeaturedMentors({ mentors }: { mentors: Mentor[] }) {
   const t = zoneTokens.mentorship;
 
   return (
-    <ZoneSection zone="mentorship" alt accent>
+    <ZoneSection zone="mentorship" alt accent={false}>
       <div className="page-container-wide">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <AnimateIn>
-            <p className={t.sectionLabel}>Mentor directory</p>
-            <h2 className="text-display-lg mt-2">Explore mentors</h2>
+            <p className={cn(t.sectionLabel, "opacity-70")}>Mentor directory</p>
+            <h2 className="text-display-lg mt-3">Explore mentors</h2>
           </AnimateIn>
           <AnimateIn delay={0.1}>
             <Input

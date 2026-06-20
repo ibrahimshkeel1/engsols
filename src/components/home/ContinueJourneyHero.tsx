@@ -19,10 +19,10 @@ type ContinueJourneyHeroProps = {
 };
 
 const simpleCardClassName =
-  "card-interactive group flex h-full min-w-0 flex-col rounded-xl p-6";
+  "card-interactive group flex h-full min-w-0 flex-col rounded-xl p-5 opacity-90";
 
 const actionCardClassName =
-  "card-interactive group flex h-full min-w-0 flex-row items-start gap-4 rounded-xl p-6";
+  "card-interactive group flex h-full min-w-0 flex-row items-start gap-4 rounded-xl p-5 opacity-90";
 
 export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroProps) {
   const firstName = userName?.split(" ")[0] || "there";
@@ -68,73 +68,75 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
 
   return (
     <section className="hero-dark relative overflow-hidden">
-      <div className="bg-grid absolute inset-0 opacity-60" />
-      <div className="page-container-wide relative py-16 lg:py-20">
-        <AnimateIn>
-          <p className="section-label">Welcome back</p>
-          <h1 className="text-display-lg mt-2">Continue your journey, {firstName}</h1>
-          <p className="text-body-lg mt-3 max-w-xl">{journey.suggestedAction.description}</p>
-          <ButtonLink href={journey.suggestedAction.href} size="lg" className="mt-6 group">
+      <div className="bg-grid absolute inset-0 opacity-20" />
+      <div className="page-container-wide relative py-20 lg:py-28">
+        <AnimateIn className="max-w-xl">
+          <p className="section-label opacity-70">Welcome back</p>
+          <h1 className="text-display-xl mt-4">Continue your journey, {firstName}</h1>
+          <p className="text-body-lg mt-4 max-w-md">{journey.suggestedAction.description}</p>
+          <ButtonLink href={journey.suggestedAction.href} size="lg" className="mt-8 group">
             <Sparkles className="h-4 w-4" />
             {journey.suggestedAction.label}
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" />
           </ButtonLink>
         </AnimateIn>
 
-        <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />
+        <div className="mt-16 border-t border-border/50 pt-12">
+          <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />
 
-        {actions.length > 0 ? (
-          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
-            {actions.map((action) => (
-              <StaggerItem key={action.href + action.label} className="min-w-0">
-                <Link href={action.href} className={actionCardClassName}>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <action.icon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium leading-snug">{action.label}</p>
-                    <p className="mt-1 text-sm text-primary group-hover:underline">{action.cta} →</p>
-                  </div>
-                </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        ) : (
-          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
-            {fallbackActions.map((action) => (
-              <StaggerItem key={action.href} className="min-w-0">
-                <Link href={action.href} className={simpleCardClassName}>
-                  <p className="font-medium leading-snug">{action.label}</p>
-                  <p className="mt-1 text-sm text-primary group-hover:underline">{action.cta} →</p>
-                </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        )}
-
-        {journey.savedMentors.length > 0 && (
-          <div className="mt-10">
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-medium text-muted-foreground">Your saved mentors</p>
-              <Link href="/mentors" className="text-sm text-primary hover:underline">
-                Browse more
-              </Link>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {journey.savedMentors.map((mentor) => (
-                <Link
-                  key={mentor.slug}
-                  href={`/mentors/${mentor.slug}`}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2 shadow-sm transition-colors hover:border-primary/35"
-                >
-                  <Avatar name={mentor.name} discipline={mentor.discipline} size="sm" src={mentor.avatarUrl} />
-                  <span className="text-sm font-medium">{mentor.name}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </Link>
+          {actions.length > 0 ? (
+            <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
+              {actions.map((action) => (
+                <StaggerItem key={action.href + action.label} className="min-w-0">
+                  <Link href={action.href} className={actionCardClassName}>
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <action.icon className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium leading-snug text-foreground/90">{action.label}</p>
+                      <p className="text-caption mt-1 group-hover:text-primary">{action.cta} →</p>
+                    </div>
+                  </Link>
+                </StaggerItem>
               ))}
+            </Stagger>
+          ) : (
+            <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
+              {fallbackActions.map((action) => (
+                <StaggerItem key={action.href} className="min-w-0">
+                  <Link href={action.href} className={simpleCardClassName}>
+                    <p className="font-medium leading-snug text-foreground/90">{action.label}</p>
+                    <p className="text-caption mt-1 group-hover:text-primary">{action.cta} →</p>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          )}
+
+          {journey.savedMentors.length > 0 && (
+            <div className="mt-10">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-caption">Your saved mentors</p>
+                <Link href="/mentors" className="text-caption hover:text-primary">
+                  Browse more
+                </Link>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {journey.savedMentors.map((mentor) => (
+                  <Link
+                    key={mentor.slug}
+                    href={`/mentors/${mentor.slug}`}
+                    className="flex items-center gap-3 rounded-xl border border-border/75 bg-card px-3 py-2.5 transition-[border-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-sm"
+                  >
+                    <Avatar name={mentor.name} discipline={mentor.discipline} size="sm" src={mentor.avatarUrl} />
+                    <span className="text-sm font-medium">{mentor.name}</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );

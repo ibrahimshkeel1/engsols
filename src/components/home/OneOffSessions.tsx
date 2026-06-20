@@ -5,9 +5,9 @@ import { ButtonLink } from "@/components/ui/button";
 
 export function OneOffSessions() {
   return (
-    <ZoneSection zone="exams" alt accent>
+    <ZoneSection zone="exams" alt accent={false}>
       <div className="page-container-wide">
-        <h2 className="text-display-lg text-center">
+        <h2 className="section-heading text-center">
           Not sure if mentorship is right for you? Try a one-off session
         </h2>
         <p className="text-body-lg mx-auto mt-4 max-w-2xl text-center">

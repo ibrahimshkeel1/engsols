@@ -37,7 +37,7 @@ export function ListPageLayout({
           heroClassName,
         )}
       >
-        <div className="page-container-wide py-16 animate-fade-up">
+        <div className="page-container-wide py-20 animate-fade-up">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
               {label && (

@@ -15,7 +15,7 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
       <div className="page-container-wide">
         <AnimateIn>
           <p className={zoneTokens.mentorship.sectionLabel}>Real outcomes</p>
-          <h2 className="text-display-lg mt-2">Engineers who found their path</h2>
+          <h2 className="section-heading mt-3">Engineers who found their path</h2>
           <p className="text-body-lg mt-2 max-w-xl">
             Mentorship that leads somewhere — not generic career advice.
           </p>
@@ -69,7 +69,7 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
           <div className="mt-12 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <div className="flex flex-col items-start justify-center gap-6 p-8 sm:p-12 lg:max-w-2xl">
               <div>
-                <h3 className="text-display-lg">Ready to start?</h3>
+                <h3 className="section-heading">Ready to start?</h3>
                 <p className="text-body-lg mt-3">
                   Join engineers getting real guidance from professionals who have done the work.
                 </p>
