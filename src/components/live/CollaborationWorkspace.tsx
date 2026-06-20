@@ -6,6 +6,7 @@ import { useRoomContext } from "@livekit/components-react";
 import { RoomEvent } from "livekit-client";
 import type { WorkspaceTab } from "@/types/live-workspace";
 import { LiveKitRoomProvider, LiveKitVideoPane } from "@/components/live/LiveKitSession";
+import { LiveChatFloatingMessages } from "@/components/live/LiveChatFloatingMessages";
 import { WorkspaceSwitcher } from "@/components/live/WorkspaceSwitcher";
 import { WhiteboardWorkspace } from "@/components/live/WhiteboardWorkspace";
 import { CadSandboxWorkspace } from "@/components/live/CadSandboxWorkspace";
@@ -127,7 +128,8 @@ function CollaborationWorkspaceInner({
   }, [room, isHost]);
 
   return (
-    <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 bg-bg-main sm:gap-3">
+    <div className="relative flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 bg-bg-main sm:gap-3">
+      <LiveChatFloatingMessages />
       <div className="live-workspace-chrome flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zone-live/25 bg-zone-live/5 px-3 py-2 sm:gap-3 sm:px-4">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-zone-live sm:text-xs">

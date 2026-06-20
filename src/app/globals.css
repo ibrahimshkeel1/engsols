@@ -712,6 +712,21 @@ html.live-room-active main {
   transform: none;
 }
 
+@keyframes live-chat-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.live-chat-toast {
+  animation: live-chat-float-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .live-kit-room {
   display: flex;
   flex-direction: column;
