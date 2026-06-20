@@ -1,62 +1,41 @@
 "use client";
 
-import { ButtonLink } from "@/components/ui/button";
 import { useState } from "react";
-import { ArrowRight, Users } from "lucide-react";
 import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
-import { MentorCard } from "@/components/mentors/MentorCard";
+import { MentorRating } from "@/components/mentors/MentorRating";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { Input } from "@/components/ui/input";
-import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
-import { AnimateIn } from "@/components/motion/AnimateIn";
-import { ZoneSection } from "@/components/ui/ZoneSection";
-import { cn } from "@/lib/utils";
+import { ButtonLink } from "@/components/ui/button";
+import { Users } from "lucide-react";
 
 type FeaturedMentorsProps = {
   mentors: Mentor[];
-  emphasis?: "primary" | "supporting";
 };
 
-export function FeaturedMentors({ mentors, emphasis = "primary" }: FeaturedMentorsProps) {
+export function FeaturedMentors({ mentors }: FeaturedMentorsProps) {
   const [search, setSearch] = useState("");
-  const filtered = filterMentors(mentors, { search: search || undefined }).items.slice(0, emphasis === "primary" ? 6 : 4);
-  const isPrimary = emphasis === "primary";
+  const filtered = filterMentors(mentors, { search: search || undefined }).items.slice(0, 6);
 
   return (
-    <ZoneSection
-      id={isPrimary ? "find-mentor" : undefined}
-      zone="mentorship"
-      alt={!isPrimary}
-      accent={false}
-      className={cn(isPrimary && "!py-24 lg:!py-32")}
-    >
+    <section id="find-mentor" className="border-b border-border/60 bg-muted/25 py-20 lg:py-28">
       <div className="page-container-wide">
-        <AnimateIn className={cn(isPrimary ? "max-w-2xl" : "max-w-xl opacity-90")}>
-          <p className={cn("section-label", isPrimary ? "opacity-70" : "opacity-50")}>
-            {isPrimary ? "Start here" : "Mentors"}
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-display-lg">Featured mentors</h2>
+          <p className="text-body-lg mx-auto mt-3 max-w-lg">
+            Vetted engineers open to mentorship — book a free intro to see if it is the right fit.
           </p>
-          <h2 className={cn(isPrimary ? "text-display-xl mt-4" : "section-heading mt-3")}>
-            {isPrimary ? "Find a mentor who has done your path" : "Featured mentors"}
-          </h2>
-          <p className={cn("mt-3 text-pretty", isPrimary ? "text-body-lg max-w-lg" : "text-caption max-w-md")}>
-            {isPrimary
-              ? "Browse vetted reservoir, drilling, and applied engineering professionals — book a free intro and see if it is the right fit."
-              : "Engineers open to mentoring across disciplines and career stages."}
-          </p>
-        </AnimateIn>
+        </div>
 
-        {isPrimary && (
-          <AnimateIn delay={0.08} className="mt-8 max-w-md">
-            <Input
-              placeholder="Search by name, skill, or company..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border-border/75 bg-card"
-              aria-label="Search mentors"
-            />
-          </AnimateIn>
-        )}
+        <div className="mx-auto mt-8 max-w-md">
+          <Input
+            placeholder="Search by name, skill, or company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border-border/75 bg-card"
+            aria-label="Search mentors"
+          />
+        </div>
 
         {filtered.length === 0 ? (
           <div className="mt-10">
@@ -69,24 +48,28 @@ export function FeaturedMentors({ mentors, emphasis = "primary" }: FeaturedMento
             />
           </div>
         ) : (
-          <ProfileBentoGrid
-            className={cn("mt-10", !isPrimary && "opacity-90")}
-            items={filtered}
-            getKey={(mentor) => mentor.slug}
-            isFeatured={(mentor) => mentor.featured}
-            renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
-          />
-        )}
-
-        {filtered.length > 0 && isPrimary && (
-          <AnimateIn delay={0.15} className="mt-14 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <ButtonLink href="/mentors" size="lg" className="group w-full sm:w-auto">
-              Browse all mentors
-              <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" />
-            </ButtonLink>
-          </AnimateIn>
+          <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3 lg:gap-6">
+            {filtered.map((mentor) => (
+              <article
+                key={mentor.slug}
+                className="flex w-[min(100%,20rem)] shrink-0 snap-start flex-col rounded-xl border border-border-custom bg-card p-6 shadow-premium-card transition-all duration-200 ease-out hover:-translate-y-0.5 sm:w-auto"
+              >
+                <h3 className="text-lg font-bold text-text-main">{mentor.name}</h3>
+                <p className="mt-1 text-sm font-medium text-text-muted">{mentor.headline}</p>
+                <p className="text-caption mt-2">
+                  {mentor.yearsExperience}+ years experience
+                </p>
+                <div className="mt-3">
+                  <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} size="sm" />
+                </div>
+                <ButtonLink href={`/mentors/${mentor.slug}`} size="default" className="mt-6 w-full">
+                  Book session
+                </ButtonLink>
+              </article>
+            ))}
+          </div>
         )}
       </div>
-    </ZoneSection>
+    </section>
   );
 }

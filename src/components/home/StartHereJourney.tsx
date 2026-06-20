@@ -1,47 +1,31 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { AnimateIn } from "@/components/motion/AnimateIn";
-import { ZoneSection } from "@/components/ui/ZoneSection";
-import { ZoneCard } from "@/components/ui/ZoneCard";
-import { cn } from "@/lib/utils";
-import { zoneTokens, type ZoneKey } from "@/lib/zone-tokens";
 
-const paths: {
-  href: string;
-  label: string;
-  zone: ZoneKey;
-}[] = [
-  { href: "/mentors?goal=fe-pe", label: "Prep for FE / PE", zone: "exams" },
-  { href: "/forum", label: "Ask the forum", zone: "recruiter" },
-  { href: "/live", label: "Watch live", zone: "live" },
-  { href: "/signup?next=/portfolios/build", label: "Build portfolio", zone: "recruiter" },
-  { href: "/certifications", label: "Certifications", zone: "exams" },
+const supportingLinks = [
+  { label: "Start Here Journey", href: "/mentors", description: "Browse mentors by discipline and goal" },
+  { label: "Career Assist", href: "/assist", description: "Match mentors to your career goal" },
+  { label: "One-off Sessions", href: "/mentors?session=intro", description: "Try a focused intro or prep call" },
+  { label: "Community", href: "/forum", description: "Forum, live sessions, and industry news" },
 ];
 
 export function StartHereJourney() {
   return (
-    <ZoneSection alt accent={false} className="!py-12 lg:!py-16">
-      <div className="page-container-wide opacity-90">
-        <AnimateIn>
-          <p className="section-label opacity-50">Also on EngSols</p>
-          <h2 className="text-caption mt-2 font-medium text-muted-foreground">Explore when you are ready</h2>
-        </AnimateIn>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {paths.map((path, i) => {
-            const t = zoneTokens[path.zone];
-            return (
-              <AnimateIn key={path.href} delay={i * 0.03}>
-                <Link href={path.href} className="group inline-flex">
-                  <ZoneCard zone={path.zone} className="!flex-row !items-center !gap-2 !px-3 !py-2" interactive>
-                    <span className="text-xs text-foreground/85">{path.label}</span>
-                    <ArrowRight className={cn("h-3 w-3 text-muted-foreground", t.arrowHover)} />
-                  </ZoneCard>
-                </Link>
-              </AnimateIn>
-            );
-          })}
-        </div>
+    <section className="border-b border-border/60 py-10 lg:py-12">
+      <div className="page-container-wide">
+        <p className="text-caption font-medium text-muted-foreground">Also on EngSols</p>
+        <ul className="mt-4 divide-y divide-border/60">
+          {supportingLinks.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="flex flex-col gap-0.5 py-3 transition-colors duration-150 hover:text-foreground sm:flex-row sm:items-center sm:justify-between"
+              >
+                <span className="text-sm text-muted-foreground">{item.label}</span>
+                <span className="text-caption text-muted-foreground/80 sm:text-end">{item.description}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-    </ZoneSection>
+    </section>
   );
 }
