@@ -33,7 +33,6 @@ export const LiveKitRoomProvider = memo(function LiveKitRoomProvider({
       audio
       video
       options={LIVEKIT_ROOM_OPTIONS}
-      data-lk-theme="default"
       className="live-kit-room-provider"
       onMediaDeviceFailure={() => {
         setDeviceError("Camera or microphone blocked. Allow access in your browser settings.");

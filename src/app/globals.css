@@ -649,6 +649,59 @@ html.live-room-active main {
   min-height: 420px;
   max-height: 900px;
   background: hsl(var(--video-shell-bg));
+  color-scheme: dark;
+}
+
+/* LiveKit controls — scoped to the video shell so header chrome keeps light-theme text */
+.live-video-shell[data-lk-theme="default"] {
+  --lk-bg: hsl(var(--video-shell-bg));
+  --lk-bg2: hsl(222 47% 14%);
+  --lk-bg3: hsl(222 47% 18%);
+  --lk-bg4: hsl(222 47% 22%);
+  --lk-bg5: hsl(222 47% 26%);
+  --lk-fg: hsl(210 40% 98%);
+  --lk-fg2: hsl(210 30% 92%);
+  --lk-control-fg: hsl(210 40% 98%);
+  --lk-control-bg: hsl(222 47% 20%);
+  --lk-control-hover-bg: hsl(222 47% 26%);
+  --lk-control-active-bg: hsl(var(--color-live-rooms));
+  --lk-control-active-hover-bg: hsl(258 70% 52%);
+  --lk-border-color: hsl(217 19% 35% / 0.7);
+  --lk-accent-fg: hsl(210 40% 98%);
+  --lk-accent-bg: hsl(var(--color-live-rooms));
+  color: var(--lk-fg);
+  color-scheme: dark;
+}
+
+.live-workspace-chrome {
+  color: hsl(var(--text-main));
+}
+
+.live-workspace-chrome .btn-secondary,
+.live-workspace-chrome button:not(.lk-button) {
+  color: hsl(var(--text-main));
+}
+
+.live-video-shell .lk-control-bar {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+  background-color: hsl(222 47% 11%);
+  border-top: 1px solid hsl(217 19% 35% / 0.55);
+}
+
+.live-video-shell .lk-button,
+.live-video-shell .lk-chat-toggle,
+.live-video-shell .lk-disconnect-button,
+.live-video-shell .lk-start-audio-button {
+  color: var(--lk-control-fg) !important;
+  background-color: var(--lk-control-bg) !important;
+}
+
+.live-video-shell .lk-button:not(:disabled):hover,
+.live-video-shell .lk-chat-toggle:not(:disabled):hover,
+.live-video-shell .lk-disconnect-button:not(:disabled):hover {
+  background-color: var(--lk-control-hover-bg);
 }
 
 .live-kit-room {
@@ -700,12 +753,6 @@ html.live-room-active main {
   border-bottom: 1px solid rgba(254, 202, 202, 0.2);
 }
 
-.live-video-shell .lk-control-bar {
-  flex-shrink: 0;
-  position: relative;
-  z-index: 20;
-}
-
 .live-video-shell--compact {
   height: 100%;
   min-height: 240px;
@@ -718,7 +765,11 @@ html.live-room-active main {
 }
 
 .live-kit-room-provider {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
 }
 
 .live-video-shell--compact .lk-participant-tile {

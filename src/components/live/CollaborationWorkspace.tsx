@@ -111,7 +111,7 @@ function CollaborationWorkspaceInner({
 
   return (
     <div className="flex h-[calc(100dvh-2rem)] min-h-0 flex-col gap-2 bg-bg-main sm:gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zone-live/25 bg-zone-live/5 px-3 py-2 sm:gap-3 sm:px-4">
+      <div className="live-workspace-chrome flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zone-live/25 bg-zone-live/5 px-3 py-2 sm:gap-3 sm:px-4">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-zone-live sm:text-xs">
             <span className="live-dot me-1.5 inline-block h-1.5 w-1.5 rounded-full bg-zone-live align-middle" />
@@ -122,11 +122,11 @@ function CollaborationWorkspaceInner({
         <div className="flex flex-wrap items-center gap-2">
           <SyncStatusIndicator room={room} className="hidden sm:inline-flex" />
           <WorkspaceSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
-          <Link href={`/live/${slug}`} className="btn-secondary hidden h-10 sm:inline-flex">
+          <Link href={`/live/${slug}`} className="btn-secondary hidden h-10 text-text-main sm:inline-flex">
             Session info
           </Link>
           {isHost && onEndCall && (
-            <Button type="button" variant="outline" onClick={onEndCall} disabled={ending} size="sm" className="sm:h-10">
+            <Button type="button" variant="secondary" onClick={onEndCall} disabled={ending} size="sm" className="sm:h-10">
               {ending ? "Ending..." : "End call"}
             </Button>
           )}
@@ -162,6 +162,7 @@ function CollaborationWorkspaceInner({
         )}
 
         <div
+          data-lk-theme="default"
           className={cn(
             "live-video-shell live-kit-room min-h-0 overflow-hidden rounded-2xl border border-zone-live/20 transition-all duration-200",
             isSplit

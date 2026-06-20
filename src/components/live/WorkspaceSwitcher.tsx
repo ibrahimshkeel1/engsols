@@ -40,8 +40,8 @@ export function WorkspaceSwitcher({ activeTab, onTabChange, className }: Props) 
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 active:scale-[0.98]",
               selected
-                ? "bg-zone-live text-white shadow-zone-live dark:text-bg-main"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ? "bg-zone-live text-white shadow-zone-live"
+                : "text-text-muted hover:bg-muted hover:text-text-main",
             )}
           >
             <Icon className="h-4 w-4 shrink-0" aria-hidden />
