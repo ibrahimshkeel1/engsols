@@ -30,8 +30,20 @@ export function LiveJoinRequestsPanel({ slug, isHost, className }: Props) {
   }, [isHost, slug]);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    if (!isHost) return;
+
+    let cancelled = false;
+    void getPendingJoinRequests(slug).then((payload) => {
+      if (cancelled || !payload) return;
+      setSessionId(payload.sessionId);
+      setRequests(payload.requests);
+      if (payload.requests.length > 0) setOpen(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isHost, slug]);
 
   useEffect(() => {
     if (!isHost || !sessionId) return;

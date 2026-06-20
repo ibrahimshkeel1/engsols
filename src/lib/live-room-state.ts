@@ -4,7 +4,6 @@ import {
   isRoomStateAuthority,
   publishLiveSyncPacket,
   type DrawStrokePacket,
-  type DrawTextPacket,
   type RoomStateCad,
   type RoomStateSnapshot,
   type WhiteboardElement,
