@@ -1,12 +1,5 @@
 import Link from "next/link";
-import {
-  Users,
-  GraduationCap,
-  MessageSquare,
-  Radio,
-  Briefcase,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 import { ZoneSection } from "@/components/ui/ZoneSection";
 import { ZoneCard } from "@/components/ui/ZoneCard";
@@ -16,71 +9,32 @@ import { zoneTokens, type ZoneKey } from "@/lib/zone-tokens";
 const paths: {
   href: string;
   label: string;
-  description: string;
-  icon: typeof Users;
   zone: ZoneKey;
 }[] = [
-  {
-    href: "/mentors",
-    label: "Find a mentor",
-    description: "Browse vetted engineers by discipline and goal",
-    icon: Users,
-    zone: "mentorship",
-  },
-  {
-    href: "/mentors?goal=fe-pe",
-    label: "Prep for FE / PE",
-    description: "Mentors who've passed the exams",
-    icon: GraduationCap,
-    zone: "exams",
-  },
-  {
-    href: "/forum",
-    label: "Ask the forum",
-    description: "Get answers from mentors and peers",
-    icon: MessageSquare,
-    zone: "recruiter",
-  },
-  {
-    href: "/live",
-    label: "Watch live",
-    description: "Q&As, workshops, and deep dives",
-    icon: Radio,
-    zone: "live",
-  },
-  {
-    href: "/signup?next=/portfolios/build",
-    label: "Build portfolio",
-    description: "Showcase projects and get discovered",
-    icon: Briefcase,
-    zone: "recruiter",
-  },
+  { href: "/mentors?goal=fe-pe", label: "Prep for FE / PE", zone: "exams" },
+  { href: "/forum", label: "Ask the forum", zone: "recruiter" },
+  { href: "/live", label: "Watch live", zone: "live" },
+  { href: "/signup?next=/portfolios/build", label: "Build portfolio", zone: "recruiter" },
+  { href: "/certifications", label: "Certifications", zone: "exams" },
 ];
 
 export function StartHereJourney() {
   return (
-    <ZoneSection zone="mentorship" accent={false}>
-      <div className="page-container-wide">
+    <ZoneSection alt accent={false} className="!py-12 lg:!py-16">
+      <div className="page-container-wide opacity-90">
         <AnimateIn>
-          <p className="section-label opacity-70">Start here</p>
-          <h2 className="section-heading mt-3">What do you want to do today?</h2>
-          <p className="text-caption mt-2 max-w-lg">
-            Pick a path — each one takes you straight to the right place on EngSols.
-          </p>
+          <p className="section-label opacity-50">Also on EngSols</p>
+          <h2 className="text-caption mt-2 font-medium text-muted-foreground">Explore when you are ready</h2>
         </AnimateIn>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-6 flex flex-wrap gap-2">
           {paths.map((path, i) => {
             const t = zoneTokens[path.zone];
             return (
-              <AnimateIn key={path.href} delay={i * 0.05}>
-                <Link href={path.href} className="group block h-full">
-                  <ZoneCard zone={path.zone} className="flex h-full flex-col !p-5" interactive>
-                    <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", t.iconWell)}>
-                      <path.icon className="h-5 w-5" aria-hidden />
-                    </div>
-                    <p className="mt-4 font-medium leading-tight text-text-main">{path.label}</p>
-                    <p className="mt-1 flex-1 text-xs leading-relaxed text-text-muted">{path.description}</p>
-                    <ArrowRight className={cn("mt-3 h-4 w-4 text-text-muted transition-transform group-hover:translate-x-0.5", t.arrowHover)} />
+              <AnimateIn key={path.href} delay={i * 0.03}>
+                <Link href={path.href} className="group inline-flex">
+                  <ZoneCard zone={path.zone} className="!flex-row !items-center !gap-2 !px-3 !py-2" interactive>
+                    <span className="text-xs text-foreground/85">{path.label}</span>
+                    <ArrowRight className={cn("h-3 w-3 text-muted-foreground", t.arrowHover)} />
                   </ZoneCard>
                 </Link>
               </AnimateIn>

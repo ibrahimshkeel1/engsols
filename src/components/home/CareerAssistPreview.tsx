@@ -9,7 +9,6 @@ import { Avatar } from "@/components/ui/Avatar";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 import { ZoneSection } from "@/components/ui/ZoneSection";
 import { ZoneCard } from "@/components/ui/ZoneCard";
-import { ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { zoneTokens } from "@/lib/zone-tokens";
 
@@ -23,34 +22,31 @@ export function CareerAssistPreview({ mentors }: { mentors: Mentor[] }) {
   const [selectedGoal, setSelectedGoal] = useState<string>(PREVIEW_GOALS[0].id);
 
   const matches = useMemo(
-    () => matchMentorsByGoals([selectedGoal], mentors, 3),
+    () => matchMentorsByGoals([selectedGoal], mentors, 2),
     [selectedGoal, mentors],
   );
 
   const t = zoneTokens.recruiter;
 
   return (
-    <ZoneSection zone="recruiter" alt accent={false}>
-      <div className="page-container-wide">
+    <ZoneSection zone="recruiter" alt accent={false} className="!py-12 lg:!py-16">
+      <div className="page-container-wide opacity-90">
         <AnimateIn>
-          <p className={cn(t.sectionLabel, "opacity-70")}>Career assist</p>
-          <h2 className="section-heading mt-3">Find mentors for your goal</h2>
-          <p className="text-caption mt-2 max-w-xl">
-            No account needed — pick a goal and see who can help in seconds.
-          </p>
+          <p className={cn(t.sectionLabel, "opacity-50")}>Career assist</p>
+          <h2 className="text-caption mt-2 font-medium text-muted-foreground">Match mentors to your goal</h2>
         </AnimateIn>
 
-        <div className="mt-8 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {PREVIEW_GOALS.map((goal) => (
             <button
               key={goal.id}
               type="button"
               onClick={() => setSelectedGoal(goal.id)}
               className={cn(
-                "rounded-full border px-4 py-2 text-sm transition-colors",
+                "rounded-full border px-3 py-1.5 text-xs transition-colors",
                 selectedGoal === goal.id
-                  ? "border-transparent bg-primary text-primary-foreground"
-                  : "border-border bg-card text-muted-foreground hover:border-border hover:text-foreground",
+                  ? "border-primary/30 bg-primary/10 text-primary"
+                  : "border-border/75 bg-card text-muted-foreground hover:text-foreground",
               )}
             >
               {goal.label}
@@ -58,39 +54,26 @@ export function CareerAssistPreview({ mentors }: { mentors: Mentor[] }) {
           ))}
         </div>
 
-        {matches.length > 0 ? (
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        {matches.length > 0 && (
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {matches.map((mentor) => (
               <Link key={mentor.slug} href={`/mentors/${mentor.slug}`} className="group block">
-                <ZoneCard zone="recruiter" className="flex items-center gap-4 !p-5">
-                  <Avatar name={mentor.name} discipline={mentor.discipline} size="lg" src={mentor.avatarUrl} />
+                <ZoneCard zone="recruiter" className="flex items-center gap-3 !p-4">
+                  <Avatar name={mentor.name} discipline={mentor.discipline} size="md" src={mentor.avatarUrl} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-text-main">{mentor.name}</p>
+                    <p className="truncate text-sm font-medium">{mentor.name}</p>
                     <p className="text-caption truncate">{mentor.headline}</p>
-                    <p className="text-caption truncate">{mentor.company}</p>
                   </div>
-                  <ArrowRight className={cn("h-4 w-4 shrink-0 text-muted-foreground", t.arrowHover)} />
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                 </ZoneCard>
               </Link>
             ))}
           </div>
-        ) : (
-          <p className="text-caption mt-8">
-            No matches yet for this goal.{" "}
-            <Link href="/mentors" className="font-medium text-primary hover:underline">
-              Browse all mentors
-            </Link>
-          </p>
         )}
 
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <ButtonLink href={`/signup?next=${encodeURIComponent("/assist")}`}>
-            Sign up to save matches & book intro
-          </ButtonLink>
-          <ButtonLink href="/mentors" variant="ghost">
-            Browse all mentors →
-          </ButtonLink>
-        </div>
+        <Link href="/assist" className="text-caption mt-5 inline-block text-primary hover:underline">
+          Open career assist →
+        </Link>
       </div>
     </ZoneSection>
   );

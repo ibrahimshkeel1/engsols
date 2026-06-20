@@ -1,41 +1,17 @@
-import { Gift, Layers, MessageCircle, Phone, Star, Users } from "lucide-react";
-import { valueProps } from "@/data/valueProps";
-
-const icons = {
-  users: Users,
-  layers: Layers,
-  gift: Gift,
-  message: MessageCircle,
-  phone: Phone,
-  star: Star,
-};
+import { AnimateIn } from "@/components/motion/AnimateIn";
 
 export function ValueProps() {
   return (
-    <section className="py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-foreground">
-            At your fingertips: a dedicated engineering mentor
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Want to break into oil & gas? Pass the FE or PE exam? Land your first engineering role?
-            Work smart with an online mentor who offers expert advice matched to your goals.
+    <section className="border-b border-border/60 py-16 lg:py-20">
+      <div className="page-container max-w-2xl">
+        <AnimateIn>
+          <p className="section-label opacity-60">What EngSols is</p>
+          <p className="text-body-lg mt-5 text-pretty">
+            A career platform built for oil &amp; gas and applied engineers — students, early-career professionals,
+            and specialists preparing for their next role. One place to find mentors, study for FE and PE exams,
+            showcase your work, and learn from people who have done the job.
           </p>
-        </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {valueProps.map((prop) => {
-            const Icon = icons[prop.icon];
-            return (
-              <div key={prop.label} className="flex items-center gap-3 rounded-xl border border-border p-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <span className="font-medium text-foreground">{prop.label}</span>
-              </div>
-            );
-          })}
-        </div>
+        </AnimateIn>
       </div>
     </section>
   );

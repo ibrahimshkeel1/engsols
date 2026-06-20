@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { ContinueJourneyHero } from "@/components/home/ContinueJourneyHero";
+import { ValueProps } from "@/components/home/ValueProps";
 import { StartHereJourney } from "@/components/home/StartHereJourney";
 import { CareerAssistPreview } from "@/components/home/CareerAssistPreview";
 import { HappeningNow } from "@/components/home/HappeningNow";
@@ -22,7 +23,6 @@ export const revalidate = 120;
 export default async function HomePage() {
   const user = await getCurrentUser();
   const mentors = await getApprovedMentors();
-  const featuredMentors = mentors.filter((m) => m.featured).slice(0, 3);
   const [stats, companyNames, journey, testimonials] = await Promise.all([
     getPlatformStats(),
     getCompanyNamesFromMentors(mentors.map((m) => m.company)),
@@ -30,26 +30,35 @@ export default async function HomePage() {
     getFeaturedTestimonials(3),
   ]);
 
+  const isGuest = !user || !journey;
+
   return (
     <>
       {user && journey ? (
         <ContinueJourneyHero userName={user.full_name} journey={journey} />
       ) : (
+        <Hero />
+      )}
+
+      <SocialProof stats={stats} />
+
+      {isGuest && (
         <>
-          <Hero mentorCount={mentors.length} featuredMentors={featuredMentors} />
-          <StartHereJourney />
+          <ValueProps />
+          <HowItWorks />
         </>
       )}
 
-      <HappeningNow />
+      <FeaturedMentors mentors={mentors} emphasis="primary" />
+
+      {isGuest && <StartHereJourney />}
       {!user && <CareerAssistPreview mentors={mentors} />}
-      <FeaturedMentors mentors={mentors} />
-      <HowItWorks />
       <OneOffSessions />
-      <SocialProof stats={stats} />
-      <CompanyStrip companyNames={companyNames} />
       <CommunityStrip />
-      <TestimonialCTA testimonials={testimonials} />
+      <HappeningNow />
+      <CompanyStrip companyNames={companyNames} />
+      <TestimonialCTA testimonials={testimonials} variant="social" />
+      <TestimonialCTA testimonials={testimonials} variant="closing" />
     </>
   );
 }

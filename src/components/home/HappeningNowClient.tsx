@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { MessageSquare, Radio, Users } from "lucide-react";
+import { Radio } from "lucide-react";
 import { SessionCountdown } from "@/components/shared/SessionCountdown";
 import { Avatar } from "@/components/ui/Avatar";
 import { RelativeTime } from "@/components/shared/RelativeTime";
@@ -142,36 +142,14 @@ export function HappeningNowClient({ initial }: HappeningNowProps) {
   }, []);
 
   return (
-    <ZoneSection zone="recruiter" accent className="py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <ZoneSection zone="recruiter" accent={false} className="!py-12 lg:!py-16">
+      <div className="page-container-wide opacity-90">
         <AnimateIn>
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-            <div>
-              <p className={zoneTokens.recruiter.sectionLabel}>Live platform</p>
-              <h2 className="font-display mt-1 text-2xl text-text-main sm:text-3xl">Happening now</h2>
-            </div>
-            <div className="flex flex-wrap gap-3 text-sm">
-              <span className="inline-flex items-center gap-2 rounded-full border border-zone-mentorship-border bg-card px-4 py-2 shadow-sm">
-                <Users className="h-4 w-4 text-zone-mentorship" />
-                <strong className="text-text-main">{data.mentorCount}</strong>
-                <span className="text-text-muted">mentors</span>
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-zone-recruiter-border bg-card px-4 py-2 shadow-sm">
-                <MessageSquare className="h-4 w-4 text-zone-recruiter" />
-                <strong className="text-text-main">{data.postCount}</strong>
-                <span className="text-text-muted">discussions</span>
-              </span>
-              {data.liveCount > 0 && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-zone-live-border bg-card px-4 py-2 text-zone-live-on">
-                  <span className="live-dot inline-block h-2 w-2 rounded-full bg-zone-live" />
-                  <strong>{data.liveCount}</strong> live now
-                </span>
-              )}
-            </div>
-          </div>
+          <p className={cn(zoneTokens.recruiter.sectionLabel, "opacity-50")}>Activity</p>
+          <h2 className="text-caption mt-2 font-medium text-muted-foreground">What&apos;s happening on EngSols</h2>
         </AnimateIn>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-3 lg:items-start">
+        <div className="mt-6 grid gap-4 lg:grid-cols-3 lg:items-start">
           <div className="min-w-0">
             <p className={cn("mb-3 text-xs font-semibold uppercase tracking-wide", zoneTokens.live.sectionLabel)}>
               Live
