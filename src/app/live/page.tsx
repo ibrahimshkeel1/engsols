@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/button";
 import { getLiveSessions } from "@/lib/data/live";
 import { PageHero } from "@/components/shared/PageHero";
 import { LiveSessionsGrid } from "@/components/live/LiveSessionsGrid";
@@ -16,11 +16,9 @@ export default async function LivePage() {
         title={title}
         description="Join Q&As, workshops, and deep-dives with mentors — ask questions in real time."
       >
-        <Link href="/live/new" className="inline-flex h-11 items-center rounded-xl bg-zone-live px-6 text-sm font-semibold text-white shadow-zone-live hover:brightness-110 dark:text-bg-main">
-          Start a session
-        </Link>
+        <ButtonLink href="/live/new">Start a session</ButtonLink>
       </PageHero>
-      <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
+      <div className="page-container-wide bg-background py-12">
         <SectionReveal>
           <LiveSessionsGrid sessions={sessions} />
         </SectionReveal>

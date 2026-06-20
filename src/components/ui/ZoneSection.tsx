@@ -18,7 +18,7 @@ export function ZoneSection({ zone, alt, accent = true, className, children, id 
       className={cn(
         alt ? "section-shell-alt" : "section-shell",
         accent && t?.sectionAccent,
-        "py-12 sm:py-16 lg:py-20",
+        "section-spacing",
         className,
       )}
     >

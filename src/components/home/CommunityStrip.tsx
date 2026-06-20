@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { MessageSquare, Radio, Newspaper, Briefcase, ArrowUpRight } from "lucide-react";
 import { AnimateIn } from "@/components/motion/AnimateIn";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
@@ -54,34 +53,30 @@ const links: {
 
 export function CommunityStrip() {
   return (
-    <ZoneSection zone="live" alt accent className="py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <ZoneSection zone="live" alt accent>
+      <div className="page-container-wide">
         <AnimateIn className="mx-auto max-w-2xl text-center">
           <p className={zoneTokens.live.sectionLabel}>Beyond mentorship</p>
-          <h2 className="font-display mt-2 text-3xl text-text-main sm:text-4xl">
-            Community built for engineers
-          </h2>
+          <h2 className="text-display-lg mt-3">Community built for engineers</h2>
         </AnimateIn>
         <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
           {links.map((item) => {
             const t = zoneTokens[item.zone];
             return (
               <StaggerItem key={item.href}>
-                <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
-                  <Link href={item.href} className="group block h-full">
-                    <ZoneCard zone={item.zone} className="flex h-full flex-col p-6">
-                      <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", t.iconWell)}>
-                        <item.icon className="h-5 w-5" />
-                      </div>
-                      <h3 className="mt-5 flex items-center gap-1 font-semibold text-text-main">
-                        {item.title}
-                        <ArrowUpRight className="h-4 w-4 text-text-muted opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
-                      </h3>
-                      <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">{item.description}</p>
-                      <p className={cn("mt-4 text-xs font-medium", t.on)}>{item.stat}</p>
-                    </ZoneCard>
-                  </Link>
-                </motion.div>
+                <Link href={item.href} className="group block h-full">
+                  <ZoneCard zone={item.zone} className="flex h-full flex-col">
+                    <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", t.iconWell)}>
+                      <item.icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-5 flex items-center gap-1 font-medium text-text-main">
+                      {item.title}
+                      <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                    </h3>
+                    <p className="text-caption mt-2 flex-1">{item.description}</p>
+                    <p className={cn("mt-4 text-xs font-medium", t.on)}>{item.stat}</p>
+                  </ZoneCard>
+                </Link>
               </StaggerItem>
             );
           })}

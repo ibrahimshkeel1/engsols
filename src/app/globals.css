@@ -37,8 +37,9 @@
   --color-news-on: 346 55% 34%;
   --color-news-border: 40 10% 90%;
 
-  --card-shadow-color: rgba(28, 25, 23, 0.06);
-  --shadow-premium-card-value: 0 4px 20px -2px var(--card-shadow-color);
+  --card-shadow-color: rgba(28, 25, 23, 0.05);
+  --shadow-premium-card-value: 0 1px 2px 0 var(--card-shadow-color), 0 4px 12px -2px var(--card-shadow-color);
+  --shadow-card-hover-value: 0 2px 4px 0 var(--card-shadow-color), 0 8px 20px -4px var(--card-shadow-color);
 
   /* Legacy aliases — keep existing utilities working */
   --foreground: var(--text-main);
@@ -92,8 +93,9 @@
   --color-news-on: 345 65% 78%;
   --color-news-border: 345 28% 24%;
 
-  --card-shadow-color: rgba(0, 0, 0, 0.4);
-  --shadow-premium-card-value: 0 4px 20px -2px var(--card-shadow-color);
+  --card-shadow-color: rgba(0, 0, 0, 0.35);
+  --shadow-premium-card-value: 0 1px 2px 0 var(--card-shadow-color), 0 4px 12px -2px var(--card-shadow-color);
+  --shadow-card-hover-value: 0 2px 4px 0 var(--card-shadow-color), 0 8px 20px -4px var(--card-shadow-color);
 
   --foreground: var(--text-main);
   --card: var(--surface);
@@ -169,6 +171,7 @@
   --color-surface-elevated: hsl(var(--surface-elevated) / <alpha-value>);
 
   --shadow-premium-card: var(--shadow-premium-card-value);
+  --shadow-card-hover: var(--shadow-card-hover-value);
   --shadow-zone-live: 0 0 24px -4px hsl(var(--color-live-rooms) / 0.45);
   --shadow-zone-exams: 0 0 0 3px hsl(var(--color-exams) / 0.35);
   --font-sans: var(--font-dm-sans);
@@ -219,6 +222,91 @@ body {
   font-family: var(--font-display), Georgia, serif;
   font-weight: 500;
   letter-spacing: -0.02em;
+}
+
+/* Typography scale */
+.text-display-xl {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: hsl(var(--text-main));
+}
+
+.text-display-lg {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: hsl(var(--text-main));
+}
+
+@media (min-width: 640px) {
+  .text-display-xl {
+    font-size: 3rem;
+  }
+
+  .text-display-lg {
+    font-size: 2rem;
+  }
+}
+
+.text-body-lg {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--text-muted));
+}
+
+.text-body {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: hsl(var(--text-main));
+}
+
+.text-caption {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: hsl(var(--text-muted));
+}
+
+/* Layout — readable content width (~1152px) */
+.page-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1rem;
+}
+
+.page-container-wide {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-container,
+  .page-container-wide {
+    padding-inline: 1.5rem;
+  }
+}
+
+.section-spacing {
+  padding-block: 4rem;
+}
+
+@media (min-width: 640px) {
+  .section-spacing {
+    padding-block: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-spacing {
+    padding-block: 6rem;
+  }
 }
 
 .bg-grid {
@@ -328,9 +416,9 @@ body {
   border: 1px solid hsl(var(--border));
   box-shadow: var(--shadow-premium-card-value);
   transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card-interactive {
@@ -341,34 +429,37 @@ body {
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     transform 0.2s ease,
-    background-color 0.3s ease;
+    background-color 0.2s ease;
 }
 
 .card-interactive:hover {
-  border-color: hsl(var(--accent) / 0.35);
-  box-shadow: 0 8px 28px -4px var(--glow);
-  transform: translateY(-2px);
+  border-color: hsl(var(--border));
+  box-shadow: var(--shadow-card-hover-value);
+  transform: translateY(-1px);
 }
 
 .card-interactive:active {
-  transform: translateY(0) scale(0.99);
+  transform: translateY(0);
 }
 
 .btn-cta {
   display: inline-flex;
-  height: 2.5rem;
+  height: 2.75rem;
   align-items: center;
-  border-radius: 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
   background: hsl(var(--primary));
   padding-inline: 1.25rem;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   color: hsl(var(--primary-foreground));
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn-cta:hover {
-  filter: brightness(1.05);
+  background: hsl(var(--primary) / 0.92);
+  box-shadow: var(--shadow-premium-card-value);
 }
 
 .btn-cta:active {
@@ -377,21 +468,22 @@ body {
 
 .btn-secondary {
   display: inline-flex;
-  height: 2.5rem;
+  height: 2.75rem;
   align-items: center;
-  border-radius: 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
   border: 1px solid hsl(var(--border));
   background: hsl(var(--surface));
   padding-inline: 1.25rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: hsl(var(--text-main));
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: hsl(var(--muted));
-  border-color: hsl(var(--accent) / 0.25);
+  background: hsl(var(--muted) / 0.6);
 }
 
 .btn-secondary:active {
@@ -484,7 +576,16 @@ body {
   transition: width 0.25s ease, left 0.25s ease;
 }
 
-.nav-link:hover::after,
+.nav-link:hover::after {
+  width: 50%;
+  left: 25%;
+}
+
+.nav-link[data-active="true"] {
+  background: hsl(var(--muted) / 0.55);
+  color: hsl(var(--text-main));
+}
+
 .nav-link[data-active="true"]::after {
   width: 50%;
   left: 25%;
@@ -507,8 +608,8 @@ body {
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: hsl(var(--color-recruiter));
+  letter-spacing: 0.12em;
+  color: hsl(var(--text-muted));
 }
 
 /* LiveKit — stable layout on desktop */

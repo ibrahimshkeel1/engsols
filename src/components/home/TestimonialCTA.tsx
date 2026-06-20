@@ -5,17 +5,18 @@ import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
-import { zoneCta, zoneTokens } from "@/lib/zone-tokens";
+import { ButtonLink } from "@/components/ui/button";
+import { zoneTokens } from "@/lib/zone-tokens";
 import { cn } from "@/lib/utils";
 
 export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimonial[] }) {
   return (
-    <section className="bg-surface py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <section className="section-spacing bg-surface">
+      <div className="page-container-wide">
         <AnimateIn>
           <p className={zoneTokens.mentorship.sectionLabel}>Real outcomes</p>
-          <h2 className="font-display mt-1 text-2xl text-text-main sm:text-3xl">Engineers who found their path</h2>
-          <p className="mt-2 max-w-xl text-text-muted">
+          <h2 className="text-display-lg mt-2">Engineers who found their path</h2>
+          <p className="text-body-lg mt-2 max-w-xl">
             Mentorship that leads somewhere — not generic career advice.
           </p>
         </AnimateIn>
@@ -32,7 +33,7 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
 
               return (
                 <StaggerItem key={t.quote.slice(0, 40)}>
-                  <article className="card-elevated group relative flex h-full flex-col overflow-hidden rounded-2xl bg-card">
+                  <article className="card-elevated group relative flex h-full flex-col overflow-hidden rounded-xl bg-card">
                     <div className={cn("h-1 w-full", stripe)} />
                     <div className="flex flex-1 flex-col p-6">
                       <Quote className="h-5 w-5 text-zone-mentorship/40" aria-hidden />
@@ -65,27 +66,21 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
         )}
 
         <AnimateIn delay={0.15}>
-          <div className="mt-12 overflow-hidden rounded-2xl border border-border bg-card shadow-premium-card">
-            <div className="flex flex-col items-start justify-center gap-6 p-10 sm:p-14 lg:max-w-2xl">
+          <div className="mt-12 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div className="flex flex-col items-start justify-center gap-6 p-8 sm:p-12 lg:max-w-2xl">
               <div>
-                <h3 className="font-display text-2xl text-text-main sm:text-3xl">Ready to start?</h3>
-                <p className="mt-3 text-text-muted">
+                <h3 className="text-display-lg">Ready to start?</h3>
+                <p className="text-body-lg mt-3">
                   Join engineers getting real guidance from professionals who have done the work.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/mentors"
-                  className={cn("inline-flex h-11 items-center rounded-lg px-6 text-sm font-medium", zoneCta("mentorship"))}
-                >
+                <ButtonLink href="/mentors" size="lg">
                   Find a mentor
-                </Link>
-                <Link
-                  href="/apply"
-                  className="inline-flex h-11 items-center rounded-lg border border-zone-recruiter-border bg-card px-6 text-sm font-medium text-text-main transition-colors hover:bg-card/80"
-                >
+                </ButtonLink>
+                <ButtonLink href="/apply" variant="secondary" size="lg">
                   Become a mentor
-                </Link>
+                </ButtonLink>
               </div>
             </div>
           </div>

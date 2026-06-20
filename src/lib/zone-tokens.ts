@@ -95,6 +95,6 @@ export const zoneTokens: Record<
   },
 };
 
-export function zoneCta(zone: ZoneKey) {
-  return `${zoneTokens[zone].accentBg} text-white hover:brightness-110 dark:text-bg-main`;
+export function zoneCta() {
+  return "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-sm";
 }

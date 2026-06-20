@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/button";
 import { getPublishedPortfolios } from "@/lib/data/portfolios";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
 import { PortfolioGrid } from "@/components/portfolios/PortfolioGrid";
@@ -22,9 +22,7 @@ export default async function PortfoliosPage() {
       description="Discover engineering students and graduates open to internships and full-time roles — hire talent with real project work."
       className="bg-background"
       action={
-        <Link href="/portfolios/build" className="inline-flex h-11 items-center rounded-xl bg-zone-recruiter px-6 text-sm font-semibold text-white shadow-sm hover:brightness-110 dark:text-bg-main">
-          Build your portfolio
-        </Link>
+        <ButtonLink href="/portfolios/build">Build your portfolio</ButtonLink>
       }
     >
       <Suspense fallback={<BentoSkeletonGrid count={6} />}>

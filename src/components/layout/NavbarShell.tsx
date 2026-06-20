@@ -68,12 +68,12 @@ export function NavbarShell({
       {routeZone !== "default" && zoneAccentBar[routeZone] ? (
         <div className={cn("h-0.5 w-full", zoneAccentBar[routeZone])} aria-hidden />
       ) : null}
-      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6">
         <Link href="/" className="group shrink-0 font-display text-xl tracking-tight transition-opacity hover:opacity-80">
           Eng<span className="text-zone-recruiter">Sols</span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {primaryNav.map((l) => {
             const outcomeTitle = "outcome" in l && l.outcome ? t(locale, l.outcome) : undefined;
             return (
@@ -82,11 +82,12 @@ export function NavbarShell({
               href={l.href}
               title={outcomeTitle}
               data-zone={navZoneKey(l.href)}
+              data-active={pathname.startsWith(l.href) ? "true" : undefined}
               className={cn(
-                "nav-link rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted/80",
+                "nav-link rounded-lg px-3.5 py-2.5 text-sm transition-colors",
                 pathname.startsWith(l.href)
-                  ? cn(zoneNavActive[l.href] ?? "text-foreground", "font-semibold")
-                  : cn("text-muted-foreground", zoneNavHover[l.href] ?? "hover:text-foreground"),
+                  ? cn(zoneNavActive[l.href] ?? "text-foreground", "font-medium")
+                  : cn("text-muted-foreground font-normal", zoneNavHover[l.href] ?? "hover:text-foreground"),
               )}
             >
               {t(locale, l.key)}
@@ -98,19 +99,19 @@ export function NavbarShell({
               type="button"
               onClick={() => setMoreOpen(!moreOpen)}
               onBlur={() => setTimeout(() => setMoreOpen(false), 150)}
-              className="nav-link flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              className="nav-link flex items-center gap-1 rounded-lg px-3.5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {t(locale, "more")} <ChevronDown className={cn("h-3.5 w-3.5 transition", moreOpen && "rotate-180")} />
             </button>
             {moreOpen && (
-              <div className="absolute end-0 top-full z-50 mt-1 min-w-[180px] rounded-xl border border-border bg-card py-1 shadow-xl">
+              <div className="absolute end-0 top-full z-50 mt-2 min-w-[200px] rounded-xl border border-border bg-card p-1.5 shadow-premium-card">
                 {moreNav.map((l) => {
                   if (l.authOnly && !showForYou) return null;
                   return (
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="flex items-center justify-between px-4 py-2.5 text-sm hover:bg-muted"
+                    className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     {t(locale, l.key)}
                     {l.preview && (

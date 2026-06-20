@@ -10,6 +10,7 @@ import {
 import type { HomeJourneyState } from "@/lib/data/home-journey";
 import { GoalsProgressCompact } from "@/components/home/GoalsProgressCompact";
 import { Avatar } from "@/components/ui/Avatar";
+import { ButtonLink } from "@/components/ui/button";
 import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
 type ContinueJourneyHeroProps = {
@@ -18,10 +19,10 @@ type ContinueJourneyHeroProps = {
 };
 
 const simpleCardClassName =
-  "group flex h-full min-w-0 flex-col rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/35";
+  "card-interactive group flex h-full min-w-0 flex-col rounded-xl p-6";
 
 const actionCardClassName =
-  "group flex h-full min-w-0 flex-row items-start gap-4 rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/35";
+  "card-interactive group flex h-full min-w-0 flex-row items-start gap-4 rounded-xl p-6";
 
 export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroProps) {
   const firstName = userName?.split(" ")[0] || "there";
@@ -68,23 +69,16 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
   return (
     <section className="hero-dark relative overflow-hidden">
       <div className="bg-grid absolute inset-0 opacity-60" />
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+      <div className="page-container-wide relative py-16 lg:py-20">
         <AnimateIn>
           <p className="section-label">Welcome back</p>
-          <h1 className="font-display mt-2 text-3xl sm:text-4xl">
-            Continue your journey, {firstName}
-          </h1>
-          <p className="mt-3 max-w-xl text-muted-foreground">
-            {journey.suggestedAction.description}
-          </p>
-          <Link
-            href={journey.suggestedAction.href}
-            className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground hover:brightness-110"
-          >
+          <h1 className="text-display-lg mt-2">Continue your journey, {firstName}</h1>
+          <p className="text-body-lg mt-3 max-w-xl">{journey.suggestedAction.description}</p>
+          <ButtonLink href={journey.suggestedAction.href} size="lg" className="mt-6 group">
             <Sparkles className="h-4 w-4" />
             {journey.suggestedAction.label}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </ButtonLink>
         </AnimateIn>
 
         <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />

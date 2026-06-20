@@ -5,6 +5,7 @@ import {
   SpecialistRequestTrigger,
   type SpecialistRequestContext,
 } from "@/components/mentors/SpecialistRequestModal";
+import { ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type EmptyStateProps = {
@@ -29,46 +30,39 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div className={cn("flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/30 px-6 py-14 text-center", className)}>
-      {Icon && <Icon className="h-10 w-10 text-muted-foreground/60" aria-hidden />}
-      <h3 className={cn("font-semibold", Icon && "mt-4")}>{title}</h3>
-      {description && <p className="mt-2 max-w-sm text-sm text-muted-foreground">{description}</p>}
+    <div
+      className={cn(
+        "flex flex-col items-center rounded-xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center",
+        className,
+      )}
+    >
+      {Icon && <Icon className="h-10 w-10 text-muted-foreground/50" aria-hidden />}
+      <h3 className={cn("text-lg font-medium text-foreground", Icon && "mt-4")}>{title}</h3>
+      {description && <p className="text-caption mt-2 max-w-sm">{description}</p>}
       {promptChips && promptChips.length > 0 && (
-        <div className="mt-5 flex flex-wrap justify-center gap-2">
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
           {promptChips.map((chip) => (
             <Link
               key={chip.href + chip.label}
               href={chip.href}
-              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary active:scale-[0.98]"
+              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
             >
               {chip.label}
             </Link>
           ))}
         </div>
       )}
-      <div className="mt-6 flex flex-wrap justify-center gap-3">
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
         {action && (
-          <Link
-            href={action.href}
-            className="btn-cta"
-          >
-            {action.label}
-          </Link>
+          <ButtonLink href={action.href}>{action.label}</ButtonLink>
         )}
         {secondaryAction &&
           (secondaryAction.href ? (
-            <Link
-              href={secondaryAction.href}
-              className="btn-secondary"
-            >
+            <ButtonLink href={secondaryAction.href} variant="secondary">
               {secondaryAction.label}
-            </Link>
+            </ButtonLink>
           ) : (
-            <button
-              type="button"
-              onClick={secondaryAction.onClick}
-              className="btn-secondary"
-            >
+            <button type="button" onClick={secondaryAction.onClick} className="btn-secondary">
               {secondaryAction.label}
             </button>
           ))}

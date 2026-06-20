@@ -59,22 +59,22 @@ const paths: {
 
 export function StartHereJourney() {
   return (
-    <ZoneSection zone="mentorship" accent className="py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <ZoneSection zone="mentorship" accent>
+      <div className="page-container-wide">
         <AnimateIn>
           <p className={zoneTokens.mentorship.sectionLabel}>Start here</p>
-          <h2 className="font-display mt-1 text-2xl text-text-main sm:text-3xl">What do you want to do today?</h2>
-          <p className="mt-2 max-w-xl text-sm text-text-muted">
+          <h2 className="text-display-lg mt-2">What do you want to do today?</h2>
+          <p className="text-caption mt-2 max-w-xl">
             Pick a path — each one takes you straight to the right place on EngSols.
           </p>
         </AnimateIn>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {paths.map((path, i) => {
             const t = zoneTokens[path.zone];
             return (
               <AnimateIn key={path.href} delay={i * 0.05}>
                 <Link href={path.href} className="group block h-full">
-                  <ZoneCard zone={path.zone} className="flex h-full flex-col p-4 hover:bg-card/90">
+                  <ZoneCard zone={path.zone} className="flex h-full flex-col !p-5" interactive>
                     <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", t.iconWell)}>
                       <path.icon className="h-5 w-5" aria-hidden />
                     </div>
