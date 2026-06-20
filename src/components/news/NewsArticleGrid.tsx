@@ -13,7 +13,7 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
   return (
     <Link
       href={`/news/${article.slug}`}
-      className="card-interactive group block overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card"
+      className="card-interactive group block overflow-hidden rounded-2xl border border-zone-news-border bg-zone-news-surface shadow-premium-card"
     >
       {article.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -63,12 +63,12 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
   const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
-    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border-custom bg-bg-surface">
+    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-zone-news-border bg-card">
       {article.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={article.imageUrl} alt={article.title} className="aspect-video w-full object-cover" />
       ) : (
-        <div className="aspect-video w-full bg-gradient-to-br from-zone-news/10 via-muted to-muted/40" />
+        <div className="aspect-video w-full bg-gradient-to-br from-zone-news-surface via-zone-news/10 to-muted/40" />
       )}
       <CardContent className="flex flex-1 flex-col p-5">
         <Badge className="w-fit bg-zone-news/10 text-zone-news">{article.discipline}</Badge>

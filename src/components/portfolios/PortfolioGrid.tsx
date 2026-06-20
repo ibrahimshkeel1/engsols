@@ -62,7 +62,7 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
           onClick={() => setOpenOnly(!openOnly)}
           className={cn(
             "rounded-xl border px-4 py-2 text-sm font-medium transition-colors",
-            openOnly ? "border-green-500/40 bg-green-500/10 text-green-700 dark:text-green-400" : "border-border text-muted-foreground hover:bg-muted",
+            openOnly ? "border-zone-mentorship-border bg-zone-mentorship/10 text-zone-mentorship-on" : "border-border text-muted-foreground hover:bg-muted",
           )}
         >
           Open to work only

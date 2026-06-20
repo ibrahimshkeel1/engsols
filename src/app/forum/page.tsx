@@ -18,11 +18,11 @@ export default async function ForumPage() {
         title={title}
         description="Get answers from mentors and peers who've passed the exams, landed the jobs, and solved the problems you're facing."
       >
-        <Link href="/forum/new" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition-all hover:brightness-110 active:scale-95">
+        <Link href="/forum/new" className="inline-flex h-11 items-center rounded-xl bg-zone-recruiter px-6 text-sm font-semibold text-white shadow-sm hover:brightness-110 dark:text-bg-main">
           Ask a question
         </Link>
       </PageHero>
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-zone-recruiter-surface px-4 py-12 sm:px-6">
         <SectionReveal>
           <Suspense fallback={<ForumSkeletonList />}>
             <ForumPageContent />

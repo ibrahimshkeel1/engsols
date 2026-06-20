@@ -104,7 +104,7 @@ export default async function JobPage({ params }: Props) {
                   </div>
                 </div>
                 {company.verified && (
-                  <span className="mt-2 inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">Verified</span>
+                  <span className="mt-2 inline-flex rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">Verified</span>
                 )}
                 <Link href={`/companies/${company.slug}`} className="mt-3 inline-block text-sm text-primary">View company →</Link>
               </CardContent>

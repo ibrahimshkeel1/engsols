@@ -37,7 +37,7 @@ export default async function CompanyPage({ params }: Props) {
         <div className="flex items-start gap-6">
           <Image src={companyLogo(company.name)} alt="" width={80} height={80} className="rounded-xl" unoptimized />
           <div>
-            {company.verified && <Badge className="bg-green-50 text-green-700">Verified employer</Badge>}
+            {company.verified && <Badge className="bg-zone-mentorship-surface text-zone-mentorship-on">Verified employer</Badge>}
             <h1 className="mt-2 text-3xl font-bold text-foreground">{company.name}</h1>
             <p className="capitalize text-muted-foreground">{company.type.replace("-", " ")} · {company.headquarters}</p>
             <p className="text-sm text-muted-foreground">Founded {company.founded} · {company.employeeCount} employees</p>

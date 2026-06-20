@@ -33,7 +33,7 @@ export default async function PostJobPage({ searchParams }: Props) {
       <h1 className="font-display text-3xl tracking-tight">Post a job</h1>
       <p className="mt-2 text-muted-foreground">Reach engineering students and professionals on EngSols.</p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">{safeDecodeURIComponent(params.error)}</p>
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">{safeDecodeURIComponent(params.error)}</p>
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">

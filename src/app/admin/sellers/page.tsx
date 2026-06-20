@@ -28,7 +28,7 @@ export default async function AdminSellersPage() {
                   <div className="flex flex-wrap gap-2">
                     <h2 className="text-lg font-semibold">{s.name}</h2>
                     {!s.published && <Badge className="bg-primary/15 text-primary">Pending</Badge>}
-                    {s.verified && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Verified</Badge>}
+                    {s.verified && <Badge className="bg-zone-mentorship/15 text-zone-mentorship-on">Verified</Badge>}
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">{s.location} · {s.country} · {s.type}</p>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>

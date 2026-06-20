@@ -16,7 +16,7 @@ export function DeleteForumPostButton({ postId, title }: { postId: string; title
       size="sm"
       variant="outline"
       disabled={pending}
-      className="text-red-600 hover:text-red-700"
+      className="text-zone-news hover:text-zone-news/80"
       onClick={() => {
         if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
         startTransition(async () => {

@@ -42,7 +42,7 @@ function StatCard({
 function transactionBadge(type: PlatformTransaction["type"]) {
   if (type === "exam") {
     return (
-      <Badge className="bg-blue-500/15 text-blue-700 dark:text-blue-300">
+      <Badge className="bg-zone-recruiter/15 text-zone-recruiter-on">
         Exam sale
       </Badge>
     );

@@ -59,7 +59,7 @@ export function EndorseProjectButton({
   if (existingEndorsement) {
     return (
       <div className={cn("flex flex-wrap items-center gap-2", className)}>
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-green-500/30 bg-green-500/10 px-2.5 py-1 text-xs font-medium text-green-800 dark:text-green-300">
+        <span className="inline-flex items-center gap-1.5 rounded-lg border border-zone-mentorship-border bg-zone-mentorship/10 px-2.5 py-1 text-xs font-medium text-zone-mentorship-on">
           <BadgeCheck className="h-3.5 w-3.5" aria-hidden />
           You endorsed this project
         </span>
@@ -67,7 +67,7 @@ export function EndorseProjectButton({
           type="button"
           onClick={handleRemove}
           disabled={pending}
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-red-600"
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-zone-news"
         >
           {pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <X className="h-3 w-3" />}
           Revoke

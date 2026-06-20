@@ -78,7 +78,7 @@ export async function ContentCrossLinks({ discipline, excludeForumSlug, classNam
           <Card className="card-elevated">
             <CardContent className="p-6">
               <div className="flex items-center gap-2">
-                <Radio className="h-4 w-4 text-red-500" />
+                <Radio className="h-4 w-4 text-zone-live" />
                 <h3 className="font-semibold">Upcoming live</h3>
               </div>
               <ul className="mt-4 space-y-3">

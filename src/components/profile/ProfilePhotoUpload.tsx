@@ -51,6 +51,6 @@ export function ProfilePhotoUpload({ name, discipline, initialUrl }: Props) {
 
 function cnStatus(status: string) {
   return status.includes("saved")
-    ? "mt-2 text-sm text-green-600"
-    : "mt-2 text-sm text-red-600";
+    ? "mt-2 text-sm text-zone-mentorship"
+    : "mt-2 text-sm text-zone-news";
 }

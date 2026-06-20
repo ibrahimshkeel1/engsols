@@ -41,7 +41,7 @@ export default async function AdminJobsPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold">{job.title}</h2>
                     {job.employer_verified ? (
-                      <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Verified employer</Badge>
+                      <Badge className="bg-zone-mentorship/15 text-zone-mentorship-on">Verified employer</Badge>
                     ) : (
                       <Badge className="bg-primary/15 text-primary">Unverified</Badge>
                     )}

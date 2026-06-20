@@ -23,7 +23,7 @@ export function EndorsementBadge({ endorsements, className, size = "sm" }: Props
     <span className={cn("group relative inline-flex", className)}>
       <span
         className={cn(
-          "inline-flex items-center gap-1 rounded-full border border-green-500/30 bg-green-500/10 font-semibold text-green-800 dark:text-green-300",
+          "inline-flex items-center gap-1 rounded-full border border-zone-mentorship-border bg-zone-mentorship/10 font-semibold text-zone-mentorship-on",
           size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs",
         )}
       >

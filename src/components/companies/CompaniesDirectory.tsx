@@ -30,15 +30,15 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
 
   return (
     <ListPageLayout
+      zone="recruiter"
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."
-      heroClassName="border-zone-recruiter/20 bg-zone-recruiter/5"
-      labelClassName="text-zone-recruiter"
+      className="bg-zone-recruiter-surface"
       action={
         <Link
           href="/companies/talent"
-          className="btn-secondary h-11 border-zone-recruiter/30 bg-zone-recruiter/5 text-zone-recruiter hover:bg-zone-recruiter/10"
+          className="inline-flex h-11 items-center rounded-xl border border-zone-recruiter-border bg-card px-5 text-sm font-semibold text-zone-recruiter-on hover:bg-card/80"
         >
           Recruiter talent hub
         </Link>

@@ -38,7 +38,7 @@ export function ForumGamificationBadges({
 
   if (activeThisWeek) {
     badges.push(
-      <span key="active" className="inline-flex items-center gap-1 rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+      <span key="active" className="inline-flex items-center gap-1 rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">
         <Flame className="h-3 w-3" />
         Active this week
       </span>,

@@ -28,7 +28,7 @@ export default async function AdminForumPage() {
               <div>
                 <div className="flex flex-wrap gap-2">
                   <Badge>{post.discipline}</Badge>
-                  {post.isSolved && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Solved</Badge>}
+                  {post.isSolved && <Badge className="bg-zone-mentorship/15 text-zone-mentorship-on">Solved</Badge>}
                 </div>
                 <h2 className="mt-2 font-semibold">{post.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">

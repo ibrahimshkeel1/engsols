@@ -34,7 +34,7 @@ export function ProfileNameForm({ initialName }: { initialName: string }) {
         {pending ? "Saving..." : "Save name"}
       </Button>
       {status && (
-        <p className={status.includes("updated") ? "text-sm text-green-600" : "text-sm text-red-600"}>{status}</p>
+        <p className={status.includes("updated") ? "text-sm text-zone-mentorship" : "text-sm text-zone-news"}>{status}</p>
       )}
     </form>
   );

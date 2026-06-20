@@ -18,7 +18,7 @@ export default async function AdminCompanyEditPage({ params, searchParams }: Pro
       <h1 className="text-2xl font-bold">Edit company</h1>
       <p className="mt-1 text-muted-foreground">{company.name}</p>
       {error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">{safeDecodeURIComponent(error)}</p>
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">{safeDecodeURIComponent(error)}</p>
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">

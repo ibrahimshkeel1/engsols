@@ -46,6 +46,7 @@ export default async function SettingsPage() {
   const completedGoals = profile?.goals_completed ?? [];
 
   return (
+    <div className="min-h-full bg-zone-mentorship-surface">
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <h1 className="font-display text-3xl tracking-tight">Account settings</h1>
       <p className="mt-2 text-muted-foreground">Manage your profile, goals, and saved mentors.</p>
@@ -183,6 +184,7 @@ export default async function SettingsPage() {
           <SessionNotesSection notes={notes ?? []} />
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }

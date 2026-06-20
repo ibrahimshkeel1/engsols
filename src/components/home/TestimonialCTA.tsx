@@ -5,16 +5,17 @@ import { getDisciplineColors } from "@/lib/discipline-colors";
 import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
+import { zoneCta, zoneTokens } from "@/lib/zone-tokens";
 import { cn } from "@/lib/utils";
 
 export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimonial[] }) {
   return (
-    <section className="py-24">
+    <section className="bg-surface py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <AnimateIn>
-          <p className="section-label">Real outcomes</p>
-          <h2 className="font-display mt-1 text-2xl sm:text-3xl">Engineers who found their path</h2>
-          <p className="mt-2 max-w-xl text-muted-foreground">
+          <p className={zoneTokens.mentorship.sectionLabel}>Real outcomes</p>
+          <h2 className="font-display mt-1 text-2xl text-text-main sm:text-3xl">Engineers who found their path</h2>
+          <p className="mt-2 max-w-xl text-text-muted">
             Mentorship that leads somewhere — not generic career advice.
           </p>
         </AnimateIn>
@@ -31,30 +32,25 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
 
               return (
                 <StaggerItem key={t.quote.slice(0, 40)}>
-                  <article className="card-elevated group relative flex h-full flex-col overflow-hidden rounded-2xl">
+                  <article className="card-elevated group relative flex h-full flex-col overflow-hidden rounded-2xl bg-card">
                     <div className={cn("h-1 w-full", stripe)} />
                     <div className="flex flex-1 flex-col p-6">
-                      <Quote className="h-5 w-5 text-primary/40" aria-hidden />
-                      <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-foreground/90">
+                      <Quote className="h-5 w-5 text-zone-mentorship/40" aria-hidden />
+                      <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-text-main">
                         &ldquo;{t.quote}&rdquo;
                       </blockquote>
                       <div className="mt-5 flex items-center gap-3 border-t border-border pt-5">
-                        <Avatar
-                          name={t.name}
-                          discipline={t.discipline}
-                          size="md"
-                          src={t.avatarUrl}
-                        />
+                        <Avatar name={t.name} discipline={t.discipline} size="md" src={t.avatarUrl} />
                         <div className="min-w-0 flex-1">
-                          <p className="truncate font-semibold">{t.name}</p>
-                          <p className="truncate text-xs text-muted-foreground">{t.role}</p>
+                          <p className="truncate font-semibold text-text-main">{t.name}</p>
+                          <p className="truncate text-xs text-text-muted">{t.role}</p>
                           <DisciplineBadge discipline={t.discipline} className="mt-1.5" />
                         </div>
                       </div>
                       {profileHref && (
                         <Link
                           href={profileHref}
-                          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-zone-mentorship hover:underline"
                         >
                           {t.mentorSlug ? "Meet their mentor" : "View portfolio"}
                           <ArrowRight className="h-3.5 w-3.5" />
@@ -69,24 +65,24 @@ export function TestimonialCTA({ testimonials }: { testimonials: FeaturedTestimo
         )}
 
         <AnimateIn delay={0.15}>
-          <div className="mt-12 overflow-hidden rounded-xl border border-border bg-card">
-            <div className="flex flex-col items-start justify-center gap-6 bg-primary/5 p-10 sm:p-14 lg:max-w-2xl">
+          <div className="section-band-gradient mt-12 overflow-hidden rounded-2xl">
+            <div className="flex flex-col items-start justify-center gap-6 p-10 sm:p-14 lg:max-w-2xl">
               <div>
-                <h3 className="font-display text-2xl sm:text-3xl">Ready to start?</h3>
-                <p className="mt-3 text-muted-foreground">
+                <h3 className="font-display text-2xl text-text-main sm:text-3xl">Ready to start?</h3>
+                <p className="mt-3 text-text-muted">
                   Join engineers getting real guidance from professionals who have done the work.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/mentors"
-                  className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className={cn("inline-flex h-11 items-center rounded-lg px-6 text-sm font-medium", zoneCta("mentorship"))}
                 >
                   Find a mentor
                 </Link>
                 <Link
                   href="/apply"
-                  className="inline-flex h-11 items-center rounded-lg border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-muted"
+                  className="inline-flex h-11 items-center rounded-lg border border-zone-recruiter-border bg-card px-6 text-sm font-medium text-text-main transition-colors hover:bg-card/80"
                 >
                   Become a mentor
                 </Link>

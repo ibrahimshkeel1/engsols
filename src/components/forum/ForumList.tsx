@@ -107,7 +107,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
                         activeThisWeek={isActiveThisWeek(post.lastReplyAt ?? post.createdAt)}
                       />
                       {post.isSolved && (
-                        <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                        <span className="inline-flex rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">
                           Solved
                         </span>
                       )}

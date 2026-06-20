@@ -35,14 +35,14 @@ export function MentorCard({ mentor, showPrice = true, variant = "default" }: Me
     <Link
       href={`/mentors/${mentor.slug}`}
       className={cn(
-        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl",
+        "card-interactive group relative flex h-full min-h-[9rem] overflow-hidden rounded-xl border border-border hover:border-zone-mentorship-border",
         isHero && "min-h-[16rem]",
         variant === "tall" && "min-h-[14rem]",
       )}
     >
       <div className={cn("absolute start-0 top-0 h-full w-1", stripe)} />
       {isHero && (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-zone-mentorship/10 to-transparent" />
       )}
 
       <div className="relative flex min-w-0 flex-1 flex-col p-4 ps-5 sm:p-5 sm:ps-6">

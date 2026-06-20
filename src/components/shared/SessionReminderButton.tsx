@@ -59,7 +59,7 @@ export function SessionReminderButton({ sessionSlug, sessionTitle, scheduledAt }
   const [pending, startTransition] = useTransition();
 
   if (stored) {
-    return <p className="text-xs text-green-600">Reminder set for &ldquo;{sessionTitle}&rdquo;</p>;
+    return <p className="text-xs text-zone-mentorship">Reminder set for &ldquo;{sessionTitle}&rdquo;</p>;
   }
 
   if (denied) {

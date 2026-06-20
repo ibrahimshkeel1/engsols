@@ -1,5 +1,6 @@
 export default function SettingsLoading() {
   return (
+    <div className="min-h-full bg-zone-mentorship-surface">
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6" aria-hidden>
       <div className="h-9 w-56 animate-pulse rounded-lg bg-muted" />
       <div className="mt-3 h-4 w-80 max-w-full animate-pulse rounded bg-muted/70" />
@@ -28,6 +29,7 @@ export default function SettingsLoading() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }

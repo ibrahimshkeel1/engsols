@@ -45,7 +45,7 @@ export default async function AdminReportsPage() {
                         report.status === "pending"
                           ? "bg-primary/15 text-primary"
                           : report.status === "resolved"
-                            ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                            ? "bg-zone-mentorship/15 text-zone-mentorship-on"
                             : "bg-muted text-muted-foreground"
                       }
                     >

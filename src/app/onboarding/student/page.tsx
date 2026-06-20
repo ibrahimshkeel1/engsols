@@ -30,7 +30,7 @@ export default async function StudentOnboardingPage({ searchParams }: Props) {
         Add a photo and tell us your goal — we&apos;ll match you with mentors who&apos;ve been there.
       </p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">
           {safeDecodeURIComponent(params.error)}
         </p>
       )}

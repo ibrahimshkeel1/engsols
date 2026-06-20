@@ -14,7 +14,7 @@ export default async function NewForumPostPage({ searchParams }: Props) {
       <h1 className="font-display text-3xl tracking-tight">Ask a question</h1>
       <p className="mt-2 text-muted-foreground">Get help from mentors and the engineering community.</p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">
           {safeDecodeURIComponent(params.error)}
         </p>
       )}

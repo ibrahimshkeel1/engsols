@@ -11,6 +11,7 @@ import { usePrefersReducedMotion } from "@/lib/motion";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const heroDisciplines = ["Oil & Gas", "Drilling Engineering", "Reservoir Engineering", "Mechanical", "Civil"];
 
@@ -61,7 +62,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <MotionWrap custom={0} reducedMotion={reducedMotion} className="section-label text-zone-mentorship">
+            <MotionWrap custom={0} reducedMotion={reducedMotion} className={cn("section-label", "section-label-zone-mentorship")}>
               Engineering mentorship
             </MotionWrap>
             <MotionWrap custom={1} reducedMotion={reducedMotion} className="font-display mt-4 text-4xl leading-[1.1] sm:text-5xl lg:text-[3.25rem]">
@@ -116,7 +117,7 @@ export function Hero({ mentorCount, featuredMentors }: { mentorCount: number; fe
 
           {featuredMentors.length > 0 ? (
             <div>
-              <MotionWrap custom={3} reducedMotion={reducedMotion} className="section-label text-zone-mentorship">
+              <MotionWrap custom={3} reducedMotion={reducedMotion} className="section-label section-label-zone-mentorship">
                 Featured mentors
               </MotionWrap>
               <MotionWrap custom={4} reducedMotion={reducedMotion} className="mt-3 space-y-3">

@@ -28,7 +28,7 @@ export default async function SignupPage({ searchParams }: Props) {
           </p>
         )}
         {params.error && (
-          <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-600">
+          <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-center text-sm text-zone-news-on">
             {safeDecodeURIComponent(params.error)}
           </p>
         )}

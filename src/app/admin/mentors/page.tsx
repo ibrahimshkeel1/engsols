@@ -32,7 +32,7 @@ export default async function AdminMentorsPage() {
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold">{m.profiles?.full_name || "Mentor"}</h2>
-                    <Badge className={m.status === "approved" ? "bg-green-500/15 text-green-700 dark:text-green-400" : m.status === "pending" ? "bg-primary/15 text-primary" : ""}>
+                    <Badge className={m.status === "approved" ? "bg-zone-mentorship/15 text-zone-mentorship-on" : m.status === "pending" ? "bg-primary/15 text-primary" : ""}>
                       {m.status}
                     </Badge>
                   </div>

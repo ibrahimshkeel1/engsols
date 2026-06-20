@@ -7,6 +7,7 @@ const zonePrefixes: { prefix: string; zone: ProductZone }[] = [
   { prefix: "/certifications", zone: "exams" },
   { prefix: "/exams", zone: "exams" },
   { prefix: "/news", zone: "news" },
+  { prefix: "/forum", zone: "recruiter" },
   { prefix: "/companies", zone: "recruiter" },
   { prefix: "/jobs", zone: "recruiter" },
   { prefix: "/portfolios", zone: "recruiter" },

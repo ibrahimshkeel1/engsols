@@ -130,7 +130,7 @@ export function ImageUpload({
           </button>
         </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-zone-news">{error}</p>}
       <p className="text-xs text-muted-foreground">JPEG, PNG, WebP, or GIF · max 5 MB</p>
     </div>
   );

@@ -56,7 +56,7 @@ export function MediaPlayer({
         </span>
       )}
       {live && (
-        <span className="absolute left-3 top-3 rounded bg-red-600 px-2 py-0.5 text-xs font-medium text-white">
+        <span className="absolute left-3 top-3 rounded bg-zone-live px-2 py-0.5 text-xs font-medium text-white dark:text-bg-main">
           LIVE
         </span>
       )}

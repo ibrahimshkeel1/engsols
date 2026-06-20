@@ -140,7 +140,7 @@ export function MockExamInterface({ examSlug }: Props) {
     return (
       <div className="mx-auto max-w-lg rounded-2xl border border-border bg-card p-8 text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Exam complete</p>
-        <p className={cn("mt-4 font-display text-5xl font-bold", result.passed ? "text-zone-mentorship" : "text-red-600")}>
+        <p className={cn("mt-4 font-display text-5xl font-bold", result.passed ? "text-zone-mentorship" : "text-zone-news")}>
           {result.score}%
         </p>
         <p className="mt-2 text-muted-foreground">
@@ -272,7 +272,7 @@ export function MockExamInterface({ examSlug }: Props) {
                     className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium"
                   >
                     <span className="inline-flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-primary" aria-hidden />
+                      <BookOpen className="h-4 w-4 text-zone-exams" aria-hidden />
                       NCEES Reference Handbook
                     </span>
                     {refsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -334,7 +334,7 @@ export function MockExamInterface({ examSlug }: Props) {
             className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl"
           >
             <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-red-600" aria-hidden />
+              <AlertTriangle className="h-5 w-5 shrink-0 text-zone-news" aria-hidden />
               <div>
                 <h2 id="submit-exam-title" className="font-semibold">Submit examination?</h2>
                 <p className="mt-2 text-sm text-muted-foreground">

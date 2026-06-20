@@ -27,7 +27,7 @@ export function GoalsProgressCompact({ goals, completed }: Props) {
       <ul className="mt-3 space-y-1.5">
         {goals.slice(0, 3).map((goal) => (
           <li key={goal} className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span className={completed.includes(goal) ? "text-green-600" : "text-muted-foreground/50"}>
+            <span className={completed.includes(goal) ? "text-zone-mentorship" : "text-muted-foreground/50"}>
               {completed.includes(goal) ? "✓" : "○"}
             </span>
             <span className={completed.includes(goal) ? "line-through opacity-70" : ""}>{goal}</span>

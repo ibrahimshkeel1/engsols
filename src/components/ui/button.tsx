@@ -18,7 +18,7 @@ const buttonVariants = cva(
         zoneNews: "bg-zone-news text-white hover:brightness-110 dark:text-bg-main",
         zoneRecruiter:
           "bg-zone-recruiter text-white shadow-sm hover:brightness-110 dark:text-bg-main",
-        destructive: "bg-red-600 text-white hover:bg-red-700",
+        destructive: "bg-zone-news text-white hover:brightness-110 dark:text-bg-main",
       },
       size: {
         default: "h-10 px-4 py-2",

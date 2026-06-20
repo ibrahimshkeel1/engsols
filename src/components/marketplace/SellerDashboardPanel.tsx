@@ -17,7 +17,7 @@ export function SellerDashboardPanel({ listings, inquiries, sellerName, sellerPu
     <div className="space-y-8">
       <div className="flex flex-wrap items-center gap-2">
         <h2 className="text-lg font-semibold">{sellerName}</h2>
-        <Badge className={sellerPublished ? "bg-green-500/15 text-green-700 dark:text-green-400" : "bg-muted text-muted-foreground"}>
+        <Badge className={sellerPublished ? "bg-zone-mentorship/15 text-zone-mentorship-on" : "bg-muted text-muted-foreground"}>
           {sellerPublished ? "Live" : "Pending approval"}
         </Badge>
       </div>
@@ -38,7 +38,7 @@ export function SellerDashboardPanel({ listings, inquiries, sellerName, sellerPu
                   <p className="text-sm text-muted-foreground">${l.price}</p>
                 </div>
                 <div className="text-right">
-                  <Badge className={l.published ? "bg-green-500/15 text-green-700" : "bg-muted text-muted-foreground"}>
+                  <Badge className={l.published ? "bg-zone-mentorship/15 text-zone-mentorship-on" : "bg-muted text-muted-foreground"}>
                     {l.published ? "Published" : "Pending"}
                   </Badge>
                   {l.published && (

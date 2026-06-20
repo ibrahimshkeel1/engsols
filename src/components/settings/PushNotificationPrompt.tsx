@@ -11,7 +11,7 @@ export function PushNotificationPrompt() {
 
   if (typeof window !== "undefined" && !("Notification" in window)) return null;
   if (status === "enabled") {
-    return <p className="text-sm text-green-600">Push notifications enabled for this device.</p>;
+    return <p className="text-sm text-zone-mentorship">Push notifications enabled for this device.</p>;
   }
   if (status === "denied") {
     return <p className="text-sm text-muted-foreground">Notifications blocked in browser settings.</p>;

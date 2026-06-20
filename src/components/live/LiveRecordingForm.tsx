@@ -51,7 +51,7 @@ export function LiveRecordingForm({ slug, initialUrl }: Props) {
           {pending ? "Saving..." : "Save recording"}
         </Button>
       </form>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-zone-news">{error}</p>}
     </div>
   );
 }

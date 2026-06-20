@@ -60,7 +60,7 @@ export default async function ForumThreadPage({ params }: Props) {
         <div className="lg:col-span-2">
           <div className="flex flex-wrap items-center gap-2">
             <DisciplineBadge discipline={post.discipline} />
-            {post.isSolved && <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Solved</Badge>}
+            {post.isSolved && <Badge className="bg-zone-mentorship/15 text-zone-mentorship-on">Solved</Badge>}
             {(isAuthor || isAdmin) && dbPost?.id && (
               <MarkSolvedButton postId={dbPost.id} isSolved={post.isSolved} />
             )}

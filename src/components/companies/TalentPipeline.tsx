@@ -41,7 +41,7 @@ function TalentCard({ portfolio }: { portfolio: Portfolio }) {
               </span>
             )}
             {portfolio.openToWork && (
-              <span className="rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+              <span className="rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">
                 Open to work
               </span>
             )}

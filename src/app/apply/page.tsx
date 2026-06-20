@@ -22,7 +22,7 @@ export default async function ApplyPage({ searchParams }: Props) {
         Share your engineering expertise with the next generation. Applications are reviewed by our team.
       </p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">
           {safeDecodeURIComponent(params.error)}
         </p>
       )}

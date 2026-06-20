@@ -38,7 +38,7 @@ export default async function AdminCompaniesPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold">{company.name}</h2>
                     {company.verified && (
-                      <Badge className="bg-green-500/15 text-green-700 dark:text-green-400">Verified</Badge>
+                      <Badge className="bg-zone-mentorship/15 text-zone-mentorship-on">Verified</Badge>
                     )}
                     {!company.published && (
                       <Badge className="bg-muted text-muted-foreground">Unpublished</Badge>

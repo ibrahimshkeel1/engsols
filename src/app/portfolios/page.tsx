@@ -16,11 +16,13 @@ export default async function PortfoliosPage() {
 
   return (
     <ListPageLayout
+      zone="recruiter"
       label="Talent"
       title={title}
       description="Discover engineering students and graduates open to internships and full-time roles — hire talent with real project work."
+      className="bg-zone-recruiter-surface"
       action={
-        <Link href="/portfolios/build" className="inline-flex h-11 items-center rounded-xl bg-accent px-6 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition-all hover:brightness-110 active:scale-95">
+        <Link href="/portfolios/build" className="inline-flex h-11 items-center rounded-xl bg-zone-recruiter px-6 text-sm font-semibold text-white shadow-sm hover:brightness-110 dark:text-bg-main">
           Build your portfolio
         </Link>
       }

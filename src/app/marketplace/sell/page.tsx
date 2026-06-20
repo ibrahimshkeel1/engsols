@@ -19,10 +19,10 @@ export default async function SellListingPage({ searchParams }: Props) {
       <h1 className="font-display text-3xl tracking-tight">List on marketplace</h1>
       <p className="mt-2 text-muted-foreground">Sell equipment, materials, or services to engineers worldwide.</p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">{safeDecodeURIComponent(params.error)}</p>
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">{safeDecodeURIComponent(params.error)}</p>
       )}
       {params.message && (
-        <p className="mt-4 rounded-xl bg-green-500/10 px-4 py-3 text-sm text-green-700">{safeDecodeURIComponent(params.message)}</p>
+        <p className="mt-4 rounded-xl bg-zone-mentorship/10 px-4 py-3 text-sm text-zone-mentorship-on">{safeDecodeURIComponent(params.message)}</p>
       )}
       {sellers.length === 0 ? (
         <div className="mt-6 space-y-3">

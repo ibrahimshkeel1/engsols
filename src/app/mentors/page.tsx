@@ -15,13 +15,12 @@ export default async function MentorsPage() {
   return (
     <>
       <PageHero
+        zone="mentorship"
         title={title}
         description={description}
         label="Mentorship"
-        labelClassName="text-zone-mentorship"
-        className="border-zone-mentorship/25 bg-zone-mentorship/10"
       />
-      <div className="mx-auto max-w-7xl bg-bg-main px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-zone-mentorship-surface px-4 py-12 sm:px-6">
         <Suspense fallback={<BentoSkeletonGrid count={8} />}>
           <MentorsPageContent />
         </Suspense>

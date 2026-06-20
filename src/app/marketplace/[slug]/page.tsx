@@ -93,7 +93,7 @@ export default async function ListingPage({ params }: Props) {
                     <p className="font-semibold">{seller.name}</p>
                     <p className="text-sm text-muted-foreground">{seller.location}</p>
                     {seller.verified && (
-                      <span className="mt-1 inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">Verified seller</span>
+                      <span className="mt-1 inline-flex rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">Verified seller</span>
                     )}
                   </div>
                   <span className="text-amber-500">★ {seller.rating}</span>

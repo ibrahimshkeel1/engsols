@@ -29,7 +29,7 @@ export function SaveMentorButton({ mentorSlug, initialSaved }: { mentorSlug: str
 
   return (
     <Button type="button" variant="outline" size="sm" disabled={pending} onClick={toggle} className="gap-2">
-      <Heart className={cn("h-4 w-4", saved && "fill-red-500 text-red-500")} />
+      <Heart className={cn("h-4 w-4", saved && "fill-zone-news text-zone-news")} />
       {saved ? "Saved" : "Save mentor"}
     </Button>
   );

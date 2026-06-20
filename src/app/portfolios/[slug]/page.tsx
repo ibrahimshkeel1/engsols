@@ -45,7 +45,7 @@ export default async function PortfolioPage({ params }: Props) {
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex flex-wrap items-center gap-2">
                 {portfolio.openToWork && (
-                  <span className="inline-flex rounded-md bg-green-500/12 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
+                  <span className="inline-flex rounded-md bg-zone-mentorship/12 px-2 py-0.5 text-xs font-medium text-zone-mentorship-on">
                     Open to work
                   </span>
                 )}

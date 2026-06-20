@@ -14,7 +14,7 @@ export function DeleteNewsButton({ articleId, title }: { articleId: string; titl
       type="button"
       size="sm"
       variant="outline"
-      className="text-red-600"
+      className="text-zone-news"
       disabled={pending}
       onClick={() => {
         if (!confirm(`Delete "${title}"?`)) return;

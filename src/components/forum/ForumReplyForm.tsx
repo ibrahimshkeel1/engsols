@@ -48,7 +48,7 @@ export function ForumReplyForm({ postId }: Props) {
           label="Attach images (optional)"
         />
       </div>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-zone-news">{error}</p>}
       {!postId && (
         <p className="mt-2 text-sm text-muted-foreground">
           Replies are saved when Supabase is configured. You can still read all discussions.

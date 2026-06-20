@@ -20,7 +20,7 @@ export default async function LivePage() {
           Start a session
         </Link>
       </PageHero>
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl bg-zone-live-surface px-4 py-12 sm:px-6">
         <SectionReveal>
           <LiveSessionsGrid sessions={sessions} />
         </SectionReveal>

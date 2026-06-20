@@ -64,7 +64,7 @@ export function NavbarShell({
   }, []);
 
   return (
-    <header className={cn("glass sticky top-0 z-50", scrolled && "glass-scrolled")}>
+    <header className={cn("glass sticky top-0 z-50", routeZone !== "default" && `nav-zone-${routeZone}`, scrolled && "glass-scrolled")}>
       <div className={cn("h-1 w-full", zoneAccentBar[routeZone])} aria-hidden />
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="group shrink-0 font-display text-xl tracking-tight transition-opacity hover:opacity-80">

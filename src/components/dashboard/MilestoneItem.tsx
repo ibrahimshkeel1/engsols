@@ -71,7 +71,7 @@ export function MilestoneItem({ milestone }: Props) {
             <p
               className={cn(
                 "mt-2 text-xs font-medium",
-                overdue ? "text-red-600 dark:text-red-400" : "text-muted-foreground",
+                overdue ? "text-zone-news" : "text-muted-foreground",
               )}
             >
               Target: {new Date(milestone.targetDate).toLocaleDateString(undefined, {

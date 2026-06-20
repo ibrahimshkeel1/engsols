@@ -31,7 +31,7 @@ export default async function AdminLivePage() {
               <div>
                 <div className="flex flex-wrap gap-2">
                   <Badge>{s.discipline}</Badge>
-                  <Badge className={s.status === "live" ? "bg-red-500/15 text-red-600" : ""}>{s.status}</Badge>
+                  <Badge className={s.status === "live" ? "bg-zone-live/15 text-zone-live-on" : ""}>{s.status}</Badge>
                   {s.callType && s.callType !== "scheduled" && (
                     <Badge className="bg-muted text-muted-foreground">{s.callType.replace(/_/g, " ")}</Badge>
                   )}

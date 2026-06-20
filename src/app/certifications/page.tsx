@@ -11,12 +11,12 @@ export default async function CertificationsPage() {
 
   return (
     <ListPageLayout
+      zone="exams"
       label="Credentials"
       title="Certifications & Exams"
       description="FE, PE, IWCF, and industry credentials — resources and mentors to help you prepare."
       preview={false}
-      heroClassName="border-zone-exams/25 bg-zone-exams/10"
-      labelClassName="text-zone-exams"
+      className="bg-zone-exams-surface"
     >
       {certifications.length === 0 ? (
         <EmptyState

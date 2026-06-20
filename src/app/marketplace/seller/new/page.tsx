@@ -19,7 +19,7 @@ export default async function SellerOnboardingPage({ searchParams }: Props) {
         Register your business to list equipment, materials, or services. Profiles are reviewed before going live.
       </p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">{safeDecodeURIComponent(params.error)}</p>
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">{safeDecodeURIComponent(params.error)}</p>
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">

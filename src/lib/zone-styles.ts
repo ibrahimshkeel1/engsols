@@ -1,4 +1,5 @@
 import type { FieldZone } from "@/lib/input-styles";
+import { zoneTokens } from "@/lib/zone-tokens";
 
 export type PanelZone = FieldZone | "default";
 
@@ -12,23 +13,23 @@ export const panelZoneStyles: Record<
     shell: "border-border bg-card",
   },
   mentorship: {
-    brand: "text-zone-mentorship",
-    active: "bg-zone-mentorship/15 text-zone-mentorship",
-    shell: "border-zone-mentorship/20 bg-zone-mentorship/5",
+    brand: zoneTokens.mentorship.on,
+    active: "bg-zone-mentorship/15 text-zone-mentorship-on",
+    shell: "border-zone-mentorship-border bg-zone-mentorship-surface",
   },
   exams: {
-    brand: "text-zone-exams",
-    active: "bg-zone-exams/15 text-zone-exams",
-    shell: "border-zone-exams/25 bg-zone-exams/5",
+    brand: zoneTokens.exams.on,
+    active: "bg-zone-exams/15 text-zone-exams-on",
+    shell: "border-zone-exams-border bg-zone-exams-surface",
   },
   news: {
-    brand: "text-zone-news",
-    active: "bg-zone-news/15 text-zone-news",
-    shell: "border-zone-news/25 bg-zone-news/5",
+    brand: zoneTokens.news.on,
+    active: "bg-zone-news/15 text-zone-news-on",
+    shell: "border-zone-news-border bg-zone-news-surface",
   },
   recruiter: {
-    brand: "text-zone-recruiter",
-    active: "bg-zone-recruiter/15 text-zone-recruiter",
-    shell: "border-zone-recruiter/25 bg-zone-recruiter/5",
+    brand: zoneTokens.recruiter.on,
+    active: "bg-zone-recruiter/15 text-zone-recruiter-on",
+    shell: "border-zone-recruiter-border bg-zone-recruiter-surface",
   },
 };

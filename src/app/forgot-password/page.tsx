@@ -16,10 +16,10 @@ export default async function ForgotPasswordPage({ searchParams }: Props) {
       <h1 className="font-display text-3xl tracking-tight">Reset password</h1>
       <p className="mt-2 text-muted-foreground">We&apos;ll email you a link to set a new password.</p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">{safeDecodeURIComponent(params.error)}</p>
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">{safeDecodeURIComponent(params.error)}</p>
       )}
       {params.message && (
-        <p className="mt-4 rounded-xl bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+        <p className="mt-4 rounded-xl bg-zone-mentorship/10 px-4 py-3 text-sm text-zone-mentorship-on">
           {safeDecodeURIComponent(params.message)}
         </p>
       )}

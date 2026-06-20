@@ -27,7 +27,7 @@ export default async function BuildPortfolioPage({ searchParams }: Props) {
       <h1 className="mt-6 font-display text-3xl tracking-tight">Build your portfolio</h1>
       <p className="mt-2 text-muted-foreground">Optional but powerful — get discovered by mentors and employers.</p>
       {params.error && (
-        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600">
+        <p className="mt-4 rounded-xl bg-zone-news/10 px-4 py-3 text-sm text-zone-news-on">
           {safeDecodeURIComponent(params.error)}
         </p>
       )}

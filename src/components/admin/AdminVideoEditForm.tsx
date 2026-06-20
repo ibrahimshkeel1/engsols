@@ -54,7 +54,7 @@ export function AdminVideoEditForm({ video }: Props) {
         <input type="checkbox" name="published" value="true" defaultChecked={video.published} className="rounded" />
         Published
       </label>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-zone-news">{error}</p>}
       <Button type="submit" variant="accent" disabled={pending}>{pending ? "Saving..." : "Save"}</Button>
     </form>
   );
