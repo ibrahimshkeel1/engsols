@@ -5,6 +5,7 @@ import type { Mentor } from "@/types";
 import { filterMentors } from "@/lib/filter-mentors";
 import { MentorRating } from "@/components/mentors/MentorRating";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { HomeBentoStaticGrid } from "@/components/home/HomeBentoGrid";
 import { Input } from "@/components/ui/input";
 import { ButtonLink } from "@/components/ui/button";
 import { Users } from "lucide-react";
@@ -48,11 +49,11 @@ export function FeaturedMentors({ mentors }: FeaturedMentorsProps) {
             />
           </div>
         ) : (
-          <div className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3 lg:gap-6">
+          <HomeBentoStaticGrid className="mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3 lg:gap-6">
             {filtered.map((mentor) => (
               <article
                 key={mentor.slug}
-                className="flex w-[min(100%,20rem)] shrink-0 snap-start flex-col rounded-xl border border-border-custom bg-card p-6 shadow-premium-card transition-all duration-200 ease-out hover:-translate-y-0.5 sm:w-auto"
+                className="flex h-full w-[min(100%,20rem)] shrink-0 snap-start flex-col rounded-xl border border-border-custom bg-card p-6 shadow-premium-card transition-all duration-200 ease-out hover:-translate-y-0.5 sm:w-auto"
               >
                 <h3 className="text-lg font-bold text-text-main">{mentor.name}</h3>
                 <p className="mt-1 text-sm font-medium text-text-muted">{mentor.headline}</p>
@@ -67,7 +68,7 @@ export function FeaturedMentors({ mentors }: FeaturedMentorsProps) {
                 </ButtonLink>
               </article>
             ))}
-          </div>
+          </HomeBentoStaticGrid>
         )}
       </div>
     </section>

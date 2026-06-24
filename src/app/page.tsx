@@ -1,4 +1,5 @@
 import { Hero } from "@/components/home/Hero";
+import { HomeIntroSplash } from "@/components/home/HomeIntroSplash";
 import { ContinueJourneyHero } from "@/components/home/ContinueJourneyHero";
 import { ValueProps } from "@/components/home/ValueProps";
 import { StartHereJourney } from "@/components/home/StartHereJourney";
@@ -29,6 +30,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <HomeIntroSplash />
       <JsonLd data={websiteJsonLd()} />
       {user && journey ? <ContinueJourneyHero userName={user.full_name} journey={journey} /> : <Hero />}
 
