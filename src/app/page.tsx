@@ -6,6 +6,8 @@ import { SocialProof } from "@/components/home/SocialProof";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { FeaturedMentors } from "@/components/home/FeaturedMentors";
 import { TestimonialCTA } from "@/components/home/TestimonialCTA";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { websiteJsonLd } from "@/lib/seo/json-ld";
 import { getApprovedMentors } from "@/lib/data/mentors";
 import { getFeaturedTestimonials } from "@/lib/data/testimonials";
 import { getPlatformStats } from "@/lib/data/stats";
@@ -27,6 +29,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={websiteJsonLd()} />
       {user && journey ? <ContinueJourneyHero userName={user.full_name} journey={journey} /> : <Hero />}
 
       <SocialProof stats={stats} />

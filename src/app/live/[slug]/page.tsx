@@ -17,6 +17,8 @@ import { LiveSessionActions } from "@/components/live/LiveSessionActions";
 import { LiveRecordingForm } from "@/components/live/LiveRecordingForm";
 import { LiveRecordingPlayer } from "@/components/live/LiveRecordingPlayer";
 import { LiveStatusWatcher } from "@/components/live/LiveStatusWatcher";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { liveSessionJsonLd } from "@/lib/seo/json-ld";
 import Image from "next/image";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -46,6 +48,16 @@ export default async function LiveStreamPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
+      <JsonLd
+        data={liveSessionJsonLd({
+          title: stream.title,
+          slug: stream.slug,
+          description: stream.description,
+          scheduledAt: stream.scheduledAt,
+          status: stream.status,
+          hostName,
+        })}
+      />
       <LiveStatusWatcher slug={slug} />
       <div className="relative aspect-video overflow-hidden rounded-2xl bg-muted">
         <Image

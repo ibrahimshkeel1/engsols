@@ -9,6 +9,8 @@ import { MarkdownBody } from "@/components/shared/MarkdownBody";
 import { RelatedOpportunitiesSidebar } from "@/components/news/RelatedOpportunitiesSidebar";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { Badge } from "@/components/ui/badge";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { newsArticleJsonLd } from "@/lib/seo/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,6 +41,16 @@ export default async function NewsArticlePage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl bg-bg-main px-4 py-0 sm:px-6">
+      <JsonLd
+        data={newsArticleJsonLd({
+          title: article.title,
+          slug: article.slug,
+          summary: article.summary,
+          content: article.content,
+          publishedAt: article.publishedAt ?? undefined,
+          discipline: article.discipline,
+        })}
+      />
       <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
         <article className="lg:col-span-2">
           <header className="border-b border-border-custom">

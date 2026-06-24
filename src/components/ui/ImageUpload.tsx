@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -95,8 +96,13 @@ export function ImageUpload({
         <div className={cn("flex flex-wrap gap-3", multiple ? "" : "justify-start")}>
           {value.map((url, index) => (
             <div key={url} className="relative h-24 w-24 overflow-hidden rounded-xl border border-border bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt="" className="h-full w-full object-cover" />
+              <Image
+                src={url}
+                alt={`Upload preview ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="96px"
+              />
               <button
                 type="button"
                 onClick={() => removeAt(index)}

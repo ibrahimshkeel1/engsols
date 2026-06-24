@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { format } from "date-fns";
 import { ArrowRight, Eye } from "lucide-react";
 import type { NewsArticle } from "@/lib/news-utils";
@@ -16,12 +17,16 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
       className="card-interactive group block overflow-hidden rounded-2xl border border-border bg-card shadow-premium-card"
     >
       {article.imageUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={article.imageUrl}
-          alt={article.title}
-          className="aspect-[21/9] w-full object-cover transition duration-300 group-hover:scale-[1.01]"
-        />
+        <div className="relative aspect-[21/9] w-full overflow-hidden">
+          <Image
+            src={article.imageUrl}
+            alt={article.title}
+            fill
+            className="object-cover transition duration-300 group-hover:scale-[1.01]"
+            sizes="100vw"
+            unoptimized
+          />
+        </div>
       )}
       <div className="p-6 sm:p-10">
         <div className="flex flex-wrap items-center gap-3">
@@ -65,8 +70,9 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
   return (
     <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
       {article.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={article.imageUrl} alt={article.title} className="aspect-video w-full object-cover" />
+        <div className="relative aspect-video w-full overflow-hidden">
+          <Image src={article.imageUrl} alt={article.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" unoptimized />
+        </div>
       ) : (
         <div className="aspect-video w-full bg-gradient-to-br from-zone-news-surface via-zone-news/10 to-muted/40" />
       )}

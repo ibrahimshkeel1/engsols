@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -16,10 +17,16 @@ export function AttachedImages({ urls, className }: Props) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block overflow-hidden rounded-xl border border-border bg-muted"
+          className="relative block h-48 w-72 overflow-hidden rounded-xl border border-border bg-muted"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={`Attached image ${index + 1}`} className="max-h-64 max-w-full object-cover" />
+          <Image
+            src={url}
+            alt={`Attached image ${index + 1}`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, 288px"
+            unoptimized
+          />
         </a>
       ))}
     </div>
