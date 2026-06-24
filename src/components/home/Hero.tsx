@@ -1,14 +1,15 @@
 import { ButtonLink } from "@/components/ui/button";
+import { DotGridBackground } from "@/components/motion/DotGridBackground";
 
 export function Hero() {
   return (
-    <section className="border-b border-border/60 bg-background">
+    <DotGridBackground sectionClassName="hero-dark border-b border-border/60">
       <div className="page-container-wide py-24 sm:py-28 lg:py-36">
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-display-xl text-balance">
+          <h1 className="hero-dot-text text-balance">
             The career platform to get mentored, certified, and hired
           </h1>
-          <p className="text-body-lg mx-auto mt-6 max-w-xl text-balance">
+          <p className="hero-dot-text-muted text-body-lg mx-auto mt-6 max-w-xl text-balance">
             One place for oil &amp; gas and applied engineers to find mentors and move forward with clarity.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -21,6 +22,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-    </section>
+    </DotGridBackground>
   );
 }

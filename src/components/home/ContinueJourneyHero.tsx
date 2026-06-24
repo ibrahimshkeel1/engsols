@@ -68,7 +68,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
   ];
 
   return (
-    <section className="hero-dark relative overflow-hidden">
+    <section className="hero-dark relative overflow-hidden border-b border-border/60">
       <div className="bg-grid absolute inset-0 opacity-20" />
       <div className="page-container-wide relative py-20 lg:py-28">
         <AnimateIn className="max-w-xl">

@@ -337,6 +337,50 @@ body {
   border-bottom: 1px solid hsl(var(--border));
 }
 
+/* Guest hero — sans headline, same scale as text-display-xl */
+.hero-dot-text {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 2.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: hsl(var(--text-main));
+  text-shadow:
+    0 0 18px rgb(255 255 255 / 0.95),
+    0 0 36px rgb(255 255 255 / 0.85),
+    0 1px 1px rgb(255 255 255 / 0.9);
+}
+
+@media (min-width: 640px) {
+  .hero-dot-text {
+    font-size: 3rem;
+  }
+}
+
+.hero-dot-text-muted {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  color: hsl(var(--text-muted));
+  text-shadow:
+    0 0 14px rgb(255 255 255 / 0.92),
+    0 0 28px rgb(255 255 255 / 0.78);
+}
+
+.dark .hero-dot-text {
+  color: #fff;
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.95),
+    0 0 18px rgb(0 0 0 / 0.85),
+    0 0 36px rgb(0 0 0 / 0.65);
+}
+
+.dark .hero-dot-text-muted {
+  color: rgb(255 255 255 / 0.92);
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.9),
+    0 0 16px rgb(0 0 0 / 0.8),
+    0 0 32px rgb(0 0 0 / 0.6);
+}
+
 /* Product-zone heroes — neutral canvas + hairline accent */
 .hero-zone-mentorship,
 .hero-zone-live,

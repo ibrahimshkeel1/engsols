@@ -1,6 +1,6 @@
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="border-b border-border/60 py-20 lg:py-28">
+    <section id="how-it-works" className="border-b border-border/60 bg-bg-main/60 py-20 lg:py-28">
       <div className="page-container-wide mx-auto max-w-4xl">
         <h2 className="section-heading text-center sm:text-start">Why it exists</h2>
         <div className="mt-8 flex flex-col gap-8 md:grid md:grid-cols-2 md:gap-12">
