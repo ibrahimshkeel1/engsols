@@ -9,6 +9,8 @@ import { MentorRating } from "@/components/mentors/MentorRating";
 import { MentorMobileBookBar } from "@/components/mentors/MentorMobileBookBar";
 import { ButtonLink } from "@/components/ui/button";
 import type { Mentor } from "@/types";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { mentorJsonLd } from "@/lib/seo/json-ld";
 
 type PageProps = { params: Promise<{ slug: string }>; searchParams: Promise<{ session?: string }> };
 
@@ -96,6 +98,18 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
 
   return (
     <div className="pb-24 lg:pb-12">
+      <JsonLd
+        data={mentorJsonLd({
+          name: mentor.name,
+          slug: mentor.slug,
+          headline: mentor.headline,
+          bio: mentor.bio,
+          company: mentor.company,
+          discipline: mentor.discipline,
+          rating: mentor.rating,
+          reviewCount: mentor.reviewCount,
+        })}
+      />
       {/* 1. Hero decision strip */}
       <section className="border-b border-border/60 bg-background">
         <div className="page-container-wide py-8 sm:py-10">

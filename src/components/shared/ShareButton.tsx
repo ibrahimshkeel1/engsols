@@ -32,8 +32,16 @@ export function ShareButton({ title, text, className }: Props) {
   }
 
   return (
-    <Button type="button" variant="outline" size="sm" disabled={pending} onClick={share} className={className}>
-      <Share2 className="h-4 w-4" />
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={pending}
+      onClick={share}
+      className={className}
+      aria-label="Share this page"
+    >
+      <Share2 className="h-4 w-4" aria-hidden />
       Share
     </Button>
   );

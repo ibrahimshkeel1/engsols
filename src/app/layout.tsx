@@ -51,12 +51,18 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-bg-main text-text-main antialiased transition-colors duration-[250ms]">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[500] focus:rounded-lg focus:bg-bg-main focus:px-4 focus:py-2 focus:shadow-lg"
+        >
+          Skip to content
+        </a>
         <Analytics />
         <SentryInit />
         <ThemeProvider>
           <LocaleProvider initialLocale={locale}>
             <Navbar />
-            <main className="flex-1 pb-16 lg:pb-0">
+            <main id="main-content" className="flex-1 pb-16 lg:pb-0">
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer />

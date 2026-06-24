@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 export type AppNotification = {
   id: string;
@@ -22,7 +23,7 @@ export async function createNotification(opts: {
     p_body: opts.body,
     p_url: opts.url ?? null,
   });
-  if (error) console.error("[notifications]", error.message);
+  if (error) logger.error("notifications", error.message);
 }
 
 export async function getNotificationsForUser(userId: string, limit = 30): Promise<AppNotification[]> {

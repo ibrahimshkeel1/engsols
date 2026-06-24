@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 type EmailPayload = {
   to: string;
   subject: string;
@@ -26,7 +28,7 @@ export async function sendEmail({ to, subject, html }: EmailPayload) {
 
   if (!res.ok) {
     const text = await res.text();
-    console.error("[email] failed", text);
+    logger.error("email", "send failed", { response: text });
     return { ok: false, error: text };
   }
 

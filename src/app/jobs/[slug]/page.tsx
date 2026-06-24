@@ -11,6 +11,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
 import { ContentCrossLinks } from "@/components/shared/ContentCrossLinks";
 import { ShareButton } from "@/components/shared/ShareButton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { jobPostingJsonLd } from "@/lib/seo/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -47,6 +49,17 @@ export default async function JobPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12">
+      <JsonLd
+        data={jobPostingJsonLd({
+          title: job.title,
+          slug: job.slug,
+          company: job.company,
+          description: job.description,
+          location: job.location,
+          discipline: job.discipline,
+          postedAt: job.postedAt,
+        })}
+      />
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="flex flex-wrap gap-2">

@@ -10,7 +10,7 @@ export function AttachedImages({ urls, className }: Props) {
 
   return (
     <div className={cn("mt-4 flex flex-wrap gap-3", className)}>
-      {urls.map((url) => (
+      {urls.map((url, index) => (
         <a
           key={url}
           href={url}
@@ -19,7 +19,7 @@ export function AttachedImages({ urls, className }: Props) {
           className="block overflow-hidden rounded-xl border border-border bg-muted"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt="" className="max-h-64 max-w-full object-cover" />
+          <img src={url} alt={`Attached image ${index + 1}`} className="max-h-64 max-w-full object-cover" />
         </a>
       ))}
     </div>

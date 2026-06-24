@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { DbForumPost, DbForumReply } from "@/types/database";
 import type { AdminForumPost, ForumPost, ForumReply } from "@/types";
+import { logger } from "@/lib/logger";
 
 type ReplyProfile = {
   full_name?: string;
@@ -56,7 +57,7 @@ async function loadProfilesForAuthors(
     .in("id", authorIds);
 
   if (error) {
-    console.error("forum reply profiles fetch failed:", error.message);
+    logger.error("forum", "reply profiles fetch failed", { message: error.message });
     return new Map();
   }
 
@@ -74,7 +75,7 @@ export async function fetchForumRepliesForPost(
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("forum replies fetch failed:", error.message);
+    logger.error("forum", "replies fetch failed", { message: error.message });
     return [];
   }
 
@@ -149,7 +150,7 @@ async function loadReplyMap(supabase: SupabaseClient) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("forum reply map fetch failed:", error.message);
+    logger.error("forum", "reply map fetch failed", { message: error.message });
     return { repliesByPost: new Map<string, ReplyRow[]>(), profileMap: new Map<string, ReplyProfile>() };
   }
 
@@ -236,7 +237,7 @@ export async function getForumPost(slug: string) {
     .order("created_at", { ascending: true });
 
   if (repliesError) {
-    console.error("forum replies fetch failed:", repliesError.message);
+    logger.error("forum", "replies fetch failed", { message: repliesError.message });
   }
 
   const rows = replyRows ?? [];

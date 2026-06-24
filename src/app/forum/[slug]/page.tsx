@@ -18,10 +18,12 @@ import { buildDetailMetadata } from "@/lib/page-metadata";
 import { ShareButton } from "@/components/shared/ShareButton";
 import { AttachedImages } from "@/components/shared/AttachedImages";
 import { ReportContentButton } from "@/components/shared/ReportContentButton";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { forumDiscussionJsonLd } from "@/lib/seo/json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -49,6 +51,16 @@ export default async function ForumThreadPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+      <JsonLd
+        data={forumDiscussionJsonLd({
+          title: post.title,
+          slug,
+          body: post.body,
+          author: post.author,
+          createdAt: post.createdAt,
+          replyCount: post.replyCount,
+        })}
+      />
       {dbPost?.id && <ForumViewTracker postId={dbPost.id} />}
       {dbPost?.id && <ForumRealtimeWatcher postId={dbPost.id} />}
       <div className="grid gap-10 lg:grid-cols-3">
