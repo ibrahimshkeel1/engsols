@@ -482,7 +482,6 @@ body {
 
 .glass {
   background: var(--nav-bg);
-  backdrop-filter: blur(16px) saturate(1.2);
   border-bottom: 1px solid hsl(var(--border) / 0.7);
   transition:
     box-shadow 0.15s var(--ease-premium),
@@ -726,8 +725,6 @@ section.ballpit-hero .ballpit-hero-read-panel {
     hsl(var(--background) / 0.4) 62%,
     transparent 78%
   );
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
 }
 
 section.ballpit-hero .ballpit-hero-copy :is(

@@ -451,6 +451,7 @@ export type BallpitConfig = {
   maxZ: number;
   controlSphere0: boolean;
   followCursor: boolean;
+  maxPixelRatio?: number;
 };
 
 class BallPhysics {
@@ -770,6 +771,7 @@ export function createBallpit(
 
   engine.renderer.toneMapping = ACESFilmicToneMapping;
   engine.renderer.setClearColor(0x000000, 0);
+  engine.maxPixelRatio = options.maxPixelRatio ?? 1.5;
   engine.camera.position.set(0, 0, 20);
   engine.camera.lookAt(0, 0, 0);
   engine.cameraMaxAspect = 1.5;

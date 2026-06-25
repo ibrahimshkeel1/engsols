@@ -56,11 +56,14 @@ export function PixelTransition({
   const defaultRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
   const delayedCallRef = useRef<gsap.core.Tween | null>(null);
+  const pixelsBuiltRef = useRef(false);
   const reducedMotion = usePrefersReducedMotion();
   const isTouchDevice = useIsTouchDevice();
   const [isActive, setIsActive] = useState(false);
 
-  useEffect(() => {
+  const ensurePixelsBuilt = useCallback(() => {
+    if (pixelsBuiltRef.current) return;
+
     const pixelGridEl = pixelGridRef.current;
     if (!pixelGridEl) return;
 
@@ -80,6 +83,12 @@ export function PixelTransition({
         pixelGridEl.appendChild(pixel);
       }
     }
+
+    pixelsBuiltRef.current = true;
+  }, [gridSize, pixelColor]);
+
+  useEffect(() => {
+    pixelsBuiltRef.current = false;
   }, [gridSize, pixelColor]);
 
   const setActiveLayer = useCallback((activate: boolean) => {
@@ -102,6 +111,8 @@ export function PixelTransition({
         setActiveLayer(activate);
         return;
       }
+
+      ensurePixelsBuilt();
 
       const pixelGridEl = pixelGridRef.current;
       const activeEl = activeRef.current;
@@ -141,7 +152,7 @@ export function PixelTransition({
         },
       });
     },
-    [animationStepDuration, reducedMotion, setActiveLayer],
+    [animationStepDuration, ensurePixelsBuilt, reducedMotion, setActiveLayer],
   );
 
   const handleEnter = () => {

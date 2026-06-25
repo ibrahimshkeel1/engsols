@@ -110,6 +110,8 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
+  const isVisibleRef = useRef(false);
+  const rafRef = useRef<number | null>(null);
   const pointerRef = useRef({
     x: -9999,
     y: -9999,
@@ -131,6 +133,99 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
     return p;
   }, [dotSize]);
 
+  const hasMotion = useCallback(() => {
+    return dotsRef.current.some(
+      (dot) =>
+        dot._inertiaApplied ||
+        Math.abs(dot.xOffset) > 0.01 ||
+        Math.abs(dot.yOffset) > 0.01,
+    );
+  }, []);
+
+  const stopLoop = useCallback(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  }, []);
+
+  const drawFrame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx || !circlePath) return;
+
+    const { width, height } = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, width, height);
+
+    const { x: px, y: py } = pointerRef.current;
+    const proxSq = proximity * proximity;
+
+    for (const dot of dotsRef.current) {
+      const ox = dot.cx + dot.xOffset;
+      const oy = dot.cy + dot.yOffset;
+      const dx = ox - px;
+      const dy = oy - py;
+      const dsq = dx * dx + dy * dy;
+
+      let fill = baseColor;
+      let alpha = baseOpacity;
+      if (trackPointer && dsq <= proxSq) {
+        const dist = Math.sqrt(dsq);
+        const t = 1 - dist / proximity;
+        const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t);
+        const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t);
+        const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t);
+        fill = `rgb(${r},${g},${b})`;
+        alpha = baseOpacity + (1 - baseOpacity) * t;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(ox, oy);
+      ctx.fillStyle = fill;
+      ctx.fill(circlePath);
+      ctx.restore();
+    }
+  }, [
+    activeRgb,
+    baseColor,
+    baseOpacity,
+    baseRgb,
+    circlePath,
+    proximity,
+    trackPointer,
+  ]);
+
+  const tick = useCallback(() => {
+    if (!isVisibleRef.current) {
+      rafRef.current = null;
+      return;
+    }
+
+    drawFrame();
+
+    if (enablePush && hasMotion()) {
+      rafRef.current = requestAnimationFrame(tick);
+    } else {
+      rafRef.current = null;
+    }
+  }, [drawFrame, enablePush, hasMotion]);
+
+  const startLoop = useCallback(() => {
+    if (!isVisibleRef.current || rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(tick);
+  }, [tick]);
+
+  const requestRedraw = useCallback(() => {
+    if (!isVisibleRef.current) return;
+    if (enablePush && hasMotion()) {
+      startLoop();
+      return;
+    }
+    drawFrame();
+  }, [drawFrame, enablePush, hasMotion, startLoop]);
+
   const toLocalCoords = useCallback((clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
@@ -141,19 +236,23 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
   const applyPushFromPointer = useCallback(
     (x: number, y: number, vx: number, vy: number, speed: number) => {
       if (!enablePush) return;
+      let pushed = false;
       for (const dot of dotsRef.current) {
         const dist = Math.hypot(dot.cx - x, dot.cy - y);
         if (speed > speedTrigger && dist < proximity && !dot._inertiaApplied) {
           pushDot(dot, dot.cx - x + vx * 0.01, dot.cy - y + vy * 0.01, returnDuration);
+          pushed = true;
         }
       }
+      if (pushed) startLoop();
     },
-    [enablePush, proximity, returnDuration, speedTrigger],
+    [enablePush, proximity, returnDuration, speedTrigger, startLoop],
   );
 
   const applyClickShock = useCallback(
     (x: number, y: number) => {
       if (!enablePush) return;
+      let pushed = false;
       for (const dot of dotsRef.current) {
         const dist = Math.hypot(dot.cx - x, dot.cy - y);
         if (dist < shockRadius && !dot._inertiaApplied) {
@@ -164,10 +263,12 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
             (dot.cy - y) * shockStrength * falloff,
             returnDuration,
           );
+          pushed = true;
         }
       }
+      if (pushed) startLoop();
     },
-    [enablePush, returnDuration, shockRadius, shockStrength],
+    [enablePush, returnDuration, shockRadius, shockStrength, startLoop],
   );
 
   useImperativeHandle(
@@ -201,10 +302,12 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
         pr.y = local.y;
 
         applyPushFromPointer(local.x, local.y, vx, vy, speed);
+        requestRedraw();
       },
       handlePointerLeave() {
         pointerRef.current.x = -9999;
         pointerRef.current.y = -9999;
+        requestRedraw();
       },
       handlePointerClick(clientX, clientY) {
         const local = toLocalCoords(clientX, clientY);
@@ -212,7 +315,7 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
         applyClickShock(local.x, local.y);
       },
     }),
-    [applyClickShock, applyPushFromPointer, maxSpeed, toLocalCoords],
+    [applyClickShock, applyPushFromPointer, maxSpeed, requestRedraw, toLocalCoords],
   );
 
   const buildGrid = useCallback(() => {
@@ -254,7 +357,8 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
       }
     }
     dotsRef.current = dots;
-  }, [dotSize, gap, eventRoot]);
+    requestRedraw();
+  }, [dotSize, gap, eventRoot, requestRedraw]);
 
   useLayoutEffect(() => {
     buildGrid();
@@ -263,60 +367,37 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
   useEffect(() => {
     if (!circlePath || disabled) return;
 
-    let rafId: number;
-    const proxSq = proximity * proximity;
+    const wrap = wrapperRef.current;
+    if (!wrap) return;
 
-    const draw = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const { width, height } = canvas.getBoundingClientRect();
-      ctx.clearRect(0, 0, width, height);
-
-      const { x: px, y: py } = pointerRef.current;
-
-      for (const dot of dotsRef.current) {
-        const ox = dot.cx + dot.xOffset;
-        const oy = dot.cy + dot.yOffset;
-        const dx = ox - px;
-        const dy = oy - py;
-        const dsq = dx * dx + dy * dy;
-
-        let fill = baseColor;
-        let alpha = baseOpacity;
-        if (trackPointer && dsq <= proxSq) {
-          const dist = Math.sqrt(dsq);
-          const t = 1 - dist / proximity;
-          const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t);
-          const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t);
-          const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t);
-          fill = `rgb(${r},${g},${b})`;
-          alpha = baseOpacity + (1 - baseOpacity) * t;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.translate(ox, oy);
-        ctx.fillStyle = fill;
-        ctx.fill(circlePath);
-        ctx.restore();
+    const io = new IntersectionObserver(([entry]) => {
+      isVisibleRef.current = entry?.isIntersecting ?? false;
+      if (isVisibleRef.current) {
+        requestRedraw();
+      } else {
+        stopLoop();
       }
+    }, { threshold: 0 });
 
-      rafId = requestAnimationFrame(draw);
+    io.observe(wrap);
+    return () => {
+      io.disconnect();
+      stopLoop();
     };
+  }, [circlePath, disabled, requestRedraw, stopLoop]);
 
-    draw();
-    return () => cancelAnimationFrame(rafId);
+  useEffect(() => {
+    if (!circlePath || disabled) return;
+    requestRedraw();
   }, [
-    proximity,
     baseColor,
-    activeRgb,
-    baseRgb,
     baseOpacity,
+    baseRgb,
+    activeRgb,
     circlePath,
     disabled,
+    proximity,
+    requestRedraw,
     trackPointer,
   ]);
 
