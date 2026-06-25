@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { t } from "@/lib/i18n/messages";
+import { getTransitionTitleForHref } from "@/lib/page-titles";
 import { darkSpeckleBackgroundStyle } from "@/lib/speckle-texture";
 
 const footerColumns = [
@@ -56,7 +57,11 @@ export function Footer() {
               <ul className="mt-4 space-y-3 text-sm text-white/65">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="transition-colors hover:text-white">
+                    <Link
+                      href={link.href}
+                      className="transition-colors hover:text-white"
+                      data-transition-title={getTransitionTitleForHref(link.href, locale)}
+                    >
                       {t(locale, link.key)}
                     </Link>
                   </li>
@@ -69,10 +74,18 @@ export function Footer() {
           <div className="flex flex-col items-center gap-3 sm:items-start">
             <p className="text-sm text-white/55">© {new Date().getFullYear()} EngSols. All rights reserved.</p>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-white/55 sm:justify-start">
-              <Link href="/how-it-works" className="transition-colors hover:text-white">
+              <Link
+                href="/how-it-works"
+                className="transition-colors hover:text-white"
+                data-transition-title={getTransitionTitleForHref("/how-it-works", locale)}
+              >
                 {t(locale, "howItWorks")}
               </Link>
-              <Link href="/privacy" className="transition-colors hover:text-white">
+              <Link
+                href="/privacy"
+                className="transition-colors hover:text-white"
+                data-transition-title={getTransitionTitleForHref("/privacy", locale)}
+              >
                 {t(locale, "privacyPolicy")}
               </Link>
             </div>

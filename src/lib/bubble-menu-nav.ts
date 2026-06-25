@@ -29,6 +29,7 @@ function toBubbleItem(
     label: displayLabel,
     href: item.href,
     ariaLabel: item.outcome ? t(locale, item.outcome) : label,
+    transitionTitle: t(locale, item.pageTitleKey ?? item.outcome ?? item.key),
     rotation: index % 2 === 0 ? -8 : 8,
     hoverStyles:
       hrefHoverStyles[item.href] ?? menuHoverPalette[index % menuHoverPalette.length],

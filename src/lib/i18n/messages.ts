@@ -60,6 +60,17 @@ export type Messages = {
   forYouHeadline: string;
   settingsHeadline: string;
   notificationsHeadline: string;
+  homeHeroTitle: string;
+  mentorsPageTitle: string;
+  howItWorksPageTitle: string;
+  privacyPageTitle: string;
+  disciplinesHeadline: string;
+  forumNewTitle: string;
+  portfolioBuildTitle: string;
+  mentorsCompareTitle: string;
+  forgotPasswordTitle: string;
+  callsHeadline: string;
+  jobsPostTitle: string;
   communityLabel: string;
   menu: string;
   closeMenu: string;
@@ -96,7 +107,7 @@ export const messages: Record<Locale, Messages> = {
     joinSubtitle: "Students get mentorship. Professionals can apply to mentor.",
     email: "Email",
     password: "Password",
-    myBookings: "My booking requests",
+    myBookings: "My bookings",
     myApplications: "My job applications",
     applyNow: "Apply now",
     footerMentorship: "Mentorship",
@@ -119,6 +130,17 @@ export const messages: Record<Locale, Messages> = {
     forYouHeadline: "Your digest",
     settingsHeadline: "Account settings",
     notificationsHeadline: "Notifications",
+    homeHeroTitle: "Pass your FE. Land the O&G role. Get a mentor who's done both.",
+    mentorsPageTitle: "Find your mentor",
+    howItWorksPageTitle: "How EngSols works",
+    privacyPageTitle: "Privacy Policy",
+    disciplinesHeadline: "Engineering disciplines",
+    forumNewTitle: "Ask a question",
+    portfolioBuildTitle: "Build your portfolio",
+    mentorsCompareTitle: "Compare mentors",
+    forgotPasswordTitle: "Reset password",
+    callsHeadline: "My calls & sessions",
+    jobsPostTitle: "Post a job",
     communityLabel: "Community",
     menu: "Menu",
     closeMenu: "Close menu",
@@ -176,6 +198,17 @@ export const messages: Record<Locale, Messages> = {
     forYouHeadline: "ملخصك",
     settingsHeadline: "إعدادات الحساب",
     notificationsHeadline: "الإشعارات",
+    homeHeroTitle: "اجتز اختبار FE. احصل على وظيفة في النفط والغاز. مع مرشد سبق أن فعل ذلك.",
+    mentorsPageTitle: "اعثر على مرشدك",
+    howItWorksPageTitle: "كيف يعمل إنجسولز",
+    privacyPageTitle: "سياسة الخصوصية",
+    disciplinesHeadline: "التخصصات الهندسية",
+    forumNewTitle: "اطرح سؤالاً",
+    portfolioBuildTitle: "أنشئ محفظتك",
+    mentorsCompareTitle: "قارن المرشدين",
+    forgotPasswordTitle: "إعادة تعيين كلمة المرور",
+    callsHeadline: "مكالماتي وجلساتي",
+    jobsPostTitle: "نشر وظيفة",
     communityLabel: "المجتمع",
     menu: "القائمة",
     closeMenu: "إغلاق القائمة",

@@ -27,9 +27,9 @@ export function Hero({ mentors, stats, testimonial }: HeroProps) {
           <HeroSocialProof mentors={mentors} stats={stats} />
 
           {testimonial && (
-            <blockquote className="mx-auto mt-6 max-w-lg border-s border-oil-gas-orange/50 ps-4 text-start text-sm text-oil-gas-white">
+            <blockquote className="mx-auto mt-6 max-w-lg border-s border-oil-gas-orange/50 ps-4 text-start text-sm text-oil-gas-navy">
               &ldquo;{testimonial.quote.length > 120 ? `${testimonial.quote.slice(0, 120)}…` : testimonial.quote}&rdquo;
-              <footer className="mt-2 text-xs text-oil-gas-white">
+              <footer className="mt-2 text-xs text-oil-gas-navy-muted">
                 — {testimonial.name}, {testimonial.role}
               </footer>
             </blockquote>

@@ -3,27 +3,29 @@ import type { Messages } from "@/lib/i18n/messages";
 export type SiteNavItem = {
   href: string;
   key: keyof Messages;
+  /** Destination page h1 — used for route transition overlay. */
+  pageTitleKey?: keyof Messages;
   outcome?: keyof Messages;
   authOnly?: boolean;
 };
 
 export const primarySiteNav: SiteNavItem[] = [
-  { href: "/mentors", key: "mentors", outcome: "mentorsOutcome" },
-  { href: "/portfolios", key: "portfolios", outcome: "portfoliosOutcome" },
-  { href: "/forum", key: "forum", outcome: "forumOutcome" },
-  { href: "/live", key: "live", outcome: "liveOutcome" },
-  { href: "/news", key: "news" },
+  { href: "/mentors", key: "mentors", pageTitleKey: "mentorsPageTitle", outcome: "mentorsOutcome" },
+  { href: "/portfolios", key: "portfolios", pageTitleKey: "portfoliosOutcome", outcome: "portfoliosOutcome" },
+  { href: "/forum", key: "forum", pageTitleKey: "forumOutcome", outcome: "forumOutcome" },
+  { href: "/live", key: "live", pageTitleKey: "liveOutcome", outcome: "liveOutcome" },
+  { href: "/news", key: "news", pageTitleKey: "newsHeadline" },
 ];
 
 export const moreSiteNav: SiteNavItem[] = [
-  { href: "/for-you", key: "forYou", authOnly: true },
-  { href: "/jobs", key: "jobs" },
-  { href: "/certifications", key: "certifications" },
-  { href: "/companies", key: "companies" },
-  { href: "/marketplace", key: "marketplace" },
-  { href: "/videos", key: "videos" },
-  { href: "/search", key: "search" },
-  { href: "/assist", key: "assist" },
+  { href: "/for-you", key: "forYou", pageTitleKey: "forYouHeadline", authOnly: true },
+  { href: "/jobs", key: "jobs", pageTitleKey: "jobsHeadline" },
+  { href: "/certifications", key: "certifications", pageTitleKey: "certificationsHeadline" },
+  { href: "/companies", key: "companies", pageTitleKey: "companiesHeadline" },
+  { href: "/marketplace", key: "marketplace", pageTitleKey: "marketplaceHeadline" },
+  { href: "/videos", key: "videos", pageTitleKey: "videosHeadline" },
+  { href: "/search", key: "search", pageTitleKey: "searchHeadline" },
+  { href: "/assist", key: "assist", pageTitleKey: "careerAssist" },
 ];
 
 export function getSiteNavItems(showForYou: boolean) {

@@ -9,6 +9,7 @@ import { matchMentorsByGoals } from "@/lib/match-mentors";
 import { introBadgeLabel } from "@/lib/mentor-display";
 import { Avatar } from "@/components/ui/Avatar";
 import { ButtonLink } from "@/components/ui/button";
+import { mentorGoalChipClass } from "@/components/mentors/MentorGoalChips";
 
 const MATCHER_GOALS = goals.filter((g) =>
   ["fe-pe", "oil-gas", "ace-interviews", "first-job", "switch-discipline", "reservoir-drilling"].includes(g.id),
@@ -88,12 +89,9 @@ export function HomeMentorMatcher({ mentors }: Props) {
             <button
               key={goal.id}
               type="button"
+              aria-pressed={selectedGoal === goal.id}
               onClick={() => setSelectedGoal(goal.id)}
-              className={
-                selectedGoal === goal.id
-                  ? "rounded-full bg-zone-mentorship px-4 py-2 text-sm font-semibold text-white"
-                  : "rounded-full border border-border-custom bg-bg-surface px-4 py-2 text-sm font-medium text-text-muted transition-colors hover:border-zone-mentorship/40 hover:text-foreground"
-              }
+              className={mentorGoalChipClass(selectedGoal === goal.id)}
             >
               {goal.label}
             </button>

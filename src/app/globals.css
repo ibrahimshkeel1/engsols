@@ -378,7 +378,7 @@ body {
   color: #c2410c;
 }
 
-/* Hero goal + discipline chips — unified navy, orange on hover */
+/* Hero goal + discipline chips — navy default, orange when active */
 .hero-chip {
   border: none;
   background: hsl(var(--oil-gas-navy));
@@ -388,6 +388,13 @@ body {
 .hero-chip:hover {
   background: hsl(var(--oil-gas-orange));
   color: #ffffff;
+}
+
+.hero-chip--active,
+.filter-chip--active {
+  background: hsl(var(--oil-gas-orange)) !important;
+  color: #ffffff !important;
+  border-color: hsl(var(--oil-gas-orange)) !important;
 }
 
 /* Filled search fields — pure white text and placeholders */

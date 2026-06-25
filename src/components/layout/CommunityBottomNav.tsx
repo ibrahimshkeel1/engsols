@@ -6,6 +6,7 @@ import { MessageSquare, Radio, Newspaper, Users, Briefcase } from "lucide-react"
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { t } from "@/lib/i18n/messages";
+import { getTransitionTitleForHref } from "@/lib/page-titles";
 
 const tabs = [
   { href: "/mentors", labelKey: "mentors" as const, icon: Users },
@@ -35,6 +36,7 @@ export function CommunityBottomNav() {
               key={tab.href}
               href={tab.href}
               aria-current={active ? "page" : undefined}
+              data-transition-title={getTransitionTitleForHref(tab.href, locale)}
               className={cn(
                 "flex min-h-[48px] min-w-[56px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2 text-[11px] font-medium transition-colors",
                 active ? "text-oil-gas-orange" : "text-oil-gas-white",

@@ -160,7 +160,7 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
       event.stopPropagation();
 
       const targetPath = pathFromHref(href);
-      const { title, subtitle } = getTransitionLabelsFromAnchor(anchor, targetPath, locale);
+      const { title, subtitle } = getTransitionLabelsFromAnchor(anchor, href, locale);
       pendingHrefRef.current = href;
       setTransition({ href, title, subtitle, phase: "presenting" });
     };

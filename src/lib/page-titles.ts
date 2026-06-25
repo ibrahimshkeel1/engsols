@@ -1,5 +1,7 @@
 import type { Locale, Messages } from "@/lib/i18n/messages";
 import { t } from "@/lib/i18n/messages";
+import { getMentorsBrowseHero } from "@/lib/mentors-browse-hero";
+import { hrefKey, recallPageTitle } from "@/lib/page-title-cache";
 
 function titleCase(value: string) {
   return value
@@ -14,12 +16,17 @@ function lastSegment(pathname: string) {
   return parts[parts.length - 1] ?? "";
 }
 
+function searchParamsFromHref(href: string) {
+  const query = href.includes("?") ? href.slice(href.indexOf("?") + 1) : "";
+  return new URLSearchParams(query);
+}
+
 type HeadlineKey = keyof Messages;
 
-/** Hero first-line copy per route — matches each page's h1 / PageHero title. */
+/** Hero h1 copy per route — aligned with PageHero / ListPageLayout / guest Hero. */
 const ROUTE_HEADLINES: Record<string, HeadlineKey> = {
-  "/": "homeHeadline",
-  "/mentors": "mentorsOutcome",
+  "/": "homeHeroTitle",
+  "/mentors": "mentorsPageTitle",
   "/forum": "forumOutcome",
   "/live": "liveOutcome",
   "/portfolios": "portfoliosOutcome",
@@ -38,79 +45,123 @@ const ROUTE_HEADLINES: Record<string, HeadlineKey> = {
   "/apply": "becomeMentor",
   "/login": "signInTitle",
   "/signup": "joinEngsols",
+  "/how-it-works": "howItWorksPageTitle",
+  "/privacy": "privacyPageTitle",
+  "/disciplines": "disciplinesHeadline",
+  "/forum/new": "forumNewTitle",
+  "/portfolios/build": "portfolioBuildTitle",
+  "/mentors/compare": "mentorsCompareTitle",
+  "/forgot-password": "forgotPasswordTitle",
+  "/calls": "callsHeadline",
+  "/jobs/post": "jobsPostTitle",
 };
 
-const PREFIX_HEADLINES: Array<{ prefix: string; key: HeadlineKey }> = [
-  { prefix: "/mentors/", key: "mentorsOutcome" },
-  { prefix: "/forum/", key: "forumOutcome" },
-  { prefix: "/live/", key: "liveOutcome" },
-  { prefix: "/portfolios/", key: "portfoliosOutcome" },
-  { prefix: "/jobs/", key: "jobsHeadline" },
-  { prefix: "/news/", key: "newsHeadline" },
-  { prefix: "/certifications/", key: "certificationsHeadline" },
-  { prefix: "/companies/", key: "companiesHeadline" },
-  { prefix: "/marketplace/", key: "marketplaceHeadline" },
-  { prefix: "/videos/", key: "videosHeadline" },
-  { prefix: "/settings/", key: "settingsHeadline" },
-];
+const SLUG_ACTION_SEGMENTS = new Set([
+  "new",
+  "edit",
+  "build",
+  "post",
+  "compare",
+  "room",
+  "matches",
+  "password",
+  "seller",
+  "sell",
+  "inbox",
+  "talent",
+  "exams",
+]);
 
 function headlineForPath(path: string, locale: Locale): string | null {
-  if (path === "/mentors/compare") {
-    return locale === "ar" ? "مقارنة المرشدين" : "Compare mentors";
-  }
-  if (path === "/forgot-password") {
-    return locale === "ar" ? "إعادة تعيين كلمة المرور" : "Reset password";
-  }
-  if (path === "/calls") {
-    return locale === "ar" ? "مكالماتي وجلساتي" : "My calls & sessions";
-  }
   if (path.startsWith("/onboarding/")) {
     return locale === "ar" ? "البدء" : "Get started";
   }
-  if (path.startsWith("/mentor/")) {
+  if (path === "/mentor" || path.startsWith("/mentor/")) {
     return locale === "ar" ? "لوحة المرشد" : "Mentor dashboard";
   }
   if (path.startsWith("/admin/")) {
     return locale === "ar" ? "الإدارة" : "Admin";
   }
-  if (path.startsWith("/disciplines/")) {
-    return locale === "ar" ? "التخصص" : "Discipline";
-  }
 
   const exactKey = ROUTE_HEADLINES[path];
   if (exactKey) return t(locale, exactKey);
 
-  for (const { prefix, key } of PREFIX_HEADLINES) {
-    if (path.startsWith(prefix)) return t(locale, key);
-  }
-
   return null;
+}
+
+function mentorsBrowseTitle(href: string, locale: Locale) {
+  const params = searchParamsFromHref(href);
+  const hero = getMentorsBrowseHero({
+    goal: params.get("goal") ?? undefined,
+    discipline: params.get("discipline") ?? undefined,
+    search: params.get("search") ?? undefined,
+  });
+  return { title: hero.title, subtitle: hero.description };
+}
+
+function detailTitleFromPath(path: string): string | null {
+  const segments = path.split("/").filter(Boolean);
+  if (segments.length < 2) return null;
+
+  const slug = segments[segments.length - 1];
+  if (!slug || SLUG_ACTION_SEGMENTS.has(slug)) return null;
+
+  return titleCase(slug.replace(/-/g, " "));
 }
 
 /** Human-readable page headline for route transition overlay. */
 export function getPageTitleFromPath(pathname: string, locale: Locale): string {
   const path = pathname.split("?")[0].split("#")[0] || "/";
-  return headlineForPath(path, locale) ?? (titleCase(lastSegment(path).replace(/-/g, " ")) || "EngSols");
+  return (
+    headlineForPath(path, locale) ??
+    detailTitleFromPath(path) ??
+    (titleCase(lastSegment(path).replace(/-/g, " ")) || "EngSols")
+  );
 }
 
 export function pathFromHref(href: string) {
-  if (href.startsWith("/")) return href.split("?")[0].split("#")[0] || "/";
+  const withoutHash = href.split("#")[0] || href;
+  if (withoutHash.startsWith("/")) return withoutHash.split("?")[0] || "/";
   try {
-    const url = new URL(href, "https://engsols.local");
+    const url = new URL(withoutHash, "https://engsols.local");
     return url.pathname;
   } catch {
     return "/";
   }
 }
 
+export function getTransitionLabelsFromHref(
+  href: string,
+  locale: Locale,
+): { title: string; subtitle?: string } {
+  const cached = recallPageTitle(hrefKey(href));
+  if (cached) return cached;
+
+  const path = pathFromHref(href);
+
+  if (path === "/mentors") {
+    return mentorsBrowseTitle(href, locale);
+  }
+
+  const staticTitle = headlineForPath(path, locale);
+  if (staticTitle) return { title: staticTitle };
+
+  const detail = detailTitleFromPath(path);
+  if (detail) return { title: detail };
+
+  return {
+    title: titleCase(lastSegment(path).replace(/-/g, " ")) || "EngSols",
+  };
+}
+
 export function shouldSkipPageTransition(pathname: string) {
   return pathname.includes("/live/") && pathname.endsWith("/room");
 }
 
-/** Optional per-link labels from data-transition-title / data-transition-subtitle on anchors. */
+/** Labels from data attributes, session cache, or route hero copy. */
 export function getTransitionLabelsFromAnchor(
   anchor: HTMLAnchorElement,
-  pathname: string,
+  href: string,
   locale: Locale,
 ): { title: string; subtitle?: string } {
   const title = anchor.dataset.transitionTitle?.trim();
@@ -118,5 +169,10 @@ export function getTransitionLabelsFromAnchor(
   if (title) {
     return { title, subtitle: subtitle || undefined };
   }
-  return { title: getPageTitleFromPath(pathname, locale) };
+  return getTransitionLabelsFromHref(href, locale);
+}
+
+/** Nav/footer link headline — same copy as the destination page hero. */
+export function getTransitionTitleForHref(href: string, locale: Locale) {
+  return getTransitionLabelsFromHref(href, locale).title;
 }

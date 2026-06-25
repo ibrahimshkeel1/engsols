@@ -9,6 +9,7 @@ import { filterMentors, type MentorFilters as MentorFilterState } from "@/lib/fi
 import { getSkillById } from "@/data/engineering-skills";
 import { MentorCard } from "@/components/mentors/MentorCard";
 import { MentorFilters } from "@/components/mentors/MentorFilters";
+import { MentorGoalChips } from "@/components/mentors/MentorGoalChips";
 import { SkillGraphFilter } from "@/components/mentors/SkillGraphFilter";
 import { SpecialistRequestTrigger } from "@/components/mentors/SpecialistRequestModal";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
@@ -104,6 +105,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
         </p>
       </aside>
       <div>
+        <MentorGoalChips selected={goal} onSelect={setGoal} className="mb-6" />
         {savedSlugs.length >= 2 && (
           <Link
             href={`/mentors/compare?slugs=${encodeURIComponent(savedSlugs.slice(0, 3).join(","))}`}

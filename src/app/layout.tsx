@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { DM_Sans, Geist_Mono, Fraunces } from "next/font/google";
 import { Toaster } from "sonner";
@@ -12,6 +13,7 @@ import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
 import { SentryInit } from "@/components/analytics/SentryInit";
 import { SpeckleSurface } from "@/components/layout/SpeckleBackground";
+import { PageTitleRegistrar } from "@/components/providers/PageTitleRegistrar";
 import { PwaInstallPrompt } from "@/components/layout/PwaInstallPrompt";
 import { LOCALE_COOKIE, localeDir, parseLocaleCookie } from "@/lib/i18n/locale-cookie";
 import "./globals.css";
@@ -62,6 +64,9 @@ export default async function RootLayout({
         </a>
         <Analytics />
         <SentryInit />
+        <Suspense fallback={null}>
+          <PageTitleRegistrar />
+        </Suspense>
         <LocaleProvider initialLocale={locale}>
           <NavigationTransitionProvider>
             <RouteAccentProvider>

@@ -21,6 +21,8 @@ export type BubbleMenuItem = {
   label: string;
   href: string;
   ariaLabel?: string;
+  transitionTitle?: string;
+  transitionSubtitle?: string;
   rotation?: number;
   hoverStyles?: { bgColor?: string; textColor?: string };
 };
@@ -293,6 +295,8 @@ export default function BubbleMenu({
                 role="menuitem"
                 href={item.href}
                 aria-label={item.ariaLabel || item.label}
+                data-transition-title={item.transitionTitle}
+                data-transition-subtitle={item.transitionSubtitle}
                 className={cn(FLUID_DROP_PEBBLE, "relative z-0 hover:z-10")}
                 style={
                   {
