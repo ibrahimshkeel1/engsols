@@ -13,6 +13,7 @@ const FADE_OUT_MS = 350;
 const emptySubscribe = () => () => {};
 
 function readIntroSeen() {
+  if (typeof navigator !== "undefined" && navigator.webdriver) return true;
   try {
     return sessionStorage.getItem(INTRO_STORAGE_KEY) !== null;
   } catch {

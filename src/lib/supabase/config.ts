@@ -37,8 +37,21 @@ export function getSupabaseAnonKey(): string | null {
   return key || null;
 }
 
+export function isPlaceholderSupabaseUrl(url: string) {
+  try {
+    const host = new URL(url).hostname;
+    return host === "placeholder.supabase.co" || host.endsWith(".invalid");
+  } catch {
+    return false;
+  }
+}
+
 export function isSupabaseConfigured() {
-  return Boolean(getSupabaseUrl() && getSupabaseAnonKey());
+  const url = getSupabaseUrl();
+  const key = getSupabaseAnonKey();
+  if (!url || !key) return false;
+  if (isPlaceholderSupabaseUrl(url) || key === "placeholder") return false;
+  return true;
 }
 
 export function getSupabaseConfigError(): string | null {

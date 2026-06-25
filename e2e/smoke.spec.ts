@@ -1,20 +1,26 @@
 import { test, expect } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    sessionStorage.setItem("engsols-home-intro-seen", "1");
+  });
+});
+
 test.describe("smoke", () => {
   test("homepage loads", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/EngSols/i);
-    await expect(page.getByRole("link", { name: /find mentor/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /browse all mentors/i }).first()).toBeVisible();
   });
 
   test("mentors directory loads", async ({ page }) => {
     await page.goto("/mentors");
-    await expect(page.getByRole("heading", { name: /find your engineering mentor/i })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /find your mentor/i })).toBeVisible();
   });
 
   test("forum page loads", async ({ page }) => {
     await page.goto("/forum");
-    await expect(page.getByRole("heading", { name: /ask engineers who.ve been there/i })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /ask engineers/i })).toBeVisible();
   });
 
   test("search page loads", async ({ page }) => {
@@ -90,7 +96,7 @@ test.describe("smoke", () => {
 
     await mentorProfileLinks.first().click();
     await expect(page).toHaveURL(/\/mentors\/[^/]+$/);
-    await page.locator("#book-intro").scrollIntoViewIfNeeded();
+    await page.locator("#booking-options").scrollIntoViewIfNeeded();
     await expect(page.getByRole("link", { name: /log in to book/i })).toBeVisible();
   });
 });

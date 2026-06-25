@@ -4,12 +4,12 @@ import { PageHero } from "@/components/shared/PageHero";
 import { ForumPageContent } from "@/components/forum/ForumPageContent";
 import { FilterBarSkeleton, ForumThreadListSkeleton } from "@/components/ui/DirectorySkeletons";
 import { SectionReveal } from "@/components/motion/SectionReveal";
-import { serverT } from "@/lib/i18n/server";
+import { messages } from "@/lib/i18n/messages";
 
 export const revalidate = 60;
 
 export default async function ForumPage() {
-  const title = await serverT("forumOutcome");
+  const title = messages.en.forumOutcome;
 
   return (
     <>
