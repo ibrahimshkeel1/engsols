@@ -8,6 +8,7 @@ import { PixelTransition } from "@/components/motion/pixel-transition";
 import { ProfilePassportPhoto } from "@/components/ui/ProfilePassportPhoto";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { introBadgeLabel } from "@/lib/mentor-display";
+import { MOTION_COLORS } from "@/lib/motion-colors";
 import { cn } from "@/lib/utils";
 
 type MentorCardProps = {
@@ -156,7 +157,8 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
       <PixelTransition
         fill
         gridSize={12}
-        pixelColor="hsl(var(--background))"
+        pixelColor={MOTION_COLORS.pixelReveal.primary}
+        pixelColorAlt={MOTION_COLORS.pixelReveal.alternate}
         animationStepDuration={0.4}
         className="h-full w-full overflow-hidden rounded-2xl"
         firstContent={<MentorCardPreview mentor={mentor} showPrice={showPrice} />}

@@ -20,5 +20,5 @@ export function CardHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("border-b border-border px-6 py-4", className)} {...props} />;
+  return <div className={cn("px-6 py-4", className)} {...props} />;
 }

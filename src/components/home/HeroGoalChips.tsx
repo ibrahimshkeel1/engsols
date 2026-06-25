@@ -22,11 +22,11 @@ export function HeroGoalChips() {
           name="search"
           type="search"
           placeholder="e.g. reservoir simulation, drilling engineer"
-          className="h-11 min-w-0 flex-1 rounded-xl border border-border/60 bg-background/80 px-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-zone-mentorship focus:ring-2 focus:ring-zone-mentorship/20"
+          className="h-11 min-w-0 flex-1 rounded-xl border border-oil-gas-navy bg-oil-gas-navy px-4 text-sm text-oil-gas-white placeholder:text-oil-gas-white caret-oil-gas-white outline-none focus:border-oil-gas-orange focus:ring-2 focus:ring-oil-gas-orange/35"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-zone-mentorship px-4 text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
+          className="shrink-0 rounded-xl bg-oil-gas-orange px-4 text-sm font-semibold text-oil-gas-white hover:bg-oil-gas-navy"
         >
           Search
         </button>
@@ -37,7 +37,7 @@ export function HeroGoalChips() {
           <Link
             key={chip.id}
             href={`/mentors?goal=${chip.id}`}
-            className="rounded-full border border-zone-mentorship/25 bg-zone-mentorship/10 px-3.5 py-1.5 text-sm font-medium text-zone-mentorship transition-colors hover:bg-zone-mentorship/20"
+            className="hero-chip rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
           >
             {chip.label}
           </Link>
@@ -49,7 +49,7 @@ export function HeroGoalChips() {
           <Link
             key={discipline}
             href={`/disciplines/${disciplineToSlug(discipline)}`}
-            className="rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+            className="hero-chip rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
           >
             {discipline}
           </Link>

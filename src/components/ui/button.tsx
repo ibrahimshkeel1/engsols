@@ -4,23 +4,28 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium text-oil-gas-white transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:text-oil-gas-white",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/92 hover:-translate-y-px hover:shadow-sm",
-        secondary: "border border-border bg-surface text-foreground hover:bg-muted/60",
-        ghost: "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-        outline: "border border-border bg-surface text-foreground hover:bg-muted/60",
-        accent: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-sm",
+        default:
+          "bg-oil-gas-orange text-oil-gas-white hover:bg-oil-gas-navy",
+        secondary:
+          "border border-transparent bg-oil-gas-navy text-oil-gas-white hover:bg-oil-gas-orange",
+        ghost:
+          "border border-transparent bg-oil-gas-navy text-oil-gas-white hover:bg-oil-gas-orange",
+        outline:
+          "border border-transparent bg-oil-gas-navy-muted text-oil-gas-white hover:bg-oil-gas-orange",
+        accent:
+          "bg-oil-gas-orange text-oil-gas-white hover:bg-oil-gas-navy",
         zoneMentorship:
-          "bg-zone-mentorship text-white hover:brightness-110 dark:text-bg-main",
-        zoneExams: "bg-zone-exams text-white hover:brightness-110 dark:text-bg-main",
-        zoneNews: "bg-zone-news text-white hover:brightness-110 dark:text-bg-main",
-        zoneRecruiter:
-          "bg-zone-recruiter text-white hover:brightness-110 dark:text-bg-main",
-        zoneLive: "bg-zone-live text-white hover:brightness-110 dark:text-bg-main",
-        destructive: "bg-zone-news text-white hover:brightness-110 dark:text-bg-main",
+          "bg-oil-gas-orange text-oil-gas-white hover:bg-oil-gas-navy",
+        zoneExams: "bg-oil-gas-orange text-oil-gas-white hover:bg-oil-gas-navy",
+        zoneNews: "bg-oil-gas-navy text-oil-gas-white hover:bg-oil-gas-orange",
+        zoneRecruiter: "bg-oil-gas-navy text-oil-gas-white hover:bg-oil-gas-orange",
+        zoneLive: "bg-oil-gas-navy-muted text-oil-gas-white hover:bg-oil-gas-orange",
+        destructive:
+          "bg-oil-gas-orange text-oil-gas-white hover:bg-oil-gas-navy",
       },
       size: {
         default: "h-11 px-4",

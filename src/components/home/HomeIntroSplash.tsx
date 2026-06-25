@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { BlurText } from "@/components/motion/BlurText";
 import { useIsClient } from "@/lib/use-is-client";
+import { speckleBackgroundStyle } from "@/lib/speckle-texture";
 
 const INTRO_STORAGE_KEY = "engsols-home-intro-seen";
 const PAUSE_AFTER_ANIMATION_MS = 200;
@@ -72,7 +73,8 @@ export function HomeIntroSplash() {
 
   return createPortal(
     <motion.div
-      className="fixed inset-0 z-[600] cursor-pointer hero-dark text-text-main antialiased"
+      className="fixed inset-0 z-[600] cursor-pointer text-text-main antialiased"
+      style={speckleBackgroundStyle}
       role="dialog"
       aria-label="Welcome"
       aria-hidden={exiting}
@@ -81,7 +83,6 @@ export function HomeIntroSplash() {
       transition={{ duration: FADE_OUT_MS / 1000, ease: "easeInOut" }}
       onClick={dismiss}
     >
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-70" aria-hidden />
       <div className="relative flex min-h-full items-center justify-center px-6">
         <div
           className="mx-auto max-w-3xl text-center"

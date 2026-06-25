@@ -27,7 +27,7 @@ export function ReportContentButton({ contentType, contentId }: { contentType: s
 
   if (!open) {
     return (
-      <Button type="button" size="sm" variant="ghost" className="text-xs text-muted-foreground" onClick={() => setOpen(true)}>
+      <Button type="button" size="sm" variant="ghost" className="text-xs" onClick={() => setOpen(true)}>
         Report
       </Button>
     );

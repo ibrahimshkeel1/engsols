@@ -55,7 +55,7 @@ export function JobsDirectory({ jobs }: Props) {
       }
     >
       <div className="flex flex-wrap gap-3">
-        <Input placeholder="Search jobs..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
+        <Input placeholder="Search jobs..." value={search} onChange={(e) => setSearch(e.target.value)} tone="search" className="max-w-xs" />
         <Select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="">All types</option>
           <option value="full-time">Full-time</option>

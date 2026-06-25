@@ -22,6 +22,7 @@ import {
   pathFromHref,
   shouldSkipPageTransition,
 } from "@/lib/page-titles";
+import { speckleBackgroundStyle } from "@/lib/speckle-texture";
 
 const PAUSE_AFTER_TEXT_MS = 350;
 const EXIT_MS = 450;
@@ -182,7 +183,8 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
             {transition && (
               <motion.div
                 key={transition.href + transition.title}
-                className="fixed inset-0 z-[550] hero-dark text-text-main antialiased"
+                className="fixed inset-0 z-[550] text-text-main antialiased"
+                style={speckleBackgroundStyle}
                 role="status"
                 aria-live="polite"
                 aria-busy={overlayVisible}
@@ -191,7 +193,6 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
                 exit={{ opacity: 0 }}
                 transition={{ duration: EXIT_MS / 1000, ease: "easeInOut" }}
               >
-                <div className="pointer-events-none absolute inset-0 bg-grid opacity-70" aria-hidden />
                 <div className="relative flex min-h-full flex-col items-center justify-center px-6 text-center">
                   <SplitText
                     key={`${transition.href}-${transition.title}`}

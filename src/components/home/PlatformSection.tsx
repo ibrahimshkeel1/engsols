@@ -26,7 +26,7 @@ const pillars = [
 
 export function PlatformSection() {
   return (
-    <section className="border-y border-border bg-foreground py-16 text-background">
+    <section className="bg-oil-gas-navy py-16 text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <h2 className="text-center text-3xl font-bold">Everything engineers need in one place</h2>
         <p className="mx-auto mt-3 max-w-2xl text-center opacity-70">
@@ -37,9 +37,9 @@ export function PlatformSection() {
             <Link
               key={p.href}
               href={p.href}
-              className="rounded-2xl border border-background/20 bg-background/5 p-5 transition hover:border-primary hover:bg-background/10"
+              className="rounded-2xl bg-oil-gas-navy-muted p-5 transition-colors hover:bg-oil-gas-navy"
             >
-              <p.icon className="h-8 w-8 text-primary" />
+              <p.icon className="h-8 w-8 text-oil-gas-orange" />
               <h3 className="mt-3 font-semibold">{p.title}</h3>
               <p className="mt-1 text-sm opacity-70">{p.desc}</p>
             </Link>

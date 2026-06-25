@@ -32,7 +32,7 @@ export function GoalsProgress({ goals, completed }: { goals: string[]; completed
                 done ? "border-zone-mentorship-border bg-zone-mentorship/10" : "border-border hover:bg-muted/50",
               )}
             >
-              <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs", done && "border-zone-mentorship bg-zone-mentorship text-white dark:text-bg-main")}>
+              <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs", done && "border-zone-mentorship bg-zone-mentorship text-white")}>
                 {done ? "✓" : ""}
               </span>
               {goal}

@@ -35,7 +35,7 @@ export function TestimonialCTA({ testimonials, variant = "social" }: Testimonial
   if (featured.length === 0) return null;
 
   return (
-    <section className="border-b border-border/60 py-16 lg:py-20">
+    <section className="py-16 lg:py-20">
       <div className="page-container-wide mx-auto max-w-3xl">
         <h2 className="section-heading text-center sm:text-start">What engineers say</h2>
         <ul className="mt-8 flex flex-col gap-8">

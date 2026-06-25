@@ -406,7 +406,7 @@ export function CadSandboxWorkspace({ room }: Props) {
           <div
             className={cn(
               "absolute inset-3 flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-colors",
-              dragOver ? "border-zone-live bg-zone-live/10" : "border-border/60 bg-background/40 backdrop-blur-sm",
+              dragOver ? "border-zone-live bg-zone-live/10" : "border-border/60 bg-background",
             )}
           >
             <Upload className="h-10 w-10 text-muted-foreground" aria-hidden />
@@ -428,15 +428,15 @@ export function CadSandboxWorkspace({ room }: Props) {
         )}
 
         {readOnly && unlocked && (
-          <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-background/10 pb-4 backdrop-blur-[1px]">
-            <span className="rounded-full border border-border/80 bg-background/90 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+          <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-background/80 pb-4">
+            <span className="rounded-full border border-border bg-background px-4 py-1.5 text-xs font-medium text-muted-foreground">
               Read-only viewer — orbit controls locked
             </span>
           </div>
         )}
 
         {loading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/90">
             <Loader2 className="h-10 w-10 animate-spin text-zone-live" aria-hidden />
             <p className="mt-3 text-sm font-medium">Parsing {fileName}…</p>
           </div>
@@ -461,7 +461,7 @@ export function CadSandboxWorkspace({ room }: Props) {
               className={cn(
                 "shrink-0 rounded-lg px-3 py-2 text-left text-xs font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-40 lg:w-full",
                 renderMode === mode.id
-                  ? "bg-zone-live text-white shadow-zone-live dark:text-bg-main"
+                  ? "bg-zone-live text-white shadow-zone-live"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >

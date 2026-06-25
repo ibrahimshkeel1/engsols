@@ -4,7 +4,7 @@ import { HeroGoalChips } from "@/components/home/HeroGoalChips";
 
 export function Hero() {
   return (
-    <DotGridBackground sectionClassName="hero-dark border-b border-border/60">
+    <DotGridBackground sectionClassName="hero-dark">
       <div className="page-container-wide py-24 sm:py-28 lg:py-36">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="hero-dot-text text-balance">
@@ -17,10 +17,15 @@ export function Hero() {
           <HeroGoalChips />
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href="/mentors" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
+            <ButtonLink href="/mentors" variant="accent" size="lg" className="w-full rounded-xl sm:w-auto">
               Browse all mentors
             </ButtonLink>
-            <ButtonLink href="/how-it-works" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
+            <ButtonLink
+              href="/how-it-works"
+              variant="secondary"
+              size="lg"
+              className="w-full rounded-xl sm:w-auto"
+            >
               How certifications &amp; jobs fit in
             </ButtonLink>
           </div>

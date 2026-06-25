@@ -26,11 +26,11 @@ function StatCard({
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm text-muted-foreground">{label}</p>
-            <p className="mt-2 font-display text-3xl tracking-tight">{value}</p>
-            <p className="mt-2 text-xs text-muted-foreground">{hint}</p>
+            <p className="text-sm text-text-muted">{label}</p>
+            <p className="mt-2 font-display text-3xl tracking-tight text-oil-gas-navy">{value}</p>
+            <p className="mt-2 text-xs text-text-muted">{hint}</p>
           </div>
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-oil-gas-orange/10 text-oil-gas-orange">
             <Icon className="h-5 w-5" aria-hidden />
           </span>
         </div>
@@ -42,16 +42,12 @@ function StatCard({
 function transactionBadge(type: PlatformTransaction["type"]) {
   if (type === "exam") {
     return (
-      <Badge className="bg-zone-recruiter/15 text-zone-recruiter-on">
-        Exam sale
-      </Badge>
+      <Badge variant="navy">Exam sale</Badge>
     );
   }
 
   return (
-    <Badge className="bg-violet-500/15 text-violet-700 dark:text-violet-300">
-      Mentorship
-    </Badge>
+    <Badge variant="orange">Mentorship</Badge>
   );
 }
 

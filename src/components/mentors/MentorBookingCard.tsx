@@ -29,7 +29,7 @@ function BookingLoginGate({ mentorSlug, sessionType }: { mentorSlug: string; ses
       <p className="text-sm text-muted-foreground">Log in to request this session with the mentor.</p>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 inline-flex h-10 items-center justify-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
+        className="mt-3 inline-flex h-10 items-center justify-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110"
       >
         Log in to book
       </Link>
@@ -188,7 +188,7 @@ export function MentorBookingCard({
               href={calendlyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110"
             >
               {selected === "intro" ? "Book intro on calendar" : "Book on calendar"}{" "}
               <ExternalLink className="h-4 w-4" />

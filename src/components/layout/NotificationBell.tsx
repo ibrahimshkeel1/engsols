@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 
 type Props = {
   initialCount?: number;
+  className?: string;
 };
 
-export function NotificationBell({ initialCount = 0 }: Props) {
+export function NotificationBell({ initialCount = 0, className }: Props) {
   const [count, setCount] = useState(initialCount);
 
   useEffect(() => {
@@ -35,7 +36,10 @@ export function NotificationBell({ initialCount = 0 }: Props) {
   return (
     <Link
       href="/notifications"
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-foreground"
+      className={
+        className ??
+        "relative inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-foreground"
+      }
       aria-label="Notifications"
     >
       <Bell className="h-4 w-4" />

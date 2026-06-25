@@ -94,7 +94,7 @@ export default async function NewsArticlePage({ params }: Props) {
           <div className="py-12">
             <MarkdownBody
               content={article.content}
-              className="prose prose-lg dark:prose-invert max-w-none leading-relaxed text-text-main/90"
+              className="prose prose-lg max-w-none leading-relaxed text-text-main/90"
             />
           </div>
         </article>

@@ -48,7 +48,7 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
   return (
     <>
       <div className="flex flex-wrap items-center gap-3">
-        <Input placeholder="Search by name, skills, university..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" aria-label="Search portfolios" />
+        <Input placeholder="Search by name, skills, university..." value={search} onChange={(e) => setSearch(e.target.value)} tone="search" className="max-w-sm" aria-label="Search portfolios" />
         <Select value={discipline} onChange={(e) => setDiscipline(e.target.value)} aria-label="Filter by discipline">
           <option value="">All disciplines</option>
           {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}

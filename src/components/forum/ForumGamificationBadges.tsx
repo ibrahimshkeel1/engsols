@@ -29,7 +29,7 @@ export function ForumGamificationBadges({
 
   if (likes >= 2) {
     badges.push(
-      <span key="helpful" className="inline-flex items-center gap-1 rounded-md bg-amber-500/12 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+      <span key="helpful" className="inline-flex items-center gap-1 rounded-md bg-amber-500/12 px-2 py-0.5 text-xs font-medium text-amber-700">
         <ThumbsUp className="h-3 w-3" />
         Helpful answer
       </span>,

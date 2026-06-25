@@ -1,5 +1,5 @@
 import { Hero } from "@/components/home/Hero";
-import { HomeIntroSplash } from "@/components/home/HomeIntroSplash";
+import { HomeIntroSplash } from "@/components/home/HomeIntroSplashLazy";
 import { ContinueJourneyHero } from "@/components/home/ContinueJourneyHero";
 import { ValueProps } from "@/components/home/ValueProps";
 import { StartHereJourney } from "@/components/home/StartHereJourney";

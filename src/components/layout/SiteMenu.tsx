@@ -32,9 +32,10 @@ export function SiteMenu({ showForYou = false, footer, trailing }: SiteMenuProps
       logo={
         <Link
           href="/"
-          className="font-display text-lg tracking-tight text-inherit transition-opacity hover:opacity-80"
+          className="font-display text-lg tracking-tight text-oil-gas-white transition-opacity hover:opacity-85"
         >
-          Eng<span className="text-zone-recruiter">Sols</span>
+          <span className="text-oil-gas-white">Eng</span>
+          <span className="text-oil-gas-orange">Sols</span>
         </Link>
       }
       items={items}

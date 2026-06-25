@@ -44,7 +44,7 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
       }
     >
       <div className="flex flex-wrap gap-3">
-        <Input placeholder="Search companies..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
+        <Input placeholder="Search companies..." value={search} onChange={(e) => setSearch(e.target.value)} tone="search" className="max-w-xs" />
         <select value={type} onChange={(e) => setType(e.target.value)} className="h-10 rounded-xl border border-border bg-background px-3 text-sm">
           <option value="">All types</option>
           <option value="operator">Operator</option>

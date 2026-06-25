@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { MOTION_COLORS } from "@/lib/motion-colors";
 import { useIsTouchDevice } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
 import "./PixelTransition.css";
@@ -12,6 +13,7 @@ export type PixelTransitionProps = {
   secondContent: ReactNode;
   gridSize?: number;
   pixelColor?: string;
+  pixelColorAlt?: string;
   animationStepDuration?: number;
   aspectRatio?: string;
   once?: boolean;
@@ -28,7 +30,8 @@ export function PixelTransition({
   firstContent,
   secondContent,
   gridSize = 7,
-  pixelColor = "hsl(var(--background))",
+  pixelColor = MOTION_COLORS.pixelReveal.primary,
+  pixelColorAlt = MOTION_COLORS.pixelReveal.alternate,
   animationStepDuration = 0.3,
   once = false,
   aspectRatio = "100%",
@@ -60,7 +63,7 @@ export function PixelTransition({
       for (let col = 0; col < gridSize; col++) {
         const pixel = document.createElement("div");
         pixel.classList.add("pixelated-image-card__pixel");
-        pixel.style.backgroundColor = pixelColor;
+        pixel.style.backgroundColor = (row + col) % 2 === 0 ? pixelColor : pixelColorAlt;
 
         const size = 100 / gridSize;
         pixel.style.width = `${size}%`;
@@ -72,11 +75,11 @@ export function PixelTransition({
     }
 
     pixelsBuiltRef.current = true;
-  }, [gridSize, pixelColor]);
+  }, [gridSize, pixelColor, pixelColorAlt]);
 
   useEffect(() => {
     pixelsBuiltRef.current = false;
-  }, [gridSize, pixelColor]);
+  }, [gridSize, pixelColor, pixelColorAlt]);
 
   const setActiveLayer = useCallback((activate: boolean) => {
     const activeEl = activeRef.current;

@@ -1,12 +1,23 @@
-/** EngSols-themed dot grid — neutral base, slate-blue on hover (no green). */
+import { MOTION_COLORS } from "@/lib/motion-colors";
+
+/** EngSols dot grid — ice base, navy + orange active dots (checkerboard). */
+export const DOT_GRID_COLORS = {
+  baseColor: MOTION_COLORS.dotGrid.base,
+  activeColor: MOTION_COLORS.dotGrid.activeNavy,
+  activeColorAlt: MOTION_COLORS.dotGrid.activeOrange,
+} as const;
+
+/** @deprecated Use DOT_GRID_COLORS — kept for callers expecting light/dark shape. */
 export const DOT_GRID_THEME = {
   light: {
-    baseColor: "#b4bcc8",
-    activeColor: "#4a5f7a",
+    baseColor: DOT_GRID_COLORS.baseColor,
+    activeColor: DOT_GRID_COLORS.activeColor,
+    activeColorAlt: DOT_GRID_COLORS.activeColorAlt,
   },
   dark: {
     baseColor: "#4a5d72",
     activeColor: "#8cb4e8",
+    activeColorAlt: MOTION_COLORS.dotGrid.activeOrange,
   },
 } as const;
 

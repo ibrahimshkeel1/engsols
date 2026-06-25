@@ -10,7 +10,7 @@ export function LocaleSwitcher() {
     <select
       value={locale}
       onChange={(e) => setLocale(e.target.value as typeof locale)}
-      className="rounded-lg border border-border bg-card px-2 py-1 text-xs text-muted-foreground"
+      className="rounded-lg border border-white/14 bg-white/8 px-2 py-1 text-xs text-white/75"
       aria-label="Language"
     >
       {locales.map((l) => (

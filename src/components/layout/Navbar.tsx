@@ -1,4 +1,3 @@
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { AuthLinks } from "@/components/layout/AuthLinks";
 import { NavbarSearch } from "@/components/layout/NavbarSearch";
 import { NavbarShell } from "@/components/layout/NavbarShell";
@@ -12,12 +11,11 @@ export async function Navbar() {
       showForYou={Boolean(user)}
       menuFooter={
         <div className="flex flex-col gap-2 sm:hidden">
-          <AuthLinks />
+          <AuthLinks variant="menuOverlay" />
         </div>
       }
     >
       <NavbarSearch />
-      <ThemeToggle />
       <div className="hidden items-center gap-1 sm:flex">
         <AuthLinks />
       </div>

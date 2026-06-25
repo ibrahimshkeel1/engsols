@@ -8,10 +8,10 @@ import { CommunityBottomNav } from "@/components/layout/CommunityBottomNav";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { NavigationTransitionProvider } from "@/components/providers/NavigationTransitionProvider";
 import { RouteAccentProvider } from "@/components/providers/RouteAccentProvider";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
 import { SentryInit } from "@/components/analytics/SentryInit";
+import { SpeckleSurface } from "@/components/layout/SpeckleBackground";
 import { PwaInstallPrompt } from "@/components/layout/PwaInstallPrompt";
 import { LOCALE_COOKIE, localeDir, parseLocaleCookie } from "@/lib/i18n/locale-cookie";
 import "./globals.css";
@@ -51,32 +51,32 @@ export default async function RootLayout({
   const dir = localeDir(locale);
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
-      <body className="flex min-h-full flex-col bg-bg-main text-text-main antialiased transition-colors duration-[250ms]">
+    <html lang={locale} dir={dir} className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
+      <body className="has-speckle min-h-full text-text-main">
+        <SpeckleSurface className="flex min-h-full flex-col">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[500] focus:rounded-lg focus:bg-bg-main focus:px-4 focus:py-2 focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[500] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
         >
           Skip to content
         </a>
         <Analytics />
         <SentryInit />
-        <ThemeProvider>
-          <LocaleProvider initialLocale={locale}>
-            <NavigationTransitionProvider>
-              <RouteAccentProvider>
-                <Navbar />
-                <main id="main-content" className="flex-1 pb-16 lg:pb-0">
-                  <PageTransition>{children}</PageTransition>
-                </main>
-                <Footer />
-                <CommunityBottomNav />
-                <Toaster position="bottom-center" richColors />
-                <PwaInstallPrompt />
-              </RouteAccentProvider>
-            </NavigationTransitionProvider>
-          </LocaleProvider>
-        </ThemeProvider>
+        <LocaleProvider initialLocale={locale}>
+          <NavigationTransitionProvider>
+            <RouteAccentProvider>
+              <Navbar />
+              <main id="main-content" className="flex-1 pb-16 lg:pb-0">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+              <CommunityBottomNav />
+              <Toaster position="bottom-center" richColors />
+              <PwaInstallPrompt />
+            </RouteAccentProvider>
+          </NavigationTransitionProvider>
+        </LocaleProvider>
+        </SpeckleSurface>
       </body>
     </html>
   );

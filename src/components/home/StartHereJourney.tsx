@@ -9,10 +9,10 @@ const supportingLinks = [
 
 export function StartHereJourney() {
   return (
-    <section className="border-b border-border/60 py-10 lg:py-12">
+    <section className="py-10 lg:py-12">
       <div className="page-container-wide">
         <p className="text-caption font-medium text-muted-foreground">Also on EngSols</p>
-        <ul className="mt-4 divide-y divide-border/60">
+        <ul className="mt-4 flex flex-col gap-1">
           {supportingLinks.map((item) => (
             <li key={item.href}>
               <Link

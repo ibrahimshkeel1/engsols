@@ -1,12 +1,17 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { fulfillExamCheckoutSession } from "@/actions/stripe";
 import { getCurrentUser } from "@/lib/auth";
 import { getMockExamMetaBySlug } from "@/lib/data/exams";
 import { hasUserPurchasedExam } from "@/lib/exam-purchases";
-import { MockExamInterface } from "@/components/exams/MockExamInterface";
 import { PremiumExamLockScreen } from "@/components/exams/PremiumExamLockScreen";
 import { buildDetailMetadata } from "@/lib/page-metadata";
+
+const MockExamInterface = dynamic(
+  () => import("@/components/exams/MockExamInterface").then((m) => m.MockExamInterface),
+  { loading: () => <div className="p-8 text-center text-sm text-text-muted">Loading exam…</div> },
+);
 
 type Props = {
   params: Promise<{ slug: string }>;

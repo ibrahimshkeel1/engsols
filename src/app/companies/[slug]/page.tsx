@@ -83,7 +83,7 @@ export default async function CompanyPage({ params }: Props) {
             </ul>
           </>
         )}
-        <Link href="/jobs/post" className="mt-8 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground">
+        <Link href="/jobs/post" className="mt-8 inline-flex rounded-lg bg-oil-gas-orange px-4 py-2 text-sm font-medium text-white hover:bg-oil-gas-navy">
           Post a job at this company
         </Link>
       </div>

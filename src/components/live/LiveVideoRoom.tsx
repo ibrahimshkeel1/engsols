@@ -1,9 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { CollaborationWorkspace } from "@/components/live/CollaborationWorkspace";
 import { LiveRoomSkeleton } from "@/components/ui/DirectorySkeletons";
+
+const CollaborationWorkspace = dynamic(
+  () => import("@/components/live/CollaborationWorkspace").then((m) => m.CollaborationWorkspace),
+  { loading: () => <LiveRoomSkeleton /> },
+);
 
 type LiveVideoRoomProps = {
   slug: string;

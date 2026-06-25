@@ -19,7 +19,7 @@ export function CompanyStrip({ companyNames }: { companyNames: string[] }) {
   const track = [...companyNames, ...companyNames];
 
   return (
-    <section className="border-b border-border/40 py-8">
+    <section className="py-8">
       <p className="text-caption text-center opacity-70">Mentors from leading operators &amp; service companies</p>
       <div className="marquee-fade relative mt-4 overflow-hidden">
         <div className="animate-marquee-ltr flex w-max items-center">

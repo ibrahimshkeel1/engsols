@@ -176,7 +176,7 @@ function CollaborationWorkspaceInner({
             aria-labelledby={`workspace-tab-${activeTab}`}
             className="order-1 z-0 flex min-h-0 flex-1 flex-col lg:order-2 lg:col-span-7 lg:h-full"
           >
-            <div className="mb-2 hidden items-center justify-between gap-2 rounded-lg border border-zone-live/20 bg-bg-surface px-3 py-2 text-xs text-text-muted backdrop-blur-sm sm:flex">
+            <div className="mb-2 hidden items-center justify-between gap-2 rounded-lg border border-zone-live/20 bg-bg-surface px-3 py-2 text-xs text-text-muted sm:flex">
               <span>
                 {activeTab === "whiteboard"
                   ? "Collaborative whiteboard — synced live with all participants"

@@ -296,7 +296,7 @@ export default function BubbleMenu({
                 className={cn(FLUID_DROP_PEBBLE, "relative z-0 hover:z-10")}
                 style={
                   {
-                    "--hover-bg": item.hoverStyles?.bgColor || "#f3f4f6",
+                    "--hover-bg": item.hoverStyles?.bgColor || "#ea580c",
                     "--hover-color": item.hoverStyles?.textColor || "#ffffff",
                   } as CSSProperties
                 }

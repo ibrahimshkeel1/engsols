@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { AnimateIn } from "@/components/motion/AnimateIn";
-import { BallpitHeroBackground } from "@/components/motion/ballpit/BallpitHeroBackground";
+import { HeroSection } from "@/components/shared/HeroSection";
 import { routeAccentClasses } from "@/lib/nav-hover-colors";
 
 type ListPageLayoutProps = {
@@ -28,9 +28,7 @@ export function ListPageLayout({
 }: ListPageLayoutProps) {
   return (
     <>
-      <BallpitHeroBackground
-        className={cn(routeAccentClasses.hairline, "border-b border-border", heroClassName)}
-      >
+      <HeroSection className={cn(heroClassName)}>
         <div className="page-container-wide py-20 animate-fade-up">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
@@ -52,7 +50,7 @@ export function ListPageLayout({
             {action && <div className="shrink-0">{action}</div>}
           </div>
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
       <div className={cn("page-container-wide py-12 pb-24 lg:pb-12", className)}>
         <AnimateIn>{children}</AnimateIn>
       </div>

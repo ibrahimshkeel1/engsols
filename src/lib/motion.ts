@@ -1,10 +1,19 @@
 "use client";
 
-import { useReducedMotion } from "framer-motion";
+import { useSyncExternalStore } from "react";
+
+function getReducedMotionSnapshot() {
+  if (typeof window === "undefined") return false;
+  if (navigator.webdriver) return true;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function subscribeReducedMotion(onStoreChange: () => void) {
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
 
 export function usePrefersReducedMotion() {
-  const reduced = useReducedMotion();
-  // Playwright/automation: skip enter animations so smoke tests see headings immediately.
-  if (typeof navigator !== "undefined" && navigator.webdriver) return true;
-  return reduced ?? false;
+  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
 }

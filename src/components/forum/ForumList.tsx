@@ -54,7 +54,7 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Input placeholder="Search discussions..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" aria-label="Search forum discussions" />
+        <Input placeholder="Search discussions..." value={search} onChange={(e) => setSearch(e.target.value)} tone="search" className="max-w-xs" aria-label="Search forum discussions" />
         <Select value={discipline} onChange={(e) => setDiscipline(e.target.value)} aria-label="Filter by discipline">
           <option value="">All disciplines</option>
           {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { BallpitHeroBackground } from "@/components/motion/ballpit/BallpitHeroBackground";
+import { HeroSection } from "@/components/shared/HeroSection";
 import { routeAccentClasses } from "@/lib/nav-hover-colors";
 
 type PageHeroProps = {
@@ -28,7 +28,7 @@ export function PageHero({
 }: PageHeroProps) {
   if (variant === "live") {
     return (
-      <BallpitHeroBackground className={cn(routeAccentClasses.hairline, "border-b border-border", className)}>
+      <HeroSection className={cn(className)}>
         <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end">
           <div className="animate-fade-up">
             {backHref && (
@@ -48,26 +48,26 @@ export function PageHero({
           </div>
           {children && <div className="flex shrink-0 flex-wrap gap-3">{children}</div>}
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   if (variant === "forum") {
     return (
-      <BallpitHeroBackground className={cn(routeAccentClasses.hairline, "border-b border-border", className)}>
+      <HeroSection className={cn(className)}>
         <div className="page-container-wide py-20 animate-fade-up">
           <p className={cn("section-label", routeAccentClasses.label)}>Community</p>
           <h1 className="text-display-xl mt-2">{title}</h1>
           {description && <p className="mt-4 max-w-2xl text-body-lg">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   if (variant === "editorial") {
     return (
-      <BallpitHeroBackground className={cn(routeAccentClasses.hairline, "border-b border-border", className)}>
+      <HeroSection className={cn(className)}>
         <div className="page-container-wide py-20 animate-fade-up">
           {backHref && (
             <Link
@@ -82,12 +82,12 @@ export function PageHero({
           {description && <p className="mt-5 max-w-2xl text-body-lg">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   return (
-    <BallpitHeroBackground className={cn(routeAccentClasses.hairline, "border-b border-border", className)}>
+    <HeroSection className={cn(className)}>
       <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end animate-fade-up">
         <div>
           {label && (
@@ -98,6 +98,6 @@ export function PageHero({
         </div>
         {children && <div className="flex shrink-0 flex-wrap gap-3">{children}</div>}
       </div>
-    </BallpitHeroBackground>
+    </HeroSection>
   );
 }

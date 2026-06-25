@@ -67,7 +67,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
   ];
 
   return (
-    <section className="hero-dark relative overflow-hidden border-b border-border/60">
+    <section className="hero-dark relative overflow-hidden">
       <div className="bg-grid absolute inset-0 opacity-20" />
       <div className="page-container-wide relative py-20 lg:py-28">
         <AnimateIn className="max-w-xl">
@@ -81,7 +81,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
           </ButtonLink>
         </AnimateIn>
 
-        <div className="mt-16 border-t border-border/50 pt-12">
+        <div className="mt-16 pt-12">
           <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />
 
           {actions.length > 0 ? (
@@ -126,7 +126,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
                   <Link
                     key={mentor.slug}
                     href={`/mentors/${mentor.slug}`}
-                    className="flex items-center gap-3 rounded-xl border border-border/75 bg-card px-3 py-2.5 transition-[border-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-xl border border-border/75 bg-card px-3 py-2.5 transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border"
                   >
                     <Avatar name={mentor.name} discipline={mentor.discipline} size="sm" src={mentor.avatarUrl} />
                     <span className="text-sm font-medium">{mentor.name}</span>

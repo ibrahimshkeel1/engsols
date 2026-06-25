@@ -13,7 +13,7 @@ export function SocialProof({ stats }: { stats: PlatformStats }) {
   ];
 
   return (
-    <section className="border-b border-border/60" aria-label="Platform metadata">
+    <section aria-label="Platform metadata">
       <div className="page-container-wide py-5">
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-center sm:gap-x-12">
           {items.map((s) => (

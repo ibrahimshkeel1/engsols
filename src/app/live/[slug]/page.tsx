@@ -68,7 +68,7 @@ export default async function LiveStreamPage({ params }: Props) {
           unoptimized
         />
         {stream.status === "live" && (
-          <span className="absolute left-4 top-4 rounded-lg bg-zone-live px-3 py-1 text-xs font-bold text-white shadow-zone-live dark:text-bg-main">
+          <span className="absolute left-4 top-4 rounded-lg bg-zone-live px-3 py-1 text-xs font-bold text-white shadow-zone-live">
             LIVE
           </span>
         )}
@@ -85,7 +85,7 @@ export default async function LiveStreamPage({ params }: Props) {
             </span>
           )}
           {stream.requireJoinApproval && (
-            <span className="rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+            <span className="rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700">
               Approval required
             </span>
           )}

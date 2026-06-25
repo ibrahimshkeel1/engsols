@@ -22,7 +22,7 @@ export function WorkspaceSwitcher({ activeTab, onTabChange, className }: Props) 
       role="tablist"
       aria-label="Collaboration workspace"
       className={cn(
-        "inline-flex flex-wrap gap-1 rounded-xl border border-border/60 bg-card/80 p-1 shadow-sm backdrop-blur-md",
+        "inline-flex flex-wrap gap-1 rounded-xl border border-border/60 bg-card p-1",
         className,
       )}
     >

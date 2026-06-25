@@ -34,7 +34,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <p className="mt-2 text-muted-foreground">Explore mentors, discussions, jobs, videos, live sessions, certifications, and marketplace.</p>
       </SectionReveal>
       <form className="mt-8" action="/search" method="get">
-        <Input name="q" defaultValue={query} placeholder="Search..." className="h-12" aria-label="Search query" />
+        <Input name="q" defaultValue={query} placeholder="Search..." tone="search" className="h-12" aria-label="Search query" />
       </form>
 
       {!query && (

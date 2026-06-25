@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { BallpitHeroBackground } from "@/components/motion/ballpit/BallpitHeroBackground";
+import { HeroSection } from "@/components/shared/HeroSection";
 import {
   BentoDirectorySkeletonGrid,
   CertificationGridSkeleton,
@@ -31,7 +31,7 @@ export function PageHeroSkeleton({
 
   if (variant === "live") {
     return (
-      <BallpitHeroBackground className="border-b border-border">
+      <HeroSection className="border-b border-border">
         <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -43,37 +43,37 @@ export function PageHeroSkeleton({
           </div>
           {action}
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   if (variant === "forum") {
     return (
-      <BallpitHeroBackground className="border-b border-border">
+      <HeroSection className="border-b border-border">
         <div className="page-container-wide py-20">
           <Skeleton className="h-3 w-24" />
           <Skeleton className="mt-2 h-10 w-80 max-w-full sm:h-12" />
           <Skeleton className="mt-4 h-4 w-full max-w-2xl" />
           {action && <div className="mt-8">{action}</div>}
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   if (variant === "editorial") {
     return (
-      <BallpitHeroBackground className="border-b border-border">
+      <HeroSection className="border-b border-border">
         <div className="page-container-wide py-20">
           <Skeleton className="h-3 w-28" />
           <Skeleton className="mt-2 h-10 w-96 max-w-full sm:h-12" />
           <Skeleton className="mt-5 h-4 w-full max-w-2xl" />
         </div>
-      </BallpitHeroBackground>
+      </HeroSection>
     );
   }
 
   return (
-    <BallpitHeroBackground className="border-b border-border">
+    <HeroSection className="border-b border-border">
       <div className="page-container-wide flex flex-col justify-between gap-6 py-20 sm:flex-row sm:items-end">
         <div className="space-y-3">
           <Skeleton className="h-3 w-24" />
@@ -82,7 +82,7 @@ export function PageHeroSkeleton({
         </div>
         {action}
       </div>
-    </BallpitHeroBackground>
+    </HeroSection>
   );
 }
 

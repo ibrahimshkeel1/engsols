@@ -126,7 +126,7 @@ export default async function CertificationPage({ params }: Props) {
       )}
       <Link
         href={`/mentors?goal=fe-pe`}
-        className="mt-8 inline-flex h-11 items-center rounded-xl bg-zone-exams px-5 text-sm font-semibold text-white hover:brightness-110 dark:text-bg-main"
+        className="mt-8 inline-flex h-11 items-center rounded-xl bg-zone-exams px-5 text-sm font-semibold text-white hover:brightness-110"
       >
         Browse all exam mentors
       </Link>

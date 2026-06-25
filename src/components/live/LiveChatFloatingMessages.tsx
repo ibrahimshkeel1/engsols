@@ -83,7 +83,7 @@ export function LiveChatFloatingMessages({ className }: Props) {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="live-chat-toast w-full rounded-xl border border-zone-live/25 bg-bg-surface/95 px-3 py-2.5 shadow-lg backdrop-blur-md"
+          className="live-chat-toast w-full rounded-xl border border-zone-live/25 bg-bg-surface px-3 py-2.5"
         >
           <p className="text-xs font-semibold text-zone-live">{toast.name}</p>
           <p className="mt-0.5 text-sm leading-snug text-text-main">{toast.message}</p>

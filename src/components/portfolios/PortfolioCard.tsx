@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Portfolio } from "@/types";
 import { PixelTransition } from "@/components/motion/pixel-transition";
+import { MOTION_COLORS } from "@/lib/motion-colors";
 import { ProfilePassportPhoto } from "@/components/ui/ProfilePassportPhoto";
 
 type PortfolioCardProps = {
@@ -121,7 +122,8 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
       <PixelTransition
         fill
         gridSize={12}
-        pixelColor="hsl(var(--background))"
+        pixelColor={MOTION_COLORS.pixelReveal.primary}
+        pixelColorAlt={MOTION_COLORS.pixelReveal.alternate}
         animationStepDuration={0.4}
         className="h-full w-full overflow-hidden rounded-2xl"
         firstContent={<PortfolioCardPreview portfolio={portfolio} />}

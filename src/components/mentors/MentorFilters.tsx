@@ -3,6 +3,7 @@
 import { disciplines } from "@/data/disciplines";
 import { goals } from "@/data/goals";
 import { Input, Select } from "@/components/ui/input";
+import { searchFieldClassName } from "@/lib/input-styles";
 import { cn } from "@/lib/utils";
 
 type MentorFiltersProps = {
@@ -17,9 +18,6 @@ type MentorFiltersProps = {
   layout?: "sidebar" | "inline";
 };
 
-const fieldClass =
-  "w-full !h-auto min-h-[42px] rounded-xl border border-border-custom bg-bg-main px-3.5 py-2.5 text-sm text-text-main outline-none transition-all duration-200 focus:border-zone-mentorship focus:ring-2 focus:ring-zone-mentorship/20";
-
 export function MentorFilters({
   search,
   discipline,
@@ -31,10 +29,12 @@ export function MentorFilters({
   onSortChange,
   layout = "inline",
 }: MentorFiltersProps) {
+  const fieldClass = searchFieldClassName("!h-auto min-h-[42px] rounded-xl px-3.5 py-2.5");
+
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-2xl border border-border-custom bg-bg-surface p-5 shadow-premium-card",
+        "flex flex-col gap-4 rounded-2xl bg-bg-surface p-5",
         layout === "inline" && "sm:flex-row sm:flex-wrap sm:items-center",
       )}
     >
@@ -47,8 +47,8 @@ export function MentorFilters({
           placeholder="Search mentors..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          zone="mentorship"
-          className={cn(fieldClass, layout === "inline" && "sm:max-w-xs")}
+          tone="search"
+          className={cn(layout === "inline" && "sm:max-w-xs")}
         />
       </div>
 
@@ -60,7 +60,7 @@ export function MentorFilters({
           id="mentor-discipline"
           value={discipline}
           onChange={(e) => onDisciplineChange(e.target.value)}
-          zone="mentorship"
+          tone="search"
           className={fieldClass}
         >
           <option value="">All disciplines</option>
@@ -80,7 +80,7 @@ export function MentorFilters({
           id="mentor-goal"
           value={goal}
           onChange={(e) => onGoalChange(e.target.value)}
-          zone="mentorship"
+          tone="search"
           className={fieldClass}
         >
           <option value="">All goals</option>
@@ -100,7 +100,7 @@ export function MentorFilters({
           id="mentor-sort"
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
-          zone="mentorship"
+          tone="search"
           className={fieldClass}
         >
           <option value="availability">Available this week</option>

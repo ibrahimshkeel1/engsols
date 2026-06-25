@@ -40,13 +40,13 @@ export function MediaPlayer({
       type="button"
       onClick={() => toast.info("Video URL not set yet. Admins can add one in Admin → Videos.")}
       className={cn(
-        "group relative aspect-video w-full overflow-hidden rounded-xl bg-foreground",
+        "group relative aspect-video w-full overflow-hidden rounded-xl bg-oil-gas-navy",
         className,
       )}
     >
       <Image src={thumbnail} alt={title} fill className="object-cover opacity-80" unoptimized />
       <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/40">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-foreground shadow-lg">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-oil-gas-orange text-white shadow-lg">
           <Play className="h-8 w-8 fill-current" />
         </div>
       </div>
@@ -56,7 +56,7 @@ export function MediaPlayer({
         </span>
       )}
       {live && (
-        <span className="absolute left-3 top-3 rounded bg-zone-live px-2 py-0.5 text-xs font-medium text-white dark:text-bg-main">
+        <span className="absolute left-3 top-3 rounded bg-zone-live px-2 py-0.5 text-xs font-medium text-white">
           LIVE
         </span>
       )}

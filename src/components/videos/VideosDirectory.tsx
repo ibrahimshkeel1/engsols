@@ -38,7 +38,7 @@ export function VideosDirectory({ videos, mentors }: Props) {
       description="Tutorials, career talks, and technical deep-dives from industry engineers. Full library launches with mentor content partnerships."
     >
       <div className="flex flex-wrap gap-3">
-        <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
+        <Input placeholder="Search videos..." value={search} onChange={(e) => setSearch(e.target.value)} tone="search" className="max-w-xs" />
         <select value={discipline} onChange={(e) => setDiscipline(e.target.value)} className="h-10 rounded-xl border border-border bg-background px-3 text-sm">
           <option value="">All disciplines</option>
           {disciplines.map((d) => <option key={d} value={d}>{d}</option>)}

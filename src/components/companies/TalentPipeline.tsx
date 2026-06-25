@@ -9,6 +9,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { DisciplineBadge } from "@/components/ui/DisciplineBadge";
 import { EndorsementBadge } from "@/components/portfolios/EndorsementBadge";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -211,7 +212,7 @@ export function TalentPipeline({ portfolios }: Props) {
             className={cn(
               "inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors",
               endorsedOnly
-                ? "border-zone-recruiter bg-zone-recruiter text-white shadow-sm dark:text-bg-main"
+                ? "border-zone-recruiter bg-zone-recruiter text-white shadow-sm"
                 : "border-border bg-muted/40 text-foreground hover:bg-muted",
             )}
           >
@@ -265,12 +266,13 @@ export function TalentPipeline({ portfolios }: Props) {
 
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Technical skills</p>
-            <input
+            <Input
               type="search"
               value={skillQuery}
               onChange={(e) => setSkillQuery(e.target.value)}
               placeholder="Search skills…"
-              className="mt-2 flex h-9 w-full rounded-lg border border-border bg-background px-3 text-xs"
+              tone="search"
+              className="mt-2 h-9 text-xs"
             />
             <div className="mt-2 flex max-h-28 flex-wrap gap-1.5 overflow-y-auto">
               {visibleSkills.map((s) => (

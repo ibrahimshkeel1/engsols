@@ -23,7 +23,10 @@ export function CommunityBottomNav() {
   if (!show && pathname !== "/") return null;
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-card/95 backdrop-blur-xl pb-safe lg:hidden" aria-label="Community">
+    <nav
+      className="fixed bottom-0 inset-x-0 z-40 bg-oil-gas-navy pb-safe text-oil-gas-white lg:hidden"
+      aria-label="Community"
+    >
       <div className="mx-auto flex max-w-lg items-center justify-around px-1 py-1.5">
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
@@ -34,10 +37,10 @@ export function CommunityBottomNav() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex min-h-[48px] min-w-[56px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2 text-[11px] font-medium transition-colors",
-                active ? "text-accent" : "text-muted-foreground",
+                active ? "text-oil-gas-orange" : "text-oil-gas-white",
               )}
             >
-              <tab.icon className={cn("h-5 w-5", active && "scale-110")} aria-hidden />
+              <tab.icon className="h-5 w-5" aria-hidden />
               {t(locale, tab.labelKey)}
             </Link>
           );

@@ -621,7 +621,7 @@ export function WhiteboardWorkspace({ room, isHost = false }: Props) {
       >
         {readOnly && (
           <div className="pointer-events-none absolute inset-x-0 top-2 z-10 flex justify-center px-3">
-            <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur-sm">
+            <span className="rounded-full bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
               View only — host has locked the whiteboard
             </span>
           </div>

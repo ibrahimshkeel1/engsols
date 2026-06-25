@@ -20,7 +20,7 @@ export default async function LoginPage({ searchParams }: Props) {
       <div className="mx-auto w-full max-w-md px-4 sm:px-6">
         <LoginHeader />
         {!supabaseReady && (
-          <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800 dark:text-amber-200">
+          <p className="mt-4 rounded-xl bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-800">
             {configError ?? "Supabase is not configured on this deployment. Add API keys in Vercel → Settings → Environment Variables."}
           </p>
         )}

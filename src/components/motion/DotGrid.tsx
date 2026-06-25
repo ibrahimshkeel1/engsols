@@ -20,6 +20,7 @@ type Dot = {
   xOffset: number;
   yOffset: number;
   _inertiaApplied: boolean;
+  activeRgb: { r: number; g: number; b: number };
 };
 
 export type DotGridHandle = {
@@ -33,6 +34,7 @@ type DotGridProps = {
   gap?: number;
   baseColor?: string;
   activeColor?: string;
+  activeColorAlt?: string;
   baseOpacity?: number;
   proximity?: number;
   speedTrigger?: number;
@@ -91,6 +93,7 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
     gap = 32,
     baseColor = "#5227FF",
     activeColor = "#5227FF",
+    activeColorAlt,
     baseOpacity = 0.55,
     proximity = 150,
     speedTrigger = 20,
@@ -125,6 +128,10 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
 
   const baseRgb = useMemo(() => hexToRgb(baseColor), [baseColor]);
   const activeRgb = useMemo(() => hexToRgb(activeColor), [activeColor]);
+  const activeAltRgb = useMemo(
+    () => hexToRgb(activeColorAlt ?? activeColor),
+    [activeColor, activeColorAlt],
+  );
 
   const circlePath = useMemo(() => {
     if (typeof window === "undefined" || !window.Path2D) return null;
@@ -173,9 +180,10 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
       if (trackPointer && dsq <= proxSq) {
         const dist = Math.sqrt(dsq);
         const t = 1 - dist / proximity;
-        const r = Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t);
-        const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t);
-        const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t);
+        const target = dot.activeRgb;
+        const r = Math.round(baseRgb.r + (target.r - baseRgb.r) * t);
+        const g = Math.round(baseRgb.g + (target.g - baseRgb.g) * t);
+        const b = Math.round(baseRgb.b + (target.b - baseRgb.b) * t);
         fill = `rgb(${r},${g},${b})`;
         alpha = baseOpacity + (1 - baseOpacity) * t;
       }
@@ -188,7 +196,6 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
       ctx.restore();
     }
   }, [
-    activeRgb,
     baseColor,
     baseOpacity,
     baseRgb,
@@ -347,18 +354,21 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
     const dots: Dot[] = [];
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
+        const parity = (x + y) % 2;
+        const targetRgb = parity === 0 ? activeRgb : activeAltRgb;
         dots.push({
           cx: startX + x * cell,
           cy: startY + y * cell,
           xOffset: 0,
           yOffset: 0,
           _inertiaApplied: false,
+          activeRgb: targetRgb,
         });
       }
     }
     dotsRef.current = dots;
     requestRedraw();
-  }, [dotSize, gap, eventRoot, requestRedraw]);
+  }, [activeAltRgb, activeRgb, dotSize, gap, eventRoot, requestRedraw]);
 
   useLayoutEffect(() => {
     buildGrid();

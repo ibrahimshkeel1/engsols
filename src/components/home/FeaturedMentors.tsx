@@ -21,7 +21,7 @@ export function FeaturedMentors({ mentors }: FeaturedMentorsProps) {
   const showcase = pickShowcaseMentors(mentors);
 
   return (
-    <section id="find-mentor" className="border-b border-border/60 bg-muted/25 py-20 lg:py-28">
+    <section id="find-mentor" className="bg-muted/25 py-20 lg:py-28">
       <div className="page-container-wide">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-display-lg">Featured mentors</h2>

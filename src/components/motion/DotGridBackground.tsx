@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { useTheme } from "next-themes";
 import { DotGrid, type DotGridHandle } from "@/components/motion/DotGrid";
-import { DOT_GRID_DEFAULTS, DOT_GRID_THEME } from "@/lib/dot-grid-theme";
+import { DOT_GRID_COLORS, DOT_GRID_DEFAULTS } from "@/lib/dot-grid-theme";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { useIsClient, useMediaQuery } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
@@ -27,14 +26,12 @@ export function DotGridBackground({
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<DotGridHandle>(null);
   const mounted = useIsClient();
-  const { resolvedTheme } = useTheme();
   const canHover = useMediaQuery("(hover: hover) and (pointer: fine)");
   const reducedMotion = usePrefersReducedMotion();
   const interactive = mounted && canHover;
   const enablePush = interactive && !reducedMotion;
 
-  const colors =
-    resolvedTheme === "dark" ? DOT_GRID_THEME.dark : DOT_GRID_THEME.light;
+  const colors = DOT_GRID_COLORS;
 
   return (
     <section
@@ -62,6 +59,7 @@ export function DotGridBackground({
           enablePush={enablePush}
           baseColor={colors.baseColor}
           activeColor={colors.activeColor}
+          activeColorAlt={colors.activeColorAlt}
           baseOpacity={DOT_GRID_DEFAULTS.baseOpacity}
           dotSize={DOT_GRID_DEFAULTS.dotSize}
           gap={DOT_GRID_DEFAULTS.gap}
