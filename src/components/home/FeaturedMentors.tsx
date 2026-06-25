@@ -1,6 +1,8 @@
+"use client";
+
 import type { Mentor } from "@/types";
 import { MentorCard } from "@/components/mentors/MentorCard";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 import { ButtonLink } from "@/components/ui/button";
 import { Users } from "lucide-react";
@@ -30,7 +32,7 @@ export function FeaturedMentors({ mentors }: FeaturedMentorsProps) {
 
         {showcase.length === 0 ? (
           <div className="mt-10">
-            <EmptyState
+            <EmptyStateClient
               icon={Users}
               title="No mentors yet"
               description="Be among the first mentors on EngSols."
