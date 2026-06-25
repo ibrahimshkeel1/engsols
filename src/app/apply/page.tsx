@@ -17,7 +17,7 @@ export default async function ApplyPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
-      <h1 className="font-display text-3xl tracking-tight">Become a mentor</h1>
+      <h1 className="hero-dot-text text-balance">Become a mentor</h1>
       <p className="mt-2 text-muted-foreground">
         Share your engineering expertise with the next generation. Applications are reviewed by our team.
       </p>

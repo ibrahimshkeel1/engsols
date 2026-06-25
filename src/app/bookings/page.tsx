@@ -28,7 +28,7 @@ export default async function BookingsPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <p className="text-caption font-medium text-oil-gas-orange">Mentorship</p>
-      <h1 className="mt-1 font-display text-3xl tracking-tight text-oil-gas-navy">My bookings</h1>
+      <h1 className="hero-dot-text mt-1 text-balance text-oil-gas-navy">My bookings</h1>
       <p className="mt-2 text-oil-gas-navy-muted">
         Track intro calls, one-off sessions, and monthly mentorship requests.
       </p>

@@ -79,7 +79,7 @@ export default async function DisciplinePage({ params }: Props) {
         <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6">
           <SectionReveal>
             <p className="section-label text-oil-gas-orange">Discipline hub</p>
-            <h1 className="font-display mt-2 text-4xl text-oil-gas-navy">{hub.headline}</h1>
+            <h1 className="hero-dot-text mt-2 text-balance text-oil-gas-navy">{hub.headline}</h1>
             <p className="mt-3 max-w-2xl text-oil-gas-navy-muted">{hub.subhead}</p>
 
             <ul className="mt-6 grid gap-2 sm:grid-cols-3">

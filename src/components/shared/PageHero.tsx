@@ -43,7 +43,7 @@ export function PageHero({
               <span className={cn("live-dot h-2 w-2 rounded-full", routeAccentClasses.dot)} />
               <span className={cn("section-label", routeAccentClasses.label)}>Live Sessions</span>
             </div>
-            <h1 className="text-display-xl mt-3">{title}</h1>
+            <h1 className="hero-dot-text mt-3 text-balance">{title}</h1>
             {description && <p className="mt-4 max-w-2xl text-body-lg">{description}</p>}
           </div>
           {children && <div className="flex shrink-0 flex-wrap gap-3">{children}</div>}
@@ -57,7 +57,7 @@ export function PageHero({
       <HeroSection className={cn(className)}>
         <div className="page-container-wide py-20 animate-fade-up">
           <p className={cn("section-label", routeAccentClasses.label)}>Community</p>
-          <h1 className="text-display-xl mt-2">{title}</h1>
+          <h1 className="hero-dot-text mt-2 text-balance">{title}</h1>
           {description && <p className="mt-4 max-w-2xl text-body-lg">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
         </div>
@@ -78,7 +78,7 @@ export function PageHero({
             </Link>
           )}
           <p className={cn("section-label mt-4", routeAccentClasses.label)}>Industry News</p>
-          <h1 className="text-display-xl mt-2 max-w-4xl">{title}</h1>
+          <h1 className="hero-dot-text mt-2 max-w-4xl text-balance">{title}</h1>
           {description && <p className="mt-5 max-w-2xl text-body-lg">{description}</p>}
           {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
         </div>
@@ -93,7 +93,7 @@ export function PageHero({
           {label && (
             <p className={cn("section-label", routeAccentClasses.label, labelClassName)}>{label}</p>
           )}
-          <h1 className={cn("text-display-xl", label && "mt-2")}>{title}</h1>
+          <h1 className={cn("hero-dot-text text-balance", label && "mt-2")}>{title}</h1>
           {description && <p className="mt-3 max-w-2xl text-body-lg">{description}</p>}
         </div>
         {children && <div className="flex shrink-0 flex-wrap gap-3">{children}</div>}

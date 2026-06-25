@@ -22,7 +22,7 @@ export default async function ForYouPage() {
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
       <SectionReveal>
         <p className="section-label">This week for you</p>
-        <h1 className="font-display mt-1 text-3xl">Your digest</h1>
+        <h1 className="hero-dot-text mt-1 text-balance">Your digest</h1>
         <p className="mt-2 text-muted-foreground">
           Curated for <span className="font-medium text-foreground">{digest.discipline}</span>
           {digest.goals[0] && <> · focused on {digest.goals[0]}</>}

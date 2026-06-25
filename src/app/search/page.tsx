@@ -30,7 +30,7 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <SectionReveal>
-        <h1 className="font-display text-3xl tracking-tight">Search EngSols</h1>
+        <h1 className="hero-dot-text text-balance">Search EngSols</h1>
         <p className="mt-2 text-muted-foreground">Explore mentors, discussions, jobs, videos, live sessions, certifications, and marketplace.</p>
       </SectionReveal>
       <form className="mt-8" action="/search" method="get">

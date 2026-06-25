@@ -359,6 +359,23 @@ body {
   color: hsl(var(--oil-gas-navy)) !important;
 }
 
+/* Page heroes — match guest home Hero h1 (sans, semibold, tight tracking) */
+section.page-hero .page-hero__content h1,
+.hero-dark h1 {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 640px) {
+  section.page-hero .page-hero__content h1,
+  .hero-dark h1 {
+    font-size: 3rem;
+  }
+}
+
 /* Guest hero — maritime navy headline on ice canvas */
 .hero-dot-text {
   font-family: var(--font-sans), system-ui, sans-serif;
@@ -759,6 +776,7 @@ section.page-hero .page-hero__content :is(
   .section-label,
   .route-accent-label,
   .route-accent-link,
+  .hero-dot-text,
   .text-display-xl,
   .text-body-lg,
   .text-muted-foreground

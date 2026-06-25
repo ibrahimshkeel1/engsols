@@ -38,7 +38,7 @@ export function ListPageLayout({
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-display-xl">{title}</h1>
+                <h1 className="hero-dot-text text-balance">{title}</h1>
                 {preview && (
                   <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
                     Preview

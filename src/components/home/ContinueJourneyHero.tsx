@@ -72,7 +72,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
       <div className="page-container-wide relative py-20 lg:py-28">
         <AnimateIn className="max-w-xl">
           <p className="section-label opacity-70">Welcome back</p>
-          <h1 className="text-display-xl mt-4">Continue your journey, {firstName}</h1>
+          <h1 className="hero-dot-text mt-4 text-balance">Continue your journey, {firstName}</h1>
           <p className="text-body-lg mt-4 max-w-md">{journey.suggestedAction.description}</p>
           <ButtonLink href={journey.suggestedAction.href} size="lg" className="mt-8 group">
             <Sparkles className="h-4 w-4" />

@@ -35,7 +35,7 @@ export default async function AssistPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="font-display text-3xl tracking-tight">Career assist</h1>
+      <h1 className="hero-dot-text text-balance">Career assist</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
         {assist.usedAi
           ? "AI-powered mentor matching based on your goals and profile."

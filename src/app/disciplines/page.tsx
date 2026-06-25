@@ -15,7 +15,7 @@ export default function DisciplinesIndexPage() {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <SectionReveal>
         <p className="section-label">Explore by field</p>
-        <h1 className="font-display mt-1 text-3xl sm:text-4xl">Engineering disciplines</h1>
+        <h1 className="hero-dot-text mt-1 text-balance">Engineering disciplines</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">
           Jump into a discipline hub for mentors, discussions, certifications, jobs, and live sessions.
         </p>
