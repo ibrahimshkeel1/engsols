@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight, BadgeCheck, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import type { Mentor } from "@/types";
 import { PixelTransition } from "@/components/motion/pixel-transition";
 import { Avatar } from "@/components/ui/Avatar";
@@ -13,6 +13,9 @@ type MentorCardProps = {
   mentor: Mentor;
   showPrice?: boolean;
 };
+
+const hoverPanelClass =
+  "flex h-full flex-col overflow-y-auto bg-background p-4 text-start shadow-[inset_0_0_0_1px_hsl(var(--border))]";
 
 const pillClass =
   "inline-flex items-center gap-1 rounded-lg border border-zone-mentorship/20 bg-zone-mentorship/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zone-mentorship";
@@ -35,7 +38,7 @@ function CardRating({ rating, reviewCount }: { rating: number; reviewCount: numb
   );
 }
 
-function MentorCardPreview({ mentor }: { mentor: Mentor }) {
+function MentorCardPreview({ mentor, showPrice }: { mentor: Mentor; showPrice: boolean }) {
   return (
     <div className="flex h-full flex-col bg-bg-surface">
       <div className="relative min-h-0 flex-1 overflow-hidden bg-muted">
@@ -47,8 +50,14 @@ function MentorCardPreview({ mentor }: { mentor: Mentor }) {
           className="h-full w-full rounded-none object-cover ring-0"
         />
       </div>
-      <div className="shrink-0 p-4 text-center">
+      <div className="shrink-0 border-t border-border-custom/60 p-4 text-center">
         <h3 className="capitalize font-semibold text-text-main">{mentor.name}</h3>
+        <p className="mt-1 line-clamp-2 text-xs font-medium text-text-muted">{mentor.headline}</p>
+        {showPrice && (
+          <p className="mt-2 text-sm text-text-muted">
+            From <span className="font-extrabold text-text-main">${mentor.monthlyRate}</span>/mo
+          </p>
+        )}
       </div>
     </div>
   );
@@ -80,31 +89,22 @@ function MentorCardDetails({ mentor, showPrice }: { mentor: Mentor; showPrice: b
   ];
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-bg-surface p-4 text-start">
+    <div className={hoverPanelClass}>
       <div className="flex items-start justify-between gap-2">
-        <div className="relative shrink-0">
-          <Avatar
-            name={mentor.name}
-            discipline={mentor.discipline}
-            size="md"
-            src={mentor.avatarUrl}
-            className="rounded-xl ring-2 ring-border-custom"
-          />
-          {mentor.featured && (
-            <span className="absolute -bottom-1 -end-1 flex h-4 w-4 items-center justify-center rounded-full bg-zone-mentorship text-bg-main shadow-sm">
-              <BadgeCheck className="h-2.5 w-2.5" />
-            </span>
-          )}
+        <div className="min-w-0">
+          <h3 className="text-base font-bold capitalize text-text-main">{mentor.name}</h3>
+          <p className="mt-0.5 text-xs font-medium tracking-wide text-text-muted">{mentor.headline}</p>
         </div>
         <CardRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
       </div>
 
-      <div className="mt-3 min-w-0">
-        <h3 className="text-base font-bold capitalize text-text-main">{mentor.name}</h3>
-        <p className="mt-0.5 text-xs font-medium tracking-wide text-text-muted">{mentor.headline}</p>
-      </div>
+      {showPrice && (
+        <p className="mt-2 text-sm text-text-muted">
+          From <span className="font-extrabold text-text-main">${mentor.monthlyRate}</span>/mo
+        </p>
+      )}
 
-      <div className="my-3 flex min-h-[40px] items-center rounded-r-xl border-l-2 border-zone-mentorship/30 bg-bg-main/40 py-2 pl-3 text-xs text-text-muted/90 line-clamp-3">
+      <div className="my-3 flex min-h-[40px] items-center rounded-r-xl border-l-2 border-zone-mentorship/30 bg-muted/60 py-2 pl-3 text-xs text-text-muted line-clamp-3">
         {bioText}
       </div>
 
@@ -116,18 +116,15 @@ function MentorCardDetails({ mentor, showPrice }: { mentor: Mentor; showPrice: b
           </span>
         ))}
         {mentor.verified && <span className={pillClass}>Verified</span>}
+        {mentor.featured && <span className={pillClass}>Featured</span>}
       </div>
 
-      {showPrice && (
-        <div className="mt-auto flex items-center justify-between border-t border-border-custom/60 pt-3">
-          <p className="text-xs text-text-muted">
-            From <span className="text-sm font-extrabold text-text-main">${mentor.monthlyRate}</span>/mo
-          </p>
-          <span className="rounded-lg bg-zone-mentorship/10 p-1.5 text-zone-mentorship" aria-hidden>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      )}
+      <div className="mt-auto flex items-center justify-between border-t border-border-custom/60 pt-3">
+        <p className="text-xs text-text-muted">View full profile</p>
+        <span className="rounded-lg bg-zone-mentorship/10 p-1.5 text-zone-mentorship" aria-hidden>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </span>
+      </div>
     </div>
   );
 }
@@ -144,7 +141,7 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
         pixelColor="hsl(var(--background))"
         animationStepDuration={0.4}
         className="h-full w-full"
-        firstContent={<MentorCardPreview mentor={mentor} />}
+        firstContent={<MentorCardPreview mentor={mentor} showPrice={showPrice} />}
         secondContent={<MentorCardDetails mentor={mentor} showPrice={showPrice} />}
       />
     </Link>

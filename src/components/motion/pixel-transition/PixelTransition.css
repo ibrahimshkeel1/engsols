@@ -23,6 +23,10 @@
   height: 100%;
 }
 
+.pixelated-image-card__default {
+  z-index: 1;
+}
+
 .pixelated-image-card__active {
   z-index: 2;
   display: none;

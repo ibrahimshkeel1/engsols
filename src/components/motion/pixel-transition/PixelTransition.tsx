@@ -53,6 +53,7 @@ export function PixelTransition({
 }: PixelTransitionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pixelGridRef = useRef<HTMLDivElement>(null);
+  const defaultRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
   const delayedCallRef = useRef<gsap.core.Tween | null>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -83,9 +84,14 @@ export function PixelTransition({
 
   const setActiveLayer = useCallback((activate: boolean) => {
     const activeEl = activeRef.current;
-    if (!activeEl) return;
-    activeEl.style.display = activate ? "block" : "none";
-    activeEl.style.pointerEvents = activate ? "none" : "";
+    const defaultEl = defaultRef.current;
+    if (activeEl) {
+      activeEl.style.display = activate ? "block" : "none";
+      activeEl.style.pointerEvents = activate ? "none" : "";
+    }
+    if (defaultEl) {
+      defaultEl.style.visibility = activate ? "hidden" : "visible";
+    }
   }, []);
 
   const animatePixels = useCallback(
@@ -167,7 +173,11 @@ export function PixelTransition({
       tabIndex={focusable ? 0 : -1}
     >
       {!fill && <div className="pixelated-image-card__aspect" style={{ paddingTop: aspectRatio }} />}
-      <div className="pixelated-image-card__default" aria-hidden={isActive}>
+      <div
+        ref={defaultRef}
+        className="pixelated-image-card__default"
+        aria-hidden={isActive}
+      >
         {firstContent}
       </div>
       <div className="pixelated-image-card__active" ref={activeRef} aria-hidden={!isActive}>

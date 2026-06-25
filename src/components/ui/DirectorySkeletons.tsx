@@ -1,6 +1,25 @@
-import { BENTO_GRID_CLASS, getBentoSpanClass } from "@/lib/bento-layout";
+import { PROFILE_GRID_CLASS } from "@/lib/bento-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+
+export function ProfileCardSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "overflow-hidden rounded-2xl border border-border bg-surface shadow-premium-card",
+        className,
+      )}
+      aria-hidden
+    >
+      <Skeleton className="aspect-square w-full rounded-none" />
+      <div className="space-y-2 border-t border-border/60 p-4">
+        <Skeleton className="mx-auto h-4 w-3/5" />
+        <Skeleton className="mx-auto h-3 w-full" />
+        <Skeleton className="mx-auto h-3 w-2/5" />
+      </div>
+    </div>
+  );
+}
 
 export function DirectoryCardSkeleton({ className }: { className?: string }) {
   return (
@@ -33,12 +52,9 @@ export function DirectoryCardSkeleton({ className }: { className?: string }) {
 
 export function BentoDirectorySkeletonGrid({ count = 8 }: { count?: number }) {
   return (
-    <div className={BENTO_GRID_CLASS}>
+    <div className={PROFILE_GRID_CLASS}>
       {Array.from({ length: count }).map((_, i) => (
-        <DirectoryCardSkeleton
-          key={i}
-          className={cn(getBentoSpanClass(i), i === 0 && "min-h-[16rem]")}
-        />
+        <ProfileCardSkeleton key={i} />
       ))}
     </div>
   );
