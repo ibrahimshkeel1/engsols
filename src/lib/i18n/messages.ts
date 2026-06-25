@@ -63,6 +63,8 @@ export type Messages = {
   communityLabel: string;
   menu: string;
   closeMenu: string;
+  howItWorks: string;
+  privacyPolicy: string;
 };
 
 export const messages: Record<Locale, Messages> = {
@@ -120,6 +122,8 @@ export const messages: Record<Locale, Messages> = {
     communityLabel: "Community",
     menu: "Menu",
     closeMenu: "Close menu",
+    howItWorks: "How it works",
+    privacyPolicy: "Privacy policy",
   },
   ar: {
     findMentors: "تواصل مع مرشد يناسبك",
@@ -175,6 +179,8 @@ export const messages: Record<Locale, Messages> = {
     communityLabel: "المجتمع",
     menu: "القائمة",
     closeMenu: "إغلاق القائمة",
+    howItWorks: "كيف يعمل",
+    privacyPolicy: "سياسة الخصوصية",
   },
 };
 

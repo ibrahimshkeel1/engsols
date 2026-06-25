@@ -66,7 +66,17 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-          <p className="text-sm text-text-muted">© {new Date().getFullYear()} EngSols. All rights reserved.</p>
+          <div className="flex flex-col items-center gap-3 sm:items-start">
+            <p className="text-sm text-text-muted">© {new Date().getFullYear()} EngSols. All rights reserved.</p>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-text-muted sm:justify-start">
+              <Link href="/how-it-works" className="transition-colors hover:text-text-main">
+                {t(locale, "howItWorks")}
+              </Link>
+              <Link href="/privacy" className="transition-colors hover:text-text-main">
+                {t(locale, "privacyPolicy")}
+              </Link>
+            </div>
+          </div>
           <LocaleSwitcher />
         </div>
       </div>
