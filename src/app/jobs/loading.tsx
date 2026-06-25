@@ -1,9 +1,5 @@
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { JobsPageSkeleton } from "@/components/ui/PageSkeletons";
 
 export default function JobsLoading() {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <BentoSkeletonGrid count={6} />
-    </div>
-  );
+  return <JobsPageSkeleton />;
 }

@@ -1,9 +1,5 @@
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { CertificationsPageSkeleton } from "@/components/ui/PageSkeletons";
 
 export default function CertificationsLoading() {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <BentoSkeletonGrid count={6} />
-    </div>
-  );
+  return <CertificationsPageSkeleton />;
 }

@@ -3,7 +3,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { getPublishedPortfolios } from "@/lib/data/portfolios";
 import { ListPageLayout } from "@/components/shared/ListPageLayout";
 import { PortfolioGrid } from "@/components/portfolios/PortfolioGrid";
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { BentoDirectorySkeletonGrid } from "@/components/ui/DirectorySkeletons";
 import { serverT } from "@/lib/i18n/server";
 
 async function PortfoliosContent() {
@@ -24,7 +24,7 @@ export default async function PortfoliosPage() {
         <ButtonLink href="/portfolios/build">Build your portfolio</ButtonLink>
       }
     >
-      <Suspense fallback={<BentoSkeletonGrid count={6} />}>
+      <Suspense fallback={<BentoDirectorySkeletonGrid count={6} />}>
         <PortfoliosContent />
       </Suspense>
     </ListPageLayout>

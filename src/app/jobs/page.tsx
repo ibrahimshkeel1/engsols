@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { JobsDirectory } from "@/components/jobs/JobsDirectory";
 import { getJobs } from "@/lib/data/jobs";
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { JobsPageSkeleton } from "@/components/ui/PageSkeletons";
 import { SectionReveal } from "@/components/motion/SectionReveal";
 
 async function JobsContent() {
@@ -12,7 +12,7 @@ async function JobsContent() {
 export default function JobsPage() {
   return (
     <SectionReveal>
-      <Suspense fallback={<div className="mx-auto max-w-7xl px-4 py-12"><BentoSkeletonGrid count={6} /></div>}>
+      <Suspense fallback={<JobsPageSkeleton />}>
         <JobsContent />
       </Suspense>
     </SectionReveal>

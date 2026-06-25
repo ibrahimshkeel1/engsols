@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { PageHero } from "@/components/shared/PageHero";
 import { MentorsPageContent } from "@/components/mentors/MentorsPageContent";
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { MentorsDirectorySkeleton } from "@/components/ui/BentoSkeletonGrid";
 import { serverT } from "@/lib/i18n/server";
 
 export const revalidate = 60;
@@ -20,7 +20,7 @@ export default async function MentorsPage() {
         label="Mentorship"
       />
       <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
-        <Suspense fallback={<BentoSkeletonGrid count={8} />}>
+        <Suspense fallback={<MentorsDirectorySkeleton />}>
           <MentorsPageContent />
         </Suspense>
       </div>

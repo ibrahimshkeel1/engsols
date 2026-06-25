@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHero } from "@/components/shared/PageHero";
 import { ForumPageContent } from "@/components/forum/ForumPageContent";
-import { ForumSkeletonList } from "@/components/forum/ForumSkeletonList";
+import { FilterBarSkeleton, ForumThreadListSkeleton } from "@/components/ui/DirectorySkeletons";
 import { SectionReveal } from "@/components/motion/SectionReveal";
 import { serverT } from "@/lib/i18n/server";
 
@@ -22,7 +22,16 @@ export default async function ForumPage() {
       </PageHero>
       <div className="page-container-wide bg-background py-12">
         <SectionReveal>
-          <Suspense fallback={<ForumSkeletonList />}>
+          <Suspense
+            fallback={
+              <>
+                <FilterBarSkeleton selects={2} />
+                <div className="mt-8">
+                  <ForumThreadListSkeleton count={5} />
+                </div>
+              </>
+            }
+          >
             <ForumPageContent />
           </Suspense>
         </SectionReveal>

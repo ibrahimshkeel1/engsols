@@ -1,12 +1,5 @@
-import { BentoDirectorySkeletonGrid, PageHeaderSkeleton } from "@/components/ui/DirectorySkeletons";
+import { PortfoliosPageSkeleton } from "@/components/ui/PageSkeletons";
 
 export default function PortfoliosLoading() {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <PageHeaderSkeleton />
-      <div className="mt-8">
-        <BentoDirectorySkeletonGrid count={6} />
-      </div>
-    </div>
-  );
+  return <PortfoliosPageSkeleton />;
 }

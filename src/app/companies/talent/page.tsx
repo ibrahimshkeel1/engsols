@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getTalentPipelinePortfolios } from "@/lib/data/portfolios";
 import { TalentPipeline } from "@/components/companies/TalentPipeline";
-import { BentoSkeletonGrid } from "@/components/ui/BentoSkeletonGrid";
+import { TalentPipelineSkeleton } from "@/components/ui/DirectorySkeletons";
 
 async function TalentContent() {
   const portfolios = await getTalentPipelinePortfolios();
@@ -10,11 +10,7 @@ async function TalentContent() {
 
 export default function CompaniesTalentPage() {
   return (
-    <Suspense fallback={
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <BentoSkeletonGrid count={6} />
-      </div>
-    }>
+    <Suspense fallback={<TalentPipelineSkeleton />}>
       <TalentContent />
     </Suspense>
   );

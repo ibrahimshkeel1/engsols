@@ -1,3 +1,2 @@
-import { BentoDirectorySkeletonGrid } from "@/components/ui/DirectorySkeletons";
-
-export { BentoDirectorySkeletonGrid as BentoSkeletonGrid };
+export { BentoDirectorySkeletonGrid as BentoSkeletonGrid } from "@/components/ui/DirectorySkeletons";
+export { MentorsDirectorySkeleton } from "@/components/ui/DirectorySkeletons";

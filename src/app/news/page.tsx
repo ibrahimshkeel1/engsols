@@ -4,6 +4,7 @@ import { getPublishedArticles } from "@/lib/data/news";
 import { PageHero } from "@/components/shared/PageHero";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { NewsDisciplineFilter } from "@/components/news/NewsDisciplineFilter";
+import { NewsDisciplineFilterSkeleton } from "@/components/ui/DirectorySkeletons";
 import { NewsArticleGrid, NewsHeroBanner } from "@/components/news/NewsArticleGrid";
 
 export const revalidate = 120;
@@ -28,7 +29,7 @@ export default async function NewsPage({ searchParams }: Props) {
         description="Technical articles, project breakdowns, and industry updates from the EngSols editorial desk."
       />
       <div className="mx-auto max-w-7xl bg-background px-4 pb-16 sm:px-6">
-        <Suspense fallback={<div className="h-12 animate-pulse rounded-xl bg-muted" aria-hidden />}>
+        <Suspense fallback={<NewsDisciplineFilterSkeleton />}>
           <NewsDisciplineFilter active={activeDiscipline} />
         </Suspense>
 
