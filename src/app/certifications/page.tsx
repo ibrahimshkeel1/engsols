@@ -11,7 +11,6 @@ export default async function CertificationsPage() {
 
   return (
     <ListPageLayout
-      zone="exams"
       label="Credentials"
       title="Certifications & Exams"
       description="FE, PE, IWCF, and industry credentials — resources and mentors to help you prepare."

@@ -15,7 +15,6 @@ export default async function MentorsPage() {
   return (
     <>
       <PageHero
-        zone="mentorship"
         title={title}
         description={description}
         label="Mentorship"

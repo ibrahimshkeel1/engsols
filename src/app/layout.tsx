@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CommunityBottomNav } from "@/components/layout/CommunityBottomNav";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { NavigationTransitionProvider } from "@/components/providers/NavigationTransitionProvider";
+import { RouteAccentProvider } from "@/components/providers/RouteAccentProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
@@ -63,14 +64,16 @@ export default async function RootLayout({
         <ThemeProvider>
           <LocaleProvider initialLocale={locale}>
             <NavigationTransitionProvider>
-              <Navbar />
-              <main id="main-content" className="flex-1 pb-16 lg:pb-0">
-                <PageTransition>{children}</PageTransition>
-              </main>
-              <Footer />
-              <CommunityBottomNav />
-              <Toaster position="bottom-center" richColors />
-              <PwaInstallPrompt />
+              <RouteAccentProvider>
+                <Navbar />
+                <main id="main-content" className="flex-1 pb-16 lg:pb-0">
+                  <PageTransition>{children}</PageTransition>
+                </main>
+                <Footer />
+                <CommunityBottomNav />
+                <Toaster position="bottom-center" richColors />
+                <PwaInstallPrompt />
+              </RouteAccentProvider>
             </NavigationTransitionProvider>
           </LocaleProvider>
         </ThemeProvider>

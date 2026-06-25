@@ -689,6 +689,107 @@ body {
 .section-label-zone-recruiter { color: hsl(var(--color-recruiter)); }
 .section-label-zone-news { color: hsl(var(--color-news)); }
 
+/* Route accent — matches BubbleMenu hover color per page */
+.route-accent-label,
+.route-accent-text,
+.route-accent-link {
+  color: var(--route-accent, hsl(var(--color-mentorship)));
+}
+
+.route-accent-link:hover {
+  text-decoration: underline;
+}
+
+.route-accent-dot {
+  background-color: var(--route-accent, hsl(var(--color-live-rooms)));
+}
+
+.route-accent-hairline {
+  box-shadow: inset 0 2px 0 0 color-mix(in srgb, var(--route-accent, hsl(var(--color-mentorship))) 50%, transparent);
+}
+
+html[data-route-accent="true"] .text-zone-mentorship,
+html[data-route-accent="true"] .text-zone-live,
+html[data-route-accent="true"] .text-zone-exams,
+html[data-route-accent="true"] .text-zone-recruiter,
+html[data-route-accent="true"] .text-zone-news,
+html[data-route-accent="true"] .text-zone-mentorship-on,
+html[data-route-accent="true"] .text-zone-live-on,
+html[data-route-accent="true"] .text-zone-exams-on,
+html[data-route-accent="true"] .text-zone-recruiter-on,
+html[data-route-accent="true"] .text-zone-news-on,
+html[data-route-accent="true"] .section-label-zone-mentorship,
+html[data-route-accent="true"] .section-label-zone-live,
+html[data-route-accent="true"] .section-label-zone-exams,
+html[data-route-accent="true"] .section-label-zone-recruiter,
+html[data-route-accent="true"] .section-label-zone-news {
+  color: var(--route-accent);
+}
+
+html[data-route-accent="true"] .bg-zone-mentorship,
+html[data-route-accent="true"] .bg-zone-live,
+html[data-route-accent="true"] .bg-zone-exams,
+html[data-route-accent="true"] .bg-zone-recruiter,
+html[data-route-accent="true"] .bg-zone-news {
+  background-color: var(--route-accent);
+  color: var(--route-accent-on, #fff);
+}
+
+html[data-route-accent="true"] .border-zone-mentorship,
+html[data-route-accent="true"] .border-zone-live,
+html[data-route-accent="true"] .border-zone-exams,
+html[data-route-accent="true"] .border-zone-recruiter,
+html[data-route-accent="true"] .border-zone-news,
+html[data-route-accent="true"] .border-zone-mentorship-border,
+html[data-route-accent="true"] .border-zone-live-border,
+html[data-route-accent="true"] .border-zone-exams-border,
+html[data-route-accent="true"] .border-zone-recruiter-border,
+html[data-route-accent="true"] .border-zone-news-border {
+  border-color: color-mix(in srgb, var(--route-accent) 40%, transparent);
+}
+
+html[data-route-accent="true"] .bg-zone-mentorship\/10,
+html[data-route-accent="true"] .bg-zone-live\/10,
+html[data-route-accent="true"] .bg-zone-live\/15,
+html[data-route-accent="true"] .bg-zone-exams\/10,
+html[data-route-accent="true"] .bg-zone-recruiter\/10,
+html[data-route-accent="true"] .bg-zone-recruiter\/15,
+html[data-route-accent="true"] .bg-zone-news\/10,
+html[data-route-accent="true"] .bg-zone-mentorship\/12,
+html[data-route-accent="true"] .bg-zone-mentorship\/15 {
+  background-color: color-mix(in srgb, var(--route-accent) 12%, transparent);
+}
+
+html[data-route-accent="true"] .fill-zone-mentorship,
+html[data-route-accent="true"] .fill-zone-live,
+html[data-route-accent="true"] .fill-zone-exams,
+html[data-route-accent="true"] .fill-zone-recruiter,
+html[data-route-accent="true"] .fill-zone-news {
+  fill: var(--route-accent);
+}
+
+html[data-route-accent="true"] .shadow-zone-live,
+html[data-route-accent="true"] .shadow-zone-mentorship\/5,
+html[data-route-accent="true"] .shadow-zone-mentorship\/10 {
+  --tw-shadow-color: color-mix(in srgb, var(--route-accent) 35%, transparent);
+}
+
+html[data-route-accent="true"] .hover\:text-zone-mentorship:hover,
+html[data-route-accent="true"] .hover\:text-zone-recruiter:hover,
+html[data-route-accent="true"] .hover\:text-zone-live:hover,
+html[data-route-accent="true"] .hover\:border-zone-mentorship:hover,
+html[data-route-accent="true"] .hover\:border-zone-mentorship\/50:hover,
+html[data-route-accent="true"] .hover\:bg-zone-mentorship:hover,
+html[data-route-accent="true"] .hover\:bg-zone-mentorship\/10:hover,
+html[data-route-accent="true"] .group-hover\:text-zone-mentorship:is(:where(.group):hover *) {
+  color: var(--route-accent);
+}
+
+html[data-route-accent="true"] .group-hover\:bg-zone-mentorship:is(:where(.group):hover *) {
+  background-color: var(--route-accent);
+  color: var(--route-accent-on, #fff);
+}
+
 .section-label {
   font-size: 0.6875rem;
   font-weight: 600;

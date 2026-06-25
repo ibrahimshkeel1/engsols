@@ -30,7 +30,6 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
 
   return (
     <ListPageLayout
-      zone="recruiter"
       label="Employers"
       title="Companies"
       description="Operators, service companies, manufacturers, and consultancies hiring engineers."

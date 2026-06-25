@@ -48,6 +48,18 @@ export type Messages = {
   mentorsOutcome: string;
   liveOutcome: string;
   portfoliosOutcome: string;
+  /** Page hero headlines (first line shown on each route) */
+  homeHeadline: string;
+  jobsHeadline: string;
+  newsHeadline: string;
+  certificationsHeadline: string;
+  companiesHeadline: string;
+  marketplaceHeadline: string;
+  videosHeadline: string;
+  searchHeadline: string;
+  forYouHeadline: string;
+  settingsHeadline: string;
+  notificationsHeadline: string;
   communityLabel: string;
   menu: string;
   closeMenu: string;
@@ -94,6 +106,17 @@ export const messages: Record<Locale, Messages> = {
     mentorsOutcome: "Find your engineering mentor",
     liveOutcome: "Watch engineers live",
     portfoliosOutcome: "Discover rising talent",
+    homeHeadline: "The career platform to get mentored, certified, and hired",
+    jobsHeadline: "Engineering Jobs",
+    newsHeadline: "Engineering Insights",
+    certificationsHeadline: "Certifications & Exams",
+    companiesHeadline: "Companies",
+    marketplaceHeadline: "Industrial Marketplace",
+    videosHeadline: "Engineering Videos",
+    searchHeadline: "Search EngSols",
+    forYouHeadline: "Your digest",
+    settingsHeadline: "Account settings",
+    notificationsHeadline: "Notifications",
     communityLabel: "Community",
     menu: "Menu",
     closeMenu: "Close menu",
@@ -138,6 +161,17 @@ export const messages: Record<Locale, Messages> = {
     mentorsOutcome: "اعثر على مرشد هندسي",
     liveOutcome: "شاهد المهندسين مباشرة",
     portfoliosOutcome: "اكتشف المواهب الصاعدة",
+    homeHeadline: "منصة مسيرتك المهنية للإرشاد والشهادات والتوظيف",
+    jobsHeadline: "وظائف هندسية",
+    newsHeadline: "رؤى هندسية",
+    certificationsHeadline: "الشهادات والامتحانات",
+    companiesHeadline: "الشركات",
+    marketplaceHeadline: "السوق الصناعي",
+    videosHeadline: "فيديوهات هندسية",
+    searchHeadline: "ابحث في إنجسولز",
+    forYouHeadline: "ملخصك",
+    settingsHeadline: "إعدادات الحساب",
+    notificationsHeadline: "الإشعارات",
     communityLabel: "المجتمع",
     menu: "القائمة",
     closeMenu: "إغلاق القائمة",

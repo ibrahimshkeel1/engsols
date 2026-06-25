@@ -68,12 +68,17 @@ export function SplitText({
       return text.split("").map((unit, index) => ({
         key: `${unit}-${index}`,
         unit: unit === " " ? "\u00A0" : unit,
+        animate: unit !== " ",
       }));
     }
-    return text.split(/(\s+)/).filter(Boolean).map((unit, index) => ({
-      key: `${unit}-${index}`,
-      unit,
-    }));
+    return text.split(/(\s+)/).filter(Boolean).map((unit, index) => {
+      const isSpace = /^\s+$/.test(unit);
+      return {
+        key: `${unit}-${index}`,
+        unit: isSpace ? unit.replace(/ /g, "\u00A0") : unit,
+        animate: !isSpace,
+      };
+    });
   }, [splitType, text]);
 
   useGSAP(
@@ -127,11 +132,17 @@ export function SplitText({
         willChange: "transform, opacity",
       }}
     >
-      {units.map(({ key, unit }) => (
-        <span key={key} className="split-unit inline-block will-change-transform">
-          {unit}
-        </span>
-      ))}
+      {units.map(({ key, unit, animate }) =>
+        animate ? (
+          <span key={key} className="split-unit inline-block will-change-transform">
+            {unit}
+          </span>
+        ) : (
+          <span key={key} className="split-space" aria-hidden>
+            {unit}
+          </span>
+        ),
+      )}
     </Tag>
   );
 }

@@ -16,7 +16,6 @@ export default async function PortfoliosPage() {
 
   return (
     <ListPageLayout
-      zone="recruiter"
       label="Talent"
       title={title}
       description="Discover engineering students and graduates open to internships and full-time roles — hire talent with real project work."

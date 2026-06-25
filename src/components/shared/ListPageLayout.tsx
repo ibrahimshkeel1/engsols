@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import { AnimateIn } from "@/components/motion/AnimateIn";
-import { zoneTokens, type ZoneKey } from "@/lib/zone-tokens";
+import { BallpitHeroBackground } from "@/components/motion/ballpit/BallpitHeroBackground";
+import { routeAccentClasses } from "@/lib/nav-hover-colors";
 
 type ListPageLayoutProps = {
   title: string;
   description: string;
   label?: string;
-  zone?: ZoneKey;
   preview?: boolean;
   action?: React.ReactNode;
   children: React.ReactNode;
@@ -19,7 +19,6 @@ export function ListPageLayout({
   title,
   description,
   label,
-  zone,
   preview,
   action,
   children,
@@ -27,21 +26,16 @@ export function ListPageLayout({
   heroClassName,
   labelClassName,
 }: ListPageLayoutProps) {
-  const t = zone ? zoneTokens[zone] : null;
-
   return (
     <>
-      <section
-        className={cn(
-          zone ? t!.hero : "gradient-hero border-b border-border",
-          heroClassName,
-        )}
+      <BallpitHeroBackground
+        className={cn(routeAccentClasses.hairline, "border-b border-border", heroClassName)}
       >
         <div className="page-container-wide py-20 animate-fade-up">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
               {label && (
-                <p className={cn("section-label", zone ? t!.sectionLabel : undefined, labelClassName)}>
+                <p className={cn("section-label", routeAccentClasses.label, labelClassName)}>
                   {label}
                 </p>
               )}
@@ -58,7 +52,7 @@ export function ListPageLayout({
             {action && <div className="shrink-0">{action}</div>}
           </div>
         </div>
-      </section>
+      </BallpitHeroBackground>
       <div className={cn("page-container-wide py-12 pb-24 lg:pb-12", className)}>
         <AnimateIn>{children}</AnimateIn>
       </div>
