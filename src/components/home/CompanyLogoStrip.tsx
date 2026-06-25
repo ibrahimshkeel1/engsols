@@ -18,18 +18,18 @@ export function CompanyLogoStrip({ mentors }: Props) {
 
   return (
     <section className="border-b border-border/60 py-8" aria-label="Mentor employers">
-      <div className="page-container-wide">
+      <div className="page-container-wide min-w-0">
         <p className="text-caption text-center font-medium text-muted-foreground">
           Mentors from leading operators &amp; engineering firms
         </p>
-        <ul className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <ul className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
           {companies.map((company) => (
             <li
               key={company}
-              className="flex items-center gap-2 rounded-xl border border-border-custom bg-bg-surface px-3 py-2 text-xs font-medium text-text-main"
+              className="flex max-w-full min-w-0 items-center gap-2 rounded-xl border border-border-custom bg-bg-surface px-3 py-2 text-xs font-medium text-text-main"
             >
               <CompanyLogo company={company} size="sm" />
-              <span>{company}</span>
+              <span className="truncate">{company}</span>
             </li>
           ))}
         </ul>

@@ -64,8 +64,8 @@ export function TestimonialCTA({ testimonials, variant = "social" }: Testimonial
       <div className="page-container-wide mx-auto max-w-5xl">
         <h2 className="section-heading text-center sm:text-start">What engineers say</h2>
         <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {featured.map((t) => (
-            <li key={t.quote.slice(0, 48)} className={featured.length === 3 ? "last:md:col-span-2 last:lg:col-span-1" : ""}>
+          {featured.map((t, index) => (
+            <li key={`${t.name}-${index}`} className={featured.length === 3 ? "last:md:col-span-2 last:lg:col-span-1" : ""}>
               <TestimonialCard testimonial={t} />
             </li>
           ))}

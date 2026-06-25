@@ -16,9 +16,9 @@ type HeroProps = {
 export function Hero({ mentors, stats, testimonial }: HeroProps) {
   return (
     <DotGridBackground sectionClassName="hero-dark">
-      <div className="page-container-wide py-24 sm:py-28 lg:py-36">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_28rem]">
-          <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:text-start">
+      <div className="page-container-wide min-w-0 py-16 sm:py-24 lg:py-36">
+        <div className="grid min-w-0 items-center gap-10 sm:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_28rem]">
+          <div className="mx-auto min-w-0 max-w-2xl text-center lg:mx-0 lg:text-start">
             <h1 className="hero-dot-text text-balance">
               Pass your FE. Land the O&amp;G role. Get a mentor who&apos;s done both.
             </h1>

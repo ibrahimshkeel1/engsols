@@ -12,8 +12,8 @@ const DISCIPLINE_CHIPS = ["Oil & Gas", "Drilling Engineering", "Reservoir Engine
 
 export function HeroGoalChips() {
   return (
-    <div className="mt-8 space-y-4">
-      <form action="/mentors" method="get" className="mx-auto flex max-w-md gap-2">
+    <div className="mt-8 min-w-0 space-y-4">
+      <form action="/mentors" method="get" className="mx-auto flex min-w-0 max-w-md gap-2">
         <label htmlFor="hero-mentor-search" className="sr-only">
           Search mentors
         </label>

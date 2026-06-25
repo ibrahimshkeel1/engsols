@@ -278,6 +278,13 @@ export default function BubbleMenu({
         )}
         aria-hidden={!isMenuOpen}
       >
+        <button
+          type="button"
+          className="bubble-menu-items__backdrop"
+          onClick={closeMenu}
+          aria-label="Close menu"
+          tabIndex={isMenuOpen ? 0 : -1}
+        />
         <div className="bubble-menu-items__body">
           <ul
             ref={clusterRef}
@@ -287,7 +294,7 @@ export default function BubbleMenu({
           >
           {menuItems.map((item, idx) => (
             <li
-              key={item.href + item.label}
+              key={`${item.href}-${idx}`}
               role="none"
               className={cn("list-none", pebbleWrapper(idx))}
             >

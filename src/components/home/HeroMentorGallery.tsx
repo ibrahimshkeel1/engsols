@@ -23,9 +23,9 @@ export function HeroMentorMobileStrip({ mentors, className }: Props) {
   if (showcase.length === 0) return null;
 
   return (
-    <div className={className}>
+    <div className={cn("min-w-0 max-w-full", className)}>
       <p className="text-caption mb-3 font-medium text-oil-gas-navy-muted">Meet our mentors</p>
-      <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2">
+      <ul className="scrollbar-none -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2">
         {showcase.map((mentor) => (
           <li key={mentor.slug} className="w-[9.5rem] shrink-0 snap-start">
             <Link

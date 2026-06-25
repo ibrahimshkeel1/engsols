@@ -29,7 +29,7 @@ export function NavbarShell({
       className={cn("nav-shell sticky top-0 z-50", scrolled && "nav-shell-scrolled")}
       style={darkSpeckleBackgroundStyle}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6">
+      <div className="mx-auto flex h-16 min-w-0 max-w-7xl items-center px-4 sm:px-6">
         <SiteMenu showForYou={showForYou} footer={menuFooter} trailing={children} />
       </div>
     </header>

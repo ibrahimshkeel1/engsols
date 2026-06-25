@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Prevent horizontal page scroll from transforms, marquees, or wide children */
+html,
+body {
+  overflow-x: clip;
+}
+
 /* ── EngSols Oil & Gas — 60-30-10 industrial palette ──
    60% Ice/Stark white · 30% Maritime navy · 10% Flare orange
    Semantic product zones + Tailwind v4 @theme bindings (no tailwind.config.js). */
@@ -266,6 +272,7 @@ body {
   margin-inline: auto;
   width: 100%;
   max-width: 72rem;
+  min-width: 0;
   padding-inline: 1rem;
 }
 
@@ -273,6 +280,7 @@ body {
   margin-inline: auto;
   width: 100%;
   max-width: 80rem;
+  min-width: 0;
   padding-inline: 1rem;
 }
 

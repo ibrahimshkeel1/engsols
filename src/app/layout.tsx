@@ -55,7 +55,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir} className={`${dmSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}>
       <body className="has-speckle min-h-full text-text-main">
-        <SpeckleSurface className="flex min-h-full flex-col">
+        <SpeckleSurface className="flex min-h-full min-w-0 flex-col overflow-x-clip">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[500] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
@@ -71,7 +71,7 @@ export default async function RootLayout({
           <NavigationTransitionProvider>
             <RouteAccentProvider>
               <Navbar />
-              <main id="main-content" className="flex-1 pb-16 lg:pb-0">
+              <main id="main-content" className="min-w-0 flex-1 overflow-x-clip pb-16 lg:pb-0">
                 <PageTransition>{children}</PageTransition>
               </main>
               <Footer />

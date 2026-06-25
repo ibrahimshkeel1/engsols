@@ -21,7 +21,7 @@ type Props = {
 
 function MatchResult({ mentor }: { mentor: Mentor }) {
   return (
-    <div className="flex min-w-[min(100%,18rem)] flex-col overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card sm:min-w-0">
+    <div className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card">
       <MentorPortrait
         name={mentor.name}
         src={mentor.avatarUrl}
@@ -101,7 +101,7 @@ export function HomeMentorMatcher({ mentors }: Props) {
           ))}
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-10 grid min-w-0 max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {matches.map((mentor) => (
             <MatchResult key={mentor.slug} mentor={mentor} />
           ))}
