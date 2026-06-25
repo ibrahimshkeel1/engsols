@@ -28,7 +28,11 @@ export default async function ApplyPage({ searchParams }: Props) {
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <ProfilePhotoUpload name={user.full_name || "Mentor"} initialUrl={user.avatar_url} />
+          <ProfilePhotoUpload
+            name={user.full_name || "Mentor"}
+            initialUrl={user.avatar_url}
+            initialFocusY={(user as { avatar_focus_y?: number | null }).avatar_focus_y}
+          />
           <form action={submitMentorApplication} className="mt-8 space-y-5">
             <FormField label="Professional headline" id="apply-headline">
               <Input name="headline" required placeholder="Senior Drilling Engineer at Shell" />

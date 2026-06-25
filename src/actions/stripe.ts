@@ -125,8 +125,8 @@ export async function createMentorshipCheckoutSession(
   if (priceCents <= 0) return { error: "This mentor does not require a paid booking" };
 
   const baseUrl = getSiteUrl();
-  const successUrl = `${baseUrl}/settings?mentorship_success=true`;
-  const cancelUrl = `${baseUrl}/mentors?canceled=true`;
+  const successUrl = `${baseUrl}/bookings?mentorship_success=true`;
+  const cancelUrl = `${baseUrl}/mentors/${booking.mentor_slug}?session=monthly&canceled=true#booking-options`;
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",

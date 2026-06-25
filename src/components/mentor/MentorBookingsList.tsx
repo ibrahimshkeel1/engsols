@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 import { updateMentorBookingStatus } from "@/actions/mentor";
 import type { BookingRequest } from "@/lib/data/bookings";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyStateClient } from "@/components/shared/EmptyStateClient";
 import { cn } from "@/lib/utils";
@@ -66,6 +66,11 @@ export function MentorBookingsList({ bookings }: { bookings: BookingRequest[] })
                   {b.status}
                 </span>
               </span>
+              {(b.status === "pending" || b.status === "contacted") && (
+                <ButtonLink href={`/bookings/${b.id}`} size="sm" variant="secondary">
+                  Messages
+                </ButtonLink>
+              )}
               <Button
                 type="button"
                 size="sm"

@@ -2,10 +2,13 @@ import { getDisciplineColors } from "@/lib/discipline-colors";
 import { resolvePortraitUrl } from "@/lib/mentor-portrait";
 import { cn } from "@/lib/utils";
 
+import { portraitObjectPositionStyle } from "@/lib/portrait-position";
+
 type ProfilePassportPhotoProps = {
   name: string;
   discipline?: string;
   src?: string | null;
+  focusY?: number | null;
   className?: string;
 };
 
@@ -14,6 +17,7 @@ export function ProfilePassportPhoto({
   name,
   discipline,
   src,
+  focusY,
   className,
 }: ProfilePassportPhotoProps) {
   const colors = discipline ? getDisciplineColors(discipline) : null;
@@ -25,7 +29,8 @@ export function ProfilePassportPhoto({
       <img
         src={photo}
         alt={name}
-        className="h-full w-full object-cover object-top"
+        className="h-full w-full object-cover"
+        style={portraitObjectPositionStyle(focusY)}
         loading="lazy"
       />
       {!src && colors && (

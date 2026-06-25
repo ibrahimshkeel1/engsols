@@ -17,7 +17,8 @@
   --background: var(--oil-gas-ice);
   --surface: var(--oil-gas-ice);
   --text-main: var(--oil-gas-navy);
-  --text-muted: 215 16% 42%;
+  /* Slightly stronger muted copy for small text on ice/white (WCAG-friendly) */
+  --text-muted: 215 20% 36%;
   --border: 214 32% 91%;
 
   /* 10% — flare orange accent (CTAs, key actions) */
@@ -321,7 +322,33 @@ body {
 
 .hero-dark {
   background: hsl(var(--surface));
-  color: hsl(var(--text-main));
+  color: hsl(var(--oil-gas-navy));
+}
+
+/* Ice hero — navy copy; never white text unless on a filled navy/orange control */
+.hero-dark :is(h1, h2, h3, .font-display, .text-display-xl, .text-display-lg, .hero-dot-text) {
+  color: hsl(var(--oil-gas-navy));
+}
+
+.hero-dark :is(p, li, .text-body-lg, .text-caption, .section-label):not(
+  [class*="bg-oil-gas-navy"],
+  [class*="bg-oil-gas-orange"],
+  .hero-chip,
+  .hero-chip--active
+) {
+  color: hsl(var(--oil-gas-navy-muted));
+}
+
+.hero-dark .section-label.text-oil-gas-orange,
+.hero-dark [class*="text-oil-gas-orange"]:not([class*="bg-oil-gas-orange"]) {
+  color: hsl(var(--oil-gas-orange));
+}
+
+.hero-dark
+  :not([class*="bg-oil-gas-navy"]):not([class*="bg-oil-gas-orange"]):not(.hero-chip)[class*="text-oil-gas-white"],
+.hero-dark
+  :not([class*="bg-oil-gas-navy"]):not([class*="bg-oil-gas-orange"]):not(.hero-chip)[class*="text-white"] {
+  color: hsl(var(--oil-gas-navy)) !important;
 }
 
 /* Guest hero — maritime navy headline on ice canvas */

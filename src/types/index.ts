@@ -24,6 +24,7 @@ export type Mentor = {
   featured: boolean;
   reviews: Review[];
   avatarUrl?: string | null;
+  avatarFocusY?: number | null;
   calendlyUrl?: string | null;
   introCalendlyUrl?: string | null;
   studyPlanCalendlyUrl?: string | null;

@@ -1,10 +1,12 @@
 import Image from "next/image";
 import { resolvePortraitUrl } from "@/lib/mentor-portrait";
+import { portraitObjectPositionStyle } from "@/lib/portrait-position";
 import { cn } from "@/lib/utils";
 
 type MentorPortraitProps = {
   name: string;
   src?: string | null;
+  focusY?: number | null;
   alt?: string;
   variant?: "mentor" | "mentee";
   priority?: boolean;
@@ -16,6 +18,7 @@ type MentorPortraitProps = {
 export function MentorPortrait({
   name,
   src,
+  focusY,
   alt,
   variant = "mentor",
   priority = false,
@@ -33,7 +36,8 @@ export function MentorPortrait({
         fill
         priority={priority}
         sizes={sizes}
-        className={cn("object-cover object-top", imageClassName)}
+        className={cn("object-cover", imageClassName)}
+        style={portraitObjectPositionStyle(focusY)}
       />
     </div>
   );

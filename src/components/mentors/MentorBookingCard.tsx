@@ -6,6 +6,8 @@ import { ExternalLink } from "lucide-react";
 import type { Mentor } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { BookingRequestForm } from "@/components/mentors/BookingRequestForm";
+import { BookingCancellationPolicy } from "@/components/mentors/BookingCancellationPolicy";
+import { MonthlyQuickCheckout } from "@/components/mentors/MonthlyQuickCheckout";
 import { sessionTypes } from "@/data/sessionTypes";
 import { formatIntroCallPrice, introBadgeLabel } from "@/lib/mentor-display";
 import { formatMentorAvailabilitySummary } from "@/lib/mentor-availability";
@@ -25,11 +27,11 @@ type Props = {
 function BookingLoginGate({ mentorSlug, sessionType }: { mentorSlug: string; sessionType: string }) {
   const next = encodeURIComponent(`/mentors/${mentorSlug}?session=${sessionType}#booking-options`);
   return (
-    <div className="rounded-xl border border-border bg-muted/40 p-4 text-center">
-      <p className="text-sm text-muted-foreground">Log in to request this session with the mentor.</p>
+    <div className="rounded-xl border border-oil-gas-navy/10 bg-oil-gas-ice p-4 text-center">
+      <p className="text-sm text-oil-gas-navy-muted">Log in to request this session with the mentor.</p>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 inline-flex h-10 items-center justify-center rounded-xl bg-zone-mentorship px-5 text-sm font-semibold text-white hover:brightness-110"
+        className="mt-3 inline-flex h-10 items-center justify-center rounded-xl bg-oil-gas-orange px-5 text-sm font-semibold text-white hover:bg-oil-gas-orange-hover"
       >
         Log in to book
       </Link>
@@ -78,9 +80,11 @@ export function MentorBookingCard({
 
   const introPrice = formatIntroCallPrice(mentor.introCallRate);
   const availabilitySummary = formatMentorAvailabilitySummary(mentor);
+  const introCalendly = calendlyForOption(mentor, "intro");
   const calendlyUrl = calendlyForOption(mentor, selected);
   const loginRequired = requiresLogin(selected);
   const showForm = !calendlyUrl;
+  const paidMonthly = selected === "monthly" && mentor.monthlyRate > 0;
 
   const options: {
     id: BookingOption;
@@ -128,8 +132,25 @@ export function MentorBookingCard({
 
   return (
     <div id="booking-options" className="scroll-mt-24">
+      {introCalendly && (
+        <div className="mb-6 rounded-2xl border border-oil-gas-orange/30 bg-oil-gas-orange/5 p-5">
+          <p className="text-sm font-semibold text-oil-gas-navy">Book a free intro instantly</p>
+          <p className="mt-1 text-xs text-oil-gas-navy-muted">
+            Pick a time on {mentor.name.split(" ")[0]}&apos;s calendar — no form, no login required.
+          </p>
+          <a
+            href={introCalendly}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-oil-gas-orange text-sm font-semibold text-white transition hover:bg-oil-gas-orange-hover"
+          >
+            Book free intro on calendar <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
+      )}
+
       <h2 className="section-heading">Book a session</h2>
-      <p className="text-body mt-2 text-muted-foreground">
+      <p className="text-body mt-2 text-oil-gas-navy-muted">
         {availabilitySummary ?? "Choose an option — pricing is upfront, no surprises."}
       </p>
 
@@ -146,26 +167,28 @@ export function MentorBookingCard({
               option.highlighted && "shadow-premium-card",
               selected === option.id
                 ? option.highlighted
-                  ? "border-primary ring-2 ring-primary/25"
-                  : "border-border-custom shadow-premium-card"
+                  ? "border-oil-gas-orange ring-2 ring-oil-gas-orange/25"
+                  : "border-oil-gas-navy/20 shadow-premium-card"
                 : "border-border/75 hover:border-border",
             )}
           >
             {option.highlighted && (
-              <Badge className="mb-3 w-fit bg-primary/10 text-primary">Best value</Badge>
+              <Badge className="mb-3 w-fit border-oil-gas-orange/20 bg-oil-gas-orange/10 text-oil-gas-orange-hover">
+                Best value
+              </Badge>
             )}
-            <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
+            <p className="text-caption font-medium uppercase tracking-wide text-oil-gas-navy-muted">
               {option.duration}
             </p>
-            <p className="mt-1 text-base font-semibold text-foreground">{option.title}</p>
-            <p className="mt-2 text-2xl font-bold tabular-nums">{option.price}</p>
-            <p className="text-caption mt-2 line-clamp-3 text-muted-foreground">{option.detail}</p>
+            <p className="mt-1 text-base font-semibold text-oil-gas-navy">{option.title}</p>
+            <p className="mt-2 text-2xl font-bold tabular-nums text-oil-gas-navy">{option.price}</p>
+            <p className="text-caption mt-2 line-clamp-3 text-oil-gas-navy-muted">{option.detail}</p>
             <span
               className={cn(
                 "mt-4 inline-flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium",
                 selected === option.id
-                  ? "bg-primary text-primary-foreground"
-                  : "border border-border bg-surface text-foreground",
+                  ? "bg-oil-gas-orange text-white"
+                  : "border border-oil-gas-navy/15 bg-white text-oil-gas-navy",
               )}
             >
               {selected === option.id ? "Selected" : "Select"}
@@ -174,29 +197,45 @@ export function MentorBookingCard({
         ))}
       </div>
 
-      {selected === "monthly" && (
-        <p className="mt-4 text-xs text-muted-foreground">
-          Cancel anytime — no lock-in. Monthly plans are billed through Stripe; you can manage billing from your
-          account settings.
-        </p>
-      )}
+      {(selected === "monthly" || paidMonthly) && <BookingCancellationPolicy className="mt-4" />}
 
-      <div className="mt-8 rounded-xl border border-border/75 bg-muted/20 p-5 sm:p-6">
-        {calendlyUrl ? (
+      <div className="mt-8 rounded-xl border border-oil-gas-navy/10 bg-oil-gas-ice/80 p-5 sm:p-6">
+        {calendlyUrl && selected !== "intro" ? (
           <>
             <a
               href={calendlyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zone-mentorship text-sm font-semibold text-white hover:brightness-110"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-oil-gas-orange text-sm font-semibold text-white hover:bg-oil-gas-orange-hover"
             >
-              {selected === "intro" ? "Book intro on calendar" : "Book on calendar"}{" "}
-              <ExternalLink className="h-4 w-4" />
+              Book on calendar <ExternalLink className="h-4 w-4" />
             </a>
-            <p className="mt-3 text-center text-xs text-muted-foreground">
+            <p className="mt-3 text-center text-xs text-oil-gas-navy-muted">
               Pick a time instantly — {mentor.name.split(" ")[0]} uses Calendly for scheduling.
             </p>
           </>
+        ) : calendlyUrl && selected === "intro" ? (
+          <div className="space-y-4">
+            <p className="text-center text-sm text-oil-gas-navy-muted">
+              Use the calendar button above for the fastest intro booking.
+            </p>
+            <BookingRequestForm
+              mentorSlug={mentor.slug}
+              mentorName={mentor.name}
+              mentor={mentor}
+              type="intro"
+              monthlyRate={mentor.monthlyRate}
+              defaultName={defaultName}
+              defaultEmail={defaultEmail}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
+        ) : paidMonthly && isLoggedIn ? (
+          <MonthlyQuickCheckout
+            mentorSlug={mentor.slug}
+            mentorName={mentor.name}
+            monthlyRate={mentor.monthlyRate}
+          />
         ) : loginRequired && !isLoggedIn ? (
           <BookingLoginGate mentorSlug={mentor.slug} sessionType={selected} />
         ) : showForm ? (

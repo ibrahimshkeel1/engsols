@@ -25,6 +25,7 @@ export default async function MentorProfilePage() {
             name={user.full_name || "Mentor"}
             discipline={profile?.discipline}
             initialUrl={user.avatar_url}
+            initialFocusY={(user as { avatar_focus_y?: number | null }).avatar_focus_y}
           />
         </CardContent>
       </Card>

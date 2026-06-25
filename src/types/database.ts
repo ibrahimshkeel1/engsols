@@ -8,6 +8,7 @@ export type DbProfile = {
   full_name: string;
   role: UserRole;
   avatar_url: string | null;
+  avatar_focus_y?: number | null;
   created_at: string;
 };
 

@@ -179,14 +179,59 @@ export async function signInWithGoogle(nextPath?: string) {
   redirect(data.url);
 }
 
-export async function updateProfileAvatar(avatarUrl: string) {
+export async function updateProfileAvatar(avatarUrl: string, avatarFocusY?: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const focus =
+    avatarFocusY === undefined ? undefined : Math.min(1, Math.max(0, avatarFocusY));
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      avatar_url: avatarUrl,
+      ...(focus !== undefined ? { avatar_focus_y: focus } : {}),
+    })
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/mentors");
+  revalidatePath("/portfolios");
+  revalidatePath("/settings");
+  return { success: true };
+}
+
+export async function updateAvatarFocus(avatarFocusY: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in" };
+
+  const focus = Math.min(1, Math.max(0, avatarFocusY));
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_focus_y: focus })
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/mentors");
+  revalidatePath("/portfolios");
+  revalidatePath("/settings");
+  return { success: true };
+}
+
+export async function clearProfileAvatar() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "You must be logged in" };
 
   const { error } = await supabase
     .from("profiles")
-    .update({ avatar_url: avatarUrl })
+    .update({ avatar_url: null, avatar_focus_y: 0 })
     .eq("id", user.id);
 
   if (error) return { error: error.message };

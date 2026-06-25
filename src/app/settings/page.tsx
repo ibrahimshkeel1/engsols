@@ -11,7 +11,8 @@ import { SessionNotesSection } from "@/components/settings/SessionNotesSection";
 import { StudentBookingsSection } from "@/components/settings/StudentBookingsSection";
 import { StudentJobApplicationsSection } from "@/components/settings/StudentJobApplicationsSection";
 import { LocalizedText } from "@/components/i18n/LocalizedText";
-import { getStudentBookings, getStudentJobApplications } from "@/lib/data/student-activity";
+import { getReviewedMentorSlugsForUser, getStudentBookingsDetailed } from "@/lib/data/booking-messages";
+import { getStudentJobApplications } from "@/lib/data/student-activity";
 import { getRoadmapsForStudent } from "@/lib/data/roadmaps";
 import { MilestoneTracker } from "@/components/dashboard/MilestoneTracker";
 import { ManageBillingButton } from "@/components/settings/ManageBillingButton";
@@ -34,10 +35,11 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  const [savedMentors, { data: notes }, bookings, jobApplications, roadmaps] = await Promise.all([
+  const [savedMentors, { data: notes }, bookings, reviewedSlugs, jobApplications, roadmaps] = await Promise.all([
     getSavedMentors(user.id),
     supabase.from("session_notes").select("*").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(20),
-    getStudentBookings(user.id),
+    getStudentBookingsDetailed(user.id),
+    getReviewedMentorSlugsForUser(user.id),
     getStudentJobApplications(user.id),
     getRoadmapsForStudent(user.id),
   ]);
@@ -55,7 +57,11 @@ export default async function SettingsPage() {
           <section>
             <h2 className="font-semibold">Profile photo</h2>
             <div className="mt-4">
-              <ProfilePhotoUpload name={user.full_name || "User"} initialUrl={user.avatar_url} />
+              <ProfilePhotoUpload
+                name={user.full_name || "User"}
+                initialUrl={user.avatar_url}
+                initialFocusY={(user as { avatar_focus_y?: number | null }).avatar_focus_y}
+              />
             </div>
           </section>
           <section className="border-t border-border pt-8">
@@ -167,7 +173,7 @@ export default async function SettingsPage() {
         <CardContent className="p-6">
           <LocalizedText messageKey="myBookings" as="h2" className="font-semibold" />
           <p className="mt-1 text-sm text-muted-foreground">Track mentorship and one-off session requests.</p>
-          <StudentBookingsSection bookings={bookings} />
+          <StudentBookingsSection bookings={bookings} reviewedMentorSlugs={[...reviewedSlugs]} />
         </CardContent>
       </Card>
 

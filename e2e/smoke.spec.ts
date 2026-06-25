@@ -80,7 +80,13 @@ test.describe("smoke", () => {
 
   test("discipline hub loads", async ({ page }) => {
     await page.goto("/disciplines/reservoir-engineering");
-    await expect(page.getByRole("heading", { level: 1, name: /reservoir engineering/i })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /reservoir engineering mentors/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /browse reservoir engineering mentors/i })).toBeVisible();
+  });
+
+  test("bookings page redirects when logged out", async ({ page }) => {
+    await page.goto("/bookings");
+    await expect(page).toHaveURL(/login/);
   });
 
   test("compare mentors page loads", async ({ page }) => {
@@ -96,6 +102,7 @@ test.describe("smoke", () => {
 
     await mentorProfileLinks.first().click();
     await expect(page).toHaveURL(/\/mentors\/[^/]+$/);
+    await page.locator("#booking-monthly").click();
     await page.locator("#booking-options").scrollIntoViewIfNeeded();
     await expect(page.getByRole("link", { name: /log in to book/i })).toBeVisible();
   });

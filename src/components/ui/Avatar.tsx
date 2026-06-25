@@ -1,11 +1,14 @@
 import { cn } from "@/lib/utils";
 import { resolvePortraitUrl } from "@/lib/mentor-portrait";
 
+import { portraitObjectPositionStyle } from "@/lib/portrait-position";
+
 type AvatarProps = {
   name: string;
   discipline?: string;
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
   src?: string | null;
+  focusY?: number | null;
   className?: string;
   variant?: "mentor" | "mentee";
 };
@@ -23,6 +26,7 @@ export function Avatar({
   discipline,
   size = "md",
   src,
+  focusY,
   className,
   variant = "mentor",
 }: AvatarProps) {
@@ -33,7 +37,8 @@ export function Avatar({
     <img
       src={photo}
       alt={name}
-      className={cn("shrink-0 rounded-xl object-cover object-top ring-2 ring-border", sizes[size], className)}
+      className={cn("shrink-0 rounded-xl object-cover ring-2 ring-border", sizes[size], className)}
+      style={portraitObjectPositionStyle(focusY)}
     />
   );
 }

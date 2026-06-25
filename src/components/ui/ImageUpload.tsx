@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -11,6 +11,7 @@ import {
   validateImageFile,
   type MediaFolder,
 } from "@/lib/storage";
+import { PortraitCropPreview } from "@/components/ui/PortraitCropPreview";
 import { cn } from "@/lib/utils";
 
 type ImageUploadProps = {
@@ -21,6 +22,12 @@ type ImageUploadProps = {
   maxFiles?: number;
   label?: string;
   className?: string;
+  /** Show portrait crop frames and placement grid after selecting a photo. */
+  cropPreview?: "portrait";
+  portraitFocusY?: number;
+  onPortraitFocusYChange?: (focusY: number) => void;
+  onPortraitSave?: () => void;
+  disabled?: boolean;
 };
 
 export function ImageUpload({
@@ -31,10 +38,35 @@ export function ImageUpload({
   maxFiles = multiple ? 4 : 1,
   label = "Add image",
   className,
+  cropPreview,
+  portraitFocusY = 0,
+  onPortraitFocusYChange,
+  onPortraitSave,
+  disabled = false,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (localPreviewUrl?.startsWith("blob:")) {
+        URL.revokeObjectURL(localPreviewUrl);
+      }
+    };
+  }, [localPreviewUrl]);
+
+  function setPreviewFromFile(file: File) {
+    if (localPreviewUrl?.startsWith("blob:")) {
+      URL.revokeObjectURL(localPreviewUrl);
+    }
+    if (cropPreview === "portrait") {
+      setLocalPreviewUrl(URL.createObjectURL(file));
+    }
+  }
+
+  const previewUrl = cropPreview === "portrait" ? (value[0] ?? localPreviewUrl) : null;
 
   async function handleFiles(fileList: FileList | null) {
     if (!fileList?.length) return;
@@ -44,6 +76,10 @@ export function ImageUpload({
     if (!files.length) {
       setError(`Maximum ${maxFiles} image${maxFiles === 1 ? "" : "s"}.`);
       return;
+    }
+
+    if (cropPreview === "portrait" && files[0]) {
+      setPreviewFromFile(files[0]);
     }
 
     setUploading(true);
@@ -77,6 +113,10 @@ export function ImageUpload({
     }
 
     if (uploaded.length) {
+      if (localPreviewUrl?.startsWith("blob:")) {
+        URL.revokeObjectURL(localPreviewUrl);
+        setLocalPreviewUrl(null);
+      }
       onChange(multiple ? [...value, ...uploaded] : uploaded);
     }
     setUploading(false);
@@ -84,6 +124,10 @@ export function ImageUpload({
   }
 
   function removeAt(index: number) {
+    if (localPreviewUrl?.startsWith("blob:")) {
+      URL.revokeObjectURL(localPreviewUrl);
+      setLocalPreviewUrl(null);
+    }
     onChange(value.filter((_, i) => i !== index));
   }
 
@@ -92,7 +136,27 @@ export function ImageUpload({
   return (
     <div className={cn("space-y-3", className)}>
       {label && <p className="text-sm font-medium">{label}</p>}
-      {value.length > 0 && (
+      {previewUrl && (
+        <>
+          <PortraitCropPreview
+            src={previewUrl}
+            alt="Uploaded photo preview"
+            focusY={portraitFocusY}
+            onFocusYChange={onPortraitFocusYChange}
+          />
+          {onPortraitSave && (value[0] || localPreviewUrl) && onPortraitFocusYChange && value[0] && (
+            <button
+              type="button"
+              onClick={onPortraitSave}
+              disabled={uploading || disabled}
+              className="rounded-xl bg-oil-gas-navy px-4 py-2 text-sm font-semibold text-white hover:bg-oil-gas-navy-muted disabled:opacity-60"
+            >
+              Save crop position
+            </button>
+          )}
+        </>
+      )}
+      {value.length > 0 && !cropPreview && (
         <div className={cn("flex flex-wrap gap-3", multiple ? "" : "justify-start")}>
           {value.map((url, index) => (
             <div key={url} className="relative h-24 w-24 overflow-hidden rounded-xl border border-border bg-muted">
@@ -115,6 +179,16 @@ export function ImageUpload({
           ))}
         </div>
       )}
+      {value.length > 0 && cropPreview && (
+        <button
+          type="button"
+          disabled={disabled || uploading}
+          onClick={() => removeAt(0)}
+          className="text-sm font-medium text-oil-gas-orange-hover hover:underline disabled:opacity-60"
+        >
+          Remove photo
+        </button>
+      )}
       {canAddMore && (
         <div>
           <input
@@ -127,17 +201,17 @@ export function ImageUpload({
           />
           <button
             type="button"
-            disabled={uploading}
+            disabled={uploading || disabled}
             onClick={() => inputRef.current?.click()}
-            className="inline-flex h-10 items-center gap-2 rounded-xl border border-dashed border-border bg-muted/40 px-4 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground disabled:opacity-60"
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-dashed border-oil-gas-navy/20 bg-oil-gas-ice px-4 text-sm font-medium text-oil-gas-navy-muted transition hover:border-oil-gas-orange/40 hover:text-oil-gas-navy disabled:opacity-60"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
             {uploading ? "Uploading..." : label}
           </button>
         </div>
       )}
-      {error && <p className="text-sm text-zone-news">{error}</p>}
-      <p className="text-xs text-muted-foreground">JPEG, PNG, WebP, or GIF · max 5 MB</p>
+      {error && <p className="text-sm text-oil-gas-orange-hover">{error}</p>}
+      <p className="text-xs text-oil-gas-navy-muted">JPEG, PNG, WebP, or GIF · max 5 MB</p>
     </div>
   );
 }

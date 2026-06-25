@@ -33,7 +33,11 @@ export default async function BuildPortfolioPage({ searchParams }: Props) {
       )}
       <Card className="card-elevated mt-8">
         <CardContent className="p-6">
-          <ProfilePhotoUpload name={user.full_name || "Student"} initialUrl={user.avatar_url} />
+          <ProfilePhotoUpload
+            name={user.full_name || "Student"}
+            initialUrl={user.avatar_url}
+            initialFocusY={(user as { avatar_focus_y?: number | null }).avatar_focus_y}
+          />
           <form action={savePortfolio} className="mt-8 space-y-5">
             <FormField label="Headline" id="portfolio-headline">
               <Input name="headline" required defaultValue={existing?.headline ?? ""} placeholder="e.g. Petroleum Engineering Graduate" />

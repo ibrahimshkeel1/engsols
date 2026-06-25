@@ -9,6 +9,7 @@ import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { BookingConfirmation } from "@/components/mentors/BookingConfirmation";
+import { BookingCancellationPolicy } from "@/components/mentors/BookingCancellationPolicy";
 import type { Mentor } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -182,11 +183,7 @@ export function BookingRequestForm({
         />
       </FormField>
       {requiresPaidMonthly && (
-        <p className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
-          Monthly mentorship requires a one-time payment of{" "}
-          <span className="font-semibold text-foreground">${monthlyRate}</span> before your request is sent to the
-          mentor. Cancel anytime from your billing portal.
-        </p>
+        <BookingCancellationPolicy variant="card" />
       )}
       <Button type="submit" variant="accent" className={cn("w-full", pending && "opacity-90")} disabled={pending}>
         {pending ? (

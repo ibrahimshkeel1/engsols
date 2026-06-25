@@ -8,6 +8,8 @@ import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
 import { MentorRating } from "@/components/mentors/MentorRating";
 import { MentorTrustBar } from "@/components/mentors/MentorTrustBar";
 import { MentorMobileBookBar } from "@/components/mentors/MentorMobileBookBar";
+import { MentorReviewForm } from "@/components/mentor/MentorReviewForm";
+import { BookingCancellationPolicy } from "@/components/mentors/BookingCancellationPolicy";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -82,15 +84,15 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
                 )}
               </div>
               <h1 className="text-display-lg mt-3">{mentor.name}</h1>
-              <p className="text-body-lg mt-1 text-muted-foreground">{mentor.headline}</p>
+              <p className="text-body-lg mt-1 text-oil-gas-navy-muted">{mentor.headline}</p>
               <div className="mt-4">
                 <MentorRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
               </div>
-              <p className="text-body mt-3 text-muted-foreground">
+              <p className="text-body mt-3 text-oil-gas-navy-muted">
                 {mentor.yearsExperience}+ years · {mentor.discipline}
                 {mentor.reviewCount > 0 ? ` · ${mentor.reviewCount} reviews` : ""}
               </p>
-              <p className="text-body mt-2 font-semibold text-foreground">
+              <p className="text-body mt-2 font-semibold text-oil-gas-navy">
                 From ${mentor.monthlyRate}/mo · Intro {introPrice}
               </p>
             </div>
@@ -99,6 +101,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
               <MentorPortrait
                 name={mentor.name}
                 src={mentor.avatarUrl}
+                focusY={mentor.avatarFocusY}
                 className="h-32 w-32 shrink-0 rounded-2xl ring-2 ring-border"
                 sizes="128px"
               />
@@ -139,7 +142,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
 
             <section>
               <h2 className="section-heading">About {mentor.name.split(" ")[0]}</h2>
-              <p className="text-body mt-4 whitespace-pre-line text-muted-foreground">{mentor.bio}</p>
+              <p className="text-body mt-4 whitespace-pre-line text-oil-gas-navy-muted">{mentor.bio}</p>
             </section>
 
             <section>
@@ -195,11 +198,24 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
               </section>
             )}
 
+            {user && (
+              <section id="leave-review" className="scroll-mt-24 rounded-2xl border border-oil-gas-orange/20 bg-oil-gas-orange/5 p-6">
+                <h2 className="section-heading text-oil-gas-navy">Leave a review</h2>
+                <p className="text-body mt-2 text-oil-gas-navy-muted">
+                  Had a session with {mentor.name.split(" ")[0]}? Share your experience to help other engineers.
+                </p>
+                <div className="mt-6">
+                  <MentorReviewForm mentorSlug={mentor.slug} />
+                </div>
+              </section>
+            )}
+
             <section className="rounded-lg border border-border/75 bg-muted/20 px-4 py-3 text-center">
-              <p className="text-sm text-muted-foreground">{availabilityUrgency(mentor)}</p>
+              <p className="text-sm text-oil-gas-navy-muted">{availabilityUrgency(mentor)}</p>
             </section>
 
             <section className="border-t border-border/60 pt-12 text-center lg:text-start">
+              <BookingCancellationPolicy variant="card" className="mb-6 text-start" />
               <p className="text-display-lg text-balance">
                 Move your career forward with {mentor.name.split(" ")[0]}.
               </p>

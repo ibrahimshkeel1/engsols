@@ -54,7 +54,7 @@ function MentorCardPreview({ mentor, showPrice }: { mentor: Mentor; showPrice: b
   return (
     <div className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-bg-surface">
       <div className="relative min-h-0 overflow-hidden border-b border-border-custom/60">
-        <ProfilePassportPhoto name={mentor.name} discipline={mentor.discipline} src={mentor.avatarUrl} />
+        <ProfilePassportPhoto name={mentor.name} discipline={mentor.discipline} src={mentor.avatarUrl} focusY={mentor.avatarFocusY} />
         <div className="absolute start-2 top-2">
           <CardTrustBadge mentor={mentor} />
         </div>
@@ -63,7 +63,7 @@ function MentorCardPreview({ mentor, showPrice }: { mentor: Mentor; showPrice: b
         <h3 className="capitalize font-semibold leading-tight text-text-main">{mentor.name}</h3>
         <p className="mt-1 line-clamp-2 text-xs font-medium text-text-muted">{mentor.headline}</p>
         {previewSkills.length > 0 && (
-          <p className="mt-1.5 line-clamp-1 text-[10px] font-medium uppercase tracking-wide text-text-muted lg:hidden">
+          <p className="mt-1.5 line-clamp-1 text-[10px] font-medium uppercase tracking-wide text-text-muted">
             {previewSkills.join(" · ")}
           </p>
         )}
