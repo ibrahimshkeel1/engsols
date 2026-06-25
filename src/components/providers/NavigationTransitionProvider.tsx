@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SplitText } from "@/components/motion/SplitText";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { useIsClient } from "@/lib/use-is-client";
 import { BUBBLE_MENU_CLOSE_EVENT } from "@/lib/bubble-menu-nav";
 import {
   getPageTitleFromPath,
@@ -77,15 +78,11 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
   const pathname = usePathname();
   const { locale } = useLocale();
   const reducedMotion = usePrefersReducedMotion();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [transition, setTransition] = useState<ActiveTransition | null>(null);
   const pendingHrefRef = useRef<string | null>(null);
   const navigateTimerRef = useRef<number | null>(null);
   const exitTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const clearTimers = useCallback(() => {
     if (navigateTimerRef.current !== null) {
@@ -126,7 +123,8 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
     if (!transition || transition.phase !== "navigating") return;
     const targetPath = pathFromHref(transition.href);
     if (pathname === targetPath) {
-      startExit();
+      const timer = window.setTimeout(startExit, 0);
+      return () => window.clearTimeout(timer);
     }
   }, [pathname, startExit, transition]);
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useTheme } from "next-themes";
 import { DotGrid, type DotGridHandle } from "@/components/motion/DotGrid";
 import { DOT_GRID_DEFAULTS, DOT_GRID_THEME } from "@/lib/dot-grid-theme";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { useIsClient, useMediaQuery } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
 
 type DotGridBackgroundProps = {
@@ -13,20 +14,6 @@ type DotGridBackgroundProps = {
   sectionClassName?: string;
   id?: string;
 };
-
-function useCanHover() {
-  const [canHover, setCanHover] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const update = () => setCanHover(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  return canHover;
-}
 
 /**
  * Section wrapper with themed DotGrid canvas behind content.
@@ -39,16 +26,12 @@ export function DotGridBackground({
 }: DotGridBackgroundProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<DotGridHandle>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const { resolvedTheme } = useTheme();
-  const canHover = useCanHover();
+  const canHover = useMediaQuery("(hover: hover) and (pointer: fine)");
   const reducedMotion = usePrefersReducedMotion();
   const interactive = mounted && canHover;
   const enablePush = interactive && !reducedMotion;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const colors =
     resolvedTheme === "dark" ? DOT_GRID_THEME.dark : DOT_GRID_THEME.light;

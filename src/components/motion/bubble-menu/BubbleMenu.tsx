@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
+import { useIsClient } from "@/lib/use-is-client";
 import { BUBBLE_MENU_CLOSE_EVENT } from "@/lib/bubble-menu-nav";
 import { FLUID_DROP_PEBBLE, pebbleWrapper } from "@/components/motion/bubble-menu/pebble-styles";
 import "./BubbleMenu.css";
@@ -104,7 +105,7 @@ export default function BubbleMenu({
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const clusterRef = useRef<HTMLUListElement>(null);
@@ -145,10 +146,6 @@ export default function BubbleMenu({
     setIsMenuOpen(nextState);
     onMenuClick?.(nextState);
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("bubble-menu-open", isMenuOpen);

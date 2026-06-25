@@ -4,12 +4,12 @@ import {
   useRef,
   useEffect,
   useMemo,
-  useState,
   type ElementType,
   type CSSProperties,
 } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useFontsLoaded } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
 
 type SplitTextProps = {
@@ -49,19 +49,11 @@ export function SplitText({
 }: SplitTextProps) {
   const ref = useRef<HTMLElement>(null);
   const onCompleteRef = useRef(onAnimationComplete ?? onLetterAnimationComplete);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const fontsLoaded = useFontsLoaded();
 
   useEffect(() => {
     onCompleteRef.current = onAnimationComplete ?? onLetterAnimationComplete;
   }, [onAnimationComplete, onLetterAnimationComplete]);
-
-  useEffect(() => {
-    if (document.fonts.status === "loaded") {
-      setFontsLoaded(true);
-      return;
-    }
-    void document.fonts.ready.then(() => setFontsLoaded(true));
-  }, []);
 
   const units = useMemo(() => {
     if (splitType === "chars") {

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { useIsTouchDevice } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
 import "./PixelTransition.css";
 
@@ -22,20 +23,6 @@ export type PixelTransitionProps = {
   enableTouchToggle?: boolean;
   focusable?: boolean;
 };
-
-function useIsTouchDevice() {
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    const touch =
-      "ontouchstart" in window ||
-      navigator.maxTouchPoints > 0 ||
-      window.matchMedia("(pointer: coarse)").matches;
-    setIsTouch(touch);
-  }, []);
-
-  return isTouch;
-}
 
 export function PixelTransition({
   firstContent,

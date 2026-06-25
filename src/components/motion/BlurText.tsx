@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ElementType } from "react";
+import { useEffect, useMemo, useRef, useState, type ElementType } from "react";
 import { motion } from "framer-motion";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -62,12 +62,6 @@ export function BlurText({
   const [inView, setInView] = useState(startOnMount);
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
-
-  useLayoutEffect(() => {
-    if (startOnMount) {
-      setInView(true);
-    }
-  }, [startOnMount]);
 
   useEffect(() => {
     if (startOnMount || !ref.current || reducedMotion) return;

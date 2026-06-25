@@ -2,10 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Component, useEffect, useState, type ReactNode } from "react";
+import { Component, type ReactNode } from "react";
 import { Ballpit } from "@/components/motion/ballpit/Ballpit";
 import { getBallpitColorsForPath } from "@/lib/ballpit-theme";
 import { usePrefersReducedMotion } from "@/lib/motion";
+import { useIsClient, useMediaQuery } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
 
 type BallpitHeroBackgroundProps = {
@@ -29,36 +30,18 @@ class BallpitErrorBoundary extends Component<
   }
 }
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  return isMobile;
-}
-
 /**
  * Hero section wrapper with Ballpit canvas behind content.
  * Ball colors match the BubbleMenu hover color for the current route.
  */
 export function BallpitHeroBackground({ children, className }: BallpitHeroBackgroundProps) {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const { resolvedTheme } = useTheme();
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const reducedMotion = usePrefersReducedMotion();
   const colors = getBallpitColorsForPath(pathname);
   const isDark = resolvedTheme === "dark";
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <section className={cn("ballpit-hero relative overflow-hidden !bg-transparent", className)}>

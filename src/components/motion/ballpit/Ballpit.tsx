@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   createBallpit,
   isWebGLSupported,
   type BallpitOptions,
 } from "@/components/motion/ballpit/create-ballpit";
 import { cn } from "@/lib/utils";
+
+const emptySubscribe = () => () => {};
 
 export type BallpitProps = Partial<BallpitOptions> & {
   className?: string;
@@ -34,15 +36,12 @@ export function Ballpit({
   maxVelocity,
 }: BallpitProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const webglSupported = useSyncExternalStore(emptySubscribe, isWebGLSupported, () => true);
   const [failed, setFailed] = useState(false);
   const colorsKey = colors.join(",");
 
   useEffect(() => {
-    if (!isWebGLSupported()) {
-      setFailed(true);
-      return;
-    }
-    if (failed) return;
+    if (!webglSupported) return;
 
     const root = rootRef.current;
     if (!root) return;
@@ -111,7 +110,6 @@ export function Ballpit({
     ambientIntensity,
     colorsKey,
     count,
-    failed,
     followCursor,
     friction,
     gravity,
@@ -120,9 +118,10 @@ export function Ballpit({
     maxVelocity,
     minSize,
     wallBounce,
+    webglSupported,
   ]);
 
-  if (failed) return null;
+  if (!webglSupported || failed) return null;
 
   return <div ref={rootRef} className={cn("absolute inset-0", className)} />;
 }

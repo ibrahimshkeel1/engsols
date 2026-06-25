@@ -1,52 +1,59 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { BlurText } from "@/components/motion/BlurText";
+import { useIsClient } from "@/lib/use-is-client";
 
 const INTRO_STORAGE_KEY = "engsols-home-intro-seen";
 const PAUSE_AFTER_ANIMATION_MS = 600;
 const FADE_OUT_MS = 500;
 
-type Phase = "checking" | "visible" | "exiting" | "done";
+const emptySubscribe = () => () => {};
+
+function readIntroSeen() {
+  try {
+    return sessionStorage.getItem(INTRO_STORAGE_KEY) !== null;
+  } catch {
+    return true;
+  }
+}
 
 export function HomeIntroSplash() {
-  const [phase, setPhase] = useState<Phase>("checking");
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
+  const alreadySeen = useSyncExternalStore(emptySubscribe, readIntroSeen, () => true);
+  const [exiting, setExiting] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   const dismiss = useCallback(() => {
-    setPhase((current) => (current === "visible" ? "exiting" : current));
+    setExiting(true);
   }, []);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    try {
-      if (sessionStorage.getItem(INTRO_STORAGE_KEY)) {
-        setPhase("done");
-        return;
+    if (!exiting) return;
+    const timer = window.setTimeout(() => {
+      try {
+        sessionStorage.setItem(INTRO_STORAGE_KEY, "1");
+      } catch {
+        // ignore private browsing quota errors
       }
-    } catch {
-      setPhase("done");
-      return;
-    }
-    setPhase("visible");
-  }, []);
+      setHidden(true);
+    }, FADE_OUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [exiting]);
 
   useEffect(() => {
-    if (phase !== "visible" && phase !== "exiting") return;
+    if (!isClient || alreadySeen || hidden) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [phase]);
+  }, [alreadySeen, hidden, isClient]);
 
   useEffect(() => {
-    if (phase !== "visible") return;
+    if (!isClient || alreadySeen || hidden || exiting) return;
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") dismiss();
@@ -54,35 +61,22 @@ export function HomeIntroSplash() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [phase, dismiss]);
+  }, [alreadySeen, dismiss, exiting, hidden, isClient]);
 
   const handleAnimationComplete = useCallback(() => {
     window.setTimeout(dismiss, PAUSE_AFTER_ANIMATION_MS);
   }, [dismiss]);
 
-  useEffect(() => {
-    if (phase !== "exiting") return;
-    const timer = window.setTimeout(() => {
-      try {
-        sessionStorage.setItem(INTRO_STORAGE_KEY, "1");
-      } catch {
-        // ignore private browsing quota errors
-      }
-      setPhase("done");
-    }, FADE_OUT_MS);
-    return () => window.clearTimeout(timer);
-  }, [phase]);
-
-  if (!mounted || phase === "checking" || phase === "done") return null;
+  if (!isClient || alreadySeen || hidden) return null;
 
   return createPortal(
     <motion.div
       className="fixed inset-0 z-[600] cursor-pointer hero-dark text-text-main antialiased"
       role="dialog"
       aria-label="Welcome"
-      aria-hidden={phase === "exiting"}
+      aria-hidden={exiting}
       initial={{ opacity: 1 }}
-      animate={{ opacity: phase === "exiting" ? 0 : 1 }}
+      animate={{ opacity: exiting ? 0 : 1 }}
       transition={{ duration: FADE_OUT_MS / 1000, ease: "easeInOut" }}
       onClick={dismiss}
     >
