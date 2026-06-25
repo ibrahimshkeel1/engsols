@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Portfolio } from "@/types";
 import { PixelTransition } from "@/components/motion/pixel-transition";
-import { Avatar } from "@/components/ui/Avatar";
+import { ProfilePassportPhoto } from "@/components/ui/ProfilePassportPhoto";
 
 type PortfolioCardProps = {
   portfolio: Portfolio;
@@ -27,14 +27,12 @@ function PortfolioCardPreview({ portfolio }: { portfolio: Portfolio }) {
   const workStatus = formatWorkStatus(portfolio.seeking);
 
   return (
-    <div className="flex h-full flex-col bg-bg-surface">
-      <div className="relative min-h-0 flex-1 overflow-hidden bg-muted">
-        <Avatar
+    <div className="flex h-full flex-col overflow-hidden bg-bg-surface">
+      <div className="flex flex-1 items-center justify-center px-4 pb-2 pt-4">
+        <ProfilePassportPhoto
           name={portfolio.name}
           discipline={portfolio.discipline}
-          size="2xl"
           src={portfolio.avatarUrl}
-          className="h-full w-full rounded-none object-cover ring-0"
         />
       </div>
       <div className="shrink-0 border-t border-border-custom/60 p-4 text-center">
@@ -116,14 +114,14 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
   return (
     <Link
       href={`/portfolios/${portfolio.slug}`}
-      className="group block h-full rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card transition-all duration-300 hover:-translate-y-1 hover:shadow-zone-recruiter/5"
+      className="group block h-full overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card transition-all duration-300 hover:-translate-y-1 hover:shadow-zone-recruiter/5"
     >
       <PixelTransition
         fill
         gridSize={12}
         pixelColor="hsl(var(--background))"
         animationStepDuration={0.4}
-        className="h-full w-full"
+        className="h-full w-full overflow-hidden rounded-2xl"
         firstContent={<PortfolioCardPreview portfolio={portfolio} />}
         secondContent={<PortfolioCardDetails portfolio={portfolio} />}
       />

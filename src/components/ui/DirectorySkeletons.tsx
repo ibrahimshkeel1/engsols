@@ -11,7 +11,9 @@ export function ProfileCardSkeleton({ className }: { className?: string }) {
       )}
       aria-hidden
     >
-      <Skeleton className="aspect-square w-full rounded-none" />
+      <div className="flex items-center justify-center px-4 pb-2 pt-4">
+        <Skeleton className="aspect-[35/45] w-[5.625rem] rounded-md sm:w-24" />
+      </div>
       <div className="space-y-2 border-t border-border/60 p-4">
         <Skeleton className="mx-auto h-4 w-3/5" />
         <Skeleton className="mx-auto h-3 w-full" />
