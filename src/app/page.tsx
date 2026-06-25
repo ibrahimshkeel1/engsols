@@ -1,6 +1,7 @@
 import { Hero } from "@/components/home/Hero";
 import { HomeIntroSplash } from "@/components/home/HomeIntroSplashLazy";
 import { ContinueJourneyHero } from "@/components/home/ContinueJourneyHero";
+import { CompanyLogoStrip } from "@/components/home/CompanyLogoStrip";
 import { WhyEngSolsWins } from "@/components/home/WhyEngSolsWins";
 import { HomeMentorMatcher } from "@/components/home/HomeMentorMatcher";
 import { StartHereJourney } from "@/components/home/StartHereJourney";
@@ -41,6 +42,8 @@ export default async function HomePage() {
       )}
 
       <SocialProof stats={stats} />
+
+      <CompanyLogoStrip mentors={mentors} />
 
       {isGuest && <HomeMentorMatcher mentors={mentors} />}
 

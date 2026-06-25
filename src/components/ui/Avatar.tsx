@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { getDisciplineColors } from "@/lib/discipline-colors";
+import { resolvePortraitUrl } from "@/lib/mentor-portrait";
 
 type AvatarProps = {
   name: string;
@@ -7,6 +7,7 @@ type AvatarProps = {
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
   src?: string | null;
   className?: string;
+  variant?: "mentor" | "mentee";
 };
 
 const sizes = {
@@ -17,41 +18,22 @@ const sizes = {
   "2xl": "h-32 w-32 text-3xl",
 };
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-export function Avatar({ name, discipline, size = "md", src, className }: AvatarProps) {
-  const colors = discipline ? getDisciplineColors(discipline) : null;
-
-  if (src) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt={name}
-        className={cn("rounded-xl object-cover ring-2 ring-border", sizes[size], className)}
-      />
-    );
-  }
+export function Avatar({
+  name,
+  discipline,
+  size = "md",
+  src,
+  className,
+  variant = "mentor",
+}: AvatarProps) {
+  const photo = resolvePortraitUrl(name, src, variant, size === "2xl" ? 512 : 256);
 
   return (
-    <div
-      className={cn(
-        "flex shrink-0 items-center justify-center rounded-xl font-semibold ring-2 ring-border",
-        colors?.bg ?? "bg-muted",
-        colors?.text ?? "text-foreground",
-        sizes[size],
-        className,
-      )}
-      aria-hidden
-    >
-      {initials(name)}
-    </div>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={photo}
+      alt={name}
+      className={cn("shrink-0 rounded-xl object-cover object-top ring-2 ring-border", sizes[size], className)}
+    />
   );
 }

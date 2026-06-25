@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Award } from "lucide-react";
 import { getMentorBySlug } from "@/lib/data/mentors";
 import { getCurrentUser } from "@/lib/auth";
-import { Avatar } from "@/components/ui/Avatar";
+import { MentorPortrait } from "@/components/ui/MentorPortrait";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
 import { MentorRating } from "@/components/mentors/MentorRating";
@@ -96,12 +96,11 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
             </div>
 
             <div className="flex flex-col items-center gap-4 lg:shrink-0 lg:items-end">
-              <Avatar
+              <MentorPortrait
                 name={mentor.name}
-                discipline={mentor.discipline}
-                size="2xl"
-                className="rounded-2xl ring-2 ring-border"
                 src={mentor.avatarUrl}
+                className="h-32 w-32 shrink-0 rounded-2xl ring-2 ring-border"
+                sizes="128px"
               />
               <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-56 lg:flex-col">
                 <ButtonLink href="#booking-options" size="lg" className="w-full">

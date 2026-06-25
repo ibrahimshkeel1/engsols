@@ -1,4 +1,5 @@
 import { getDisciplineColors } from "@/lib/discipline-colors";
+import { resolvePortraitUrl } from "@/lib/mentor-portrait";
 import { cn } from "@/lib/utils";
 
 type ProfilePassportPhotoProps = {
@@ -8,16 +9,7 @@ type ProfilePassportPhotoProps = {
   className?: string;
 };
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-/** Fills the card photo area and shows the full image without cropping. */
+/** MentorCruise-style portrait — face-forward crop, always shows a photo. */
 export function ProfilePassportPhoto({
   name,
   discipline,
@@ -25,27 +17,22 @@ export function ProfilePassportPhoto({
   className,
 }: ProfilePassportPhotoProps) {
   const colors = discipline ? getDisciplineColors(discipline) : null;
+  const photo = resolvePortraitUrl(name, src, "mentor", 640);
 
   return (
-    <div className={cn("relative h-full w-full overflow-hidden bg-muted", className)}>
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={name}
-          className="h-full w-full object-contain object-center"
-        />
-      ) : (
+    <div className={cn("relative min-h-[12rem] w-full overflow-hidden bg-muted sm:min-h-[14rem]", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={photo}
+        alt={name}
+        className="h-full w-full object-cover object-top"
+        loading="lazy"
+      />
+      {!src && colors && (
         <div
-          className={cn(
-            "flex h-full w-full items-center justify-center text-2xl font-semibold sm:text-3xl",
-            colors?.bg ?? "bg-muted",
-            colors?.text ?? "text-foreground",
-          )}
+          className={cn("pointer-events-none absolute inset-x-0 bottom-0 h-1", colors.bg)}
           aria-hidden
-        >
-          {initials(name)}
-        </div>
+        />
       )}
     </div>
   );

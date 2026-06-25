@@ -7,7 +7,7 @@ import type { Mentor } from "@/types";
 import { goals } from "@/data/goals";
 import { matchMentorsByGoals } from "@/lib/match-mentors";
 import { introBadgeLabel } from "@/lib/mentor-display";
-import { Avatar } from "@/components/ui/Avatar";
+import { MentorPortrait } from "@/components/ui/MentorPortrait";
 import { ButtonLink } from "@/components/ui/button";
 import { mentorGoalChipClass } from "@/components/mentors/MentorGoalChips";
 
@@ -21,18 +21,20 @@ type Props = {
 
 function MatchResult({ mentor }: { mentor: Mentor }) {
   return (
-    <div className="flex min-w-[min(100%,18rem)] flex-col rounded-2xl border border-border-custom bg-bg-surface p-4 shadow-premium-card sm:min-w-0">
-      <div className="flex items-start gap-3">
-        <Avatar name={mentor.name} discipline={mentor.discipline} src={mentor.avatarUrl} size="md" />
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold capitalize text-text-main">{mentor.name}</p>
-          <p className="line-clamp-2 text-xs text-text-muted">{mentor.headline}</p>
-          <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-zone-mentorship">
-            {mentor.discipline}
-          </p>
-        </div>
-      </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-muted">
+    <div className="flex min-w-[min(100%,18rem)] flex-col overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card sm:min-w-0">
+      <MentorPortrait
+        name={mentor.name}
+        src={mentor.avatarUrl}
+        className="aspect-[16/10] w-full sm:aspect-[3/2]"
+        sizes="(max-width: 640px) 80vw, 320px"
+      />
+      <div className="flex flex-1 flex-col p-4">
+        <p className="truncate font-semibold capitalize text-text-main">{mentor.name}</p>
+        <p className="line-clamp-2 text-xs text-text-muted">{mentor.headline}</p>
+        <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-zone-mentorship">
+          {mentor.discipline}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-muted">
         <span className="rounded-lg bg-zone-mentorship/10 px-2 py-0.5 font-semibold text-zone-mentorship">
           {introBadgeLabel(mentor.introCallRate)}
         </span>
@@ -50,6 +52,7 @@ function MatchResult({ mentor }: { mentor: Mentor }) {
         <ButtonLink href={`/mentors/${mentor.slug}?session=intro#booking-options`} size="sm" className="flex-1">
           Book intro
         </ButtonLink>
+      </div>
       </div>
     </div>
   );

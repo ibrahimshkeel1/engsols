@@ -1,16 +1,18 @@
+import Link from "next/link";
 import type { Mentor } from "@/types";
 import type { PlatformStats } from "@/lib/data/stats";
-import { Avatar } from "@/components/ui/Avatar";
+import { MentorPortrait } from "@/components/ui/MentorPortrait";
+import { pickMentorsForShowcase } from "@/lib/mentor-portrait";
+import { cn } from "@/lib/utils";
 
 type Props = {
   mentors: Mentor[];
   stats: PlatformStats;
+  className?: string;
 };
 
-export function HeroSocialProof({ mentors, stats }: Props) {
-  const faces = mentors
-    .filter((m) => m.avatarUrl || m.name)
-    .slice(0, 5);
+export function HeroSocialProof({ mentors, stats, className }: Props) {
+  const faces = pickMentorsForShowcase(mentors, 5);
 
   if (faces.length === 0 && stats.mentorCount === 0) return null;
 
@@ -22,24 +24,27 @@ export function HeroSocialProof({ mentors, stats }: Props) {
         : null;
 
   return (
-    <div className="mt-8 flex flex-col items-center gap-3">
+    <div className={cn("mt-8 flex flex-col items-center gap-3", className)}>
       {faces.length > 0 && (
-        <div className="flex items-center -space-x-2 rtl:space-x-reverse">
+        <div className="flex items-center -space-x-3 rtl:space-x-reverse">
           {faces.map((mentor) => (
-            <Avatar
+            <Link
               key={mentor.slug}
-              name={mentor.name}
-              discipline={mentor.discipline}
-              src={mentor.avatarUrl}
-              size="sm"
-              className="ring-2 ring-oil-gas-navy"
-            />
+              href={`/mentors/${mentor.slug}`}
+              className="relative block h-11 w-11 overflow-hidden rounded-full ring-2 ring-oil-gas-ice transition-transform hover:z-10 hover:scale-110"
+              title={mentor.name}
+            >
+              <MentorPortrait
+                name={mentor.name}
+                src={mentor.avatarUrl}
+                className="h-full w-full rounded-full"
+                sizes="44px"
+              />
+            </Link>
           ))}
         </div>
       )}
-      {proofLine && (
-        <p className="text-caption text-oil-gas-white">{proofLine}</p>
-      )}
+      {proofLine && <p className="text-caption text-oil-gas-navy-muted">{proofLine}</p>}
     </div>
   );
 }
