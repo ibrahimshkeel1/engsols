@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { PageHero } from "@/components/shared/PageHero";
 import { MentorsPageContent } from "@/components/mentors/MentorsPageContent";
+import { MentorTrustBar } from "@/components/mentors/MentorTrustBar";
 import { MentorsDirectorySkeleton } from "@/components/ui/BentoSkeletonGrid";
 import { getMentorsBrowseHero } from "@/lib/mentors-browse-hero";
 
@@ -18,6 +19,7 @@ export default async function MentorsPage({ searchParams }: PageProps) {
     <>
       <PageHero title={hero.title} description={hero.description} label="Mentorship" />
       <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
+        <MentorTrustBar />
         <Suspense fallback={<MentorsDirectorySkeleton />}>
           <MentorsPageContent />
         </Suspense>

@@ -6,6 +6,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { MentorBookingCard } from "@/components/mentors/MentorBookingCard";
 import { MentorRating } from "@/components/mentors/MentorRating";
+import { MentorTrustBar } from "@/components/mentors/MentorTrustBar";
 import { MentorMobileBookBar } from "@/components/mentors/MentorMobileBookBar";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -210,6 +211,7 @@ export default async function MentorProfilePage({ params, searchParams }: PagePr
           </div>
 
           <aside className="hidden lg:sticky lg:top-24 lg:block">
+            <MentorTrustBar compact />
             <MentorBookingCard
               mentor={mentor}
               defaultName={user?.full_name ?? ""}

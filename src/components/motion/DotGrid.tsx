@@ -390,8 +390,21 @@ export const DotGrid = forwardRef<DotGridHandle, DotGridProps>(function DotGrid(
     }, { threshold: 0 });
 
     io.observe(wrap);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+        return;
+      }
+      if (isVisibleRef.current) {
+        requestRedraw();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     return () => {
       io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       stopLoop();
     };
   }, [circlePath, disabled, requestRedraw, stopLoop]);

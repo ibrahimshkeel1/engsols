@@ -1,7 +1,8 @@
 import { Hero } from "@/components/home/Hero";
 import { HomeIntroSplash } from "@/components/home/HomeIntroSplashLazy";
 import { ContinueJourneyHero } from "@/components/home/ContinueJourneyHero";
-import { ValueProps } from "@/components/home/ValueProps";
+import { WhyEngSolsWins } from "@/components/home/WhyEngSolsWins";
+import { HomeMentorMatcher } from "@/components/home/HomeMentorMatcher";
 import { StartHereJourney } from "@/components/home/StartHereJourney";
 import { SocialProof } from "@/components/home/SocialProof";
 import { HowItWorks } from "@/components/home/HowItWorks";
@@ -27,23 +28,30 @@ export default async function HomePage() {
   ]);
 
   const isGuest = !user || !journey;
+  const heroTestimonial = testimonials[0] ?? null;
 
   return (
     <>
       <HomeIntroSplash />
       <JsonLd data={websiteJsonLd()} />
-      {user && journey ? <ContinueJourneyHero userName={user.full_name} journey={journey} /> : <Hero />}
+      {user && journey ? (
+        <ContinueJourneyHero userName={user.full_name} journey={journey} />
+      ) : (
+        <Hero mentors={mentors} stats={stats} testimonial={heroTestimonial} />
+      )}
 
       <SocialProof stats={stats} />
 
+      {isGuest && <HomeMentorMatcher mentors={mentors} />}
+
+      <FeaturedMentors mentors={mentors} />
+
       {isGuest && (
         <>
-          <ValueProps />
+          <WhyEngSolsWins />
           <HowItWorks />
         </>
       )}
-
-      <FeaturedMentors mentors={mentors} />
 
       <StartHereJourney />
 

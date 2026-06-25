@@ -1,8 +1,18 @@
 import { ButtonLink } from "@/components/ui/button";
 import { DotGridBackground } from "@/components/motion/DotGridBackground";
 import { HeroGoalChips } from "@/components/home/HeroGoalChips";
+import { HeroSocialProof } from "@/components/home/HeroSocialProof";
+import type { Mentor } from "@/types";
+import type { PlatformStats } from "@/lib/data/stats";
+import type { FeaturedTestimonial } from "@/types";
 
-export function Hero() {
+type HeroProps = {
+  mentors: Mentor[];
+  stats: PlatformStats;
+  testimonial?: FeaturedTestimonial | null;
+};
+
+export function Hero({ mentors, stats, testimonial }: HeroProps) {
   return (
     <DotGridBackground sectionClassName="hero-dark">
       <div className="page-container-wide py-24 sm:py-28 lg:py-36">
@@ -13,6 +23,17 @@ export function Hero() {
           <p className="hero-dot-text-muted text-body-lg mx-auto mt-6 max-w-xl text-balance">
             Free 30-min intro · Vetted engineers · Cancel anytime
           </p>
+
+          <HeroSocialProof mentors={mentors} stats={stats} />
+
+          {testimonial && (
+            <blockquote className="mx-auto mt-6 max-w-lg border-s border-oil-gas-orange/50 ps-4 text-start text-sm text-oil-gas-white">
+              &ldquo;{testimonial.quote.length > 120 ? `${testimonial.quote.slice(0, 120)}…` : testimonial.quote}&rdquo;
+              <footer className="mt-2 text-xs text-oil-gas-white">
+                — {testimonial.name}, {testimonial.role}
+              </footer>
+            </blockquote>
+          )}
 
           <HeroGoalChips />
 

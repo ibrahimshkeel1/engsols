@@ -6,7 +6,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --no-server-fast-refresh",
+    "dev:clean": "rm -rf .next && next dev --no-server-fast-refresh",
+    "dev:webpack": "next dev --webpack --no-server-fast-refresh",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
