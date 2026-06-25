@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CommunityBottomNav } from "@/components/layout/CommunityBottomNav";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { NavigationTransitionProvider } from "@/components/providers/NavigationTransitionProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Analytics } from "@/components/analytics/Analytics";
@@ -61,14 +62,16 @@ export default async function RootLayout({
         <SentryInit />
         <ThemeProvider>
           <LocaleProvider initialLocale={locale}>
-            <Navbar />
-            <main id="main-content" className="flex-1 pb-16 lg:pb-0">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-            <CommunityBottomNav />
-            <Toaster position="bottom-center" richColors />
-            <PwaInstallPrompt />
+            <NavigationTransitionProvider>
+              <Navbar />
+              <main id="main-content" className="flex-1 pb-16 lg:pb-0">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+              <CommunityBottomNav />
+              <Toaster position="bottom-center" richColors />
+              <PwaInstallPrompt />
+            </NavigationTransitionProvider>
           </LocaleProvider>
         </ThemeProvider>
       </body>

@@ -13,10 +13,10 @@ export function Hero() {
             One place for oil &amp; gas and applied engineers to find mentors and move forward with clarity.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href="#find-mentor" size="lg" className="w-full sm:w-auto">
+            <ButtonLink href="#find-mentor" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
               Find a Mentor
             </ButtonLink>
-            <ButtonLink href="#how-it-works" variant="ghost" size="lg" className="w-full sm:w-auto">
+            <ButtonLink href="#how-it-works" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
               How it works
             </ButtonLink>
           </div>

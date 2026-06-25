@@ -17,6 +17,7 @@
     "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@livekit/components-react": "^2.9.21",
     "@livekit/components-styles": "^1.2.0",
     "@supabase/ssr": "^0.12.0",

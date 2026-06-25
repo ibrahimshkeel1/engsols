@@ -1,9 +1,7 @@
-import Link from "next/link";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { AuthLinks } from "@/components/layout/AuthLinks";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { NavbarSearch } from "@/components/layout/NavbarSearch";
-import { NavbarShell, navLinks } from "@/components/layout/NavbarShell";
+import { NavbarShell } from "@/components/layout/NavbarShell";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function Navbar() {
@@ -12,12 +10,10 @@ export async function Navbar() {
   return (
     <NavbarShell
       showForYou={Boolean(user)}
-      mobileMenu={
-        <MobileMenu links={navLinks} showForYou={Boolean(user)}>
-          <div className="flex flex-col gap-2 sm:hidden">
-            <AuthLinks />
-          </div>
-        </MobileMenu>
+      menuFooter={
+        <div className="flex flex-col gap-2 sm:hidden">
+          <AuthLinks />
+        </div>
       }
     >
       <NavbarSearch />
@@ -25,12 +21,6 @@ export async function Navbar() {
       <div className="hidden items-center gap-1 sm:flex">
         <AuthLinks />
       </div>
-      <Link
-        href="/mentors"
-        className="ml-1 hidden rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground shadow-md shadow-accent/25 transition hover:brightness-110 active:scale-95 sm:inline-flex"
-      >
-        Find mentor
-      </Link>
     </NavbarShell>
   );
 }

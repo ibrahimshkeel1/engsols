@@ -359,10 +359,35 @@ body {
 
 .hero-dot-text-muted {
   font-family: var(--font-sans), system-ui, sans-serif;
-  color: hsl(var(--text-muted));
+  color: hsl(var(--text-main));
   text-shadow:
     0 0 14px rgb(255 255 255 / 0.92),
     0 0 28px rgb(255 255 255 / 0.78);
+}
+
+.hero-dot-btn {
+  background: rgb(255 255 255 / 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--border) / 0.55);
+  color: hsl(var(--text-main));
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+}
+
+.hero-dot-btn:hover {
+  background: rgb(255 255 255 / 0.92);
+  color: hsl(var(--text-main));
+}
+
+.dark .hero-dot-btn {
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.18);
+  color: #fff;
+}
+
+.dark .hero-dot-btn:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: #fff;
 }
 
 .dark .hero-dot-text {

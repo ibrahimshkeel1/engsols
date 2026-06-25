@@ -49,6 +49,8 @@ export type Messages = {
   liveOutcome: string;
   portfoliosOutcome: string;
   communityLabel: string;
+  menu: string;
+  closeMenu: string;
 };
 
 export const messages: Record<Locale, Messages> = {
@@ -93,6 +95,8 @@ export const messages: Record<Locale, Messages> = {
     liveOutcome: "Watch engineers live",
     portfoliosOutcome: "Discover rising talent",
     communityLabel: "Community",
+    menu: "Menu",
+    closeMenu: "Close menu",
   },
   ar: {
     findMentors: "تواصل مع مرشد يناسبك",
@@ -135,6 +139,8 @@ export const messages: Record<Locale, Messages> = {
     liveOutcome: "شاهد المهندسين مباشرة",
     portfoliosOutcome: "اكتشف المواهب الصاعدة",
     communityLabel: "المجتمع",
+    menu: "القائمة",
+    closeMenu: "إغلاق القائمة",
   },
 };
 
