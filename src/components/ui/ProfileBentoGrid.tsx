@@ -3,11 +3,6 @@
 import { useMemo } from "react";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 import {
-  MagicBentoSection,
-  MagicBentoCard,
-  MAGIC_BENTO_CARD_DEFAULTS,
-} from "@/components/motion/magic-bento";
-import {
   BENTO_GRID_CLASS,
   getBentoSpanClass,
   getBentoVariant,
@@ -25,22 +20,6 @@ type ProfileBentoGridProps<T> = {
   animated?: boolean;
 };
 
-function BentoCell({
-  children,
-  span,
-}: {
-  children: React.ReactNode;
-  span: string;
-}) {
-  return (
-    <div className={cn("min-h-0 h-full", span)}>
-      <MagicBentoCard {...MAGIC_BENTO_CARD_DEFAULTS} className="h-full">
-        {children}
-      </MagicBentoCard>
-    </div>
-  );
-}
-
 export function ProfileBentoGrid<T>({
   items,
   getKey,
@@ -55,33 +34,34 @@ export function ProfileBentoGrid<T>({
     return [...items.filter(isFeatured), ...items.filter((item) => !isFeatured(item))];
   }, [items, isFeatured]);
 
-  const gridContent = orderedItems.map((item, index) => {
-    const variant = getBentoVariant(index);
-    const span = getBentoSpanClass(index);
-    const card = renderCard(item, variant, index);
-
-    return animated ? (
-      <StaggerItem key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
-        <MagicBentoCard {...MAGIC_BENTO_CARD_DEFAULTS} className="h-full">
-          {card}
-        </MagicBentoCard>
-      </StaggerItem>
-    ) : (
-      <BentoCell key={getKey(item)} span={span}>
-        {card}
-      </BentoCell>
+  if (!animated) {
+    return (
+      <div className={cn(BENTO_GRID_CLASS, className)}>
+        {orderedItems.map((item, index) => {
+          const variant = getBentoVariant(index);
+          const span = getBentoSpanClass(index);
+          return (
+            <div key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
+              {renderCard(item, variant, index)}
+            </div>
+          );
+        })}
+      </div>
     );
-  });
+  }
 
   return (
-    <MagicBentoSection className={className}>
-      {animated ? (
-        <Stagger className={BENTO_GRID_CLASS} stagger={stagger}>
-          {gridContent}
-        </Stagger>
-      ) : (
-        <div className={BENTO_GRID_CLASS}>{gridContent}</div>
-      )}
-    </MagicBentoSection>
+    <Stagger className={cn(BENTO_GRID_CLASS, className)} stagger={stagger}>
+      {orderedItems.map((item, index) => {
+        const variant = getBentoVariant(index);
+        const span = getBentoSpanClass(index);
+
+        return (
+          <StaggerItem key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
+            {renderCard(item, variant, index)}
+          </StaggerItem>
+        );
+      })}
+    </Stagger>
   );
 }

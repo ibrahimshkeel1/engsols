@@ -92,7 +92,7 @@ export default async function DisciplinePage({ params }: Props) {
                     getKey={(m) => m.slug}
                     isFeatured={(m) => m.featured}
                     animated={false}
-                    renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} />}
+                    renderCard={(m) => <MentorCard mentor={m} />}
                   />
                 ) : (
                   <div className="mt-4">

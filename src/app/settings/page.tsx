@@ -156,7 +156,7 @@ export default async function SettingsPage() {
               getKey={(m) => m.slug}
               isFeatured={(m) => m.featured}
               animated={false}
-              renderCard={(m, variant) => <MentorCard mentor={m} variant={variant} showPrice={false} />}
+              renderCard={(m) => <MentorCard mentor={m} showPrice={false} />}
             />
             </>
           )}

@@ -148,7 +148,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
             items={filtered}
             getKey={(mentor) => mentor.slug}
             isFeatured={(mentor) => mentor.featured}
-            renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+            renderCard={(mentor) => <MentorCard mentor={mentor} />}
           />
         )}
       </div>

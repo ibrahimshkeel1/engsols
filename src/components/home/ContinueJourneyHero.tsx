@@ -11,8 +11,7 @@ import type { HomeJourneyState } from "@/lib/data/home-journey";
 import { GoalsProgressCompact } from "@/components/home/GoalsProgressCompact";
 import { Avatar } from "@/components/ui/Avatar";
 import { ButtonLink } from "@/components/ui/button";
-import { AnimateIn } from "@/components/motion/AnimateIn";
-import { HomeBentoGrid } from "@/components/home/HomeBentoGrid";
+import { AnimateIn, Stagger, StaggerItem } from "@/components/motion/AnimateIn";
 
 type ContinueJourneyHeroProps = {
   userName: string | null;
@@ -86,28 +85,32 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
           <GoalsProgressCompact goals={journey.careerGoals} completed={journey.goalsCompleted} />
 
           {actions.length > 0 ? (
-            <HomeBentoGrid className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
               {actions.map((action) => (
-                <Link key={action.href + action.label} href={action.href} className={actionCardClassName}>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <action.icon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
+                <StaggerItem key={action.href + action.label} className="min-w-0">
+                  <Link href={action.href} className={actionCardClassName}>
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <action.icon className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium leading-snug text-foreground/90">{action.label}</p>
+                      <p className="text-caption mt-1 group-hover:text-primary">{action.cta} →</p>
+                    </div>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          ) : (
+            <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" stagger={0.06}>
+              {fallbackActions.map((action) => (
+                <StaggerItem key={action.href} className="min-w-0">
+                  <Link href={action.href} className={simpleCardClassName}>
                     <p className="font-medium leading-snug text-foreground/90">{action.label}</p>
                     <p className="text-caption mt-1 group-hover:text-primary">{action.cta} →</p>
-                  </div>
-                </Link>
+                  </Link>
+                </StaggerItem>
               ))}
-            </HomeBentoGrid>
-          ) : (
-            <HomeBentoGrid className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {fallbackActions.map((action) => (
-                <Link key={action.href} href={action.href} className={simpleCardClassName}>
-                  <p className="font-medium leading-snug text-foreground/90">{action.label}</p>
-                  <p className="text-caption mt-1 group-hover:text-primary">{action.cta} →</p>
-                </Link>
-              ))}
-            </HomeBentoGrid>
+            </Stagger>
           )}
 
           {journey.savedMentors.length > 0 && (

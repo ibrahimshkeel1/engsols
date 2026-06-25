@@ -96,7 +96,7 @@ export function PortfolioGrid({ portfolios }: { portfolios: Portfolio[] }) {
           items={filtered}
           getKey={(portfolio) => portfolio.slug}
           isFeatured={(portfolio) => portfolio.openToWork}
-          renderCard={(portfolio, variant) => <PortfolioCard portfolio={portfolio} variant={variant} />}
+          renderCard={(portfolio) => <PortfolioCard portfolio={portfolio} />}
         />
       )}
     </>

@@ -68,7 +68,7 @@ export default async function AssistPage() {
           getKey={(mentor) => mentor.slug}
           isFeatured={(mentor) => mentor.featured}
           animated={false}
-          renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+          renderCard={(mentor) => <MentorCard mentor={mentor} />}
         />
       )}
 

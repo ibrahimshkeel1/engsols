@@ -17,7 +17,7 @@ export function SimilarMentors({ mentors }: SimilarMentorsProps) {
         items={mentors}
         getKey={(mentor) => mentor.slug}
         isFeatured={(mentor) => mentor.featured}
-        renderCard={(mentor, variant) => <MentorCard mentor={mentor} variant={variant} />}
+        renderCard={(mentor) => <MentorCard mentor={mentor} />}
       />
     </section>
   );
