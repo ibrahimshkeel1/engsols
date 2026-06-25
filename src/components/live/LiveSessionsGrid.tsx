@@ -87,7 +87,13 @@ export function LiveSessionsGrid({ sessions }: { sessions: Session[] }) {
           {filtered.map((stream) => {
             const stripe = getDisciplineColors(stream.discipline).stripe;
             return (
-              <Link key={stream.slug} href={`/live/${stream.slug}`} className="card-interactive group overflow-hidden rounded-2xl">
+              <Link
+                key={stream.slug}
+                href={`/live/${stream.slug}`}
+                data-transition-title={stream.title}
+                data-transition-subtitle={stream.discipline}
+                className="card-interactive group overflow-hidden rounded-2xl"
+              >
                 <div className="relative aspect-video bg-muted">
                   <Image src={videoThumbnail(stream.title.slice(0, 20))} alt="" fill className="object-cover opacity-90 transition group-hover:opacity-100 dark:opacity-75" unoptimized />
                   <div className={cn("absolute left-0 top-0 h-1 w-full", stripe)} />

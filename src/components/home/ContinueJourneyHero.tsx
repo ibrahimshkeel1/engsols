@@ -41,7 +41,7 @@ export function ContinueJourneyHero({ userName, journey }: ContinueJourneyHeroPr
       cta: "Continue building",
     },
     journey.pendingBookings > 0 && {
-      href: "/settings#my-bookings",
+      href: "/bookings",
       icon: ClipboardList,
       label: `${journey.pendingBookings} pending booking${journey.pendingBookings === 1 ? "" : "s"}`,
       cta: "Track requests",

@@ -114,6 +114,8 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
   return (
     <Link
       href={`/portfolios/${portfolio.slug}`}
+      data-transition-title={portfolio.name}
+      data-transition-subtitle={portfolio.headline || "Engineering Professional"}
       className="group block h-full overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card transition-all duration-300 hover:-translate-y-1 hover:shadow-zone-recruiter/5"
     >
       <PixelTransition

@@ -33,6 +33,7 @@ const ROUTE_HEADLINES: Record<string, HeadlineKey> = {
   "/assist": "careerAssist",
   "/for-you": "forYouHeadline",
   "/settings": "settingsHeadline",
+  "/bookings": "myBookings",
   "/notifications": "notificationsHeadline",
   "/apply": "becomeMentor",
   "/login": "signInTitle",
@@ -104,4 +105,18 @@ export function pathFromHref(href: string) {
 
 export function shouldSkipPageTransition(pathname: string) {
   return pathname.includes("/live/") && pathname.endsWith("/room");
+}
+
+/** Optional per-link labels from data-transition-title / data-transition-subtitle on anchors. */
+export function getTransitionLabelsFromAnchor(
+  anchor: HTMLAnchorElement,
+  pathname: string,
+  locale: Locale,
+): { title: string; subtitle?: string } {
+  const title = anchor.dataset.transitionTitle?.trim();
+  const subtitle = anchor.dataset.transitionSubtitle?.trim();
+  if (title) {
+    return { title, subtitle: subtitle || undefined };
+  }
+  return { title: getPageTitleFromPath(pathname, locale) };
 }

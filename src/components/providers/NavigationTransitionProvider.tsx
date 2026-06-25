@@ -18,7 +18,7 @@ import { usePrefersReducedMotion } from "@/lib/motion";
 import { useIsClient } from "@/lib/use-is-client";
 import { BUBBLE_MENU_CLOSE_EVENT } from "@/lib/bubble-menu-nav";
 import {
-  getPageTitleFromPath,
+  getTransitionLabelsFromAnchor,
   pathFromHref,
   shouldSkipPageTransition,
 } from "@/lib/page-titles";
@@ -31,6 +31,7 @@ type TransitionPhase = "presenting" | "navigating" | "exiting";
 type ActiveTransition = {
   href: string;
   title: string;
+  subtitle?: string;
   phase: TransitionPhase;
 };
 
@@ -158,9 +159,9 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
       event.stopPropagation();
 
       const targetPath = pathFromHref(href);
-      const title = getPageTitleFromPath(targetPath, locale);
+      const { title, subtitle } = getTransitionLabelsFromAnchor(anchor, targetPath, locale);
       pendingHrefRef.current = href;
-      setTransition({ href, title, phase: "presenting" });
+      setTransition({ href, title, subtitle, phase: "presenting" });
     };
 
     document.addEventListener("click", onClick, true);
@@ -191,7 +192,7 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
                 transition={{ duration: EXIT_MS / 1000, ease: "easeInOut" }}
               >
                 <div className="pointer-events-none absolute inset-0 bg-grid opacity-70" aria-hidden />
-                <div className="relative flex min-h-full items-center justify-center px-6">
+                <div className="relative flex min-h-full flex-col items-center justify-center px-6 text-center">
                   <SplitText
                     key={`${transition.href}-${transition.title}`}
                     tag="h1"
@@ -202,8 +203,25 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
                     duration={0.55}
                     ease="power3.out"
                     play={transition.phase === "presenting"}
-                    onAnimationComplete={handleTextAnimationComplete}
+                    onAnimationComplete={
+                      transition.subtitle ? undefined : handleTextAnimationComplete
+                    }
                   />
+                  {transition.subtitle && (
+                    <SplitText
+                      key={`${transition.href}-${transition.subtitle}`}
+                      tag="p"
+                      text={transition.subtitle}
+                      className="hero-dot-text-muted text-body-lg mx-auto mt-4 max-w-2xl text-balance"
+                      splitType="words"
+                      delay={35}
+                      duration={0.45}
+                      startDelay={0.35}
+                      ease="power3.out"
+                      play={transition.phase === "presenting"}
+                      onAnimationComplete={handleTextAnimationComplete}
+                    />
+                  )}
                 </div>
               </motion.div>
             )}

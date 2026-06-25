@@ -145,10 +145,15 @@ async function insertContactRequest(fields: {
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "You must be logged in to submit a request" };
 
-  const { checkRateLimit } = await import("@/lib/rate-limit");
-  const limited = await checkRateLimit(user.id, "booking");
+  if (!user && fields.requestType !== "intro") {
+    return { error: "You must be logged in to submit this request" };
+  }
+
+  const { checkRateLimit, checkGuestRateLimit } = await import("@/lib/rate-limit");
+  const limited = user
+    ? await checkRateLimit(user.id, "booking")
+    : await checkGuestRateLimit("booking");
   if (!limited.ok) return { error: limited.error };
 
   const { contactSchema } = await import("@/lib/validation");
@@ -213,7 +218,7 @@ async function insertContactRequest(fields: {
     requester_email: parsed.data.email,
     message: parsed.data.message,
     request_type: fields.requestType,
-    user_id: user.id,
+    user_id: user?.id ?? null,
     mentor_user_id: mentorUserId,
     seller_slug: sellerSlug,
     listing_slug: listingSlug,

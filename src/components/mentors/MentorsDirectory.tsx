@@ -16,6 +16,8 @@ import { ProfileBentoGrid } from "@/components/ui/ProfileBentoGrid";
 
 export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor[]; savedSlugs?: string[] }) {
   const searchParams = useSearchParams();
+  const hasAvailabilityData = mentors.some((m) => (m.introSlotsThisWeek ?? 0) > 0 || (m.respondsWithinHours ?? 0) > 0);
+  const defaultSort = hasAvailabilityData ? "availability" : "rating";
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [discipline, setDiscipline] = useState(searchParams.get("discipline") ?? "");
   const [goal, setGoal] = useState(searchParams.get("goal") ?? "");
@@ -23,7 +25,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
   const [sessionFilter] = useState(searchParams.get("session") ?? "");
   const [subField] = useState(searchParams.get("sub_field") ?? "");
   const [skill, setSkill] = useState("");
-  const [sort, setSort] = useState("rating");
+  const [sort, setSort] = useState(searchParams.get("sort") ?? defaultSort);
 
   const activeFilters: MentorFilterState = useMemo(
     () => ({
@@ -60,7 +62,7 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
     setDiscipline("");
     setGoal("");
     setSkill("");
-    setSort("rating");
+    setSort(defaultSort);
   }
 
   return (
@@ -93,6 +95,12 @@ export function MentorsDirectory({ mentors, savedSlugs = [] }: { mentors: Mentor
         <p className="mt-4 hidden text-sm text-muted-foreground lg:block">
           {filtered.length} mentors match your filters
           {isFallback ? " (recommendations)" : ""}
+        </p>
+        <p className="mt-3 hidden text-xs text-muted-foreground lg:block">
+          Not sure?{" "}
+          <Link href="/mentors/compare" className="font-medium text-zone-mentorship hover:underline">
+            Save 2–3 mentors and compare
+          </Link>
         </p>
       </aside>
       <div>

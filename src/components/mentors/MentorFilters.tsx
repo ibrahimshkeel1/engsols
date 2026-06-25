@@ -103,6 +103,7 @@ export function MentorFilters({
           zone="mentorship"
           className={fieldClass}
         >
+          <option value="availability">Available this week</option>
           <option value="rating">Highest rated</option>
           <option value="price-asc">Price: low to high</option>
           <option value="price-desc">Price: high to low</option>

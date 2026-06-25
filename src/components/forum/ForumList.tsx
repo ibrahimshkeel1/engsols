@@ -88,6 +88,8 @@ export function ForumList({ posts }: { posts: ForumPost[] }) {
               <Link
                 key={post.slug}
                 href={`/forum/${post.slug}`}
+                data-transition-title={post.title}
+                data-transition-subtitle={`${post.author} · ${post.discipline}`}
                 className="card-interactive group relative flex overflow-hidden rounded-2xl"
               >
                 <div className={cn("w-1 shrink-0", stripe)} />

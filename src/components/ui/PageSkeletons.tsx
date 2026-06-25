@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { BallpitHeroBackground } from "@/components/motion/ballpit/BallpitHeroBackground";
 import {
   BentoDirectorySkeletonGrid,
@@ -559,4 +560,458 @@ export function PrivacyPageSkeleton() {
       </div>
     </>
   );
+}
+
+function DetailSectionSkeleton({ lines = 4 }: { lines?: number }) {
+  return (
+    <section className="space-y-4">
+      <Skeleton className="h-7 w-40" />
+      <div className="space-y-2">
+        {Array.from({ length: lines }).map((_, i) => (
+          <Skeleton key={i} className="h-4 w-full" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SidebarCardSkeleton() {
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-6 shadow-premium-card">
+      <Skeleton className="h-5 w-36" />
+      <Skeleton className="mt-2 h-4 w-full" />
+      <Skeleton className="mt-4 h-32 w-full rounded-xl" />
+    </div>
+  );
+}
+
+export function MentorProfilePageSkeleton() {
+  return (
+    <div className="pb-24 lg:pb-12" aria-hidden>
+      <section className="border-b border-border/60 bg-background">
+        <div className="page-container-wide py-8 sm:py-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0 flex-1 space-y-3">
+              <Skeleton className="h-10 w-64 max-w-full sm:h-12" />
+              <Skeleton className="h-5 w-80 max-w-full" />
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-56" />
+            </div>
+            <div className="flex flex-col items-center gap-4 lg:items-end">
+              <Skeleton className="h-32 w-32 rounded-2xl" />
+              <Skeleton className="h-12 w-full rounded-xl sm:w-56" />
+              <Skeleton className="h-12 w-full rounded-xl sm:w-56" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <div className="page-container-wide mx-auto max-w-3xl space-y-16 py-12 sm:space-y-20 sm:py-16">
+        <DetailSectionSkeleton lines={4} />
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-premium-card">
+          <Skeleton className="h-6 w-44" />
+          <Skeleton className="mt-4 h-40 w-full rounded-xl" />
+        </div>
+        <DetailSectionSkeleton lines={4} />
+        <DetailSectionSkeleton lines={3} />
+        <DetailSectionSkeleton lines={3} />
+        <Skeleton className="h-14 w-full rounded-lg" />
+        <div className="border-t border-border/60 pt-12 text-center">
+          <Skeleton className="mx-auto h-8 w-72 max-w-full" />
+          <Skeleton className="mx-auto mt-6 h-12 w-44 rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PortfolioProfilePageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-3">
+        <div className="space-y-8 lg:col-span-2">
+          <div className="flex items-start gap-6 sm:gap-8">
+            <Skeleton className="h-28 w-28 shrink-0 rounded-2xl sm:h-32 sm:w-32" />
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-24 rounded-md" />
+                <Skeleton className="h-5 w-28 rounded-md" />
+              </div>
+              <Skeleton className="h-9 w-64 max-w-full sm:h-10" />
+              <Skeleton className="h-5 w-80 max-w-full" />
+              <Skeleton className="h-4 w-56" />
+              <div className="flex gap-2 pt-1">
+                <Skeleton className="h-6 w-20 rounded-full" />
+                <Skeleton className="h-6 w-24 rounded-md" />
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-16 rounded-md" />
+            ))}
+          </div>
+          <div>
+            <Skeleton className="h-7 w-28" />
+            <div className="mt-4 space-y-4">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="rounded-2xl border border-border bg-surface p-5 shadow-premium-card">
+                  <Skeleton className="h-5 w-48" />
+                  <Skeleton className="mt-2 h-4 w-full" />
+                  <Skeleton className="mt-3 h-4 w-3/4" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="sticky top-24 rounded-2xl border border-border bg-surface p-6 shadow-premium-card">
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="mt-2 h-4 w-full" />
+            <Skeleton className="mt-4 h-48 w-full rounded-xl" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ForumThreadPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <div className="flex gap-2">
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-full" />
+          </div>
+          <Skeleton className="h-9 w-full max-w-2xl" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+          <div className="flex gap-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-16 rounded-full" />
+            ))}
+          </div>
+          <div className="space-y-3 pt-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-border bg-surface p-5">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="mt-3 h-4 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-6">
+          <SidebarCardSkeleton />
+          <SidebarCardSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function JobDetailPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-6 w-20 rounded-md" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-md" />
+          </div>
+          <Skeleton className="h-9 w-full max-w-xl" />
+          <Skeleton className="h-5 w-64" />
+          <Skeleton className="h-6 w-40" />
+          <div className="space-y-2 pt-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+          <DetailSectionSkeleton lines={4} />
+        </div>
+        <div className="space-y-6">
+          <SidebarCardSkeleton />
+          <SidebarCardSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function NewsArticleDetailPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl bg-bg-main px-4 py-0 sm:px-6" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
+        <article className="lg:col-span-2">
+          <Skeleton className="aspect-[21/9] w-full rounded-2xl" />
+          <div className="space-y-4 border-b border-border-custom py-12 sm:py-16">
+            <Skeleton className="h-4 w-32" />
+            <div className="flex gap-2">
+              <Skeleton className="h-6 w-20 rounded-full" />
+              <Skeleton className="h-6 w-16 rounded-full" />
+            </div>
+            <Skeleton className="h-10 w-full max-w-3xl sm:h-12" />
+            <Skeleton className="h-5 w-full max-w-2xl" />
+            <div className="flex gap-4">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          </div>
+          <div className="space-y-3 py-12">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+        </article>
+        <div className="py-8 lg:sticky lg:top-24 lg:self-start lg:py-12">
+          <SidebarCardSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function LiveSessionDetailPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-5xl px-4 py-12 pb-24 sm:px-6 lg:pb-12" aria-hidden>
+      <Skeleton className="aspect-video w-full rounded-2xl" />
+      <div className="mt-8 space-y-4">
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-24 rounded-full" />
+          <Skeleton className="h-6 w-20 rounded-md" />
+        </div>
+        <Skeleton className="h-9 w-full max-w-2xl" />
+        <Skeleton className="h-4 w-32" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+        </div>
+        <div className="flex gap-3">
+          <Skeleton className="h-10 w-32 rounded-xl" />
+          <Skeleton className="h-10 w-36 rounded-xl" />
+        </div>
+        <div className="mt-4 rounded-2xl border border-border bg-surface p-5">
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-3 w-48" />
+            </div>
+          </div>
+        </div>
+        <Skeleton className="h-12 w-full rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+export function DisciplineHubPageSkeleton() {
+  return (
+    <div aria-hidden>
+      <section className="hero-dark relative overflow-hidden border-b border-border/60">
+        <Skeleton className="absolute inset-x-0 top-0 h-1 w-full rounded-none" />
+        <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6">
+          <Skeleton className="h-3 w-28" />
+          <Skeleton className="mt-2 h-10 w-64 max-w-full" />
+          <Skeleton className="mt-3 h-4 w-full max-w-2xl" />
+          <div className="mt-6 flex flex-wrap gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-9 w-32 rounded-full" />
+            ))}
+          </div>
+        </div>
+      </section>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-3">
+          <div className="space-y-12 lg:col-span-2">
+            <div>
+              <Skeleton className="h-6 w-24" />
+              <div className="mt-6">
+                <BentoDirectorySkeletonGrid count={4} />
+              </div>
+            </div>
+            <div>
+              <Skeleton className="h-6 w-20" />
+              <div className="mt-4 space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full rounded-xl" />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <SidebarCardSkeleton />
+            <SidebarCardSkeleton />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function CompanyDetailPageSkeleton() {
+  return (
+    <div className="py-12" aria-hidden>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex items-start gap-6">
+          <Skeleton className="h-20 w-20 rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-28 rounded-full" />
+            <Skeleton className="h-9 w-64 max-w-full" />
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+        </div>
+        <div className="mt-6 space-y-2">
+          <Skeleton className="h-4 w-full max-w-3xl" />
+          <Skeleton className="h-4 w-5/6 max-w-2xl" />
+        </div>
+        <div className="mt-4 flex gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-6 w-20 rounded-full" />
+          ))}
+        </div>
+        <Skeleton className="mt-10 h-7 w-40" />
+        <div className="mt-4 space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function CertificationDetailPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-3 lg:items-start">
+        <div className="space-y-8 lg:col-span-2">
+          <Skeleton className="h-6 w-24 rounded-full" />
+          <Skeleton className="h-9 w-full max-w-xl" />
+          <Skeleton className="h-5 w-64" />
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+          <Skeleton className="h-7 w-40" />
+          <BentoDirectorySkeletonGrid count={3} />
+        </div>
+        <div className="space-y-6">
+          <SidebarCardSkeleton />
+          <SidebarCardSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function MarketplaceListingDetailPageSkeleton() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 pb-24 sm:px-6 lg:pb-12" aria-hidden>
+      <div className="grid gap-10 lg:grid-cols-2">
+        <Skeleton className="aspect-[16/10] w-full rounded-2xl" />
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-24 rounded-md" />
+          <Skeleton className="h-9 w-full max-w-lg" />
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-4 w-48" />
+          <div className="space-y-2 pt-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+          <Skeleton className="mt-4 h-12 w-full rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function VideoDetailPageSkeleton() {
+  return (
+    <div className="py-12" aria-hidden>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <Skeleton className="aspect-video w-full rounded-2xl" />
+        <div className="mt-8 space-y-4">
+          <div className="flex gap-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-16 rounded-full" />
+            ))}
+          </div>
+          <Skeleton className="h-9 w-full max-w-2xl" />
+          <Skeleton className="h-4 w-32" />
+          <div className="space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-full" />
+            ))}
+          </div>
+        </div>
+        <div className="mt-12">
+          <Skeleton className="h-6 w-32" />
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-video rounded-xl" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function renderSkeletonForPath(pathname: string): ReactElement {
+  if (pathname === "/") return <HomePageSkeleton />;
+  if (pathname === "/mentors") return <MentorsPageSkeleton />;
+  if (pathname === "/portfolios") return <PortfoliosPageSkeleton />;
+  if (pathname === "/jobs") return <JobsPageSkeleton />;
+  if (pathname === "/forum") return <ForumPageSkeleton />;
+  if (pathname === "/live") return <LivePageSkeleton />;
+  if (pathname === "/news") return <NewsPageSkeleton />;
+  if (pathname === "/companies") return <CompaniesPageSkeleton />;
+  if (pathname === "/certifications") return <CertificationsPageSkeleton />;
+  if (pathname === "/videos") return <VideosPageSkeleton />;
+  if (pathname === "/for-you") return <ForYouPageSkeleton />;
+  if (pathname === "/search") return <SearchPageSkeleton />;
+  if (pathname === "/settings") return <SettingsPageSkeleton />;
+  if (pathname === "/marketplace") return <MarketplacePageSkeleton />;
+  if (pathname === "/disciplines") return <DisciplinesPageSkeleton />;
+  if (pathname === "/assist") return <AssistPageSkeleton />;
+  if (pathname === "/how-it-works") return <HowItWorksPageSkeleton />;
+  if (pathname === "/privacy") return <PrivacyPageSkeleton />;
+
+  if (pathname.startsWith("/mentors/") && pathname !== "/mentors/compare") {
+    return <MentorProfilePageSkeleton />;
+  }
+  if (pathname.startsWith("/portfolios/")) return <PortfolioProfilePageSkeleton />;
+  if (pathname.startsWith("/forum/")) return <ForumThreadPageSkeleton />;
+  if (pathname.startsWith("/jobs/")) return <JobDetailPageSkeleton />;
+  if (pathname.startsWith("/news/")) return <NewsArticleDetailPageSkeleton />;
+  if (pathname.startsWith("/live/") && !pathname.endsWith("/room")) {
+    return <LiveSessionDetailPageSkeleton />;
+  }
+  if (pathname.startsWith("/disciplines/")) return <DisciplineHubPageSkeleton />;
+  if (pathname.startsWith("/companies/")) return <CompanyDetailPageSkeleton />;
+  if (pathname.startsWith("/certifications/")) return <CertificationDetailPageSkeleton />;
+  if (pathname.startsWith("/marketplace/")) return <MarketplaceListingDetailPageSkeleton />;
+  if (pathname.startsWith("/videos/")) return <VideoDetailPageSkeleton />;
+  if (pathname.startsWith("/mentor/")) return <MentorDashboardSkeleton />;
+  if (pathname.startsWith("/settings/")) return <SettingsPageSkeleton />;
+
+  return <GenericPageSkeleton />;
 }

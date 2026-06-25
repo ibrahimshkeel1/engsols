@@ -14,6 +14,8 @@ export function NewsHeroBanner({ article }: { article: NewsArticle }) {
   return (
     <Link
       href={`/news/${article.slug}`}
+      data-transition-title={article.title}
+      data-transition-subtitle={article.discipline}
       className="card-interactive group block overflow-hidden rounded-2xl border border-border bg-card shadow-premium-card"
     >
       {article.imageUrl && (
@@ -68,7 +70,12 @@ function NewsArticleCard({ article }: { article: NewsArticle }) {
   const readingTime = estimateReadingTimeMinutes(article.content);
 
   return (
-    <Link href={`/news/${article.slug}`} className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <Link
+      href={`/news/${article.slug}`}
+      data-transition-title={article.title}
+      data-transition-subtitle={article.discipline}
+      className="card-interactive group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card"
+    >
       {article.imageUrl ? (
         <div className="relative aspect-video w-full overflow-hidden">
           <Image src={article.imageUrl} alt={article.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" unoptimized />

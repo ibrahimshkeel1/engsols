@@ -7,6 +7,7 @@ import type { Mentor } from "@/types";
 import { PixelTransition } from "@/components/motion/pixel-transition";
 import { ProfilePassportPhoto } from "@/components/ui/ProfilePassportPhoto";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { introBadgeLabel } from "@/lib/mentor-display";
 import { cn } from "@/lib/utils";
 
 type MentorCardProps = {
@@ -22,11 +23,7 @@ const pillClass =
 
 function CardRating({ rating, reviewCount }: { rating: number; reviewCount: number }) {
   if (reviewCount === 0) {
-    return (
-      <span className="flex shrink-0 items-center gap-1 text-[10px] font-semibold text-text-muted">
-        ⭐ 0.0 (0)
-      </span>
-    );
+    return null;
   }
 
   return (
@@ -38,19 +35,37 @@ function CardRating({ rating, reviewCount }: { rating: number; reviewCount: numb
   );
 }
 
+function CardTrustBadge({ mentor }: { mentor: Mentor }) {
+  if (mentor.reviewCount > 0) {
+    return <CardRating rating={mentor.rating} reviewCount={mentor.reviewCount} />;
+  }
+
+  return (
+    <span className="inline-flex shrink-0 rounded-lg border border-zone-mentorship/25 bg-zone-mentorship/10 px-2 py-0.5 text-[10px] font-semibold text-zone-mentorship">
+      {introBadgeLabel(mentor.introCallRate)}
+    </span>
+  );
+}
+
 function MentorCardPreview({ mentor, showPrice }: { mentor: Mentor; showPrice: boolean }) {
+  const previewSkills = mentor.skills.slice(0, 2);
+
   return (
     <div className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-bg-surface">
-      <div className="min-h-0 overflow-hidden border-b border-border-custom/60">
-        <ProfilePassportPhoto
-          name={mentor.name}
-          discipline={mentor.discipline}
-          src={mentor.avatarUrl}
-        />
+      <div className="relative min-h-0 overflow-hidden border-b border-border-custom/60">
+        <ProfilePassportPhoto name={mentor.name} discipline={mentor.discipline} src={mentor.avatarUrl} />
+        <div className="absolute start-2 top-2">
+          <CardTrustBadge mentor={mentor} />
+        </div>
       </div>
       <div className="px-3 py-3 text-center">
         <h3 className="capitalize font-semibold leading-tight text-text-main">{mentor.name}</h3>
         <p className="mt-1 line-clamp-2 text-xs font-medium text-text-muted">{mentor.headline}</p>
+        {previewSkills.length > 0 && (
+          <p className="mt-1.5 line-clamp-1 text-[10px] font-medium uppercase tracking-wide text-text-muted lg:hidden">
+            {previewSkills.join(" · ")}
+          </p>
+        )}
         {showPrice && (
           <p className="mt-1.5 text-sm text-text-muted">
             From <span className="font-extrabold text-text-main">${mentor.monthlyRate}</span>/mo
@@ -93,7 +108,7 @@ function MentorCardDetails({ mentor, showPrice }: { mentor: Mentor; showPrice: b
           <h3 className="text-base font-bold capitalize text-text-main">{mentor.name}</h3>
           <p className="mt-0.5 text-xs font-medium tracking-wide text-text-muted">{mentor.headline}</p>
         </div>
-        <CardRating rating={mentor.rating} reviewCount={mentor.reviewCount} />
+        <CardTrustBadge mentor={mentor} />
       </div>
 
       {showPrice && (
@@ -113,6 +128,9 @@ function MentorCardDetails({ mentor, showPrice }: { mentor: Mentor; showPrice: b
             {item.label}
           </span>
         ))}
+        {mentor.reviewCount === 0 && (
+          <span className={pillClass}>New mentor</span>
+        )}
         {mentor.verified && <span className={pillClass}>Verified</span>}
         {mentor.featured && <span className={pillClass}>Featured</span>}
       </div>
@@ -131,6 +149,8 @@ export function MentorCard({ mentor, showPrice = true }: MentorCardProps) {
   return (
     <Link
       href={`/mentors/${mentor.slug}`}
+      data-transition-title={mentor.name}
+      data-transition-subtitle={mentor.headline}
       className="group block h-full overflow-hidden rounded-2xl border border-border-custom bg-bg-surface shadow-premium-card transition-all duration-300 hover:-translate-y-1 hover:shadow-zone-mentorship/5"
     >
       <PixelTransition

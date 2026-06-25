@@ -1,5 +1,6 @@
 import { ButtonLink } from "@/components/ui/button";
 import { DotGridBackground } from "@/components/motion/DotGridBackground";
+import { HeroGoalChips } from "@/components/home/HeroGoalChips";
 
 export function Hero() {
   return (
@@ -7,17 +8,20 @@ export function Hero() {
       <div className="page-container-wide py-24 sm:py-28 lg:py-36">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="hero-dot-text text-balance">
-            The career platform to get mentored, certified, and hired
+            Pass your FE. Land the O&amp;G role. Get a mentor who&apos;s done both.
           </h1>
           <p className="hero-dot-text-muted text-body-lg mx-auto mt-6 max-w-xl text-balance">
-            One place for oil &amp; gas and applied engineers to find mentors and move forward with clarity.
+            Free 30-min intro · Vetted engineers · Cancel anytime
           </p>
+
+          <HeroGoalChips />
+
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <ButtonLink href="/mentors" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
-              Find a Mentor
+              Browse all mentors
             </ButtonLink>
             <ButtonLink href="/how-it-works" variant="ghost" size="lg" className="hero-dot-btn w-full sm:w-auto">
-              How it works
+              How certifications &amp; jobs fit in
             </ButtonLink>
           </div>
         </div>

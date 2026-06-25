@@ -8,15 +8,19 @@ import { createMentorshipCheckoutSession } from "@/actions/stripe";
 import { FormField } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
+import { BookingConfirmation } from "@/components/mentors/BookingConfirmation";
+import type { Mentor } from "@/types";
 import { cn } from "@/lib/utils";
 
 type Props = {
   mentorSlug: string;
   mentorName: string;
+  mentor?: Pick<Mentor, "respondsWithinHours">;
   type?: "intro" | "monthly" | "study-plan" | "interview-prep";
   monthlyRate?: number;
   defaultName?: string;
   defaultEmail?: string;
+  isLoggedIn?: boolean;
 };
 
 type FieldErrors = {
@@ -40,15 +44,29 @@ function validateBooking(fields: { name: string; email: string; message: string 
 export function BookingRequestForm({
   mentorSlug,
   mentorName,
+  mentor,
   type = "intro",
   monthlyRate = 0,
   defaultName = "",
   defaultEmail = "",
+  isLoggedIn = false,
 }: Props) {
   const [pending, setPending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const requiresPaidMonthly = type === "monthly" && monthlyRate > 0;
+
+  if (submitted) {
+    return (
+      <BookingConfirmation
+        mentorName={mentorName}
+        requestType={type}
+        mentor={mentor}
+        isGuest={!isLoggedIn}
+      />
+    );
+  }
 
   function touchField(name: keyof FieldErrors, value: string, all: { name: string; email: string; message: string }) {
     setTouched((prev) => ({ ...prev, [name]: true }));
@@ -89,7 +107,7 @@ export function BookingRequestForm({
         return;
       }
 
-      toast.success("Request sent! The mentor will follow up by email.");
+      setSubmitted(true);
       formEl.reset();
       setErrors({});
       setTouched({});
@@ -166,8 +184,8 @@ export function BookingRequestForm({
       {requiresPaidMonthly && (
         <p className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
           Monthly mentorship requires a one-time payment of{" "}
-          <span className="font-semibold text-foreground">${monthlyRate}</span> before your request is
-          sent to the mentor.
+          <span className="font-semibold text-foreground">${monthlyRate}</span> before your request is sent to the
+          mentor. Cancel anytime from your billing portal.
         </p>
       )}
       <Button type="submit" variant="accent" className={cn("w-full", pending && "opacity-90")} disabled={pending}>

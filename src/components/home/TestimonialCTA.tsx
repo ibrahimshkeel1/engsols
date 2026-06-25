@@ -8,10 +8,19 @@ type TestimonialCTAProps = {
 
 export function TestimonialCTA({ testimonials, variant = "social" }: TestimonialCTAProps) {
   if (variant === "closing") {
+    const featured = testimonials[0];
     return (
       <section className="bg-background py-20 lg:py-28">
         <div className="page-container mx-auto max-w-xl text-center">
-          <p className="text-display-lg text-balance">
+          {featured && (
+            <blockquote className="text-body-lg mx-auto max-w-lg border-s-2 border-zone-mentorship/40 ps-4 text-start text-pretty text-muted-foreground">
+              &ldquo;{featured.quote}&rdquo;
+              <footer className="text-caption mt-3 not-italic text-foreground">
+                {featured.name} — {featured.role}
+              </footer>
+            </blockquote>
+          )}
+          <p className="text-display-lg mt-10 text-balance">
             Your next career move starts with one conversation.
           </p>
           <ButtonLink href="/mentors" size="lg" className="mt-8">

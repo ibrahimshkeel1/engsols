@@ -66,7 +66,13 @@ export function CompaniesDirectory({ companies, jobs }: Props) {
           {filtered.map((company) => {
             const openJobs = jobs.filter((j) => j.companySlug === company.slug).length;
             return (
-              <Link key={company.slug} href={`/companies/${company.slug}`} className="card-interactive rounded-2xl p-5">
+              <Link
+                key={company.slug}
+                href={`/companies/${company.slug}`}
+                data-transition-title={company.name}
+                data-transition-subtitle={company.headquarters}
+                className="card-interactive rounded-2xl p-5"
+              >
                 <div className="flex items-center gap-3">
                   <CompanyLogo company={company.name} />
                   <div>

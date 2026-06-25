@@ -83,6 +83,8 @@ export function JobsDirectory({ jobs }: Props) {
               <Link
                 key={job.slug}
                 href={`/jobs/${job.slug}`}
+                data-transition-title={job.title}
+                data-transition-subtitle={job.company}
                 className={cn("card-interactive relative block overflow-hidden rounded-2xl p-5", job.featured && "ring-1 ring-accent/30")}
               >
                 <div className={cn("absolute left-0 top-0 h-full w-1", stripe)} />

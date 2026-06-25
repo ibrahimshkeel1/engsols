@@ -11,7 +11,7 @@ type FeaturedMentorsProps = {
   mentors: Mentor[];
 };
 
-function pickShowcaseMentors(mentors: Mentor[], limit = 6) {
+function pickShowcaseMentors(mentors: Mentor[], limit = 3) {
   const featured = mentors.filter((mentor) => mentor.featured);
   const rest = mentors.filter((mentor) => !mentor.featured);
   return [...featured, ...rest].slice(0, limit);

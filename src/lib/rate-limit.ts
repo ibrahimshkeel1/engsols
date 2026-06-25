@@ -75,6 +75,19 @@ export async function checkRateLimit(
   return { ok: false, error: "Too many requests. Please wait a moment and try again." };
 }
 
+export async function checkGuestRateLimit(
+  action: keyof typeof ACTION_LIMITS,
+): Promise<CheckRateLimitResult> {
+  const config = ACTION_LIMITS[action];
+  if (!config) return { ok: true };
+
+  const key = await getRequestRateLimitKey(`guest:${action}`);
+  const result = consumeRateLimit(key, config.limit, config.windowMs);
+  if (result.ok) return { ok: true };
+
+  return { ok: false, error: "Too many requests. Please wait a moment and try again." };
+}
+
 /** @internal test helper */
 export function __resetRateLimitsForTests(): void {
   buckets.clear();

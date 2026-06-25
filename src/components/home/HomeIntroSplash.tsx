@@ -7,8 +7,8 @@ import { BlurText } from "@/components/motion/BlurText";
 import { useIsClient } from "@/lib/use-is-client";
 
 const INTRO_STORAGE_KEY = "engsols-home-intro-seen";
-const PAUSE_AFTER_ANIMATION_MS = 600;
-const FADE_OUT_MS = 500;
+const PAUSE_AFTER_ANIMATION_MS = 200;
+const FADE_OUT_MS = 350;
 
 const emptySubscribe = () => () => {};
 
@@ -91,8 +91,8 @@ export function HomeIntroSplash() {
             text="One stop solution for engineers"
             animateBy="words"
             direction="top"
-            delay={80}
-            stepDuration={0.4}
+            delay={50}
+            stepDuration={0.28}
             startOnMount
             className="text-display-xl text-balance text-text-main"
             onAnimationComplete={handleAnimationComplete}

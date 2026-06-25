@@ -9,7 +9,7 @@ export type MentorFilters = {
   skill?: string;
   company?: string;
   session?: string;
-  sort?: "rating" | "price-asc" | "price-desc";
+  sort?: "rating" | "price-asc" | "price-desc" | "availability";
 };
 
 export type MentorFilterResult = {
@@ -75,6 +75,17 @@ const TRANSFERABLE_SKILL_KEYWORDS = [
 function sortMentors(mentors: Mentor[], sort?: MentorFilters["sort"]): Mentor[] {
   const result = [...mentors];
   switch (sort) {
+    case "availability":
+      result.sort((a, b) => {
+        const aSlots = a.introSlotsThisWeek ?? 0;
+        const bSlots = b.introSlotsThisWeek ?? 0;
+        if (bSlots !== aSlots) return bSlots - aSlots;
+        const aResp = a.respondsWithinHours ?? 999;
+        const bResp = b.respondsWithinHours ?? 999;
+        if (aResp !== bResp) return aResp - bResp;
+        return b.rating - a.rating;
+      });
+      break;
     case "price-asc":
       result.sort((a, b) => a.monthlyRate - b.monthlyRate);
       break;

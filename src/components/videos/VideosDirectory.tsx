@@ -56,7 +56,13 @@ export function VideosDirectory({ videos, mentors }: Props) {
           {filtered.map((video) => {
             const author = mentors.find((m) => m.slug === video.authorSlug);
             return (
-              <Link key={video.slug} href={`/videos/${video.slug}`} className="card-interactive overflow-hidden rounded-2xl">
+              <Link
+                key={video.slug}
+                href={`/videos/${video.slug}`}
+                data-transition-title={video.title}
+                data-transition-subtitle={author?.name ?? video.discipline}
+                className="card-interactive overflow-hidden rounded-2xl"
+              >
                 <div className="relative aspect-video bg-muted">
                   <Image src={resolveVideoThumbnail(video.title, video.videoUrl, video.thumbnailUrl)} alt={video.title} fill className="object-cover" unoptimized />
                   <span className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">{video.duration}</span>

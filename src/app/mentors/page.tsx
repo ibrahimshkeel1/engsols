@@ -2,23 +2,21 @@ import { Suspense } from "react";
 import { PageHero } from "@/components/shared/PageHero";
 import { MentorsPageContent } from "@/components/mentors/MentorsPageContent";
 import { MentorsDirectorySkeleton } from "@/components/ui/BentoSkeletonGrid";
-import { serverT } from "@/lib/i18n/server";
+import { getMentorsBrowseHero } from "@/lib/mentors-browse-hero";
 
 export const revalidate = 60;
 
-export default async function MentorsPage() {
-  const [title, description] = await Promise.all([
-    serverT("mentorsOutcome"),
-    Promise.resolve("Browse vetted mentors — book a free intro and get matched to your goals."),
-  ]);
+type PageProps = {
+  searchParams: Promise<{ goal?: string; discipline?: string; search?: string }>;
+};
+
+export default async function MentorsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const hero = getMentorsBrowseHero(params);
 
   return (
     <>
-      <PageHero
-        title={title}
-        description={description}
-        label="Mentorship"
-      />
+      <PageHero title={hero.title} description={hero.description} label="Mentorship" />
       <div className="mx-auto max-w-7xl bg-background px-4 py-12 sm:px-6">
         <Suspense fallback={<MentorsDirectorySkeleton />}>
           <MentorsPageContent />
