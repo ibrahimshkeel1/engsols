@@ -1,4 +1,4 @@
-import { Avatar } from "@/components/ui/Avatar";
+import { getDisciplineColors } from "@/lib/discipline-colors";
 import { cn } from "@/lib/utils";
 
 type ProfilePassportPhotoProps = {
@@ -8,27 +8,45 @@ type ProfilePassportPhotoProps = {
   className?: string;
 };
 
-/** 35×45mm passport-style portrait (7:9 ratio). */
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+/** Fills the card photo area and shows the full image without cropping. */
 export function ProfilePassportPhoto({
   name,
   discipline,
   src,
   className,
 }: ProfilePassportPhotoProps) {
+  const colors = discipline ? getDisciplineColors(discipline) : null;
+
   return (
-    <div
-      className={cn(
-        "relative aspect-[35/45] w-[5.625rem] shrink-0 overflow-hidden rounded-md border border-border-custom bg-muted shadow-sm sm:w-24",
-        className,
+    <div className={cn("relative h-full w-full overflow-hidden bg-muted", className)}>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={name}
+          className="h-full w-full object-contain object-center"
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex h-full w-full items-center justify-center text-2xl font-semibold sm:text-3xl",
+            colors?.bg ?? "bg-muted",
+            colors?.text ?? "text-foreground",
+          )}
+          aria-hidden
+        >
+          {initials(name)}
+        </div>
       )}
-    >
-      <Avatar
-        name={name}
-        discipline={discipline}
-        size="xl"
-        src={src}
-        className="h-full w-full rounded-none object-cover ring-0"
-      />
     </div>
   );
 }

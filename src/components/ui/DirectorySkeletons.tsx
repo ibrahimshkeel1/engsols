@@ -6,15 +6,13 @@ export function ProfileCardSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-2xl border border-border bg-surface shadow-premium-card",
+        "grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden rounded-2xl border border-border bg-surface shadow-premium-card",
         className,
       )}
       aria-hidden
     >
-      <div className="flex items-center justify-center px-4 pb-2 pt-4">
-        <Skeleton className="aspect-[35/45] w-[5.625rem] rounded-md sm:w-24" />
-      </div>
-      <div className="space-y-2 border-t border-border/60 p-4">
+      <Skeleton className="h-full w-full rounded-none" />
+      <div className="space-y-2 border-t border-border/60 px-3 py-3">
         <Skeleton className="mx-auto h-4 w-3/5" />
         <Skeleton className="mx-auto h-3 w-full" />
         <Skeleton className="mx-auto h-3 w-2/5" />

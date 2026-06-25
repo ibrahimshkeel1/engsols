@@ -40,19 +40,19 @@ function CardRating({ rating, reviewCount }: { rating: number; reviewCount: numb
 
 function MentorCardPreview({ mentor, showPrice }: { mentor: Mentor; showPrice: boolean }) {
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-bg-surface">
-      <div className="flex flex-1 items-center justify-center px-4 pb-2 pt-4">
+    <div className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-bg-surface">
+      <div className="min-h-0 overflow-hidden border-b border-border-custom/60">
         <ProfilePassportPhoto
           name={mentor.name}
           discipline={mentor.discipline}
           src={mentor.avatarUrl}
         />
       </div>
-      <div className="shrink-0 border-t border-border-custom/60 p-4 text-center">
-        <h3 className="capitalize font-semibold text-text-main">{mentor.name}</h3>
+      <div className="px-3 py-3 text-center">
+        <h3 className="capitalize font-semibold leading-tight text-text-main">{mentor.name}</h3>
         <p className="mt-1 line-clamp-2 text-xs font-medium text-text-muted">{mentor.headline}</p>
         {showPrice && (
-          <p className="mt-2 text-sm text-text-muted">
+          <p className="mt-1.5 text-sm text-text-muted">
             From <span className="font-extrabold text-text-main">${mentor.monthlyRate}</span>/mo
           </p>
         )}

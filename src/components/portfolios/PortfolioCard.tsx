@@ -27,20 +27,20 @@ function PortfolioCardPreview({ portfolio }: { portfolio: Portfolio }) {
   const workStatus = formatWorkStatus(portfolio.seeking);
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-bg-surface">
-      <div className="flex flex-1 items-center justify-center px-4 pb-2 pt-4">
+    <div className="grid h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-bg-surface">
+      <div className="min-h-0 overflow-hidden border-b border-border-custom/60">
         <ProfilePassportPhoto
           name={portfolio.name}
           discipline={portfolio.discipline}
           src={portfolio.avatarUrl}
         />
       </div>
-      <div className="shrink-0 border-t border-border-custom/60 p-4 text-center">
-        <h3 className="capitalize font-semibold text-text-main">{portfolio.name}</h3>
+      <div className="px-3 py-3 text-center">
+        <h3 className="capitalize font-semibold leading-tight text-text-main">{portfolio.name}</h3>
         <p className="mt-1 line-clamp-2 text-xs font-medium text-text-muted">
           {portfolio.headline || "Engineering Professional"}
         </p>
-        <p className="mt-2 text-sm text-text-muted">
+        <p className="mt-1.5 text-sm text-text-muted">
           Seeking <span className="font-extrabold text-text-main">{workStatus}</span>
         </p>
       </div>
