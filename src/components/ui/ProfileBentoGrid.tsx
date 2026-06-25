@@ -2,14 +2,19 @@
 
 import { useMemo } from "react";
 import { Stagger, StaggerItem } from "@/components/motion/AnimateIn";
-import { PROFILE_GRID_CLASS } from "@/lib/bento-layout";
+import {
+  BENTO_GRID_CLASS,
+  getBentoSpanClass,
+  getBentoVariant,
+  type BentoVariant,
+} from "@/lib/bento-layout";
 import { cn } from "@/lib/utils";
 
 type ProfileBentoGridProps<T> = {
   items: T[];
   getKey: (item: T) => string;
   isFeatured?: (item: T) => boolean;
-  renderCard: (item: T, index: number) => React.ReactNode;
+  renderCard: (item: T, variant: BentoVariant, index: number) => React.ReactNode;
   stagger?: number;
   className?: string;
   animated?: boolean;
@@ -31,23 +36,32 @@ export function ProfileBentoGrid<T>({
 
   if (!animated) {
     return (
-      <div className={cn(PROFILE_GRID_CLASS, className)}>
-        {orderedItems.map((item, index) => (
-          <div key={getKey(item)} className="min-h-0">
-            {renderCard(item, index)}
-          </div>
-        ))}
+      <div className={cn(BENTO_GRID_CLASS, className)}>
+        {orderedItems.map((item, index) => {
+          const variant = getBentoVariant(index);
+          const span = getBentoSpanClass(index);
+          return (
+            <div key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
+              {renderCard(item, variant, index)}
+            </div>
+          );
+        })}
       </div>
     );
   }
 
   return (
-    <Stagger className={cn(PROFILE_GRID_CLASS, className)} stagger={stagger}>
-      {orderedItems.map((item, index) => (
-        <StaggerItem key={getKey(item)} className="min-h-0">
-          {renderCard(item, index)}
-        </StaggerItem>
-      ))}
+    <Stagger className={cn(BENTO_GRID_CLASS, className)} stagger={stagger}>
+      {orderedItems.map((item, index) => {
+        const variant = getBentoVariant(index);
+        const span = getBentoSpanClass(index);
+
+        return (
+          <StaggerItem key={getKey(item)} className={cn("min-h-0 h-full overflow-hidden", span)}>
+            {renderCard(item, variant, index)}
+          </StaggerItem>
+        );
+      })}
     </Stagger>
   );
 }

@@ -1,4 +1,4 @@
-import { PROFILE_GRID_CLASS } from "@/lib/bento-layout";
+import { BENTO_GRID_CLASS, getBentoSpanClass } from "@/lib/bento-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -52,9 +52,12 @@ export function DirectoryCardSkeleton({ className }: { className?: string }) {
 
 export function BentoDirectorySkeletonGrid({ count = 8 }: { count?: number }) {
   return (
-    <div className={PROFILE_GRID_CLASS}>
+    <div className={BENTO_GRID_CLASS}>
       {Array.from({ length: count }).map((_, i) => (
-        <ProfileCardSkeleton key={i} />
+        <ProfileCardSkeleton
+          key={i}
+          className={cn("h-full", getBentoSpanClass(i), i === 0 && "min-h-[16rem]")}
+        />
       ))}
     </div>
   );
