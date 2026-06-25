@@ -315,10 +315,6 @@ function bindPointerListeners() {
   document.body.addEventListener("pointermove", onPointerMove);
   document.body.addEventListener("pointerleave", onPointerLeave);
   document.body.addEventListener("click", onPointerClick);
-  document.body.addEventListener("touchstart", onTouchStart, { passive: false });
-  document.body.addEventListener("touchmove", onTouchMove, { passive: false });
-  document.body.addEventListener("touchend", onTouchEnd, { passive: false });
-  document.body.addEventListener("touchcancel", onTouchEnd, { passive: false });
   pointerListenersBound = true;
 }
 
@@ -327,10 +323,6 @@ function unbindPointerListeners() {
   document.body.removeEventListener("pointermove", onPointerMove);
   document.body.removeEventListener("pointerleave", onPointerLeave);
   document.body.removeEventListener("click", onPointerClick);
-  document.body.removeEventListener("touchstart", onTouchStart);
-  document.body.removeEventListener("touchmove", onTouchMove);
-  document.body.removeEventListener("touchend", onTouchEnd);
-  document.body.removeEventListener("touchcancel", onTouchEnd);
   pointerListenersBound = false;
 }
 
@@ -398,6 +390,7 @@ function processPointerInteraction() {
 }
 
 function onPointerMove(event: PointerEvent) {
+  if (event.pointerType !== "mouse") return;
   globalPointer.x = event.clientX;
   globalPointer.y = event.clientY;
   processPointerInteraction();
@@ -418,60 +411,6 @@ function onPointerLeave() {
     if (tracker.hover) {
       tracker.hover = false;
       tracker.onLeave(tracker);
-    }
-  }
-}
-
-function onTouchStart(event: TouchEvent) {
-  if (event.touches.length === 0) return;
-  event.preventDefault();
-  globalPointer.x = event.touches[0].clientX;
-  globalPointer.y = event.touches[0].clientY;
-
-  for (const [element, tracker] of pointerTrackers) {
-    const rect = element.getBoundingClientRect();
-    if (isInsideRect(rect)) {
-      tracker.touching = true;
-      updateTrackerPosition(tracker, rect);
-      if (!tracker.hover) {
-        tracker.hover = true;
-        tracker.onEnter(tracker);
-      }
-      tracker.onMove(tracker);
-    }
-  }
-}
-
-function onTouchMove(event: TouchEvent) {
-  if (event.touches.length === 0) return;
-  event.preventDefault();
-  globalPointer.x = event.touches[0].clientX;
-  globalPointer.y = event.touches[0].clientY;
-
-  for (const [element, tracker] of pointerTrackers) {
-    const rect = element.getBoundingClientRect();
-    updateTrackerPosition(tracker, rect);
-    if (isInsideRect(rect)) {
-      if (!tracker.hover) {
-        tracker.hover = true;
-        tracker.touching = true;
-        tracker.onEnter(tracker);
-      }
-      tracker.onMove(tracker);
-    } else if (tracker.hover && tracker.touching) {
-      tracker.onMove(tracker);
-    }
-  }
-}
-
-function onTouchEnd() {
-  for (const tracker of pointerTrackers.values()) {
-    if (tracker.touching) {
-      tracker.touching = false;
-      if (tracker.hover) {
-        tracker.hover = false;
-        tracker.onLeave(tracker);
-      }
     }
   }
 }
@@ -840,7 +779,9 @@ export function createBallpit(
   const plane = new Plane(new Vector3(0, 0, 1), 0);
   const intersection = new Vector3();
 
-  canvas.style.touchAction = "none";
+  const interactive = options.followCursor !== false;
+  canvas.style.touchAction = "auto";
+  canvas.style.pointerEvents = "none";
   canvas.style.userSelect = "none";
 
   const initialize = (config: Partial<BallpitConfig>) => {
@@ -864,22 +805,25 @@ export function createBallpit(
     pendingConfig = options;
   }
 
-  const tracker = createPointerTracker({
-    domElement: canvas,
-    onMove() {
-      if (!spheres) return;
-      raycaster.setFromCamera(tracker.nPosition, engine.camera);
-      engine.camera.getWorldDirection(plane.normal);
-      const hit = raycaster.ray.intersectPlane(plane, intersection);
-      if (hit) {
-        spheres.physics.center.copy(intersection);
-        spheres.config.controlSphere0 = true;
-      }
-    },
-    onLeave() {
-      if (spheres) spheres.config.controlSphere0 = false;
-    },
-  });
+  let tracker: PointerTracker | null = null;
+  if (interactive) {
+    tracker = createPointerTracker({
+      domElement: canvas,
+      onMove() {
+        if (!spheres) return;
+        raycaster.setFromCamera(tracker!.nPosition, engine.camera);
+        engine.camera.getWorldDirection(plane.normal);
+        const hit = raycaster.ray.intersectPlane(plane, intersection);
+        if (hit) {
+          spheres.physics.center.copy(intersection);
+          spheres.config.controlSphere0 = true;
+        }
+      },
+      onLeave() {
+        if (spheres) spheres.config.controlSphere0 = false;
+      },
+    });
+  }
 
   engine.onBeforeRender = (clock) => {
     if (!paused && spheres) spheres.update(clock);
@@ -921,7 +865,7 @@ export function createBallpit(
       paused = !paused;
     },
     dispose() {
-      tracker.dispose();
+      tracker?.dispose();
       engine.dispose();
     },
   };

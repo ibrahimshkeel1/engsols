@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import { Component, useEffect, useState, type ReactNode } from "react";
 import { Ballpit } from "@/components/motion/ballpit/Ballpit";
 import { getBallpitColorsForPath } from "@/lib/ballpit-theme";
@@ -28,20 +29,6 @@ class BallpitErrorBoundary extends Component<
   }
 }
 
-function useCanHover() {
-  const [canHover, setCanHover] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const update = () => setCanHover(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  return canHover;
-}
-
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -63,28 +50,32 @@ function useIsMobile() {
 export function BallpitHeroBackground({ children, className }: BallpitHeroBackgroundProps) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const canHover = useCanHover();
+  const { resolvedTheme } = useTheme();
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
   const colors = getBallpitColorsForPath(pathname);
+  const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   return (
-    <section className={cn("relative overflow-hidden !bg-transparent", className)}>
+    <section className={cn("ballpit-hero relative overflow-hidden !bg-transparent", className)}>
       {mounted && (
-        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+        <div
+          className="ballpit-hero-canvas pointer-events-none absolute inset-0 z-0"
+          aria-hidden
+        >
           <BallpitErrorBoundary>
             <Ballpit
               count={isMobile ? 80 : 130}
               gravity={0.55}
               friction={0.9975}
               wallBounce={0.95}
-              followCursor={canHover && !reducedMotion}
+              followCursor={!reducedMotion}
               colors={colors}
-              lightIntensity={140}
+              lightIntensity={isDark ? 120 : 140}
               minSize={0.4}
               maxSize={0.9}
               maxVelocity={0.12}
@@ -93,17 +84,15 @@ export function BallpitHeroBackground({ children, className }: BallpitHeroBackgr
         </div>
       )}
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-background/92 via-background/78 to-background/94"
+        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-background/92 via-background/78 to-background/94 dark:from-background/50 dark:via-background/28 dark:to-background/42"
         aria-hidden
       />
       <div className="relative z-10">
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/88 via-background/72 to-transparent"
+          className="ballpit-hero-read-panel pointer-events-none absolute inset-0"
           aria-hidden
         />
-        <div className="relative [&_.section-label]:drop-shadow-sm [&_.text-body-lg]:text-text-main [&_.text-display-xl]:text-text-main [&_h1]:drop-shadow-sm [&_p]:text-text-main/90 [&_p]:drop-shadow-sm">
-          {children}
-        </div>
+        <div className="ballpit-hero-copy relative">{children}</div>
       </div>
     </section>
   );
